@@ -176,11 +176,11 @@ footer p{font-family:var(--mono);font-size:11px;color:var(--text-dim)}
     </div>
     <div class="links">
       <a href="#about">About</a>
-      <a href="#people">People</a>
       <a href="#research">Research</a>
       <a href="#publications">Papers</a>
       <a href="#teaching">Teaching</a>
       <a href="#contact">Contact</a>
+      <a href="#people">People</a>
     </div>
     <div class="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode">
       <div class="knob" id="toggleKnob"></div>
@@ -231,6 +231,98 @@ footer p{font-family:var(--mono);font-size:11px;color:var(--text-dim)}
       <div class="position-item"><div class="pos-title">Applied Scientist III</div><div class="pos-place">Amazon SCOT (Supply Chain Optimization Technologies)</div></div>
       <div class="position-item"><div class="pos-title">PhD, Computer Science</div><div class="pos-place">Duke University · 2023</div></div>
     </div>
+  </div>
+</section>
+
+
+<section id="research">
+  <div class="section-label">Research</div>
+  <div class="section-title">Research Themes</div>
+  <p class="research-intro">Our tools are flexible, robust, and trustworthy, designed for scenarios where standard causal assumptions are challenged. We commit to delivering solutions that are <em>accurate</em>, <em>trustworthy</em>, and <em>domain-conscious</em>.</p>
+  <div class="research-grid stagger">
+    <div class="research-card"><span class="rc-icon">⊕</span><h3>Data Fusion for Causal Inference</h3><p>Combining experimental and observational data, partial identification, integrating disparate outcome measures, and characterizing underrepresented populations.</p><div class="rc-tags"><span>data integration</span><span>generalizability</span><span>external validity</span></div></div>
+    <div class="research-card"><span class="rc-icon">◈</span><h3>Interpretable ML for Causal Inference</h3><p>Matching methods (MALTS, VIM, AME), the Rashomon effect, distributional treatment effects, and regularized extrapolation.</p><div class="rc-tags"><span>matching</span><span>interpretability</span><span>Rashomon sets</span></div></div>
+    <div class="research-card"><span class="rc-icon">⬡</span><h3>AI Sandbox for Causal Inference</h3><p>Validating and benchmarking causal methods through controllable generative sandboxes and power analysis for trial design.</p><div class="rc-tags"><span>validation</span><span>simulation</span><span>trial design</span></div></div>
+    <div class="research-card"><span class="rc-icon">⊞</span><h3>Causal Inference for Networks</h3><p>Causal relational learning on structured data, graph ML estimators for network effects, and transporting effects across social networks.</p><div class="rc-tags"><span>networks</span><span>graph ML</span><span>relational data</span></div></div>
+    <div class="research-card"><span class="rc-icon">♺</span><h3>Experienced Burden of Diseases</h3><p>Quantifying heterogeneous socio-economic impacts of health shocks, including breast cancer income loss and lasting costs of illness.</p><div class="rc-tags"><span>health economics</span><span>heterogeneous effects</span></div></div>
+    <div class="research-card"><span class="rc-icon">⌬</span><h3>Anthropogenic Threats to Biodiversity</h3><p>Causal analysis of deforestation drivers in Madagascar and the relationship between vanilla farming and wildlife hunting pressures.</p><div class="rc-tags"><span>ecology</span><span>deforestation</span><span>natural experiments</span></div></div>
+    <div class="research-card"><span class="rc-icon">≡</span><h3>Data Equity in Public Health</h3><p>Developing frameworks for ensuring equitable data representation in public health data science and evidence-based policymaking.</p><div class="rc-tags"><span>data equity</span><span>public health</span><span>health disparities</span></div></div>
+  </div>
+</section>
+
+<div class="divider"><hr></div>
+
+<section id="publications">
+  <div class="section-label">Publications</div>
+  <div class="section-title">Selected Papers</div>
+  <div class="pub-filters">
+    <button class="pub-filter-btn active" data-filter="all">All</button>
+    <button class="pub-filter-btn" data-filter="journal">Journals</button>
+    <button class="pub-filter-btn" data-filter="conference">Conferences</button>
+    <button class="pub-filter-btn" data-filter="preprint">Preprints</button>
+  </div>
+  <div id="pub-list">
+    <div class="pub-year-group"><div class="pub-year-label">2026</div>
+      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">JAMA HF</div><div class="pub-content"><div class="pub-title">Ten Core Concepts for Ensuring Data Equity in Public Health</div><div class="pub-authors">Y Wang, AE Boyd, L Rountree, Y Ren, K Nyhan, R Nagar, J Higginbottom, ML Ranney, <strong>H Parikh</strong>, B Mukherjee</div></div></div>
+      <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title">Why Are There Many Equally Good Models? An Anatomy of the Rashomon Effect</div><div class="pub-authors"><strong>H Parikh</strong></div></div></div>
+      <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title">Demystifying Prediction Powered Inference</div><div class="pub-authors">Y Song, DM Kluger, <strong>H Parikh</strong>, T Gu</div></div></div>
+    </div>
+    <div class="pub-year-group"><div class="pub-year-label">2025</div>
+      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">JASA</div><div class="pub-content"><div class="pub-title">Who Are We Missing? A Principled Approach to Characterizing the Underrepresented Population</div><div class="pub-authors"><strong>H Parikh</strong>, RK Ross, EA Stuart, KE Rudolph</div></div></div>
+      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">Nat. Commun.</div><div class="pub-content"><div class="pub-title">Breast Cancer and Income Loss in Denmark: Heterogeneous Outcomes and Longitudinal Effects</div><div class="pub-authors">EK Johnson, <strong>H Parikh</strong>, KR Olsen, AY Chang, L Sopina</div></div></div>
+      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">JRSS-C</div><div class="pub-content"><div class="pub-title">Precision Mental Health: Predicting Heterogeneous Treatment Effects for Depression</div><div class="pub-authors">CL Brantner, TQ Nguyen, <strong>H Parikh</strong>, C Zhao, H Hong, EA Stuart</div></div></div>
+      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">Obs. Studies</div><div class="pub-content"><div class="pub-title">A Double Machine Learning Approach for Combining Experimental and Observational Studies</div><div class="pub-authors"><strong>H Parikh</strong>, M Morucci, V Orlandi, S Roy, C Rudin, A Volfovsky</div></div></div>
+      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">IJROBP</div><div class="pub-content"><div class="pub-title">Representativeness and Generalizability of NCI-Funded Multi-Modality RCTs</div><div class="pub-authors">CFPM de Sousa, <strong>H Parikh</strong>, JD Bradley, E Stuart, C Hu</div></div></div>
+      <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title">Regularizing Extrapolation in Causal Inference</div><div class="pub-authors">D Arbour, <strong>H Parikh</strong>, B Niknam, EA Stuart, KE Rudolph, A Feller</div></div></div>
+      <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title">A Cautionary Tale on Integrating Studies with Disparate Outcome Measures</div><div class="pub-authors"><strong>H Parikh</strong>, TQ Nguyen, EA Stuart, KE Rudolph, CH Miles</div></div></div>
+      <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title">Data Fusion for Partial Identification of Causal Effects</div><div class="pub-authors">Q Lanners, C Rudin, A Volfovsky, <strong>H Parikh</strong></div></div></div>
+      <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title">Demystifying Proximal Causal Inference</div><div class="pub-authors">GV Ringlein, TQ Nguyen, PP Zandi, EA Stuart, <strong>H Parikh</strong></div></div></div>
+      <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title">Towards Enhancing Data Equity in Public Health Data Science</div><div class="pub-authors">Y Wang, AE Boyd, L Rountree, Y Ren, K Nyhan, R Nagar, J Higginbottom, ML Ranney, <strong>H Parikh</strong>, B Mukherjee</div></div></div>
+      <div class="pub-item" data-type="conference"><div class="pub-venue-badge">JMM</div><div class="pub-content"><div class="pub-title">Almost-Exact Matching for Interpretable and Trustworthy Causal Inference</div><div class="pub-authors">Q Lanners, <strong>H Parikh</strong>, S Katta, D Page, C Rudin, A Volfovsky</div></div></div>
+    </div>
+    <div class="pub-year-group"><div class="pub-year-label">2024</div>
+      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">ACTN</div><div class="pub-content"><div class="pub-title">How Many Patients Do You Need? Trial Designs for Anti-Seizure Treatment</div><div class="pub-authors"><strong>H Parikh</strong>, H Sun, R Amerineni, ES Rosenthal, A Volfovsky, C Rudin, MB Westover, SF Zafar</div></div></div>
+      <div class="pub-item" data-type="conference"><div class="pub-venue-badge">AISTATS</div><div class="pub-content"><div class="pub-title">Safe and Interpretable Estimation of Optimal Treatment Regimes</div><div class="pub-authors"><strong>H Parikh</strong>, Q Lanners, Z Akras, S Zafar, MB Westover, C Rudin, A Volfovsky</div></div></div>
+      <div class="pub-item" data-type="conference"><div class="pub-venue-badge">AISTATS</div><div class="pub-content"><div class="pub-title">Interpretable Causal Inference for Wearable, Sensor, and Distributional Data</div><div class="pub-authors">S Katta, <strong>H Parikh</strong>, C Rudin, A Volfovsky</div></div></div>
+      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">HDSR</div><div class="pub-content"><div class="pub-title">Towards Generalizing Inferences from Trials to Target Populations</div><div class="pub-authors">MY Huang, <strong>H Parikh</strong></div></div></div>
+      <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title">Graph ML-based Doubly Robust Estimator for Network Causal Effects</div><div class="pub-authors">SB Khatami, <strong>H Parikh</strong>, H Chen, S Roy, B Salimi</div></div></div>
+    </div>
+    <div class="pub-year-group"><div class="pub-year-label">2023</div>
+      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">Lancet DH</div><div class="pub-content"><div class="pub-title">Effects of Epileptiform Activity on Discharge Outcome in Critically Ill Patients</div><div class="pub-authors"><strong>H Parikh</strong>, K Hoffman, H Sun, SF Zafar, W Ge, J Jing, L Liu, J Sun, A Struck, A Volfovsky, C Rudin, MB Westover</div></div></div>
+      <div class="pub-item" data-type="conference"><div class="pub-venue-badge">ICLR</div><div class="pub-content"><div class="pub-title">Synthetic Control as Balancing Scores</div><div class="pub-authors"><strong>H Parikh</strong></div></div></div>
+      <div class="pub-item" data-type="conference"><div class="pub-venue-badge">UAI</div><div class="pub-content"><div class="pub-title">Variable Importance Matching for Causal Inference</div><div class="pub-authors">Q Lanners, <strong>H Parikh</strong>, A Volfovsky, C Rudin, D Page</div></div></div>
+    </div>
+    <div class="pub-year-group"><div class="pub-year-label">2022</div>
+      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">JMLR</div><div class="pub-content"><div class="pub-title">MALTS: Matching After Learning to Stretch</div><div class="pub-authors"><strong>H Parikh</strong>, A Volfovsky, C Rudin</div></div></div>
+      <div class="pub-item" data-type="conference"><div class="pub-venue-badge">ICML</div><div class="pub-content"><div class="pub-title">Validating Causal Inference Methods</div><div class="pub-authors"><strong>H Parikh</strong>, C Varjao, L Xu, EJ Tchetgen Tchetgen</div></div></div>
+      <div class="pub-item" data-type="conference"><div class="pub-venue-badge">NeurIPS</div><div class="pub-content"><div class="pub-title">AME: Interpretable Almost Exact Matching for Causal Inference</div><div class="pub-authors">H Jiang, T Howell, NR Gupta, V Orlandi, M Morucci, <strong>H Parikh</strong>, S Roy, C Rudin, A Volfovsky</div></div></div>
+    </div>
+    <div class="pub-year-group"><div class="pub-year-label">2020–2021</div>
+      <div class="pub-item" data-type="conference"><div class="pub-venue-badge">SIGMOD</div><div class="pub-content"><div class="pub-title">Causal Relational Learning</div><div class="pub-authors">B Salimi, <strong>H Parikh</strong>, M Kayali, L Getoor, S Roy, D Suciu</div></div></div>
+      <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title">Heterogeneous Treatment Effects in Social Networks</div><div class="pub-authors">A Gilad, <strong>H Parikh</strong>, S Roy, B Salimi</div></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><hr></div>
+
+<section id="teaching">
+  <div class="section-label">Teaching</div>
+  <div class="section-title">Courses</div>
+  <div class="teaching-list fade-in">
+    <div class="teaching-item"><div class="teaching-sem">Fall 2025</div><div class="teaching-info"><h3>Introduction to Data Science</h3><p>A new course for biostatistics graduate students with emphasis on public health applications, covering modern data science workflows in Python and R.</p></div></div>
+    <div class="teaching-item"><div class="teaching-sem">Summer 2025–26</div><div class="teaching-info"><h3>Big Data Summer Immersion at Yale (BDSY)</h3><p>An interdisciplinary six-week training and research program introducing undergraduate students to the intersection of big data and human health.</p></div></div>
+  </div>
+</section>
+
+<div class="divider"><hr></div>
+
+<section id="contact">
+  <div class="section-label">Contact</div>
+  <div class="section-title">Get in Touch</div>
+  <div class="contact-grid fade-in">
+    <div class="contact-card"><h3>Office</h3><p>Department of Biostatistics<br>Yale School of Public Health<br>New Haven, CT</p><br><p><a href="mailto:harsh.parikh@yale.edu">harsh.parikh@yale.edu</a></p></div>
+    <div class="contact-card"><h3>Prospective Students</h3><p>I am always looking for motivated students interested in causal inference, machine learning, and public health. If you're interested in joining CEADS as a PhD student or postdoc, please reach out with your CV and a brief description of your research interests.</p></div>
   </div>
 </section>
 
@@ -337,98 +429,6 @@ footer p{font-family:var(--mono);font-size:11px;color:var(--text-dim)}
 </section>
 
 <div class="divider"><hr></div>
-
-<section id="research">
-  <div class="section-label">Research</div>
-  <div class="section-title">Research Themes</div>
-  <p class="research-intro">Our tools are flexible, robust, and trustworthy, designed for scenarios where standard causal assumptions are challenged. We commit to delivering solutions that are <em>accurate</em>, <em>trustworthy</em>, and <em>domain-conscious</em>.</p>
-  <div class="research-grid stagger">
-    <div class="research-card"><span class="rc-icon">⊕</span><h3>Data Fusion for Causal Inference</h3><p>Combining experimental and observational data, partial identification, integrating disparate outcome measures, and characterizing underrepresented populations.</p><div class="rc-tags"><span>data integration</span><span>generalizability</span><span>external validity</span></div></div>
-    <div class="research-card"><span class="rc-icon">◈</span><h3>Interpretable ML for Causal Inference</h3><p>Matching methods (MALTS, VIM, AME), the Rashomon effect, distributional treatment effects, and regularized extrapolation.</p><div class="rc-tags"><span>matching</span><span>interpretability</span><span>Rashomon sets</span></div></div>
-    <div class="research-card"><span class="rc-icon">⬡</span><h3>AI Sandbox for Causal Inference</h3><p>Validating and benchmarking causal methods through controllable generative sandboxes and power analysis for trial design.</p><div class="rc-tags"><span>validation</span><span>simulation</span><span>trial design</span></div></div>
-    <div class="research-card"><span class="rc-icon">⊞</span><h3>Causal Inference for Networks</h3><p>Causal relational learning on structured data, graph ML estimators for network effects, and transporting effects across social networks.</p><div class="rc-tags"><span>networks</span><span>graph ML</span><span>relational data</span></div></div>
-    <div class="research-card"><span class="rc-icon">♺</span><h3>Experienced Burden of Diseases</h3><p>Quantifying heterogeneous socio-economic impacts of health shocks, including breast cancer income loss and lasting costs of illness.</p><div class="rc-tags"><span>health economics</span><span>heterogeneous effects</span></div></div>
-    <div class="research-card"><span class="rc-icon">⌬</span><h3>Anthropogenic Threats to Biodiversity</h3><p>Causal analysis of deforestation drivers in Madagascar and the relationship between vanilla farming and wildlife hunting pressures.</p><div class="rc-tags"><span>ecology</span><span>deforestation</span><span>natural experiments</span></div></div>
-    <div class="research-card"><span class="rc-icon">≡</span><h3>Data Equity in Public Health</h3><p>Developing frameworks for ensuring equitable data representation in public health data science and evidence-based policymaking.</p><div class="rc-tags"><span>data equity</span><span>public health</span><span>health disparities</span></div></div>
-  </div>
-</section>
-
-<div class="divider"><hr></div>
-
-<section id="publications">
-  <div class="section-label">Publications</div>
-  <div class="section-title">Selected Papers</div>
-  <div class="pub-filters">
-    <button class="pub-filter-btn active" data-filter="all">All</button>
-    <button class="pub-filter-btn" data-filter="journal">Journals</button>
-    <button class="pub-filter-btn" data-filter="conference">Conferences</button>
-    <button class="pub-filter-btn" data-filter="preprint">Preprints</button>
-  </div>
-  <div id="pub-list">
-    <div class="pub-year-group"><div class="pub-year-label">2026</div>
-      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">JAMA HF</div><div class="pub-content"><div class="pub-title">Ten Core Concepts for Ensuring Data Equity in Public Health</div><div class="pub-authors">Y Wang, AE Boyd, L Rountree, Y Ren, K Nyhan, R Nagar, J Higginbottom, ML Ranney, <strong>H Parikh</strong>, B Mukherjee</div></div></div>
-      <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title">Why Are There Many Equally Good Models? An Anatomy of the Rashomon Effect</div><div class="pub-authors"><strong>H Parikh</strong></div></div></div>
-      <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title">Demystifying Prediction Powered Inference</div><div class="pub-authors">Y Song, DM Kluger, <strong>H Parikh</strong>, T Gu</div></div></div>
-    </div>
-    <div class="pub-year-group"><div class="pub-year-label">2025</div>
-      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">JASA</div><div class="pub-content"><div class="pub-title">Who Are We Missing? A Principled Approach to Characterizing the Underrepresented Population</div><div class="pub-authors"><strong>H Parikh</strong>, RK Ross, EA Stuart, KE Rudolph</div></div></div>
-      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">Nat. Commun.</div><div class="pub-content"><div class="pub-title">Breast Cancer and Income Loss in Denmark: Heterogeneous Outcomes and Longitudinal Effects</div><div class="pub-authors">EK Johnson, <strong>H Parikh</strong>, KR Olsen, AY Chang, L Sopina</div></div></div>
-      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">JRSS-C</div><div class="pub-content"><div class="pub-title">Precision Mental Health: Predicting Heterogeneous Treatment Effects for Depression</div><div class="pub-authors">CL Brantner, TQ Nguyen, <strong>H Parikh</strong>, C Zhao, H Hong, EA Stuart</div></div></div>
-      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">Obs. Studies</div><div class="pub-content"><div class="pub-title">A Double Machine Learning Approach for Combining Experimental and Observational Studies</div><div class="pub-authors"><strong>H Parikh</strong>, M Morucci, V Orlandi, S Roy, C Rudin, A Volfovsky</div></div></div>
-      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">IJROBP</div><div class="pub-content"><div class="pub-title">Representativeness and Generalizability of NCI-Funded Multi-Modality RCTs</div><div class="pub-authors">CFPM de Sousa, <strong>H Parikh</strong>, JD Bradley, E Stuart, C Hu</div></div></div>
-      <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title">Regularizing Extrapolation in Causal Inference</div><div class="pub-authors">D Arbour, <strong>H Parikh</strong>, B Niknam, EA Stuart, KE Rudolph, A Feller</div></div></div>
-      <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title">A Cautionary Tale on Integrating Studies with Disparate Outcome Measures</div><div class="pub-authors"><strong>H Parikh</strong>, TQ Nguyen, EA Stuart, KE Rudolph, CH Miles</div></div></div>
-      <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title">Data Fusion for Partial Identification of Causal Effects</div><div class="pub-authors">Q Lanners, C Rudin, A Volfovsky, <strong>H Parikh</strong></div></div></div>
-      <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title">Demystifying Proximal Causal Inference</div><div class="pub-authors">GV Ringlein, TQ Nguyen, PP Zandi, EA Stuart, <strong>H Parikh</strong></div></div></div>
-      <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title">Towards Enhancing Data Equity in Public Health Data Science</div><div class="pub-authors">Y Wang, AE Boyd, L Rountree, Y Ren, K Nyhan, R Nagar, J Higginbottom, ML Ranney, <strong>H Parikh</strong>, B Mukherjee</div></div></div>
-      <div class="pub-item" data-type="conference"><div class="pub-venue-badge">JMM</div><div class="pub-content"><div class="pub-title">Almost-Exact Matching for Interpretable and Trustworthy Causal Inference</div><div class="pub-authors">Q Lanners, <strong>H Parikh</strong>, S Katta, D Page, C Rudin, A Volfovsky</div></div></div>
-    </div>
-    <div class="pub-year-group"><div class="pub-year-label">2024</div>
-      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">ACTN</div><div class="pub-content"><div class="pub-title">How Many Patients Do You Need? Trial Designs for Anti-Seizure Treatment</div><div class="pub-authors"><strong>H Parikh</strong>, H Sun, R Amerineni, ES Rosenthal, A Volfovsky, C Rudin, MB Westover, SF Zafar</div></div></div>
-      <div class="pub-item" data-type="conference"><div class="pub-venue-badge">AISTATS</div><div class="pub-content"><div class="pub-title">Safe and Interpretable Estimation of Optimal Treatment Regimes</div><div class="pub-authors"><strong>H Parikh</strong>, Q Lanners, Z Akras, S Zafar, MB Westover, C Rudin, A Volfovsky</div></div></div>
-      <div class="pub-item" data-type="conference"><div class="pub-venue-badge">AISTATS</div><div class="pub-content"><div class="pub-title">Interpretable Causal Inference for Wearable, Sensor, and Distributional Data</div><div class="pub-authors">S Katta, <strong>H Parikh</strong>, C Rudin, A Volfovsky</div></div></div>
-      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">HDSR</div><div class="pub-content"><div class="pub-title">Towards Generalizing Inferences from Trials to Target Populations</div><div class="pub-authors">MY Huang, <strong>H Parikh</strong></div></div></div>
-      <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title">Graph ML-based Doubly Robust Estimator for Network Causal Effects</div><div class="pub-authors">SB Khatami, <strong>H Parikh</strong>, H Chen, S Roy, B Salimi</div></div></div>
-    </div>
-    <div class="pub-year-group"><div class="pub-year-label">2023</div>
-      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">Lancet DH</div><div class="pub-content"><div class="pub-title">Effects of Epileptiform Activity on Discharge Outcome in Critically Ill Patients</div><div class="pub-authors"><strong>H Parikh</strong>, K Hoffman, H Sun, SF Zafar, W Ge, J Jing, L Liu, J Sun, A Struck, A Volfovsky, C Rudin, MB Westover</div></div></div>
-      <div class="pub-item" data-type="conference"><div class="pub-venue-badge">ICLR</div><div class="pub-content"><div class="pub-title">Synthetic Control as Balancing Scores</div><div class="pub-authors"><strong>H Parikh</strong></div></div></div>
-      <div class="pub-item" data-type="conference"><div class="pub-venue-badge">UAI</div><div class="pub-content"><div class="pub-title">Variable Importance Matching for Causal Inference</div><div class="pub-authors">Q Lanners, <strong>H Parikh</strong>, A Volfovsky, C Rudin, D Page</div></div></div>
-    </div>
-    <div class="pub-year-group"><div class="pub-year-label">2022</div>
-      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">JMLR</div><div class="pub-content"><div class="pub-title">MALTS: Matching After Learning to Stretch</div><div class="pub-authors"><strong>H Parikh</strong>, A Volfovsky, C Rudin</div></div></div>
-      <div class="pub-item" data-type="conference"><div class="pub-venue-badge">ICML</div><div class="pub-content"><div class="pub-title">Validating Causal Inference Methods</div><div class="pub-authors"><strong>H Parikh</strong>, C Varjao, L Xu, EJ Tchetgen Tchetgen</div></div></div>
-      <div class="pub-item" data-type="conference"><div class="pub-venue-badge">NeurIPS</div><div class="pub-content"><div class="pub-title">AME: Interpretable Almost Exact Matching for Causal Inference</div><div class="pub-authors">H Jiang, T Howell, NR Gupta, V Orlandi, M Morucci, <strong>H Parikh</strong>, S Roy, C Rudin, A Volfovsky</div></div></div>
-    </div>
-    <div class="pub-year-group"><div class="pub-year-label">2020–2021</div>
-      <div class="pub-item" data-type="conference"><div class="pub-venue-badge">SIGMOD</div><div class="pub-content"><div class="pub-title">Causal Relational Learning</div><div class="pub-authors">B Salimi, <strong>H Parikh</strong>, M Kayali, L Getoor, S Roy, D Suciu</div></div></div>
-      <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title">Heterogeneous Treatment Effects in Social Networks</div><div class="pub-authors">A Gilad, <strong>H Parikh</strong>, S Roy, B Salimi</div></div></div>
-    </div>
-  </div>
-</section>
-
-<div class="divider"><hr></div>
-
-<section id="teaching">
-  <div class="section-label">Teaching</div>
-  <div class="section-title">Courses</div>
-  <div class="teaching-list fade-in">
-    <div class="teaching-item"><div class="teaching-sem">Fall 2025</div><div class="teaching-info"><h3>Introduction to Data Science</h3><p>A new course for biostatistics graduate students with emphasis on public health applications, covering modern data science workflows in Python and R.</p></div></div>
-    <div class="teaching-item"><div class="teaching-sem">Summer 2025–26</div><div class="teaching-info"><h3>Big Data Summer Immersion at Yale (BDSY)</h3><p>An interdisciplinary six-week training and research program introducing undergraduate students to the intersection of big data and human health.</p></div></div>
-  </div>
-</section>
-
-<div class="divider"><hr></div>
-
-<section id="contact">
-  <div class="section-label">Contact</div>
-  <div class="section-title">Get in Touch</div>
-  <div class="contact-grid fade-in">
-    <div class="contact-card"><h3>Office</h3><p>Department of Biostatistics<br>Yale School of Public Health<br>New Haven, CT</p><br><p><a href="mailto:harsh.parikh@yale.edu">harsh.parikh@yale.edu</a></p></div>
-    <div class="contact-card"><h3>Prospective Students</h3><p>I am always looking for motivated students interested in causal inference, machine learning, and public health. If you're interested in joining CEADS as a PhD student or postdoc, please reach out with your CV and a brief description of your research interests.</p></div>
-  </div>
-</section>
-
 <footer><p>© 2026 Harsh Parikh · Yale University</p></footer>
 
 <script>
