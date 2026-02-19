@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Publication Network — Harsh Parikh</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0c10;
+    color: #c8ccd4;
+    font-family: 'DM Sans', sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  #header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    pointer-events: none;
+    background: linear-gradient(to bottom, rgba(10,12,16,0.95) 0%, rgba(10,12,16,0.6) 70%, transparent 100%);
+  }
+
+  #header h1 {
+    font-size: 18px;
+    font-weight: 500;
+    color: #e8ecf4;
+    letter-spacing: -0.3px;
+  }
+
+  #header .subtitle {
+    font-size: 12px;
+    color: #5a6270;
+    margin-top: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 300;
+  }
+
+  #legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    pointer-events: auto;
+    max-width: 500px;
+    justify-content: flex-end;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #6a7080;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 300;
+  }
+
+  .legend-item:hover { opacity: 0.8; }
+
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  #graph { width: 100vw; height: 100vh; }
+
+  .tooltip {
+    position: fixed;
+    pointer-events: none;
+    background: rgba(16, 19, 28, 0.96);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 16px 20px;
+    max-width: 380px;
+    z-index: 200;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+
+  .tooltip.active { opacity: 1; }
+
+  .tooltip .title {
+    font-size: 13px;
+    font-weight: 500;
+    color: #e8ecf4;
+    line-height: 1.45;
+    margin-bottom: 8px;
+  }
+
+  .tooltip .authors {
+    font-size: 11px;
+    color: #6a7080;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .tooltip .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #4a5060;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .tooltip .tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    padding: 2px 7px;
+    margin: 1px 2px;
+    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    color: #8090a8;
+  }
+
+  .tooltip .venue {
+    color: #7a8a9e;
+  }
+
+  #controls {
+    position: fixed;
+    bottom: 20px;
+    left: 32px;
+    z-index: 100;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    pointer-events: auto;
+  }
+
+  #controls label {
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    color: #4a5060;
+  }
+
+  #threshold {
+    -webkit-appearance: none;
+    width: 140px;
+    height: 3px;
+    background: #1e2230;
+    border-radius: 2px;
+    outline: none;
+  }
+
+  #threshold::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #5080c0;
+    cursor: pointer;
+    border: 2px solid #0a0c10;
+  }
+
+  #threshold-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #5080c0;
+    min-width: 32px;
+  }
+
+  #stats {
+    position: fixed;
+    bottom: 20px;
+    right: 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #3a4050;
+    z-index: 100;
+  }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div>
+    <h1>Publication Network</h1>
+    <div class="subtitle">Harsh Parikh · 2015–2026 · Topic Similarity Graph</div>
+  </div>
+  <div id="legend"></div>
+</div>
+
+<svg id="graph"></svg>
+
+<div class="tooltip" id="tooltip"></div>
+
+<div id="controls">
+  <label>Edge threshold</label>
+  <input type="range" id="threshold" min="0" max="0.6" step="0.02" value="0.15">
+  <span id="threshold-val">0.15</span>
+</div>
+
+<div id="stats"></div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────
+
+const publications = [
+  {
+    id: "parikh2015computational",
+    title: "Computational Prediction of Origin of Replication in Bacterial Genomes Using CEM",
+    authors: "Parikh, Singh, Krishnamachari, Shah",
+    year: 2015,
+    venue: "Biosystems",
+    tags: ["bioinformatics", "computational-biology"],
+    cluster: "early-work"
+  },
+  {
+    id: "shankar2015investigating",
+    title: "Investigating the 'Wisdom of Crowds' at Scale",
+    authors: "Shankar Mysore, Yaligar, Arrieta Ibarra, Simoiu, Goel, et al.",
+    year: 2015,
+    venue: "UIST Adjunct",
+    tags: ["crowdsourcing", "hci"],
+    cluster: "early-work"
+  },
+  {
+    id: "malik2016gargling",
+    title: "Gargling Affect on Salivary Electrochemical Parameters to Predict Blood Glucose",
+    authors: "Malik, Gupta, Parikh, Anand",
+    year: 2016,
+    venue: "ICCTICT",
+    tags: ["biosensors", "health-monitoring"],
+    cluster: "early-work"
+  },
+  {
+    id: "dutta2016ensemble",
+    title: "An Ensemble Micro Neural Network Approach for Zinc Finger Protein–DNA Interactions",
+    authors: "Dutta, Madan, Parikh, Sundar",
+    year: 2016,
+    venue: "BMC Genomics",
+    tags: ["bioinformatics", "neural-networks", "computational-biology"],
+    cluster: "early-work"
+  },
+  {
+    id: "malik2019non",
+    title: "Non-Invasive Platform to Estimate Fasting Blood Glucose from Salivary Parameters",
+    authors: "Malik, Parikh, Shah, Anand, Gupta",
+    year: 2019,
+    venue: "Healthcare Tech Letters",
+    tags: ["biosensors", "health-monitoring"],
+    cluster: "early-work"
+  },
+  {
+    id: "parikh2019application",
+    title: "An Application of Matching After Learning To Stretch (MALTS)",
+    authors: "Parikh, Rudin, Volfovsky",
+    year: 2019,
+    venue: "Observational Studies",
+    tags: ["matching", "causal-inference", "interpretable-ml"],
+    cluster: "matching"
+  },
+  {
+    id: "parikh2019emerging",
+    title: "Emerging Market Equity Benchmarks for Japanese Investors",
+    authors: "Parikh",
+    year: 2019,
+    venue: "J. Asset Management",
+    tags: ["finance", "benchmarks"],
+    cluster: "other"
+  },
+  {
+    id: "salimi2020causal",
+    title: "Causal Relational Learning",
+    authors: "Salimi, Parikh, Kayali, Getoor, Roy, Suciu",
+    year: 2020,
+    venue: "SIGMOD",
+    tags: ["causal-inference", "databases", "relational-learning"],
+    cluster: "networks-databases"
+  },
+  {
+    id: "gilad2021heterogeneous",
+    title: "Heterogeneous Treatment Effects in Social Networks",
+    authors: "Gilad, Parikh, Roy, Salimi",
+    year: 2021,
+    venue: "arXiv",
+    tags: ["causal-inference", "networks", "heterogeneous-effects", "databases"],
+    cluster: "networks-databases"
+  },
+  {
+    id: "parikh2022validating",
+    title: "Validating Causal Inference Methods",
+    authors: "Parikh, Varjao, Xu, Tchetgen Tchetgen",
+    year: 2022,
+    venue: "ICML",
+    tags: ["causal-inference", "validation", "methodology", "semiparametric"],
+    cluster: "methodology"
+  },
+  {
+    id: "parikh2022malts",
+    title: "MALTS: Matching After Learning to Stretch",
+    authors: "Parikh, Volfovsky, Rudin",
+    year: 2022,
+    venue: "JMLR",
+    tags: ["matching", "causal-inference", "interpretable-ml", "heterogeneous-effects"],
+    cluster: "matching"
+  },
+  {
+    id: "jiang2022ame",
+    title: "AME: Interpretable Almost Exact Matching for Causal Inference",
+    authors: "Jiang, Howell, Gupta, Orlandi, Morucci, Parikh, Roy, Rudin, Volfovsky",
+    year: 2022,
+    venue: "NeurIPS Demo",
+    tags: ["matching", "causal-inference", "interpretable-ml"],
+    cluster: "matching"
+  },
+  {
+    id: "parikh2023causal",
+    title: "Causal Inference for High-Stakes Decisions (PhD Thesis)",
+    authors: "Parikh",
+    year: 2023,
+    venue: "Duke University",
+    tags: ["causal-inference", "matching", "interpretable-ml", "methodology", "heterogeneous-effects", "clinical"],
+    cluster: "methodology"
+  },
+  {
+    id: "parikh2023effects",
+    title: "Effects of Epileptiform Activity on Discharge Outcome in Critically Ill Patients",
+    authors: "Parikh, Hoffman, Sun, Zafar, Ge, Jing, Liu, et al.",
+    year: 2023,
+    venue: "Lancet Digital Health",
+    tags: ["clinical", "neurology", "causal-inference", "observational"],
+    cluster: "clinical"
+  },
+  {
+    id: "parikh2023synthetic",
+    title: "Synthetic Control as Balancing Scores",
+    authors: "Parikh",
+    year: 2023,
+    venue: "ICLR Tiny Papers",
+    tags: ["causal-inference", "synthetic-control", "balancing", "methodology"],
+    cluster: "methodology"
+  },
+  {
+    id: "lanners2023variable",
+    title: "Variable Importance Matching for Causal Inference",
+    authors: "Lanners, Parikh, Volfovsky, Rudin, Page",
+    year: 2023,
+    venue: "UAI",
+    tags: ["matching", "causal-inference", "interpretable-ml", "variable-selection"],
+    cluster: "matching"
+  },
+  {
+    id: "parikh2024many",
+    title: "How Many Patients Do You Need? Trial Designs for Anti-Seizure Treatment",
+    authors: "Parikh, Sun, Amerineni, Rosenthal, Volfovsky, Rudin, Westover, Zafar",
+    year: 2024,
+    venue: "Ann. Clin. Transl. Neurol.",
+    tags: ["clinical", "neurology", "trial-design", "causal-inference"],
+    cluster: "clinical"
+  },
+  {
+    id: "katta2024interpretable",
+    title: "Interpretable Causal Inference for Wearable, Sensor, and Distributional Data",
+    authors: "Katta, Parikh, Rudin, Volfovsky",
+    year: 2024,
+    venue: "AISTATS",
+    tags: ["matching", "causal-inference", "interpretable-ml", "distributional"],
+    cluster: "matching"
+  },
+  {
+    id: "parikh2024safe",
+    title: "Safe and Interpretable Estimation of Optimal Treatment Regimes",
+    authors: "Parikh, Lanners, Akras, Zafar, Westover, Rudin, Volfovsky",
+    year: 2024,
+    venue: "AISTATS",
+    tags: ["causal-inference", "interpretable-ml", "treatment-regimes", "clinical", "neurology"],
+    cluster: "clinical"
+  },
+  {
+    id: "huang2024towards",
+    title: "Towards Generalizing Inferences from Trials to Target Populations",
+    authors: "Huang, Parikh",
+    year: 2024,
+    venue: "Harvard Data Science Review",
+    tags: ["generalizability", "external-validity", "causal-inference", "data-integration"],
+    cluster: "generalizability"
+  },
+  {
+    id: "baharan2024graph",
+    title: "Graph ML-based Doubly Robust Estimator for Network Causal Effects",
+    authors: "Baharan Khatami, Parikh, Chen, Roy, Salimi",
+    year: 2024,
+    venue: "arXiv",
+    tags: ["causal-inference", "networks", "graph-ml", "doubly-robust", "databases"],
+    cluster: "networks-databases"
+  },
+  {
+    id: "parikh2025we",
+    title: "Who Are We Missing? Characterizing the Underrepresented Population",
+    authors: "Parikh, Ross, Stuart, Rudolph",
+    year: 2025,
+    venue: "JASA",
+    tags: ["generalizability", "external-validity", "causal-inference", "underrepresentation"],
+    cluster: "generalizability"
+  },
+  {
+    id: "johnson2025breast",
+    title: "Breast Cancer and Income Loss in Denmark: Heterogeneous Outcomes",
+    authors: "Johnson, Parikh, Olsen, Chang, Sopina",
+    year: 2025,
+    venue: "Nature Communications",
+    tags: ["heterogeneous-effects", "health-economics", "causal-inference", "clinical"],
+    cluster: "clinical"
+  },
+  {
+    id: "parikh2025cautionary",
+    title: "A Cautionary Tale on Integrating Studies with Disparate Outcome Measures",
+    authors: "Parikh, Nguyen, Stuart, Rudolph, Miles",
+    year: 2025,
+    venue: "arXiv",
+    tags: ["data-integration", "causal-inference", "methodology", "generalizability"],
+    cluster: "generalizability"
+  },
+  {
+    id: "lanners2025data",
+    title: "Data Fusion for Partial Identification of Causal Effects",
+    authors: "Lanners, Rudin, Volfovsky, Parikh",
+    year: 2025,
+    venue: "arXiv",
+    tags: ["data-integration", "partial-identification", "causal-inference", "methodology"],
+    cluster: "generalizability"
+  },
+  {
+    id: "brantner2025precision",
+    title: "Precision Mental Health: Predicting Heterogeneous Treatment Effects for Depression",
+    authors: "Brantner, Nguyen, Parikh, Zhao, Hong, Stuart",
+    year: 2025,
+    venue: "JRSS-C",
+    tags: ["data-integration", "heterogeneous-effects", "mental-health", "causal-inference", "clinical"],
+    cluster: "generalizability"
+  },
+  {
+    id: "arbour2025regularizing",
+    title: "Regularizing Extrapolation in Causal Inference",
+    authors: "Arbour, Parikh, Niknam, Stuart, Rudolph, Feller",
+    year: 2025,
+    venue: "arXiv",
+    tags: ["causal-inference", "extrapolation", "regularization", "methodology", "semiparametric"],
+    cluster: "methodology"
+  },
+  {
+    id: "de2025representativeness",
+    title: "Representativeness and Generalizability of NCI-Funded Multi-Modality RCTs",
+    authors: "de Sousa, Parikh, Bradley, Stuart, Hu",
+    year: 2025,
+    venue: "IJROBP",
+    tags: ["generalizability", "external-validity", "clinical", "cancer"],
+    cluster: "generalizability"
+  },
+  {
+    id: "parikh2025double",
+    title: "A Double Machine Learning Approach for Combining Experimental and Observational Studies",
+    authors: "Parikh, Morucci, Orlandi, Roy, Rudin, Volfovsky",
+    year: 2025,
+    venue: "Observational Studies",
+    tags: ["data-integration", "double-ml", "causal-inference", "experimental-observational"],
+    cluster: "generalizability"
+  },
+  {
+    id: "ringlein2025demystifying",
+    title: "Demystifying Proximal Causal Inference",
+    authors: "Ringlein, Nguyen, Zandi, Stuart, Parikh",
+    year: 2025,
+    venue: "arXiv",
+    tags: ["causal-inference", "proximal", "methodology", "semiparametric"],
+    cluster: "methodology"
+  },
+  {
+    id: "lanners2025almost",
+    title: "Almost-Exact Matching for Interpretable and Trustworthy Causal Inference",
+    authors: "Lanners, Parikh, Katta, Page, Rudin, Volfovsky",
+    year: 2025,
+    venue: "JMM",
+    tags: ["matching", "causal-inference", "interpretable-ml"],
+    cluster: "matching"
+  },
+  {
+    id: "wang2025towards",
+    title: "Towards Enhancing Data Equity in Public Health Data Science",
+    authors: "Wang, Boyd, Rountree, Ren, Nyhan, Nagar, Higginbottom, Ranney, Parikh, Mukherjee",
+    year: 2025,
+    venue: "arXiv",
+    tags: ["data-equity", "public-health", "data-science"],
+    cluster: "data-equity"
+  },
+  {
+    id: "wang2026ten",
+    title: "Ten Core Concepts for Ensuring Data Equity in Public Health",
+    authors: "Wang, Boyd, Rountree, Ren, Nyhan, Nagar, Higginbottom, Ranney, Parikh, Mukherjee",
+    year: 2026,
+    venue: "JAMA Health Forum",
+    tags: ["data-equity", "public-health", "data-science"],
+    cluster: "data-equity"
+  },
+  {
+    id: "parikh2026there",
+    title: "Why Are There Many Equally Good Models? An Anatomy of the Rashomon Effect",
+    authors: "Parikh",
+    year: 2026,
+    venue: "arXiv",
+    tags: ["rashomon", "model-multiplicity", "interpretable-ml", "methodology"],
+    cluster: "methodology"
+  },
+  {
+    id: "song2026demystifying",
+    title: "Demystifying Prediction Powered Inference",
+    authors: "Song, Kluger, Parikh, Gu",
+    year: 2026,
+    venue: "arXiv",
+    tags: ["prediction-powered", "inference", "methodology", "semiparametric"],
+    cluster: "methodology"
+  }
+];
+
+// ── CLUSTER COLORS ────────────────────────────────────────────────────
+
+const clusterConfig = {
+  "matching":           { label: "Matching & Interpretable CI", color: "#4ecdc4" },
+  "methodology":        { label: "Methodology",                 color: "#6c8ebf" },
+  "generalizability":   { label: "Generalizability & Data Integration", color: "#f7a072" },
+  "clinical":           { label: "Clinical Applications",       color: "#e8637a" },
+  "networks-databases": { label: "Networks & Databases",        color: "#b490d0" },
+  "data-equity":        { label: "Data Equity",                 color: "#8cc265" },
+  "early-work":         { label: "Early Work",                  color: "#7a8a9e" },
+  "other":              { label: "Other",                       color: "#4a5568" }
+};
+
+// ── JACCARD SIMILARITY ────────────────────────────────────────────────
+
+function jaccard(a, b) {
+  const setA = new Set(a);
+  const setB = new Set(b);
+  const intersection = [...setA].filter(x => setB.has(x));
+  const union = new Set([...setA, ...setB]);
+  return intersection.length / union.size;
+}
+
+function buildEdges(threshold) {
+  const edges = [];
+  for (let i = 0; i < publications.length; i++) {
+    for (let j = i + 1; j < publications.length; j++) {
+      const w = jaccard(publications[i].tags, publications[j].tags);
+      if (w >= threshold) {
+        edges.push({
+          source: publications[i].id,
+          target: publications[j].id,
+          weight: w
+        });
+      }
+    }
+  }
+  return edges;
+}
+
+// ── VISUALIZATION ─────────────────────────────────────────────────────
+
+const width = window.innerWidth;
+const height = window.innerHeight;
+
+const svg = d3.select("#graph")
+  .attr("width", width)
+  .attr("height", height);
+
+// Background gradient
+const defs = svg.append("defs");
+const radGrad = defs.append("radialGradient")
+  .attr("id", "bg-grad")
+  .attr("cx", "50%").attr("cy", "50%").attr("r", "60%");
+radGrad.append("stop").attr("offset", "0%").attr("stop-color", "#0f1218");
+radGrad.append("stop").attr("offset", "100%").attr("stop-color", "#0a0c10");
+
+svg.append("rect")
+  .attr("width", width).attr("height", height)
+  .attr("fill", "url(#bg-grad)");
+
+// Glow filter
+const glow = defs.append("filter").attr("id", "glow");
+glow.append("feGaussianBlur").attr("stdDeviation", "3").attr("result", "blur");
+glow.append("feMerge").selectAll("feMergeNode")
+  .data(["blur", "SourceGraphic"]).enter()
+  .append("feMergeNode").attr("in", d => d);
+
+const g = svg.append("g");
+
+// Zoom
+const zoom = d3.zoom()
+  .scaleExtent([0.3, 5])
+  .on("zoom", (event) => g.attr("transform", event.transform));
+svg.call(zoom);
+
+const linkGroup = g.append("g").attr("class", "links");
+const nodeGroup = g.append("g").attr("class", "nodes");
+const labelGroup = g.append("g").attr("class", "labels");
+
+const tooltip = document.getElementById("tooltip");
+
+let currentThreshold = 0.15;
+let simulation;
+
+function render(threshold) {
+  const nodes = publications.map(d => ({ ...d }));
+  const edges = buildEdges(threshold);
+
+  // Update stats
+  document.getElementById("stats").textContent =
+    `${nodes.length} nodes · ${edges.length} edges`;
+
+  // Links
+  const link = linkGroup.selectAll("line").data(edges, d => d.source + "-" + d.target);
+  link.exit().transition().duration(300).attr("stroke-opacity", 0).remove();
+  const linkEnter = link.enter().append("line")
+    .attr("stroke", "#1e2a3a")
+    .attr("stroke-opacity", 0);
+  const linkMerge = linkEnter.merge(link);
+  linkMerge.transition().duration(400)
+    .attr("stroke-width", d => 0.5 + d.weight * 3)
+    .attr("stroke-opacity", d => 0.15 + d.weight * 0.5)
+    .attr("stroke", d => {
+      const srcNode = publications.find(p => p.id === (typeof d.source === 'object' ? d.source.id : d.source));
+      return srcNode ? clusterConfig[srcNode.cluster].color + "40" : "#1e2a3a";
+    });
+
+  // Nodes
+  const node = nodeGroup.selectAll("circle").data(nodes, d => d.id);
+  node.exit().transition().duration(300).attr("r", 0).remove();
+  const nodeEnter = node.enter().append("circle")
+    .attr("r", 0)
+    .attr("fill", d => clusterConfig[d.cluster].color)
+    .attr("stroke", d => clusterConfig[d.cluster].color)
+    .attr("stroke-width", 1.5)
+    .attr("stroke-opacity", 0.3)
+    .attr("fill-opacity", 0.8)
+    .attr("cursor", "pointer")
+    .attr("filter", "url(#glow)")
+    .call(d3.drag()
+      .on("start", dragStart)
+      .on("drag", dragging)
+      .on("end", dragEnd));
+
+  const nodeMerge = nodeEnter.merge(node);
+  nodeMerge.transition().duration(500)
+    .attr("r", d => {
+      const degree = edges.filter(e =>
+        (typeof e.source === 'object' ? e.source.id : e.source) === d.id ||
+        (typeof e.target === 'object' ? e.target.id : e.target) === d.id
+      ).length;
+      return 5 + Math.min(degree * 1.2, 12);
+    });
+
+  // Labels (short keys for first-author papers)
+  const labelData = nodes.filter(d => d.id.startsWith("parikh") || d.id.startsWith("wang2026") || d.id.startsWith("song2026"));
+  const label = labelGroup.selectAll("text").data(labelData, d => d.id);
+  label.exit().transition().duration(300).attr("opacity", 0).remove();
+  const labelEnter = label.enter().append("text")
+    .attr("font-family", "'JetBrains Mono', monospace")
+    .attr("font-size", 9)
+    .attr("fill", d => clusterConfig[d.cluster].color)
+    .attr("fill-opacity", 0.6)
+    .attr("text-anchor", "middle")
+    .attr("dy", -14)
+    .text(d => {
+      const short = d.title.length > 35 ? d.title.slice(0, 32) + "…" : d.title;
+      return d.year;
+    });
+  const labelMerge = labelEnter.merge(label);
+
+  // Hover
+  nodeMerge
+    .on("mouseover", (event, d) => {
+      const connected = new Set();
+      edges.forEach(e => {
+        const sid = typeof e.source === 'object' ? e.source.id : e.source;
+        const tid = typeof e.target === 'object' ? e.target.id : e.target;
+        if (sid === d.id) connected.add(tid);
+        if (tid === d.id) connected.add(sid);
+      });
+      connected.add(d.id);
+
+      nodeMerge.transition().duration(150)
+        .attr("fill-opacity", n => connected.has(n.id) ? 1 : 0.08)
+        .attr("stroke-opacity", n => connected.has(n.id) ? 0.6 : 0.03);
+
+      linkMerge.transition().duration(150)
+        .attr("stroke-opacity", e => {
+          const sid = typeof e.source === 'object' ? e.source.id : e.source;
+          const tid = typeof e.target === 'object' ? e.target.id : e.target;
+          return (sid === d.id || tid === d.id) ? 0.6 + e.weight * 0.4 : 0.02;
+        })
+        .attr("stroke", e => {
+          const sid = typeof e.source === 'object' ? e.source.id : e.source;
+          const tid = typeof e.target === 'object' ? e.target.id : e.target;
+          return (sid === d.id || tid === d.id) ? clusterConfig[d.cluster].color + "90" : "#1e2a3a20";
+        });
+
+      labelMerge.transition().duration(150)
+        .attr("fill-opacity", n => connected.has(n.id) ? 0.8 : 0.05);
+
+      const tagsHtml = d.tags.map(t => `<span class="tag">${t}</span>`).join("");
+      tooltip.innerHTML = `
+        <div class="title">${d.title}</div>
+        <div class="authors">${d.authors}</div>
+        <div class="meta">
+          <span class="venue">${d.venue}</span>
+          <span>${d.year}</span>
+        </div>
+        <div style="margin-top:8px">${tagsHtml}</div>
+      `;
+      tooltip.classList.add("active");
+    })
+    .on("mousemove", (event) => {
+      const x = event.clientX + 16;
+      const y = event.clientY - 10;
+      const tw = tooltip.offsetWidth;
+      const th = tooltip.offsetHeight;
+      tooltip.style.left = (x + tw > width ? event.clientX - tw - 16 : x) + "px";
+      tooltip.style.top = (y + th > height ? event.clientY - th - 10 : y) + "px";
+    })
+    .on("mouseout", () => {
+      nodeMerge.transition().duration(300)
+        .attr("fill-opacity", 0.8)
+        .attr("stroke-opacity", 0.3);
+      linkMerge.transition().duration(300)
+        .attr("stroke-opacity", d => 0.15 + d.weight * 0.5)
+        .attr("stroke", d => {
+          const srcNode = publications.find(p => p.id === (typeof d.source === 'object' ? d.source.id : d.source));
+          return srcNode ? clusterConfig[srcNode.cluster].color + "40" : "#1e2a3a";
+        });
+      labelMerge.transition().duration(300)
+        .attr("fill-opacity", 0.6);
+      tooltip.classList.remove("active");
+    });
+
+  // Simulation
+  if (simulation) simulation.stop();
+
+  simulation = d3.forceSimulation(nodes)
+    .force("link", d3.forceLink(edges).id(d => d.id)
+      .distance(d => 120 - d.weight * 80)
+      .strength(d => d.weight * 0.8))
+    .force("charge", d3.forceManyBody().strength(-180))
+    .force("center", d3.forceCenter(width / 2, height / 2))
+    .force("collision", d3.forceCollide(18))
+    .force("x", d3.forceX(width / 2).strength(0.04))
+    .force("y", d3.forceY(height / 2).strength(0.04))
+    .alphaDecay(0.02)
+    .on("tick", () => {
+      linkMerge
+        .attr("x1", d => d.source.x)
+        .attr("y1", d => d.source.y)
+        .attr("x2", d => d.target.x)
+        .attr("y2", d => d.target.y);
+      nodeMerge
+        .attr("cx", d => d.x)
+        .attr("cy", d => d.y);
+      labelMerge
+        .attr("x", d => d.x)
+        .attr("y", d => d.y);
+    });
+
+  function dragStart(event, d) {
+    if (!event.active) simulation.alphaTarget(0.3).restart();
+    d.fx = d.x; d.fy = d.y;
+  }
+  function dragging(event, d) {
+    d.fx = event.x; d.fy = event.y;
+  }
+  function dragEnd(event, d) {
+    if (!event.active) simulation.alphaTarget(0);
+    d.fx = null; d.fy = null;
+  }
+}
+
+// ── LEGEND ────────────────────────────────────────────────────────────
+
+const legend = document.getElementById("legend");
+Object.entries(clusterConfig).forEach(([key, { label, color }]) => {
+  const item = document.createElement("div");
+  item.className = "legend-item";
+  item.innerHTML = `<div class="legend-dot" style="background:${color}"></div>${label}`;
+  legend.appendChild(item);
+});
+
+// ── THRESHOLD CONTROL ─────────────────────────────────────────────────
+
+const slider = document.getElementById("threshold");
+const valSpan = document.getElementById("threshold-val");
+
+slider.addEventListener("input", (e) => {
+  currentThreshold = parseFloat(e.target.value);
+  valSpan.textContent = currentThreshold.toFixed(2);
+  render(currentThreshold);
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────
+
+render(currentThreshold);
+
+// Center view slightly
+svg.call(zoom.transform, d3.zoomIdentity.translate(0, 0).scale(1));
+</script>
+</body>
+</html>

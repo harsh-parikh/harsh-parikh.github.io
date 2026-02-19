@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harsh Parikh — Yale University</title>
+<meta name="description" content="Harsh Parikh is an Assistant Professor of Biostatistics at Yale School of Public Health, leading the Causal Evidence and Decisions Studio (CEADS).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --serif:'Newsreader',Georgia,serif;
+  --sans:'DM Sans',-apple-system,sans-serif;
+  --mono:'JetBrains Mono','Fira Code',monospace;
+  --max-w:980px;
+  --transition:0.35s cubic-bezier(0.4,0,0.2,1);
+}
+[data-theme="dark"]{
+  --bg:#0c0e12;--bg-elevated:#11141a;--bg-card:#151820;--bg-hover:#1a1e28;
+  --border:rgba(255,255,255,0.06);--text:#b8bcc6;--text-dim:#5e6474;--text-bright:#e2e6f0;
+  --accent:#c59a6c;--accent-dim:rgba(197,154,108,0.15);--accent-glow:rgba(197,154,108,0.08);
+  --blue:#6c8ebf;--teal:#4ecdc4;--coral:#e8637a;--violet:#b490d0;--green:#8cc265;--orange:#f7a072;
+  --avatar-bg:#1e2230;--shadow:rgba(0,0,0,0.3);--noise-opacity:0.025;
+}
+[data-theme="light"]{
+  --bg:#f5f3ef;--bg-elevated:#edeae4;--bg-card:#ffffff;--bg-hover:#f0ede7;
+  --border:rgba(0,0,0,0.08);--text:#4a4540;--text-dim:#8a847c;--text-bright:#1a1714;
+  --accent:#9a6d3c;--accent-dim:rgba(154,109,60,0.12);--accent-glow:rgba(154,109,60,0.06);
+  --blue:#4a6d96;--teal:#2a9d96;--coral:#c84a5e;--violet:#8a68a8;--green:#5a8a3a;--orange:#c87a4a;
+  --avatar-bg:#edeae4;--shadow:rgba(0,0,0,0.08);--noise-opacity:0.015;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:400;line-height:1.7;overflow-x:hidden;transition:background var(--transition),color var(--transition)}
+::selection{background:var(--accent-dim);color:var(--text-bright)}
+a{color:var(--accent);text-decoration:none;transition:color 0.2s}
+a:hover{color:var(--text-bright)}
+body::before{content:'';position:fixed;inset:0;opacity:var(--noise-opacity);background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none;z-index:9999}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 40px;height:56px;display:flex;align-items:center;justify-content:space-between;background:color-mix(in srgb,var(--bg) 80%,transparent);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:background var(--transition),border-color var(--transition)}
+nav .logo{font-family:var(--serif);font-size:17px;font-weight:500;color:var(--text-bright);letter-spacing:-0.3px;transition:color var(--transition)}
+nav .logo span{color:var(--accent)}
+.nav-right{display:flex;align-items:center;gap:28px}
+nav .links{display:flex;gap:28px}
+nav .links a{font-size:12.5px;font-weight:400;color:var(--text-dim);text-transform:uppercase;letter-spacing:1.2px;transition:color 0.2s;position:relative}
+nav .links a:hover,nav .links a.active{color:var(--text-bright)}
+nav .links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--accent);transition:width 0.3s}
+nav .links a:hover::after,nav .links a.active::after{width:100%}
+.theme-toggle{width:40px;height:22px;border-radius:11px;border:1px solid var(--border);background:var(--bg-card);cursor:pointer;position:relative;flex-shrink:0;transition:background var(--transition),border-color var(--transition)}
+.theme-toggle .knob{width:16px;height:16px;border-radius:50%;background:var(--accent);position:absolute;top:2px;left:2px;transition:transform var(--transition);display:flex;align-items:center;justify-content:center;font-size:9px;line-height:1;color:var(--bg)}
+[data-theme="light"] .theme-toggle .knob{transform:translateX(18px)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+.hamburger span{width:22px;height:1.5px;background:var(--text-dim);transition:background var(--transition)}
+@media(max-width:768px){
+  .hamburger{display:flex}
+  nav .links{display:none;position:absolute;top:56px;left:0;right:0;flex-direction:column;background:color-mix(in srgb,var(--bg) 96%,transparent);backdrop-filter:blur(20px);padding:24px 40px;gap:20px;border-bottom:1px solid var(--border)}
+  nav .links.open{display:flex}
+  nav{padding:0 24px}
+}
+
+section{max-width:var(--max-w);margin:0 auto;padding:100px 40px 60px}
+@media(max-width:768px){section{padding:80px 24px 40px}}
+.section-label{font-family:var(--mono);font-size:11px;font-weight:300;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;opacity:0.8;transition:color var(--transition)}
+.section-title{font-family:var(--serif);font-size:32px;font-weight:400;color:var(--text-bright);letter-spacing:-0.5px;margin-bottom:40px;line-height:1.3;transition:color var(--transition)}
+
+#hero{min-height:100vh;display:flex;align-items:center;padding-top:56px;position:relative}
+#hero::before{content:'';position:absolute;top:0;right:-20%;width:600px;height:600px;background:radial-gradient(circle,var(--accent-glow) 0%,transparent 70%);pointer-events:none}
+.hero-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:60px;align-items:center;width:100%}
+@media(max-width:768px){.hero-grid{grid-template-columns:1fr;gap:40px;text-align:center}}
+.hero-portrait{position:relative}
+.hero-portrait .frame{width:280px;height:340px;border-radius:12px;overflow:hidden;border:1px solid var(--border);position:relative;background:var(--bg-card);transition:background var(--transition),border-color var(--transition)}
+@media(max-width:768px){.hero-portrait .frame{margin:0 auto;width:220px;height:270px}}
+.hero-portrait .frame img{width:100%;height:100%;object-fit:cover}
+[data-theme="dark"] .hero-portrait .frame img{filter:grayscale(0.1) contrast(1.05)}
+.hero-portrait .frame .overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,color-mix(in srgb,var(--bg) 40%,transparent) 100%)}
+.hero-portrait .badge{position:absolute;bottom:-16px;right:-16px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-family:var(--mono);font-size:11px;color:var(--accent);transition:background var(--transition),border-color var(--transition),color var(--transition)}
+.hero-text h1{font-family:var(--serif);font-size:clamp(38px,5vw,52px);font-weight:400;color:var(--text-bright);letter-spacing:-1px;line-height:1.15;margin-bottom:16px;transition:color var(--transition)}
+.hero-text .role{font-size:16px;color:var(--text);margin-bottom:8px;line-height:1.6}
+.hero-text .affiliation{font-family:var(--mono);font-size:12px;color:var(--text-dim);margin-bottom:28px;line-height:1.8}
+.hero-text .tagline{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--text);line-height:1.6;margin-bottom:32px;max-width:480px;opacity:0.85}
+@media(max-width:768px){.hero-text .tagline{margin:0 auto 32px}}
+.hero-links{display:flex;gap:16px;flex-wrap:wrap}
+@media(max-width:768px){.hero-links{justify-content:center}}
+.hero-links a{font-family:var(--mono);font-size:12px;color:var(--text-dim);padding:8px 18px;border:1px solid var(--border);border-radius:6px;transition:all 0.2s}
+.hero-links a:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 30%,transparent);background:var(--accent-glow)}
+
+#about .about-content{display:grid;grid-template-columns:1fr 1fr;gap:48px}
+@media(max-width:768px){#about .about-content{grid-template-columns:1fr;gap:32px}}
+#about .about-content p{font-size:15px;line-height:1.8}
+.positions{display:flex;flex-direction:column;gap:16px}
+.position-item{padding:16px 20px;border-left:2px solid var(--border);transition:border-color 0.2s}
+.position-item:hover{border-color:var(--accent)}
+.position-item .pos-title{font-size:14px;font-weight:500;color:var(--text-bright);margin-bottom:3px}
+.position-item .pos-place{font-size:13px;color:var(--text-dim)}
+
+.people-subtitle{font-size:15px;color:var(--text);margin-bottom:40px;max-width:600px;line-height:1.7}
+.people-group-label{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px;margin-top:48px;opacity:0.8}
+.people-group-label:first-of-type{margin-top:0}
+.people-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:24px}
+.person-card{text-align:center;padding:28px 16px;border-radius:10px;border:1px solid var(--border);background:var(--bg-card);transition:all 0.3s}
+.person-card:hover{border-color:color-mix(in srgb,var(--accent) 20%,transparent);transform:translateY(-2px);box-shadow:0 6px 24px var(--shadow)}
+.person-avatar{width:80px;height:80px;border-radius:50%;margin:0 auto 16px;overflow:hidden;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;background:var(--avatar-bg);transition:border-color var(--transition),background var(--transition)}
+.person-avatar img{width:100%;height:100%;object-fit:cover}
+.person-avatar .initials{font-family:var(--serif);font-size:22px;font-weight:400;color:var(--accent);user-select:none}
+.person-card .person-name{font-size:14px;font-weight:500;color:var(--text-bright);margin-bottom:4px}
+.person-card .person-name a{color:var(--text-bright);transition:color 0.2s}
+.person-card .person-name a:hover{color:var(--accent)}
+.person-card .person-role{font-size:12px;color:var(--text-dim);line-height:1.5}
+.person-card .person-affiliation{font-family:var(--mono);font-size:10px;color:var(--text-dim);margin-top:8px;opacity:0.7}
+
+.research-intro{font-size:15px;line-height:1.8;max-width:700px;margin-bottom:48px}
+.research-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.research-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:28px;transition:all 0.3s;position:relative;overflow:hidden}
+.research-card:hover{border-color:color-mix(in srgb,var(--text) 15%,transparent);transform:translateY(-2px);box-shadow:0 8px 32px var(--shadow)}
+.research-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.research-card:nth-child(1)::before{background:var(--orange)}
+.research-card:nth-child(2)::before{background:var(--teal)}
+.research-card:nth-child(3)::before{background:var(--blue)}
+.research-card:nth-child(4)::before{background:var(--violet)}
+.research-card:nth-child(5)::before{background:var(--coral)}
+.research-card:nth-child(6)::before{background:var(--green)}
+.research-card:nth-child(7)::before{background:var(--accent)}
+.research-card .rc-icon{font-size:24px;margin-bottom:16px;display:block}
+.research-card h3{font-family:var(--serif);font-size:18px;font-weight:400;color:var(--text-bright);margin-bottom:12px;line-height:1.35}
+.research-card p{font-size:13px;color:var(--text-dim);line-height:1.6}
+.research-card .rc-tags{margin-top:16px;display:flex;flex-wrap:wrap;gap:6px}
+.research-card .rc-tags span{font-family:var(--mono);font-size:10px;color:var(--text-dim);background:color-mix(in srgb,var(--text) 5%,transparent);padding:3px 8px;border-radius:4px;border:1px solid var(--border)}
+
+.pub-filters{display:flex;gap:10px;margin-bottom:32px;flex-wrap:wrap}
+.pub-filter-btn{font-family:var(--mono);font-size:11px;color:var(--text-dim);background:transparent;border:1px solid var(--border);border-radius:6px;padding:6px 14px;cursor:pointer;transition:all 0.2s}
+.pub-filter-btn:hover,.pub-filter-btn.active{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 30%,transparent);background:var(--accent-glow)}
+.pub-year-group{margin-bottom:40px}
+.pub-year-label{font-family:var(--mono);font-size:13px;color:var(--text-dim);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.pub-item{padding:16px 0;border-bottom:1px solid color-mix(in srgb,var(--text) 3%,transparent);transition:background 0.2s;display:flex;gap:16px;align-items:flex-start}
+.pub-item:last-child{border-bottom:none}
+.pub-item:hover{background:var(--bg-elevated);margin:0 -16px;padding:16px;border-radius:6px}
+.pub-venue-badge{flex-shrink:0;font-family:var(--mono);font-size:10px;color:var(--text-dim);background:color-mix(in srgb,var(--text) 5%,transparent);border:1px solid var(--border);border-radius:4px;padding:4px 8px;min-width:72px;text-align:center;margin-top:2px;white-space:nowrap}
+.pub-content .pub-title{font-size:14px;font-weight:500;color:var(--text-bright);line-height:1.5;margin-bottom:4px}
+.pub-content .pub-authors{font-size:13px;color:var(--text-dim);line-height:1.5}
+.pub-content .pub-authors strong{color:var(--accent);font-weight:500}
+.pub-item.hidden{display:none}
+
+.teaching-list{display:flex;flex-direction:column;gap:20px}
+.teaching-item{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:28px;display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center;transition:border-color 0.2s,background var(--transition)}
+.teaching-item:hover{border-color:color-mix(in srgb,var(--text) 15%,transparent)}
+@media(max-width:600px){.teaching-item{grid-template-columns:1fr;gap:12px}}
+.teaching-sem{font-family:var(--mono);font-size:12px;color:var(--accent);white-space:nowrap}
+.teaching-info h3{font-family:var(--serif);font-size:17px;font-weight:400;color:var(--text-bright);margin-bottom:4px}
+.teaching-info p{font-size:13px;color:var(--text-dim);line-height:1.6}
+
+#contact{padding-bottom:120px}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px}
+@media(max-width:768px){.contact-grid{grid-template-columns:1fr}}
+.contact-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:32px;transition:background var(--transition),border-color var(--transition)}
+.contact-card h3{font-family:var(--serif);font-size:18px;color:var(--text-bright);margin-bottom:16px}
+.contact-card p,.contact-card a{font-size:14px;line-height:1.8}
+footer{border-top:1px solid var(--border);padding:32px 40px;text-align:center;transition:border-color var(--transition)}
+footer p{font-family:var(--mono);font-size:11px;color:var(--text-dim)}
+.divider{max-width:var(--max-w);margin:0 auto;padding:0 40px}
+.divider hr{border:none;height:1px;background:var(--border);transition:background var(--transition)}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+.stagger>*{opacity:0;transform:translateY(16px);transition:opacity 0.5s ease,transform 0.5s ease}
+.stagger.visible>*:nth-child(1){transition-delay:0s}.stagger.visible>*:nth-child(2){transition-delay:0.06s}.stagger.visible>*:nth-child(3){transition-delay:0.12s}.stagger.visible>*:nth-child(4){transition-delay:0.18s}.stagger.visible>*:nth-child(5){transition-delay:0.24s}.stagger.visible>*:nth-child(6){transition-delay:0.3s}.stagger.visible>*:nth-child(7){transition-delay:0.36s}.stagger.visible>*:nth-child(8){transition-delay:0.42s}
+.stagger.visible>*{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#hero" class="logo">Harsh <span>Parikh</span></a>
+  <div class="nav-right">
+    <div class="hamburger" onclick="this.nextElementSibling.classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="links">
+      <a href="#about">About</a>
+      <a href="#people">People</a>
+      <a href="#research">Research</a>
+      <a href="#publications">Papers</a>
+      <a href="#teaching">Teaching</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode">
+      <div class="knob" id="toggleKnob"></div>
+    </div>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="hero-grid">
+    <div class="hero-portrait fade-in">
+      <div class="frame">
+        <img src="https://ysph.yale.edu/profile-pictures/a23f1c9e-41d5-4ad3-8e5f-c6cfd9d9e1db" alt="Harsh Parikh" onerror="this.parentElement.style.background='linear-gradient(135deg, var(--bg-card), var(--bg-hover))'; this.style.display='none';">
+        <div class="overlay"></div>
+      </div>
+      <div class="badge">CEADS Lab</div>
+    </div>
+    <div class="hero-text fade-in">
+      <h1>Harsh Parikh</h1>
+      <div class="role">Assistant Professor of Biostatistics</div>
+      <div class="affiliation">Yale School of Public Health<br>Fellow, Benjamin Franklin College<br>Affiliated Faculty, Yale Institute for Global Health</div>
+      <div class="tagline">Building rigorous causal inference methods for high-stakes decisions in healthcare, public health, and social sciences.</div>
+      <div class="hero-links">
+        <a href="mailto:harsh.parikh@yale.edu">Email</a>
+        <a href="https://scholar.google.com/citations?user=uCrw1ZMAAAAJ" target="_blank">Scholar</a>
+        <a href="https://www.linkedin.com/in/harsh-parikh/" target="_blank">LinkedIn</a>
+        <a href="https://github.com/harshparikh" target="_blank">GitHub</a>
+        <a href="#" target="_blank">CV ↓</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><hr></div>
+
+<section id="about">
+  <div class="section-label">About</div>
+  <div class="section-title">Causal Evidence &amp; Decisions Studio</div>
+  <div class="about-content fade-in">
+    <div>
+      <p>I lead the <strong style="color:var(--text-bright)">Causal Evidence and Decisions Studio (CEADS)</strong> at Yale, where we develop machine learning–aided causal inference methods for high-stakes decision-making. Our work sits at the intersection of nonparametric and semiparametric statistics, interpretable ML, and data science—grounded in first-principles thinking and process-driven science.</p>
+      <br>
+      <p>We partner with domain experts across a vast spectrum of critical challenges—from estimating disease prevalence and understanding deforestation in Madagascar, to quantifying the socio-economic burden of health shocks. Our collaboration partners span North America, Europe, Africa, and Asia, working in public health, medicine, environmental science, ecology, and supply chain management.</p>
+    </div>
+    <div class="positions">
+      <div class="position-item"><div class="pos-title">Assistant Professor of Biostatistics</div><div class="pos-place">Yale School of Public Health · 2025–present</div></div>
+      <div class="position-item"><div class="pos-title">Guest Researcher</div><div class="pos-place">Danish Centre for Health Economics, U. of Southern Denmark</div></div>
+      <div class="position-item"><div class="pos-title">Affiliate, Biostatistics</div><div class="pos-place">Johns Hopkins Bloomberg School of Public Health</div></div>
+      <div class="position-item"><div class="pos-title">Applied Scientist III</div><div class="pos-place">Amazon SCOT (Supply Chain Optimization Technologies)</div></div>
+      <div class="position-item"><div class="pos-title">PhD, Computer Science</div><div class="pos-place">Duke University · 2023</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><hr></div>
+
+<section id="people">
+  <div class="section-label">People</div>
+  <div class="section-title">CEADS Team</div>
+  <p class="people-subtitle">Members and affiliates of the Causal Evidence and Decisions Studio.</p>
+
+  <div class="people-grid stagger">
+    <div class="person-card">
+      <div class="person-avatar">
+        <img src="https://ysph.yale.edu/profile-pictures/a23f1c9e-41d5-4ad3-8e5f-c6cfd9d9e1db" alt="HP" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <span class="initials" style="display:none;">HP</span>
+      </div>
+      <div class="person-name"><a href="https://scholar.google.com/citations?user=uCrw1ZMAAAAJ" target="_blank">Harsh Parikh</a></div>
+    </div>
+    <div class="person-card">
+      <div class="person-avatar"><span class="initials">SM</span></div>
+      <div class="person-name"><a href="https://www.linkedin.com/in/sean-mcgrath-16b782141/" target="_blank">Sean McGrath</a></div>
+    </div>
+    <div class="person-card">
+      <div class="person-avatar"><span class="initials">LR</span></div>
+      <div class="person-name"><a href="https://www.linkedin.com/in/lillian-rountree-655456217/" target="_blank">Lillian Rountree</a></div>
+    </div>
+    <div class="person-card">
+      <div class="person-avatar"><span class="initials">EJ</span></div>
+      <div class="person-name"><a href="https://www.linkedin.com/in/emilykatherinejohnson/" target="_blank">Emily Johnson</a></div>
+    </div>
+    <div class="person-card">
+      <div class="person-avatar"><span class="initials">GR</span></div>
+      <div class="person-name"><a href="https://www.linkedin.com/in/grace-ringlein-7b8616141/" target="_blank">Grace Ringlein</a></div>
+    </div>
+    <div class="person-card">
+      <div class="person-avatar"><span class="initials">SK</span></div>
+      <div class="person-name">Srikar Katta</div>
+    </div>
+    <div class="person-card">
+      <div class="person-avatar"><span class="initials">CD</span></div>
+      <div class="person-name">Camille Desisto</div>
+    </div>
+    <div class="person-card">
+      <div class="person-avatar"><span class="initials">PL</span></div>
+      <div class="person-name">Peter Liu</div>
+    </div>
+    <div class="person-card">
+      <div class="person-avatar"><span class="initials">YH</span></div>
+      <div class="person-name">Yiren Hou</div>
+    </div>
+    <div class="person-card">
+      <div class="person-avatar"><span class="initials">AR</span></div>
+      <div class="person-name">Ana Karina Raygoza Cortez</div>
+    </div>
+    <div class="person-card">
+      <div class="person-avatar"><span class="initials">QL</span></div>
+      <div class="person-name">Quinn Lanners</div>
+    </div>
+    <div class="person-card">
+      <div class="person-avatar"><span class="initials">GG</span></div>
+      <div class="person-name">Ge Ge</div>
+    </div>
+    <div class="person-card">
+      <div class="person-avatar"><span class="initials">QZ</span></div>
+      <div class="person-name">Qi Zhang</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><hr></div>
+
+<section id="research">
+  <div class="section-label">Research</div>
+  <div class="section-title">Research Themes</div>
+  <p class="research-intro">Our tools are flexible, robust, and trustworthy, designed for scenarios where standard causal assumptions are challenged. We commit to delivering solutions that are <em>accurate</em>, <em>trustworthy</em>, and <em>domain-conscious</em>.</p>
+  <div class="research-grid stagger">
+    <div class="research-card"><span class="rc-icon">⊕</span><h3>Data Fusion for Causal Inference</h3><p>Combining experimental and observational data, partial identification, integrating disparate outcome measures, and characterizing underrepresented populations.</p><div class="rc-tags"><span>data integration</span><span>generalizability</span><span>external validity</span></div></div>
+    <div class="research-card"><span class="rc-icon">◈</span><h3>Interpretable ML for Causal Inference</h3><p>Matching methods (MALTS, VIM, AME), the Rashomon effect, distributional treatment effects, and regularized extrapolation.</p><div class="rc-tags"><span>matching</span><span>interpretability</span><span>Rashomon sets</span></div></div>
+    <div class="research-card"><span class="rc-icon">⬡</span><h3>AI Sandbox for Causal Inference</h3><p>Validating and benchmarking causal methods through controllable generative sandboxes and power analysis for trial design.</p><div class="rc-tags"><span>validation</span><span>simulation</span><span>trial design</span></div></div>
+    <div class="research-card"><span class="rc-icon">⊞</span><h3>Causal Inference for Networks</h3><p>Causal relational learning on structured data, graph ML estimators for network effects, and transporting effects across social networks.</p><div class="rc-tags"><span>networks</span><span>graph ML</span><span>relational data</span></div></div>
+    <div class="research-card"><span class="rc-icon">♺</span><h3>Experienced Burden of Diseases</h3><p>Quantifying heterogeneous socio-economic impacts of health shocks, including breast cancer income loss and lasting costs of illness.</p><div class="rc-tags"><span>health economics</span><span>heterogeneous effects</span></div></div>
+    <div class="research-card"><span class="rc-icon">⌬</span><h3>Anthropogenic Threats to Biodiversity</h3><p>Causal analysis of deforestation drivers in Madagascar and the relationship between vanilla farming and wildlife hunting pressures.</p><div class="rc-tags"><span>ecology</span><span>deforestation</span><span>natural experiments</span></div></div>
+    <div class="research-card"><span class="rc-icon">≡</span><h3>Data Equity in Public Health</h3><p>Developing frameworks for ensuring equitable data representation in public health data science and evidence-based policymaking.</p><div class="rc-tags"><span>data equity</span><span>public health</span><span>health disparities</span></div></div>
+  </div>
+</section>
+
+<div class="divider"><hr></div>
+
+<section id="publications">
+  <div class="section-label">Publications</div>
+  <div class="section-title">Selected Papers</div>
+  <div class="pub-filters">
+    <button class="pub-filter-btn active" data-filter="all">All</button>
+    <button class="pub-filter-btn" data-filter="journal">Journals</button>
+    <button class="pub-filter-btn" data-filter="conference">Conferences</button>
+    <button class="pub-filter-btn" data-filter="preprint">Preprints</button>
+  </div>
+  <div id="pub-list">
+    <div class="pub-year-group"><div class="pub-year-label">2026</div>
+      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">JAMA HF</div><div class="pub-content"><div class="pub-title">Ten Core Concepts for Ensuring Data Equity in Public Health</div><div class="pub-authors">Y Wang, AE Boyd, L Rountree, Y Ren, K Nyhan, R Nagar, J Higginbottom, ML Ranney, <strong>H Parikh</strong>, B Mukherjee</div></div></div>
+      <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title">Why Are There Many Equally Good Models? An Anatomy of the Rashomon Effect</div><div class="pub-authors"><strong>H Parikh</strong></div></div></div>
+      <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title">Demystifying Prediction Powered Inference</div><div class="pub-authors">Y Song, DM Kluger, <strong>H Parikh</strong>, T Gu</div></div></div>
+    </div>
+    <div class="pub-year-group"><div class="pub-year-label">2025</div>
+      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">JASA</div><div class="pub-content"><div class="pub-title">Who Are We Missing? A Principled Approach to Characterizing the Underrepresented Population</div><div class="pub-authors"><strong>H Parikh</strong>, RK Ross, EA Stuart, KE Rudolph</div></div></div>
+      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">Nat. Commun.</div><div class="pub-content"><div class="pub-title">Breast Cancer and Income Loss in Denmark: Heterogeneous Outcomes and Longitudinal Effects</div><div class="pub-authors">EK Johnson, <strong>H Parikh</strong>, KR Olsen, AY Chang, L Sopina</div></div></div>
+      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">JRSS-C</div><div class="pub-content"><div class="pub-title">Precision Mental Health: Predicting Heterogeneous Treatment Effects for Depression</div><div class="pub-authors">CL Brantner, TQ Nguyen, <strong>H Parikh</strong>, C Zhao, H Hong, EA Stuart</div></div></div>
+      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">Obs. Studies</div><div class="pub-content"><div class="pub-title">A Double Machine Learning Approach for Combining Experimental and Observational Studies</div><div class="pub-authors"><strong>H Parikh</strong>, M Morucci, V Orlandi, S Roy, C Rudin, A Volfovsky</div></div></div>
+      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">IJROBP</div><div class="pub-content"><div class="pub-title">Representativeness and Generalizability of NCI-Funded Multi-Modality RCTs</div><div class="pub-authors">CFPM de Sousa, <strong>H Parikh</strong>, JD Bradley, E Stuart, C Hu</div></div></div>
+      <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title">Regularizing Extrapolation in Causal Inference</div><div class="pub-authors">D Arbour, <strong>H Parikh</strong>, B Niknam, EA Stuart, KE Rudolph, A Feller</div></div></div>
+      <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title">A Cautionary Tale on Integrating Studies with Disparate Outcome Measures</div><div class="pub-authors"><strong>H Parikh</strong>, TQ Nguyen, EA Stuart, KE Rudolph, CH Miles</div></div></div>
+      <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title">Data Fusion for Partial Identification of Causal Effects</div><div class="pub-authors">Q Lanners, C Rudin, A Volfovsky, <strong>H Parikh</strong></div></div></div>
+      <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title">Demystifying Proximal Causal Inference</div><div class="pub-authors">GV Ringlein, TQ Nguyen, PP Zandi, EA Stuart, <strong>H Parikh</strong></div></div></div>
+      <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title">Towards Enhancing Data Equity in Public Health Data Science</div><div class="pub-authors">Y Wang, AE Boyd, L Rountree, Y Ren, K Nyhan, R Nagar, J Higginbottom, ML Ranney, <strong>H Parikh</strong>, B Mukherjee</div></div></div>
+      <div class="pub-item" data-type="conference"><div class="pub-venue-badge">JMM</div><div class="pub-content"><div class="pub-title">Almost-Exact Matching for Interpretable and Trustworthy Causal Inference</div><div class="pub-authors">Q Lanners, <strong>H Parikh</strong>, S Katta, D Page, C Rudin, A Volfovsky</div></div></div>
+    </div>
+    <div class="pub-year-group"><div class="pub-year-label">2024</div>
+      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">ACTN</div><div class="pub-content"><div class="pub-title">How Many Patients Do You Need? Trial Designs for Anti-Seizure Treatment</div><div class="pub-authors"><strong>H Parikh</strong>, H Sun, R Amerineni, ES Rosenthal, A Volfovsky, C Rudin, MB Westover, SF Zafar</div></div></div>
+      <div class="pub-item" data-type="conference"><div class="pub-venue-badge">AISTATS</div><div class="pub-content"><div class="pub-title">Safe and Interpretable Estimation of Optimal Treatment Regimes</div><div class="pub-authors"><strong>H Parikh</strong>, Q Lanners, Z Akras, S Zafar, MB Westover, C Rudin, A Volfovsky</div></div></div>
+      <div class="pub-item" data-type="conference"><div class="pub-venue-badge">AISTATS</div><div class="pub-content"><div class="pub-title">Interpretable Causal Inference for Wearable, Sensor, and Distributional Data</div><div class="pub-authors">S Katta, <strong>H Parikh</strong>, C Rudin, A Volfovsky</div></div></div>
+      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">HDSR</div><div class="pub-content"><div class="pub-title">Towards Generalizing Inferences from Trials to Target Populations</div><div class="pub-authors">MY Huang, <strong>H Parikh</strong></div></div></div>
+      <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title">Graph ML-based Doubly Robust Estimator for Network Causal Effects</div><div class="pub-authors">SB Khatami, <strong>H Parikh</strong>, H Chen, S Roy, B Salimi</div></div></div>
+    </div>
+    <div class="pub-year-group"><div class="pub-year-label">2023</div>
+      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">Lancet DH</div><div class="pub-content"><div class="pub-title">Effects of Epileptiform Activity on Discharge Outcome in Critically Ill Patients</div><div class="pub-authors"><strong>H Parikh</strong>, K Hoffman, H Sun, SF Zafar, W Ge, J Jing, L Liu, J Sun, A Struck, A Volfovsky, C Rudin, MB Westover</div></div></div>
+      <div class="pub-item" data-type="conference"><div class="pub-venue-badge">ICLR</div><div class="pub-content"><div class="pub-title">Synthetic Control as Balancing Scores</div><div class="pub-authors"><strong>H Parikh</strong></div></div></div>
+      <div class="pub-item" data-type="conference"><div class="pub-venue-badge">UAI</div><div class="pub-content"><div class="pub-title">Variable Importance Matching for Causal Inference</div><div class="pub-authors">Q Lanners, <strong>H Parikh</strong>, A Volfovsky, C Rudin, D Page</div></div></div>
+    </div>
+    <div class="pub-year-group"><div class="pub-year-label">2022</div>
+      <div class="pub-item" data-type="journal"><div class="pub-venue-badge">JMLR</div><div class="pub-content"><div class="pub-title">MALTS: Matching After Learning to Stretch</div><div class="pub-authors"><strong>H Parikh</strong>, A Volfovsky, C Rudin</div></div></div>
+      <div class="pub-item" data-type="conference"><div class="pub-venue-badge">ICML</div><div class="pub-content"><div class="pub-title">Validating Causal Inference Methods</div><div class="pub-authors"><strong>H Parikh</strong>, C Varjao, L Xu, EJ Tchetgen Tchetgen</div></div></div>
+      <div class="pub-item" data-type="conference"><div class="pub-venue-badge">NeurIPS</div><div class="pub-content"><div class="pub-title">AME: Interpretable Almost Exact Matching for Causal Inference</div><div class="pub-authors">H Jiang, T Howell, NR Gupta, V Orlandi, M Morucci, <strong>H Parikh</strong>, S Roy, C Rudin, A Volfovsky</div></div></div>
+    </div>
+    <div class="pub-year-group"><div class="pub-year-label">2020–2021</div>
+      <div class="pub-item" data-type="conference"><div class="pub-venue-badge">SIGMOD</div><div class="pub-content"><div class="pub-title">Causal Relational Learning</div><div class="pub-authors">B Salimi, <strong>H Parikh</strong>, M Kayali, L Getoor, S Roy, D Suciu</div></div></div>
+      <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title">Heterogeneous Treatment Effects in Social Networks</div><div class="pub-authors">A Gilad, <strong>H Parikh</strong>, S Roy, B Salimi</div></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><hr></div>
+
+<section id="teaching">
+  <div class="section-label">Teaching</div>
+  <div class="section-title">Courses</div>
+  <div class="teaching-list fade-in">
+    <div class="teaching-item"><div class="teaching-sem">Fall 2025</div><div class="teaching-info"><h3>Introduction to Data Science</h3><p>A new course for biostatistics graduate students with emphasis on public health applications, covering modern data science workflows in Python and R.</p></div></div>
+    <div class="teaching-item"><div class="teaching-sem">Summer 2025–26</div><div class="teaching-info"><h3>Big Data Summer Immersion at Yale (BDSY)</h3><p>An interdisciplinary six-week training and research program introducing undergraduate students to the intersection of big data and human health.</p></div></div>
+  </div>
+</section>
+
+<div class="divider"><hr></div>
+
+<section id="contact">
+  <div class="section-label">Contact</div>
+  <div class="section-title">Get in Touch</div>
+  <div class="contact-grid fade-in">
+    <div class="contact-card"><h3>Office</h3><p>Department of Biostatistics<br>Yale School of Public Health<br>New Haven, CT</p><br><p><a href="mailto:harsh.parikh@yale.edu">harsh.parikh@yale.edu</a></p></div>
+    <div class="contact-card"><h3>Prospective Students</h3><p>I am always looking for motivated students interested in causal inference, machine learning, and public health. If you're interested in joining CEADS as a PhD student or postdoc, please reach out with your CV and a brief description of your research interests.</p></div>
+  </div>
+</section>
+
+<footer><p>© 2026 Harsh Parikh · Yale University</p></footer>
+
+<script>
+function toggleTheme(){const h=document.documentElement,c=h.getAttribute('data-theme'),n=c==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('theme',n)}
+(function(){const s=localStorage.getItem('theme');if(s){document.documentElement.setAttribute('data-theme',s)}else{const d=window.matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.setAttribute('data-theme',d?'dark':'light')}})();
+const observer=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('visible')})},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.fade-in,.stagger').forEach(el=>observer.observe(el));
+const sections=document.querySelectorAll('section[id]'),navLinks=document.querySelectorAll('nav .links a');
+window.addEventListener('scroll',()=>{const y=window.scrollY+100;sections.forEach(s=>{const t=s.offsetTop,h=s.offsetHeight,id=s.getAttribute('id');if(y>=t&&y<t+h){navLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+id)l.classList.add('active')})}})});
+document.querySelectorAll('.pub-filter-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.pub-filter-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');const f=b.dataset.filter;document.querySelectorAll('.pub-item').forEach(i=>{i.classList.toggle('hidden',f!=='all'&&i.dataset.type!==f)});document.querySelectorAll('.pub-year-group').forEach(g=>{g.style.display=g.querySelectorAll('.pub-item:not(.hidden)').length===0?'none':'block'})})});
+document.querySelectorAll('nav .links a').forEach(l=>{l.addEventListener('click',()=>{document.querySelector('nav .links').classList.remove('open')})});
+</script>
+</body>
+</html>
