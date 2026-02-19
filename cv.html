@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CV — Harsh Parikh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --serif:'Newsreader',Georgia,serif;
+  --sans:'DM Sans',-apple-system,sans-serif;
+  --mono:'JetBrains Mono','Fira Code',monospace;
+  --max-w:820px;
+  --transition:0.35s cubic-bezier(0.4,0,0.2,1);
+}
+[data-theme="dark"]{
+  --bg:#0c0e12;--bg-elevated:#11141a;--bg-card:#151820;--bg-hover:#1a1e28;
+  --border:rgba(255,255,255,0.06);--text:#b8bcc6;--text-dim:#5e6474;--text-bright:#e2e6f0;
+  --accent:#c59a6c;--accent-dim:rgba(197,154,108,0.15);--accent-glow:rgba(197,154,108,0.08);
+  --shadow:rgba(0,0,0,0.3);--noise-opacity:0.025;--print-hide:block;
+}
+[data-theme="light"]{
+  --bg:#f5f3ef;--bg-elevated:#edeae4;--bg-card:#ffffff;--bg-hover:#f0ede7;
+  --border:rgba(0,0,0,0.08);--text:#4a4540;--text-dim:#8a847c;--text-bright:#1a1714;
+  --accent:#9a6d3c;--accent-dim:rgba(154,109,60,0.12);--accent-glow:rgba(154,109,60,0.06);
+  --shadow:rgba(0,0,0,0.08);--noise-opacity:0.015;--print-hide:block;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:400;line-height:1.7;overflow-x:hidden;transition:background var(--transition),color var(--transition)}
+::selection{background:var(--accent-dim);color:var(--text-bright)}
+a{color:var(--accent);text-decoration:none;transition:color 0.2s}
+a:hover{color:var(--text-bright)}
+body::before{content:'';position:fixed;inset:0;opacity:var(--noise-opacity);background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none;z-index:9999}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 40px;height:56px;display:flex;align-items:center;justify-content:space-between;background:color-mix(in srgb,var(--bg) 80%,transparent);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:background var(--transition),border-color var(--transition)}
+nav .logo{font-family:var(--serif);font-size:17px;font-weight:500;color:var(--text-bright);letter-spacing:-0.3px}
+nav .logo span{color:var(--accent)}
+.nav-right{display:flex;align-items:center;gap:24px}
+nav .links{display:flex;gap:24px}
+nav .links a{font-size:12.5px;font-weight:400;color:var(--text-dim);text-transform:uppercase;letter-spacing:1.2px;transition:color 0.2s}
+nav .links a:hover{color:var(--text-bright)}
+.theme-toggle{width:40px;height:22px;border-radius:11px;border:1px solid var(--border);background:var(--bg-card);cursor:pointer;position:relative;flex-shrink:0;transition:background var(--transition),border-color var(--transition)}
+.theme-toggle .knob{width:16px;height:16px;border-radius:50%;background:var(--accent);position:absolute;top:2px;left:2px;transition:transform var(--transition)}
+[data-theme="light"] .theme-toggle .knob{transform:translateX(18px)}
+
+/* LAYOUT */
+.cv-container{max-width:var(--max-w);margin:0 auto;padding:100px 40px 80px}
+@media(max-width:768px){.cv-container{padding:80px 24px 60px}}
+
+/* HEADER */
+.cv-header{margin-bottom:56px;padding-bottom:32px;border-bottom:1px solid var(--border)}
+.cv-header h1{font-family:var(--serif);font-size:clamp(32px,5vw,44px);font-weight:400;color:var(--text-bright);letter-spacing:-0.5px;margin-bottom:8px}
+.cv-header .subtitle{font-size:15px;color:var(--text);margin-bottom:16px;line-height:1.6}
+.cv-header .links-row{display:flex;flex-wrap:wrap;gap:16px}
+.cv-header .links-row a{font-family:var(--mono);font-size:12px;color:var(--text-dim);padding:6px 14px;border:1px solid var(--border);border-radius:5px;transition:all 0.2s}
+.cv-header .links-row a:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 30%,transparent);background:var(--accent-glow)}
+
+/* SECTIONS */
+.cv-section{margin-bottom:52px}
+.cv-section-title{font-family:var(--mono);font-size:11px;font-weight:300;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:24px;padding-bottom:10px;border-bottom:1px solid var(--border);opacity:0.85}
+
+/* ENTRY (positions, education, etc.) */
+.cv-entry{display:grid;grid-template-columns:140px 1fr;gap:16px;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid color-mix(in srgb,var(--text) 3%,transparent)}
+.cv-entry:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+@media(max-width:600px){.cv-entry{grid-template-columns:1fr;gap:4px}}
+.cv-date{font-family:var(--mono);font-size:12px;color:var(--text-dim);padding-top:2px;white-space:nowrap}
+.cv-details h3{font-size:15px;font-weight:500;color:var(--text-bright);margin-bottom:2px;line-height:1.4}
+.cv-details .cv-org{font-size:13px;color:var(--text);margin-bottom:2px}
+.cv-details .cv-note{font-size:13px;color:var(--text-dim);font-style:italic;line-height:1.6}
+.cv-details .cv-desc{font-size:13px;color:var(--text-dim);line-height:1.6;margin-top:4px}
+
+/* PUBLICATIONS */
+.pub-entry{margin-bottom:18px;padding-left:20px;position:relative;font-size:14px;line-height:1.7;color:var(--text)}
+.pub-entry::before{content:attr(data-num);position:absolute;left:0;top:0;font-family:var(--mono);font-size:11px;color:var(--text-dim)}
+.pub-entry .pub-me{color:var(--accent);font-weight:500}
+.pub-entry .pub-venue{font-style:italic}
+.pub-entry .pub-note{font-family:var(--mono);font-size:10px;color:var(--accent);background:var(--accent-dim);padding:2px 7px;border-radius:3px;margin-left:4px;white-space:nowrap}
+
+/* AWARDS */
+.award-entry{display:grid;grid-template-columns:60px 1fr;gap:12px;margin-bottom:10px;font-size:14px}
+@media(max-width:600px){.award-entry{grid-template-columns:1fr;gap:2px}}
+.award-entry .award-year{font-family:var(--mono);font-size:12px;color:var(--text-dim)}
+.award-entry .award-text{color:var(--text)}
+
+/* TALKS — compact list */
+.talk-group{margin-bottom:24px}
+.talk-group h3{font-size:14px;font-weight:500;color:var(--text-bright);margin-bottom:6px;line-height:1.5}
+.talk-group .talk-venues{font-size:13px;color:var(--text-dim);line-height:1.7}
+
+/* SERVICE */
+.service-block{margin-bottom:16px}
+.service-block h3{font-size:13px;font-weight:500;color:var(--text-bright);margin-bottom:4px}
+.service-block p{font-size:13px;color:var(--text-dim);line-height:1.7}
+
+/* SKILLS ROW */
+.skills-grid{display:grid;grid-template-columns:100px 1fr;gap:12px;margin-bottom:12px;font-size:14px}
+@media(max-width:600px){.skills-grid{grid-template-columns:1fr;gap:2px}}
+.skills-grid .skills-label{font-family:var(--mono);font-size:12px;color:var(--text-dim)}
+.skills-grid .skills-list{color:var(--text)}
+
+/* MEDIA */
+.media-entry{margin-bottom:12px;font-size:14px;line-height:1.7}
+.media-entry .media-source{color:var(--text-dim);font-style:italic}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:32px 40px;text-align:center}
+footer p{font-family:var(--mono);font-size:11px;color:var(--text-dim)}
+
+/* PDF BUTTON */
+.pdf-btn{background:var(--accent-dim)!important;border-color:color-mix(in srgb,var(--accent) 30%,transparent)!important;color:var(--accent)!important}
+.pdf-btn:hover{background:color-mix(in srgb,var(--accent) 20%,transparent)!important;color:var(--text-bright)!important}
+
+/* PRINT */
+@media print{
+  nav,.theme-toggle,.pdf-btn,footer,body::before{display:none!important}
+  body{background:#fff!important;color:#222!important;font-size:11px;line-height:1.5}
+  .cv-container{padding:0!important;max-width:100%}
+  .cv-header{margin-bottom:24px;padding-bottom:16px}
+  .cv-header h1{font-size:22px;color:#000!important}
+  .cv-header .subtitle{font-size:12px;color:#444!important}
+  .cv-header .links-row a{border:none!important;padding:0!important;font-size:10px;color:#444!important}
+  .cv-header .links-row a::after{content:none}
+  .cv-header .links-row{gap:8px}
+  .cv-section{margin-bottom:20px}
+  .cv-section-title{font-size:10px;color:#888!important;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #ddd!important}
+  .cv-entry{margin-bottom:10px;padding-bottom:10px;gap:8px}
+  .cv-date{font-size:10px;color:#666!important}
+  .cv-details h3{font-size:12px;color:#000!important}
+  .cv-details .cv-org,.cv-details .cv-desc,.cv-details .cv-note{font-size:11px;color:#444!important}
+  .pub-entry{font-size:11px;margin-bottom:8px;line-height:1.5;color:#222!important}
+  .pub-entry .pub-me{color:#000!important;font-weight:600}
+  .pub-entry .pub-venue{color:#222!important}
+  .pub-entry .pub-note{font-size:9px;color:#666!important;background:#eee!important;border:none}
+  .award-entry{font-size:11px;margin-bottom:4px}
+  .award-entry .award-year{font-size:10px;color:#666!important}
+  .talk-group h3{font-size:12px;color:#000!important}
+  .talk-group .talk-venues{font-size:10px;color:#555!important}
+  .service-block h3{font-size:11px;color:#000!important}
+  .service-block p{font-size:11px;color:#444!important}
+  .skills-grid{font-size:11px}
+  .skills-grid .skills-label{color:#666!important}
+  .media-entry{font-size:11px}
+  a{color:#222!important;text-decoration:none!important}
+  @page{margin:0.6in 0.7in;size:letter}
+  h1,h2,h3{page-break-after:avoid}
+  .cv-entry,.pub-entry,.award-entry{page-break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="./index.html" class="logo">Harsh <span>Parikh</span></a>
+  <div class="nav-right">
+    <div class="links">
+      <a href="./index.html">Home</a>
+      <a href="./index.html#research">Research</a>
+      <a href="./index.html#publications">Papers</a>
+      <a href="./index.html#contact">Contact</a>
+    </div>
+    <div class="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode">
+      <div class="knob"></div>
+    </div>
+  </div>
+</nav>
+
+<div class="cv-container">
+
+<!-- ═══════════ HEADER ═══════════ -->
+<div class="cv-header">
+  <h1>Harsh Parikh</h1>
+  <div class="subtitle">Assistant Professor · Department of Biostatistics · Yale University</div>
+  <div class="links-row">
+    <a href="mailto:harsh.parikh@yale.edu">harsh.parikh@yale.edu</a>
+    <a href="https://scholar.google.com/citations?user=uCrw1ZMAAAAJ" target="_blank">Google Scholar</a>
+    <a href="https://github.com/harsh-parikh" target="_blank">GitHub</a>
+    <a href="https://www.linkedin.com/in/harsh-parikh/" target="_blank">LinkedIn</a>
+    <a href="javascript:void(0)" onclick="window.print()" class="pdf-btn">↓ Download PDF</a>
+  </div>
+</div>
+
+<!-- ═══════════ SUMMARY ═══════════ -->
+<div class="cv-section">
+  <div class="cv-section-title">Summary</div>
+  <p style="font-size:14px;line-height:1.8;max-width:720px">I develop machine learning–aided causal inference approaches to solve high-stakes problems that are: (i) <strong style="color:var(--text-bright)">Accurate</strong>, enabling estimation of heterogeneous treatment effects in complex scenarios with limited data; (ii) <strong style="color:var(--text-bright)">Trustworthy</strong>, allowing domain experts to understand the machinery, validate underlying assumptions, and identify where predictions may be unreliable; and (iii) <strong style="color:var(--text-bright)">Domain-conscious</strong>, leveraging domain context and knowledge to come up with applicable solutions, reducing the research-to-practice gap.</p>
+</div>
+
+<!-- ═══════════ CURRENT AFFILIATIONS ═══════════ -->
+<div class="cv-section">
+  <div class="cv-section-title">Current Affiliations</div>
+  <div class="cv-entry">
+    <div class="cv-date">2025–Present</div>
+    <div class="cv-details"><h3>Tenure-Track Assistant Professor</h3><div class="cv-org">Department of Biostatistics, Yale University</div></div>
+  </div>
+  <div class="cv-entry">
+    <div class="cv-date">2025–Present</div>
+    <div class="cv-details"><h3>Guest Researcher</h3><div class="cv-org">Danish Centre for Health Economics, Syddansk Universitet</div></div>
+  </div>
+  <div class="cv-entry">
+    <div class="cv-date">2025–Present</div>
+    <div class="cv-details"><h3>Affiliate Researcher</h3><div class="cv-org">Johns Hopkins Bloomberg School of Public Health</div></div>
+  </div>
+  <div class="cv-entry">
+    <div class="cv-date">2025–Present</div>
+    <div class="cv-details"><h3>Applied Scientist III</h3><div class="cv-org">Amazon.com · Supply Chain Optimization Technologies</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ ACADEMIC TRAINING ═══════════ -->
+<div class="cv-section">
+  <div class="cv-section-title">Academic Training</div>
+  <div class="cv-entry">
+    <div class="cv-date">2023–2025</div>
+    <div class="cv-details">
+      <h3>Postdoctoral Fellow</h3>
+      <div class="cv-org">Johns Hopkins Bloomberg School of Public Health, Department of Biostatistics</div>
+      <div class="cv-note">Trustworthy Causal Inference for Transportability and Generalizability</div>
+      <div class="cv-desc">Advisors: Elizabeth Stuart, Kara Rudolph</div>
+    </div>
+  </div>
+  <div class="cv-entry">
+    <div class="cv-date">2018–2023</div>
+    <div class="cv-details">
+      <h3>Ph.D. in Computer Science</h3>
+      <div class="cv-org">Duke University, Department of Computer Science</div>
+      <div class="cv-note">Causal Inference for High-Stakes Decisions</div>
+      <div class="cv-desc">Advisors: Cynthia Rudin, Alexander Volfovsky, Sudeepa Roy<br>★ Outstanding PhD Dissertation Award 2023 · Certificate in College Teaching</div>
+    </div>
+  </div>
+  <div class="cv-entry">
+    <div class="cv-date">2016–2018</div>
+    <div class="cv-details">
+      <h3>M.S. Economics &amp; Computation</h3>
+      <div class="cv-org">Duke University, Department of Economics</div>
+      <div class="cv-desc">Advisors: Vincent Conitzer, Charles Becker</div>
+    </div>
+  </div>
+  <div class="cv-entry">
+    <div class="cv-date">2011–2015</div>
+    <div class="cv-details">
+      <h3>B.Tech. Computer Science &amp; Engineering</h3>
+      <div class="cv-org">Indian Institute of Technology (IIT) Delhi</div>
+      <div class="cv-desc">Advisor: Parag Singla</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ PUBLICATIONS ═══════════ -->
+<div class="cv-section">
+  <div class="cv-section-title">Publications</div>
+
+  <div class="pub-entry" data-num="23."><span class="pub-me">Harsh Parikh</span>, Rachael K Ross, Elizabeth Stuart, and Kara E Rudolph. Who are we missing?: A principled approach to characterizing the underrepresented population. <span class="pub-venue">Journal of the American Statistical Association</span>, 2025</div>
+
+  <div class="pub-entry" data-num="22.">David Arbour*, <span class="pub-me">Harsh Parikh</span>*, Bijan Niknam, Elizabeth Stuart, Kara Rudolph, and Avi Feller. Regularizing extrapolation in causal inference. <span class="pub-venue">arXiv:2509.17180</span>, 2025 <span class="pub-note">Accepted AISTATS</span></div>
+
+  <div class="pub-entry" data-num="21."><span class="pub-me">Harsh Parikh</span>, Trang Quynh Nguyen, Elizabeth A Stuart, Kara E Rudolph, and Caleb H Miles. A cautionary tale on integrating studies with disparate outcome measures for causal inference. <span class="pub-venue">arXiv:2505.11014</span>, 2025 <span class="pub-note">Accepted NeurIPS</span></div>
+
+  <div class="pub-entry" data-num="20.">Quinn Lanners, Cynthia Rudin, Alexander Volfovsky, and <span class="pub-me">Harsh Parikh</span>. Data fusion for partial identification of causal effects. <span class="pub-venue">arXiv:2505.24296</span>, 2025 <span class="pub-note">Accepted NeurIPS</span></div>
+
+  <div class="pub-entry" data-num="19."><span class="pub-me">Harsh Parikh</span>*, Marco Morucci*, Vittorio Orlandi*, Sudeepa Roy, Cynthia Rudin, and Alexander Volfovsky. A double machine learning approach to combining experimental and observational data. <span class="pub-venue">Observational Studies</span>, 2025</div>
+
+  <div class="pub-entry" data-num="18.">Emily K Johnson, <span class="pub-me">Harsh Parikh</span>, Kim Rose Olsen, Angela Y Chang, and Liza Sopina. Breast cancer and income loss in Denmark: heterogeneous outcomes and longitudinal effects. <span class="pub-venue">Nature Communications</span>, 2025</div>
+
+  <div class="pub-entry" data-num="17.">Carly L Brantner, Trang Quynh Nguyen, <span class="pub-me">Harsh Parikh</span>, Congwen Zhao, Hwanhee Hong, and Elizabeth A Stuart. Precision mental health: predicting heterogeneous treatment effects for depression through data integration. <span class="pub-venue">Journal of the Royal Statistical Society Series C</span>, 2025</div>
+
+  <div class="pub-entry" data-num="16.">Seyedeh Baharan Khatami, <span class="pub-me">Harsh Parikh</span>, Haowei Chen, Sudeepa Roy, and Babak Salimi. Graph machine learning based doubly robust estimator for network causal effects. <span class="pub-venue">AISTATS</span>, 258:4366–4374, 2025</div>
+
+  <div class="pub-entry" data-num="15."><span class="pub-me">Harsh Parikh</span>*, Quinn Lanners*, Zade Akras, Sahar F Zafar, M Brandon Westover, Cynthia Rudin, and Alexander Volfovsky. Estimating trustworthy and safe optimal treatment regimes. <span class="pub-venue">AISTATS</span>, 2024</div>
+
+  <div class="pub-entry" data-num="14.">Srikar Katta, <span class="pub-me">Harsh Parikh</span>, Cynthia Rudin, and Alexander Volfovsky. Interpretable causal inference for analyzing wearable, sensor, and distributional data. <span class="pub-venue">AISTATS</span>, 2024 <span class="pub-note">Early Career Paper Award, Biometrics JSM</span></div>
+
+  <div class="pub-entry" data-num="13."><span class="pub-me">Harsh Parikh</span>, Carlos Varjao, Louise Xu, and Eric Tchetgen Tchetgen. Validating causal inference methods. <span class="pub-venue">ICML</span>, pages 17346–17358, 2022</div>
+
+  <div class="pub-entry" data-num="12.">Babak Salimi, <span class="pub-me">Harsh Parikh</span>, Moe Kayali, Lise Getoor, Sudeepa Roy, and Dan Suciu. Causal relational learning. <span class="pub-venue">ACM SIGMOD</span>, pages 241–256, 2020</div>
+
+  <div class="pub-entry" data-num="11.">Quinn Lanners, <span class="pub-me">Harsh Parikh</span>, Alexander Volfovsky, Cynthia Rudin, and David Page. Variable importance matching for causal inference. <span class="pub-venue">UAI</span>, pages 1174–1184, 2023</div>
+
+  <div class="pub-entry" data-num="10.">Melody Y Huang and <span class="pub-me">Harsh Parikh</span>. Towards generalizing inferences from trials to target populations. <span class="pub-venue">Harvard Data Science Review</span>, 6(4), 2024</div>
+
+  <div class="pub-entry" data-num="9."><span class="pub-me">Harsh Parikh</span>, Alexander Volfovsky, and Cynthia Rudin. MALTS: Matching After Learning to Stretch. <span class="pub-venue">Journal of Machine Learning Research</span>, 23(240), 2022</div>
+
+  <div class="pub-entry" data-num="8."><span class="pub-me">Harsh Parikh</span>*, Kentaro Hoffman*, Haoqi Sun*, Sahar F Zafar, Wendong Ge, Jin Jing, Lin Liu, Jimeng Sun, Aaron Struck, Alexander Volfovsky, Cynthia Rudin, and M Brandon Westover. Effects of epileptiform activity on discharge outcome in critically ill patients in the USA. <span class="pub-venue">The Lancet Digital Health</span>, 2023</div>
+
+  <div class="pub-entry" data-num="7."><span class="pub-me">Harsh Parikh</span>, Haoqi Sun, Rajesh Amerineni, Eric Rosenthal, Alexander Volfovsky, Cynthia Rudin, M Brandon Westover, and Sahar F Zafar. How many patients do you need? Investigating trial designs for anti-seizure treatment. <span class="pub-venue">Annals of Clinical and Translational Neurology</span>, 2024</div>
+
+  <div class="pub-entry" data-num="6."><span class="pub-me">Harsh Parikh</span>, Cynthia Rudin, and Alexander Volfovsky. An application of Matching After Learning To Stretch (MALTS). <span class="pub-venue">Observational Studies</span>, 5:118–130, 2019</div>
+
+  <div class="pub-entry" data-num="5.">Sarul Malik, <span class="pub-me">Harsh Parikh</span>, Neil Shah, Sneh Anand, and Shalini Gupta. Non-invasive platform to estimate fasting blood glucose levels from salivary electrochemical parameters. <span class="pub-venue">Healthcare Technology Letters</span>, 6(4):87–91, 2019</div>
+
+  <div class="pub-entry" data-num="4.">Shayoni Dutta, Spandan Madan, <span class="pub-me">Harsh Parikh</span>, and Durai Sundar. An ensemble micro neural network approach for elucidating interactions between zinc finger proteins and their target DNA. <span class="pub-venue">BMC Genomics</span>, 17(13):97–107, 2016</div>
+
+  <div class="pub-entry" data-num="3."><span class="pub-me">Harsh Parikh</span>, Apoorvi Singh, Annangarachari Krishnamachari, and Kushal Shah. Computational prediction of origin of replication in bacterial genomes using correlated entropy measure (CEM). <span class="pub-venue">Biosystems</span>, 128:19–25, 2015</div>
+
+  <div class="pub-entry" data-num="2."><span class="pub-me">Harsh Parikh</span>. Synthetic controls as balancing scores. <span class="pub-venue">ICLR 2023, Tiny Papers</span>, 2023</div>
+
+  <div class="pub-entry" data-num="1.">Sarul Malik, Shalini Gupta, <span class="pub-me">Harsh Parikh</span>, and Sneh Anand. Gargling affect on salivary electrochemical parameters to predict blood glucose. <span class="pub-venue">ICCTICT</span>, pages 603–606, IEEE, 2016</div>
+</div>
+
+<!-- ═══════════ HONORS & AWARDS ═══════════ -->
+<div class="cv-section">
+  <div class="cv-section-title">Honors &amp; Awards</div>
+  <div class="award-entry"><span class="award-year">2024</span><span class="award-text">Future Leader in Data Science and AI, Michigan Institute for Data & AI in Society</span></div>
+  <div class="award-entry"><span class="award-year">2024</span><span class="award-text">Selected for Building Future Faculty Program, North Carolina State University</span></div>
+  <div class="award-entry"><span class="award-year">2023</span><span class="award-text">Outstanding PhD Dissertation Award, Dept. of Computer Science, Duke University</span></div>
+  <div class="award-entry"><span class="award-year">2023</span><span class="award-text">Uncertainty in Artificial Intelligence Conference Travel Award</span></div>
+  <div class="award-entry"><span class="award-year">2022</span><span class="award-text">Finalist, Two Sigma PhD Fellowship</span></div>
+  <div class="award-entry"><span class="award-year">2022</span><span class="award-text">International Conference on Machine Learning Conference Travel Award</span></div>
+  <div class="award-entry"><span class="award-year">2022</span><span class="award-text">Certificate in College Teaching, Duke University</span></div>
+  <div class="award-entry"><span class="award-year">2020–22</span><span class="award-text">Amazon Graduate Research Fellowship</span></div>
+  <div class="award-entry"><span class="award-year">2020</span><span class="award-text">Invited Talk, IIT Gandhinagar "Sabarmati Young Researcher's Seminar Series"</span></div>
+  <div class="award-entry"><span class="award-year">2016–18</span><span class="award-text">Duke Economics Master's Scholar Award, Duke University</span></div>
+  <div class="award-entry"><span class="award-year">2016</span><span class="award-text">Runner's Up, Global Healthcare Summit (Non-invasive blood glucose sensor)</span></div>
+  <div class="award-entry"><span class="award-year">2013–14</span><span class="award-text">Charpak (Student Exchange) French Government Scholarship, University of Lorraine</span></div>
+  <div class="award-entry"><span class="award-year">2013</span><span class="award-text">Summer Undergraduate Research Award (UROP), IIT Delhi</span></div>
+  <div class="award-entry"><span class="award-year">2011–12</span><span class="award-text">IIT Delhi Semester Merit Award</span></div>
+  <div class="award-entry"><span class="award-year">2012</span><span class="award-text">Runner's Up, CanSat USA by AAS, AIAA, JPL, NASA, NRL</span></div>
+  <div class="award-entry"><span class="award-year">2009–11</span><span class="award-text">Manish Bhatt Scholarship, Excellence in Computer Science</span></div>
+</div>
+
+<!-- ═══════════ PROFESSIONAL EXPERIENCE ═══════════ -->
+<div class="cv-section">
+  <div class="cv-section-title">Additional Professional Experience</div>
+  <div class="cv-entry">
+    <div class="cv-date">May–Aug 2022</div>
+    <div class="cv-details"><h3>Research Intern</h3><div class="cv-org">Meta (Facebook) · Core Data Science · New York</div><div class="cv-desc">Inferring Network Interference in Randomized Controlled Trials</div></div>
+  </div>
+  <div class="cv-entry">
+    <div class="cv-date">2020 &amp; 2021</div>
+    <div class="cv-details"><h3>Applied Scientist Intern</h3><div class="cv-org">Amazon.com · Seller Fees and Profitability · Seattle</div><div class="cv-desc">Evaluating Causal Inference Methods</div></div>
+  </div>
+  <div class="cv-entry">
+    <div class="cv-date">Jun–Jul 2017</div>
+    <div class="cv-details"><h3>Research Intern</h3><div class="cv-org">The Urban Institute · International Development and Governance · Washington DC</div><div class="cv-desc">Public Transport and Rental Markets; Women Empowerment and Labor Force Participation</div></div>
+  </div>
+  <div class="cv-entry">
+    <div class="cv-date">Mar–Jul 2016</div>
+    <div class="cv-details"><h3>Research Fellow</h3><div class="cv-org">Vision India Foundation · Evidence-based Public Policy Analysis · New Delhi</div><div class="cv-desc">Impact Analysis of National Rural Employment Guarantee Act</div></div>
+  </div>
+  <div class="cv-entry">
+    <div class="cv-date">Jul 2015–May 2016</div>
+    <div class="cv-details"><h3>Research Engineer</h3><div class="cv-org">IBM India Research Laboratory · Data Fusion & Graph Analytics · New Delhi</div><div class="cv-desc">Social Network Data Analysis for Law Enforcement</div></div>
+  </div>
+  <div class="cv-entry">
+    <div class="cv-date">May–Jul 2014</div>
+    <div class="cv-details"><h3>Software Engineering Intern</h3><div class="cv-org">Arista Networks · Emerging Technologies · Bangalore</div><div class="cv-desc">Protocol for Audio-Video Bridging (AVB) Switches</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ INVITED TALKS ═══════════ -->
+<div class="cv-section">
+  <div class="cv-section-title">Invited &amp; Conference Talks</div>
+
+  <div class="talk-group">
+    <h3>Characterizing Underrepresented Populations when Generalizing Experimental Evidence</h3>
+    <div class="talk-venues">Joint Statistical Meeting (Aug 2025) · Johns Hopkins University (Feb 2025) · Yale School of Public Health (Jan 2025) · Harvard University (Jan 2025) · Columbia University (Jan 2025) · ICHPS (Jan 2025) · University of Michigan (Nov 2024) · Boston University (Nov 2024) · UT Austin (Nov 2024) · IIT Gandhinagar (Nov 2024) · ACIC (May 2024) · NC State University (Mar 2024) · ENAR (Feb 2024) · ICERM (Nov 2023)</div>
+  </div>
+
+  <div class="talk-group">
+    <h3>A Double Machine Learning Approach to Combining Experimental and Observational Studies</h3>
+    <div class="talk-venues">INFORMS Annual Meeting (Oct 2023) · IISA Annual Meeting (Dec 2022)</div>
+  </div>
+
+  <div class="talk-group">
+    <h3>Causal Inference for High Stakes Decision Making</h3>
+    <div class="talk-venues">Wake Forest University School of Medicine (Mar 2023) · NC State University (Jan 2023) · MIDAS, Johns Hopkins (Sep 2022) · Jacobs Technion-Cornell Institute (Oct 2022) · Microsoft Research (Nov 2022)</div>
+  </div>
+
+  <div class="talk-group">
+    <h3>Validating Causal Inference Methods</h3>
+    <div class="talk-venues">ICML (Jul 2022) · Clinical Data Animation Center, MGH (Aug 2022) · SER Conference (Jun 2023)</div>
+  </div>
+
+  <div class="talk-group">
+    <h3>Matching After Learning to Stretch</h3>
+    <div class="talk-venues">ICML (Aug 2023) · Duke Microeconometrics (Sep 2019) · IIT Gandhinagar (Dec 2019)</div>
+  </div>
+
+  <div class="talk-group">
+    <h3>Effect of Epileptiform Activity in Critically Ill Patients</h3>
+    <div class="talk-venues">Clinical Data Animation Center, MGH (Sep 2021)</div>
+  </div>
+</div>
+
+<!-- ═══════════ TEACHING ═══════════ -->
+<div class="cv-section">
+  <div class="cv-section-title">Teaching</div>
+  <div class="cv-entry">
+    <div class="cv-date">Fall 2025</div>
+    <div class="cv-details"><h3>Instructor — Introduction to Data Science</h3><div class="cv-org">Yale University</div></div>
+  </div>
+  <div class="cv-entry">
+    <div class="cv-date">2024</div>
+    <div class="cv-details"><h3>Instructor — Interpretable Machine Learning Tutorial</h3><div class="cv-org">International Conference on Computational Social Science (IC2S2)</div></div>
+  </div>
+  <div class="cv-entry">
+    <div class="cv-date">Fall 2019</div>
+    <div class="cv-details"><h3>Instructor — Introduction to Causal Inference (Advanced)</h3><div class="cv-org">Duke Datathon</div></div>
+  </div>
+  <div class="cv-entry">
+    <div class="cv-date">Spring 2019</div>
+    <div class="cv-details"><h3>Teaching Assistant — COMPSCI 671 Machine Learning</h3><div class="cv-org">Duke University</div></div>
+  </div>
+  <div class="cv-entry">
+    <div class="cv-date">Fall 2018</div>
+    <div class="cv-details"><h3>Instructor — Introduction to Data Science</h3><div class="cv-org">Duke MEMPDC (Consulting Club)</div></div>
+  </div>
+  <div class="cv-entry">
+    <div class="cv-date">Fall 2018</div>
+    <div class="cv-details"><h3>Teaching Assistant — COMPSCI 590.02 Computational Microeconomics</h3><div class="cv-org">Duke University</div></div>
+  </div>
+  <div class="cv-entry">
+    <div class="cv-date">Spring 2018</div>
+    <div class="cv-details"><h3>Teaching Assistant — COMPSCI 223 Computational Microeconomics</h3><div class="cv-org">Duke University</div></div>
+  </div>
+  <div class="cv-entry">
+    <div class="cv-date">2016–2017</div>
+    <div class="cv-details"><h3>Teaching Assistant — COMPSCI 230 Discrete Mathematics</h3><div class="cv-org">Duke University (Fall 2017, Spring 2017)</div></div>
+  </div>
+  <div class="cv-entry">
+    <div class="cv-date">Fall 2016</div>
+    <div class="cv-details"><h3>Teaching Assistant — COMPSCI 201 Data Structures &amp; Algorithms</h3><div class="cv-org">Duke University</div></div>
+  </div>
+</div>
+
+<!-- ═══════════ POPULAR MEDIA ═══════════ -->
+<div class="cv-section">
+  <div class="cv-section-title">Popular Media</div>
+  <div class="media-entry"><span class="pub-me">Harsh Parikh</span>, Ankita Gupta, Subham. Covid-19: Mitigating the risk from reverse migration. <span class="media-source">Ideas for India</span>, 2020</div>
+  <div class="media-entry"><span class="pub-me">Harsh Parikh</span>, Kumar Subham. Efficacy of India's Covid-19 response. <span class="media-source">Center for Soft Power</span>, 2020</div>
+  <div class="media-entry">Ammar Malik, <span class="pub-me">Harsh Parikh</span>. Rents are driven by the quality of public services, not proximity to transit. <span class="media-source">Urban Wire: International Development</span>, 2017</div>
+  <div class="media-entry">Fenohasina Rakotondrazaka Maret, <span class="pub-me">Harsh Parikh</span>, Rachel Wilder. Empowering women through international tourism. <span class="media-source">Urban Wire: International Development</span>, 2017</div>
+  <div class="media-entry"><span class="pub-me">Harsh Parikh</span>. Book Review: The Indian Economy—A Macroeconomic Perspective. <span class="media-source">ARTNeT UNESCAP</span>, 2017</div>
+</div>
+
+<!-- ═══════════ SERVICE ═══════════ -->
+<div class="cv-section">
+  <div class="cv-section-title">Service</div>
+  <div class="service-block">
+    <h3>Reviewer</h3>
+    <p>JRSS (2021, 2025) · JASA (2025) · JMLR (2024) · Nature Human Behaviour (2022) · AISTATS (2021, 2023–25) · NeurIPS (2021, 2025) · Management Science (2021–22)</p>
+  </div>
+  <div class="service-block">
+    <h3>Leadership</h3>
+    <p>Project Manager, NC Voucher Program Evaluation (2017) · Project Manager, Slum Development, AINA IIT Delhi (2011–15) · Committee Chair, CS Dept. Socials, Duke (2019–20) · President, Duke Indian Students Association (2019–21) · Treasurer, Duke Cricket Team (2017–20)</p>
+  </div>
+</div>
+
+<!-- ═══════════ SKILLS ═══════════ -->
+<div class="cv-section">
+  <div class="cv-section-title">Skills &amp; Coursework</div>
+  <div class="skills-grid">
+    <span class="skills-label">Coursework</span>
+    <span class="skills-list">Causal Inference, Machine Learning, Bayesian Statistics, Reinforcement Learning, Algorithms, Probability & Stochastic Processes, Linear Algebra, Real Analysis, Econometrics, Micro/Macroeconomics</span>
+  </div>
+  <div class="skills-grid">
+    <span class="skills-label">Programming</span>
+    <span class="skills-list">Python, Java, C/C++, STATA, R, MATLAB, SQL, HTML, PHP, Perl, ArcGIS</span>
+  </div>
+</div>
+
+<!-- ═══════════ REFERENCES ═══════════ -->
+<div class="cv-section">
+  <div class="cv-section-title">References</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px">
+    <div><strong style="color:var(--text-bright);font-size:14px">Cynthia Rudin</strong><br><span style="font-size:13px;color:var(--text-dim)">Computer Science, Duke University<br><a href="mailto:cynthia.rudin@duke.edu">cynthia.rudin@duke.edu</a></span></div>
+    <div><strong style="color:var(--text-bright);font-size:14px">Elizabeth Stuart</strong><br><span style="font-size:13px;color:var(--text-dim)">Biostatistics, Johns Hopkins<br><a href="mailto:estuart@jhu.edu">estuart@jhu.edu</a></span></div>
+    <div><strong style="color:var(--text-bright);font-size:14px">Alexander Volfovsky</strong><br><span style="font-size:13px;color:var(--text-dim)">Statistical Science, Duke University<br><a href="mailto:alexander.volfovsky@duke.edu">alexander.volfovsky@duke.edu</a></span></div>
+    <div><strong style="color:var(--text-bright);font-size:14px">Sudeepa Roy</strong><br><span style="font-size:13px;color:var(--text-dim)">Computer Science, Duke University<br><a href="mailto:sudeepa@cs.duke.edu">sudeepa@cs.duke.edu</a></span></div>
+    <div><strong style="color:var(--text-bright);font-size:14px">Bhramar Mukherjee</strong><br><span style="font-size:13px;color:var(--text-dim)">Biostatistics, Yale University<br><a href="mailto:bhramar.mukherjee@yale.edu">bhramar.mukherjee@yale.edu</a></span></div>
+    <div><strong style="color:var(--text-bright);font-size:14px">Kara Rudolph</strong><br><span style="font-size:13px;color:var(--text-dim)">Epidemiology, Columbia University<br><a href="mailto:kr2854@cumc.columbia.edu">kr2854@cumc.columbia.edu</a></span></div>
+  </div>
+</div>
+
+</div><!-- /cv-container -->
+
+<footer><p>© 2026 Harsh Parikh · Yale University</p></footer>
+
+<script>
+function toggleTheme(){const h=document.documentElement,c=h.getAttribute('data-theme'),n=c==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('theme',n)}
+(function(){const s=localStorage.getItem('theme');if(s){document.documentElement.setAttribute('data-theme',s)}else{const d=window.matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.setAttribute('data-theme',d?'dark':'light')}})();
+</script>
+</body>
+</html>
