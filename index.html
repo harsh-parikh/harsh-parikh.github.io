@@ -310,7 +310,7 @@ footer p{font-family:var(--mono);font-size:11px;color:var(--text-dim)}
   <div class="section-label">Teaching</div>
   <div class="section-title">Courses</div>
   <div class="teaching-list fade-in">
-    <div class="teaching-item"><div class="teaching-sem">Fall 2025</div><div class="teaching-info"><h3>Introduction to Data Science</h3><p>Master the art of algorithmic thinking, prediction modeling, and data visualization within the context of public health. Learn to translate 'messy' real-world problems into precise mathematical solutions using Python.</p></div></div>
+    <div class="teaching-item"><div class="teaching-sem">Fall 2026</div><div class="teaching-info"><h3>Introduction to Data Science</h3><p>Master the art of algorithmic thinking, prediction modeling, and data visualization within the context of public health. Learn to translate 'messy' real-world problems into precise mathematical solutions using Python. <a href="https://harsh-parikh.github.io/intro_ds_2026" target="_blank">Course website →</a></p></div></div>
     <div class="teaching-item"><div class="teaching-sem">Tutorial</div><div class="teaching-info"><h3>Interpretable ML Tutorial</h3><p>An overview of recent research in interpretable machine learning, covering fundamental principles and hands-on activities with real-world data for effective analysis and responsible decision-making. <a href="https://sites.google.com/view/interpretableml/home" target="_blank">Tutorial site →</a></p></div></div>
   </div>
 </section>
@@ -438,8 +438,7 @@ const observer=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting)
 document.querySelectorAll('.fade-in,.stagger').forEach(el=>observer.observe(el));
 const sections=document.querySelectorAll('section[id]'),navLinks=document.querySelectorAll('nav .links a');
 window.addEventListener('scroll',()=>{const y=window.scrollY+100;sections.forEach(s=>{const t=s.offsetTop,h=s.offsetHeight,id=s.getAttribute('id');if(y>=t&&y<t+h){navLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+id)l.classList.add('active')})}})});
-document.querySelectorAll('.pub-filter-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.pub-filter-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');const f=b.dataset.filter;document.querySelectorAll('.pub-item').forEach(i=>{i.classList.toggle('hidden',f!=='all'&&i.dataset.type!==f)});document.querySelectorAll('.pub-year-group').forEach(g=>{g.style.display=g.querySelectorAll('.pub-item:not(.hidden)').length===0?'none':'block'})})});
-document.querySelectorAll('nav .links a').forEach(l=>{l.addEventListener('click',()=>{document.querySelector('nav .links').classList.remove('open')})});
+document.querySelectorAll('.pub-filter-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.pub-filter-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');const f=b.dataset.filter;document.querySelectorAll('.pub-item').forEach(i=>{i.classList.toggle('hidden',f!=='all'&&i.dataset.type!==f)});document.querySelectorAll('.pub-year-group').forEach(g=>{const visible=g.querySelectorAll('.pub-item:not(.hidden)');g.style.display=visible.length?'':'none'})})});
 </script>
 </body>
 </html>
