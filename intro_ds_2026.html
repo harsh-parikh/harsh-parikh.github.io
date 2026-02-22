@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BIS5XX: Introduction to Health Data Science — Harsh Parikh, Yale</title>
+<meta name="description" content="Introduction to Health Data Science. Yale School of Public Health, Department of Biostatistics. Fall 2025. Instructor: Harsh Parikh, Ph.D." />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #0a0a0f;
+  --bg-card: rgba(255,255,255,0.03);
+  --bg-card-hover: rgba(255,255,255,0.06);
+  --border: rgba(255,255,255,0.08);
+  --border-light: rgba(255,255,255,0.04);
+  --text: #e8e8ec;
+  --text-muted: #8a8a9a;
+  --text-dim: #5a5a6a;
+  --accent: #7eb8ff;
+  --white: #ffffff;
+  --m1: #5b9df5;
+  --m2: #a78bfa;
+  --m3: #5eead4;
+}
+/* Light theme */
+html.light {
+  --bg: #fafbfd;
+  --bg-card: rgba(0,0,0,0.02);
+  --bg-card-hover: rgba(0,0,0,0.04);
+  --border: rgba(0,0,0,0.08);
+  --border-light: rgba(0,0,0,0.05);
+  --text: #1a1a2e;
+  --text-muted: #5a5a7a;
+  --text-dim: #8a8a9a;
+  --accent: #2563eb;
+  --white: #0a0a0f;
+  --m1: #2563eb;
+  --m2: #7c3aed;
+  --m3: #059669;
+}
+html.light .pill-accent { background: rgba(37,99,235,0.1); }
+html.light .pill-muted { background: rgba(0,0,0,0.06); }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.6; -webkit-font-smoothing: antialiased; transition: background 0.3s, color 0.3s; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+/* Theme toggle */
+.theme-toggle { background: none; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; padding: 6px 8px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); transition: color 0.2s, border-color 0.2s; margin-left: 8px; }
+.theme-toggle:hover { color: var(--text); border-color: var(--text-muted); }
+.theme-toggle svg { width: 16px; height: 16px; }
+.theme-toggle .icon-sun { display: none; }
+.theme-toggle .icon-moon { display: block; }
+html.light .theme-toggle .icon-sun { display: block; }
+html.light .theme-toggle .icon-moon { display: none; }
+
+/* Nav */
+nav { position: sticky; top: 0; z-index: 100; background: rgba(10,10,15,0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-light); transition: background 0.3s; }
+html.light nav { background: rgba(250,251,253,0.88); }
+nav .inner { display: flex; align-items: center; justify-content: space-between; height: 56px; }
+nav .logo { font-family: 'DM Serif Display', serif; font-size: 16px; color: var(--white); }
+nav .logo span { font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--text-dim); margin-left: 10px; font-weight: 400; }
+nav .links { display: flex; gap: 2px; }
+nav .links a { font-size: 13px; font-weight: 500; color: var(--text-dim); padding: 8px 14px; border-radius: 6px; text-decoration: none; transition: color 0.2s, background 0.2s; }
+nav .links a:hover, nav .links a.active { color: var(--white); background: rgba(255,255,255,0.06); }
+html.light nav .links a:hover, html.light nav .links a.active { color: var(--white); background: rgba(0,0,0,0.06); }
+
+/* Hero */
+.hero { padding: 80px 0 64px; border-bottom: 1px solid var(--border); }
+.hero .sup { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 20px; font-weight: 500; }
+.hero h1 { font-family: 'DM Serif Display', serif; font-size: clamp(36px, 5vw, 56px); font-weight: 400; color: var(--white); margin-bottom: 20px; line-height: 1.1; letter-spacing: -0.5px; }
+.hero .tagline { font-size: 17px; color: var(--text-muted); max-width: 560px; line-height: 1.7; margin-bottom: 36px; font-weight: 300; }
+.hero .meta { display: flex; gap: 40px; flex-wrap: wrap; }
+.hero .meta-item .label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 4px; font-weight: 500; }
+.hero .meta-item .value { font-size: 15px; color: var(--text); font-weight: 500; }
+
+/* Sections */
+main { padding: 64px 0 80px; }
+section { margin-bottom: 72px; scroll-margin-top: 80px; }
+.section-label { font-size: 12px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 12px; }
+.section-title { font-family: 'DM Serif Display', serif; font-size: 32px; font-weight: 400; color: var(--white); margin-bottom: 32px; line-height: 1.2; letter-spacing: -0.3px; }
+
+/* Cards */
+.card { background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border); padding: 20px 24px; transition: background 0.2s; }
+.card:hover { background: var(--bg-card-hover); }
+.card-label { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 12px; font-weight: 500; }
+
+/* Grids */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px; }
+.grid-3-2 { display: grid; grid-template-columns: 3fr 2fr; gap: 16px; }
+
+/* Pills */
+.pill { display: inline-block; font-size: 11px; font-weight: 500; letter-spacing: 0.3px; padding: 3px 10px; border-radius: 20px; margin-right: 6px; margin-bottom: 4px; }
+.pill-accent { background: rgba(126,184,255,0.15); color: var(--accent); }
+.pill-muted { background: rgba(138,138,154,0.15); color: var(--text-muted); }
+
+/* Mono */
+.mono { font-family: 'JetBrains Mono', monospace; }
+
+/* Schedule rows */
+.sched-row { display: grid; grid-template-columns: 60px 1fr 200px 200px 70px; gap: 16px; align-items: center; padding: 16px 20px; }
+.sched-row .week { display: flex; align-items: center; gap: 10px; }
+.sched-row .week .bar { width: 3px; height: 24px; border-radius: 2px; }
+.sched-row .topic-title { font-weight: 600; font-size: 14px; color: var(--text); margin-bottom: 2px; }
+.sched-row .topic-desc { font-size: 12px; color: var(--text-dim); line-height: 1.5; }
+.sched-row .readings { font-size: 12px; color: var(--text-dim); }
+.sched-row .assignment { font-size: 12px; color: var(--text-dim); }
+.sched-row .assignment.due { color: var(--accent); font-weight: 500; }
+.lo-badge { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; border: 1px solid var(--border); font-size: 10px; font-family: 'JetBrains Mono', monospace; color: var(--text-dim); font-weight: 500; margin-left: 3px; }
+
+/* LO cards */
+.lo-card { display: flex; gap: 16px; align-items: flex-start; }
+.lo-num { min-width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); color: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; font-family: 'JetBrains Mono', monospace; flex-shrink: 0; }
+.lo-verb { font-weight: 600; font-size: 13px; color: var(--accent); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+.lo-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+/* Assessment row */
+.assess-row { display: flex; align-items: center; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--border-light); }
+.assess-row:last-child { border-bottom: none; }
+.assess-pct { min-width: 48px; font-family: 'JetBrains Mono', monospace; font-weight: 500; font-size: 16px; color: var(--accent); text-align: right; }
+.assess-bar { width: 72px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.assess-bar-fill { height: 100%; background: var(--accent); border-radius: 2px; opacity: 0.6; }
+
+/* Grade row */
+.grade-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; }
+
+/* Date row */
+.date-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-bottom: 1px solid var(--border-light); font-size: 13px; }
+
+/* Textbook card */
+.tb-card { display: flex; gap: 14px; align-items: flex-start; }
+.tb-icon { min-width: 44px; height: 44px; border-radius: 8px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-weight: 500; font-size: 10px; color: var(--accent); flex-shrink: 0; }
+
+/* Policy bullets */
+.policy-list { font-size: 12px; color: var(--text-muted); line-height: 1.8; }
+.policy-list div::before { content: "• "; }
+.policy-list strong { color: var(--text); }
+
+/* Footer */
+.footer { border-top: 1px solid var(--border); padding-top: 40px; text-align: center; }
+.footer .note { font-size: 13px; color: var(--text-dim); font-style: italic; }
+.footer .welcome { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--text); margin-top: 12px; }
+.footer .copy { font-size: 12px; color: var(--text-dim); margin-top: 16px; }
+
+/* Module legend */
+.mod-legend { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+.mod-legend .item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted); }
+.mod-legend .dot { width: 10px; height: 10px; border-radius: 3px; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .grid-2, .grid-3, .grid-4, .grid-3-2 { grid-template-columns: 1fr; }
+  .sched-row { grid-template-columns: 1fr; gap: 8px; }
+  nav .links { display: none; }
+  .hero .meta { gap: 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <div class="wrap inner">
+    <div><span class="logo">BIS5XX</span><span>Fall 2025</span></div>
+    <div style="display:flex;align-items:center">
+      <div class="links">
+        <a href="#about">About</a>
+        <a href="#objectives">Objectives</a>
+        <a href="#schedule">Schedule</a>
+        <a href="#assessments">Assessments</a>
+        <a href="#materials">Materials</a>
+        <a href="#policies">Policies</a>
+        <a href="#resources">Resources</a>
+      </div>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle light/dark mode" title="Toggle light/dark mode">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<header class="hero">
+  <div class="wrap">
+    <div class="sup">Yale School of Public Health · Department of Biostatistics</div>
+    <h1>Introduction to<br>Health Data Science</h1>
+    <p class="tagline">Translating real-world public health problems into precise questions, applying appropriate analytical tools, and communicating findings effectively.</p>
+    <div class="meta">
+      <div class="meta-item"><div class="label">Instructor</div><div class="value">Harsh Parikh, Ph.D.</div></div>
+      <div class="meta-item"><div class="label">Schedule</div><div class="value">80 min · 2× / week</div></div>
+      <div class="meta-item"><div class="label">Format</div><div class="value">Lectures + Cases + Labs</div></div>
+      <div class="meta-item"><div class="label">Language</div><div class="value">Python</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- Main -->
+<main class="wrap">
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">Overview</div>
+  <div class="section-title">About This Course</div>
+
+  <div class="grid-2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-label">Description</div>
+      <p style="font-size:14px;line-height:1.75;color:var(--text-muted)">A comprehensive introduction to data science with a focus on public health and healthcare applications. Covers data structures and algorithms, machine learning, and causal inference — equipping students to decompose complex problems, select appropriate methods, and communicate results to diverse audiences.</p>
+    </div>
+    <div class="card">
+      <div class="card-label">Who Should Enroll</div>
+      <div style="font-size:14px;line-height:1.75;color:var(--text-muted)">
+        <div style="margin-bottom:6px">MS / PhD in Biostatistics <span class="pill pill-accent">Required</span></div>
+        <div style="margin-bottom:6px">MPH students (quantitative focus)</div>
+        <div style="margin-bottom:6px">Advanced undergrads (with permission)</div>
+        <div>Stats &amp; DS or CS grad students</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px">
+      <div>
+        <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px">Harsh Parikh, Ph.D.</div>
+        <div style="font-size:13px;color:var(--text-muted)">Assistant Professor, Biostatistics</div>
+        <a href="mailto:harsh.parikh@yale.edu" style="font-size:13px">harsh.parikh@yale.edu</a>
+      </div>
+      <div>
+        <div class="card-label" style="margin-bottom:6px">Office Hours</div>
+        <div style="font-size:14px;color:var(--text-muted)">TBD — 1 hour / week</div>
+        <div style="font-size:13px;color:var(--text-dim)">60 College St, Rm 200</div>
+      </div>
+      <div>
+        <div class="card-label" style="margin-bottom:6px">Teaching Fellows</div>
+        <div style="font-size:14px;color:var(--text-muted)">3–4 TFs (TBD)</div>
+        <div style="font-size:13px;color:var(--text-dim)">1 OH each / week</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Prerequisites</div>
+    <div class="grid-4">
+      <div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px">Linear Algebra</div><div style="font-size:13px;color:var(--text-dim);line-height:1.5">Vectors, matrices, basic operations</div></div>
+      <div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px">Set Theory</div><div style="font-size:13px;color:var(--text-dim);line-height:1.5">Notation, union, intersection, complement</div></div>
+      <div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px">Probability</div><div style="font-size:13px;color:var(--text-dim);line-height:1.5">Random variables, distributions, Bayes' rule</div></div>
+      <div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px">Programming</div><div style="font-size:13px;color:var(--text-dim);line-height:1.5">Any language; Python helpful but not required</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- OBJECTIVES -->
+<section id="objectives">
+  <div class="section-label">Learning</div>
+  <div class="section-title">Learning Objectives</div>
+  <p style="font-size:15px;color:var(--text-muted);line-height:1.7;margin-bottom:24px;max-width:600px">By the end of this course, students will be able to:</p>
+  <div class="grid-2">
+    <div class="card lo-card"><div class="lo-num">1</div><div><div class="lo-verb">Formulate</div><div class="lo-desc">precise mathematical or statistical questions from natural language problems, identifying meaningful estimands</div></div></div>
+    <div class="card lo-card"><div class="lo-num">2</div><div><div class="lo-verb">Decompose</div><div class="lo-desc">complex problems into tractable sub-problems and recognize appropriate tools for each component</div></div></div>
+    <div class="card lo-card"><div class="lo-num">3</div><div><div class="lo-verb">Implement</div><div class="lo-desc">data science methods using Python (NumPy, Pandas, Scikit-learn) to analyze real-world datasets</div></div></div>
+    <div class="card lo-card"><div class="lo-num">4</div><div><div class="lo-verb">Interpret</div><div class="lo-desc">results within the appropriate problem context, understanding capabilities and limitations</div></div></div>
+    <div class="card lo-card"><div class="lo-num">5</div><div><div class="lo-verb">Communicate</div><div class="lo-desc">findings effectively to academic and non-technical audiences through writing and visualization</div></div></div>
+    <div class="card lo-card"><div class="lo-num">6</div><div><div class="lo-verb">Evaluate</div><div class="lo-desc">the appropriateness of analytical approaches, making informed trade-offs between methods</div></div></div>
+  </div>
+</section>
+
+<!-- SCHEDULE -->
+<section id="schedule">
+  <div class="section-label">12 Weeks</div>
+  <div class="section-title">Course Schedule</div>
+  <div class="mod-legend">
+    <div class="item"><div class="dot" style="background:var(--m1)"></div>M1: Data Structures &amp; Algorithms</div>
+    <div class="item"><div class="dot" style="background:var(--m2)"></div>M2: Machine Learning &amp; AI</div>
+    <div class="item"><div class="dot" style="background:var(--m3)"></div>M3: Causal Inference</div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:6px">
+    <div class="card sched-row"><div class="week"><div class="bar" style="background:var(--m1)"></div><span class="mono" style="font-size:13px;font-weight:500;color:var(--text)">1</span></div><div><div class="topic-title">Course Introduction</div><div class="topic-desc">Overview of data science; problem formulation; translating questions to estimands</div></div><div class="readings">Syllabus; Turing (1950)</div><div class="assignment">Self-assessment quiz</div><div style="text-align:right"><span class="lo-badge">1</span><span class="lo-badge">2</span></div></div>
+    <div class="card sched-row"><div class="week"><div class="bar" style="background:var(--m1)"></div><span class="mono" style="font-size:13px;font-weight:500;color:var(--text)">1–2</span></div><div><div class="topic-title">Lists, Arrays &amp; Sorting</div><div class="topic-desc">Fundamental data structures; sorting algorithms; computational complexity</div></div><div class="readings">CLRS Ch. 2, 7, 8</div><div class="assignment">HW 1 released (Wk 2)</div><div style="text-align:right"><span class="lo-badge">2</span><span class="lo-badge">3</span></div></div>
+    <div class="card sched-row"><div class="week"><div class="bar" style="background:var(--m1)"></div><span class="mono" style="font-size:13px;font-weight:500;color:var(--text)">3</span></div><div><div class="topic-title">Trees &amp; Graph Traversal</div><div class="topic-desc">Tree structures; BFS; DFS; applications in healthcare networks</div></div><div class="readings">CLRS Ch. 10, 22</div><div class="assignment">Team formation due</div><div style="text-align:right"><span class="lo-badge">2</span><span class="lo-badge">3</span></div></div>
+    <div class="card sched-row"><div class="week"><div class="bar" style="background:var(--m1)"></div><span class="mono" style="font-size:13px;font-weight:500;color:var(--text)">4</span></div><div><div class="topic-title">Dynamic Programming</div><div class="topic-desc">Optimization principles; memoization; tabulation; sequence alignment</div></div><div class="readings">CLRS Ch. 15</div><div class="assignment due">HW 1 due · Proposal due</div><div style="text-align:right"><span class="lo-badge">2</span><span class="lo-badge">3</span></div></div>
+    <div class="card sched-row"><div class="week"><div class="bar" style="background:var(--m2)"></div><span class="mono" style="font-size:13px;font-weight:500;color:var(--text)">5</span></div><div><div class="topic-title">Statistical Learning</div><div class="topic-desc">Maximum likelihood estimation; uncertainty quantification</div></div><div class="readings">ISLR Ch. 1–2; IAML Ch. 1.1</div><div class="assignment">HW 2 released</div><div style="text-align:right"><span class="lo-badge">1</span><span class="lo-badge">4</span></div></div>
+    <div class="card sched-row"><div class="week"><div class="bar" style="background:var(--m2)"></div><span class="mono" style="font-size:13px;font-weight:500;color:var(--text)">6</span></div><div><div class="topic-title">Linear Methods</div><div class="topic-desc">Linear &amp; logistic regression; regularization (Ridge, LASSO); evaluation metrics</div></div><div class="readings">ISLR Ch. 3, 4, 6; IAML Ch. 4</div><div class="assignment">—</div><div style="text-align:right"><span class="lo-badge">1</span><span class="lo-badge">3</span><span class="lo-badge">4</span></div></div>
+    <div class="card sched-row"><div class="week"><div class="bar" style="background:var(--m2)"></div><span class="mono" style="font-size:13px;font-weight:500;color:var(--text)">7</span></div><div><div class="topic-title">Nonparametric Methods</div><div class="topic-desc">Decision trees; random forests; boosting &amp; bagging</div></div><div class="readings">ISLR Ch. 8; IAML Ch. 2–3</div><div class="assignment due">HW 2 due</div><div style="text-align:right"><span class="lo-badge">3</span><span class="lo-badge">4</span><span class="lo-badge">6</span></div></div>
+    <div class="card sched-row"><div class="week"><div class="bar" style="background:var(--m2)"></div><span class="mono" style="font-size:13px;font-weight:500;color:var(--text)">8</span></div><div><div class="topic-title">Neural Networks</div><div class="topic-desc">Perceptrons; multi-layer networks; backpropagation; deep learning intro</div></div><div class="readings">ISLR Ch. 10; IAML Ch. 12.1</div><div class="assignment due">Progress report due · HW 3 released</div><div style="text-align:right"><span class="lo-badge">3</span><span class="lo-badge">4</span></div></div>
+    <div class="card sched-row"><div class="week"><div class="bar" style="background:var(--m2)"></div><span class="mono" style="font-size:13px;font-weight:500;color:var(--text)">9</span></div><div><div class="topic-title">Clustering</div><div class="topic-desc">K-means; EM algorithm; hierarchical clustering</div></div><div class="readings">ISLR Ch. 12.4; IAML Ch. 10</div><div class="assignment">—</div><div style="text-align:right"><span class="lo-badge">3</span><span class="lo-badge">4</span><span class="lo-badge">6</span></div></div>
+    <div class="card sched-row"><div class="week"><div class="bar" style="background:var(--m3)"></div><span class="mono" style="font-size:13px;font-weight:500;color:var(--text)">10</span></div><div><div class="topic-title">Potential Outcomes &amp; DAGs</div><div class="topic-desc">Rubin Causal Model; causal graphs; confounding; identification strategies</div></div><div class="readings">Mixtape Ch. 3–4; FCCI Ch. 1–2</div><div class="assignment due">HW 3 due · HW 4 released</div><div style="text-align:right"><span class="lo-badge">1</span><span class="lo-badge">2</span><span class="lo-badge">4</span></div></div>
+    <div class="card sched-row"><div class="week"><div class="bar" style="background:var(--m3)"></div><span class="mono" style="font-size:13px;font-weight:500;color:var(--text)">11</span></div><div><div class="topic-title">Matching &amp; Weighting</div><div class="topic-desc">Matching and weighting estimators; difference-in-differences</div></div><div class="readings">Mixtape Ch. 5; FCCI Ch. 10–11</div><div class="assignment">—</div><div style="text-align:right"><span class="lo-badge">3</span><span class="lo-badge">4</span><span class="lo-badge">6</span></div></div>
+    <div class="card sched-row"><div class="week"><div class="bar" style="background:var(--m3)"></div><span class="mono" style="font-size:13px;font-weight:500;color:var(--text)">12</span></div><div><div class="topic-title">Project Presentations</div><div class="topic-desc">Student poster session; data equity discussion</div></div><div class="readings">Data Equity in Data Science</div><div class="assignment due">HW 4 due · Final project (Finals Wk)</div><div style="text-align:right"><span class="lo-badge">5</span><span class="lo-badge">6</span></div></div>
+  </div>
+</section>
+
+<!-- ASSESSMENTS -->
+<section id="assessments">
+  <div class="section-label">Evaluation</div>
+  <div class="section-title">Assessments &amp; Grading</div>
+  <div class="grid-3-2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-label">Grade Components</div>
+      <div class="assess-row"><div class="assess-pct mono">36%</div><div style="flex:1"><div style="font-weight:600;font-size:14px;color:var(--text)">Homework Assignments (4)</div><div style="font-size:12px;color:var(--text-dim)">Conceptual, programming, and applied problems every ~3 weeks</div></div><div class="assess-bar"><div class="assess-bar-fill" style="width:90%"></div></div></div>
+      <div class="assess-row"><div class="assess-pct mono">30%</div><div style="flex:1"><div style="font-weight:600;font-size:14px;color:var(--text)">Course Project</div><div style="font-size:12px;color:var(--text-dim)">Team-based (3–4) applied project with proposal, report, and poster</div></div><div class="assess-bar"><div class="assess-bar-fill" style="width:75%"></div></div></div>
+      <div class="assess-row"><div class="assess-pct mono">18%</div><div style="flex:1"><div style="font-weight:600;font-size:14px;color:var(--text)">Scribe Notes (2)</div><div style="font-size:12px;color:var(--text-dim)">Detailed LaTeX lecture notes with extensions beyond class content</div></div><div class="assess-bar"><div class="assess-bar-fill" style="width:45%"></div></div></div>
+      <div class="assess-row"><div class="assess-pct mono">11%</div><div style="flex:1"><div style="font-weight:600;font-size:14px;color:var(--text)">In-Class Quizzes</div><div style="font-size:12px;color:var(--text-dim)">Short 5–10 min quizzes on readings and lecture material</div></div><div class="assess-bar"><div class="assess-bar-fill" style="width:28%"></div></div></div>
+      <div class="assess-row"><div class="assess-pct mono">5%</div><div style="flex:1"><div style="font-weight:600;font-size:14px;color:var(--text)">Participation</div><div style="font-size:12px;color:var(--text-dim)">Class engagement, discussions, and forum contributions</div></div><div class="assess-bar"><div class="assess-bar-fill" style="width:13%"></div></div></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="card">
+        <div class="card-label">Grading Scale (YSPH)</div>
+        <div class="grade-row"><span class="mono" style="font-size:13px;color:var(--text-muted)">≥ 90%</span><span style="color:var(--text);font-weight:500">Honors (H)</span></div>
+        <div class="grade-row"><span class="mono" style="font-size:13px;color:var(--text-muted)">80–89%</span><span style="color:var(--text);font-weight:500">High Pass (HP)</span></div>
+        <div class="grade-row"><span class="mono" style="font-size:13px;color:var(--text-muted)">65–79%</span><span style="color:var(--text);font-weight:500">Pass (P)</span></div>
+        <div class="grade-row"><span class="mono" style="font-size:13px;color:var(--text-muted)">&lt; 65%</span><span style="color:var(--text);font-weight:500">Fail (F)</span></div>
+      </div>
+      <div class="card">
+        <div class="card-label">Late Policy</div>
+        <p style="font-size:13px;color:var(--text-muted);line-height:1.6">Late submissions are <strong style="color:var(--text)">not accepted</strong>. Contact the instructor <em>before</em> the deadline for documented emergencies.</p>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-label">Key Dates</div>
+    <div class="grid-2" style="gap:0">
+      <div class="date-row"><span style="font-weight:500;color:var(--text)">Homework 1</span><span style="color:var(--text-dim)">Week 2 → <strong style="color:var(--accent)">Week 4</strong></span></div>
+      <div class="date-row"><span style="font-weight:500;color:var(--text)">Homework 2</span><span style="color:var(--text-dim)">Week 5 → <strong style="color:var(--accent)">Week 7</strong></span></div>
+      <div class="date-row"><span style="font-weight:500;color:var(--text)">Homework 3</span><span style="color:var(--text-dim)">Week 8 → <strong style="color:var(--accent)">Week 10</strong></span></div>
+      <div class="date-row"><span style="font-weight:500;color:var(--text)">Homework 4</span><span style="color:var(--text-dim)">Week 10 → <strong style="color:var(--accent)">Week 12</strong></span></div>
+      <div class="date-row"><span style="font-weight:500;color:var(--text)">Project Proposal</span><span style="color:var(--text-dim)">Week 2 → <strong style="color:var(--accent)">Week 4</strong></span></div>
+      <div class="date-row"><span style="font-weight:500;color:var(--text)">Progress Report</span><span style="color:var(--text-dim)">Week 6 → <strong style="color:var(--accent)">Week 8</strong></span></div>
+      <div class="date-row"><span style="font-weight:500;color:var(--text)">Final Report</span><span style="color:var(--text-dim)">Week 10 → <strong style="color:var(--accent)">Finals Week</strong></span></div>
+      <div class="date-row"><span style="font-weight:500;color:var(--text)">Poster Session</span><span><strong style="color:var(--accent)">Week 12 (in class)</strong></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- MATERIALS -->
+<section id="materials">
+  <div class="section-label">Readings &amp; Software</div>
+  <div class="section-title">Materials</div>
+  <p style="font-size:14px;color:var(--text-muted);margin-bottom:20px">No single required textbook. All texts are freely available online.</p>
+  <div class="grid-2" style="margin-bottom:16px">
+    <div class="card tb-card"><div class="tb-icon">CLRS</div><div><a href="https://mcube.lab.nycu.edu.tw/~cfung/docs/books/cormen2001algorithms.pdf" target="_blank" style="font-weight:600;font-size:14px;color:var(--text)">Introduction to Algorithms</a><div style="font-size:12px;color:var(--text-dim)">Cormen, Leiserson, Rivest, Stein</div></div></div>
+    <div class="card tb-card"><div class="tb-icon">IAML</div><div><a href="https://users.cs.duke.edu/~cynthia/teaching.html" target="_blank" style="font-weight:600;font-size:14px;color:var(--text)">Intuition for the Algorithms of ML</a><div style="font-size:12px;color:var(--text-dim)">Cynthia Rudin</div></div></div>
+    <div class="card tb-card"><div class="tb-icon">ISLR</div><div><a href="https://www.statlearning.com" target="_blank" style="font-weight:600;font-size:14px;color:var(--text)">An Introduction to Statistical Learning</a><div style="font-size:12px;color:var(--text-dim)">James, Witten, Hastie, Tibshirani</div></div></div>
+    <div class="card tb-card"><div class="tb-icon">FCCI</div><div><a href="https://arxiv.org/pdf/2305.18793" target="_blank" style="font-weight:600;font-size:14px;color:var(--text)">A First Course in Causal Inference</a><div style="font-size:12px;color:var(--text-dim)">Peng Ding</div></div></div>
+    <div class="card tb-card"><div class="tb-icon">Mix</div><div><a href="https://mixtape.scunning.com/" target="_blank" style="font-weight:600;font-size:14px;color:var(--text)">Causal Inference: The Mixtape</a><div style="font-size:12px;color:var(--text-dim)">Scott Cunningham</div></div></div>
+    <div class="card tb-card"><div class="tb-icon">PyDS</div><div><a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank" style="font-weight:600;font-size:14px;color:var(--text)">Python Data Science Handbook</a><div style="font-size:12px;color:var(--text-dim)">Jake VanderPlas</div></div></div>
+  </div>
+  <div class="card">
+    <div class="card-label">Software Stack</div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <span class="pill pill-muted">Python 3.x</span>
+      <span class="pill pill-muted">NumPy</span>
+      <span class="pill pill-muted">Pandas</span>
+      <span class="pill pill-muted">PyTorch</span>
+      <span class="pill pill-muted">Scikit-learn</span>
+      <span class="pill pill-muted">Matplotlib</span>
+      <span class="pill pill-muted">Seaborn</span>
+      <span class="pill pill-muted">Jupyter</span>
+      <span class="pill pill-muted">Overleaf (LaTeX)</span>
+    </div>
+  </div>
+</section>
+
+<!-- POLICIES -->
+<section id="policies">
+  <div class="section-label">Expectations</div>
+  <div class="section-title">Course Policies</div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-label">AI Policy</div>
+      <p style="font-size:13px;color:var(--text-muted);line-height:1.7;margin-bottom:10px">AI assistants (ChatGPT, Claude, Copilot) are <strong style="color:var(--text)">permitted as learning aids</strong> for homework and scribe notes:</p>
+      <div class="policy-list"><div>You must <strong>understand</strong> everything you submit</div><div><strong>Disclose</strong> all AI use at the top of submissions</div><div>No acknowledgment → submission <strong>not accepted</strong></div><div>You own all <strong>accuracy</strong> — AI hallucinations are on you</div><div>Quizzes: <strong style="color:var(--accent)">no AI allowed</strong></div></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Collaboration</div>
+      <p style="font-size:13px;color:var(--text-muted);line-height:1.7;margin-bottom:10px">Discussion with classmates is encouraged, but:</p>
+      <div class="policy-list"><div>All written solutions must be <strong>your own</strong></div><div>All code must be <strong>written individually</strong></div><div><strong>Acknowledge</strong> all collaborators and resources</div><div>Do not share answers, code, or LaTeX files</div></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Electronic Devices</div>
+      <p style="font-size:13px;color:var(--text-muted);line-height:1.7">Mobile phones, iPads, and laptops are <strong style="color:var(--text)">not permitted during lectures</strong>. Handwritten notes promote deeper processing. Exceptions for documented accommodations. No devices during quizzes under any circumstances.</p>
+    </div>
+    <div class="card">
+      <div class="card-label">Academic Integrity</div>
+      <p style="font-size:13px;color:var(--text-muted);line-height:1.7">All students must adhere to the YSPH <strong style="color:var(--text)">Code of Academic and Professional Integrity (CAPI)</strong>. Violations — plagiarism, unauthorized collaboration, undisclosed AI use, fabrication — will be referred to the CAPI Committee. Penalties can include expulsion.</p>
+    </div>
+  </div>
+</section>
+
+<!-- RESOURCES -->
+<section id="resources">
+  <div class="section-label">Support</div>
+  <div class="section-title">Resources</div>
+  <div class="grid-3">
+    <div class="card"><div class="card-label">Accessibility</div><p style="font-size:13px;color:var(--text-muted);line-height:1.6">Yale Student Accessibility Services (SAS). Email <a href="mailto:sas@yale.edu">sas@yale.edu</a> or call 203-432-2324.</p></div>
+    <div class="card"><div class="card-label">Mental Health</div><p style="font-size:13px;color:var(--text-muted);line-height:1.6">YSPH Wellness Counselor: <a href="mailto:diane.frankel-gramelis@yale.edu">Diane Frankel-Gramelis</a>. 988 Lifeline: dial <strong style="color:var(--text)">988</strong> (24/7).</p></div>
+    <div class="card"><div class="card-label">Writing Support</div><p style="font-size:13px;color:var(--text-muted);line-height:1.6">Graduate Writing Lab — free consultations. Book at <a href="https://yale.mywconline.net" target="_blank">yale.mywconline.net</a>.</p></div>
+    <div class="card"><div class="card-label">Inclusivity</div><p style="font-size:13px;color:var(--text-muted);line-height:1.6">Office of Community &amp; Practice. Contact <a href="mailto:mayur.desai@yale.edu">Mayur Desai</a> or <a href="mailto:randi.mccray@yale.edu">Randi McCray</a>.</p></div>
+    <div class="card"><div class="card-label">Title IX</div><p style="font-size:13px;color:var(--text-muted);line-height:1.6">Deputy coordinator: <a href="mailto:kelly.shay@yale.edu">Kelly Shay</a>. <a href="https://oiea.yale.edu/" target="_blank">OIEA</a>.</p></div>
+    <div class="card"><div class="card-label">Classroom Safety</div><p style="font-size:13px;color:var(--text-muted);line-height:1.6"><a href="https://emergency.yale.edu" target="_blank">emergency.yale.edu</a> · <a href="https://emergency.yale.edu/be-prepared/classroom-preparedness" target="_blank">Preparedness</a></p></div>
+  </div>
+</section>
+
+<!-- Footer -->
+<div class="footer">
+  <p class="note">This syllabus is subject to change. Students will be notified of any modifications via Canvas.</p>
+  <p class="welcome">Welcome to Introduction to Health Data Science</p>
+  <p class="copy">© 2025 Harsh Parikh · Yale University</p>
+</div>
+
+</main>
+
+<!-- Theme toggle + active nav highlight -->
+<script>
+// Theme
+function toggleTheme() {
+  document.documentElement.classList.toggle('light');
+  localStorage.setItem('bis5xx-theme', document.documentElement.classList.contains('light') ? 'light' : 'dark');
+}
+(function() {
+  var saved = localStorage.getItem('bis5xx-theme');
+  if (saved === 'light') document.documentElement.classList.add('light');
+})();
+
+// Active nav
+document.addEventListener('DOMContentLoaded', function() {
+  var navLinks = document.querySelectorAll('nav .links a');
+  var sections = document.querySelectorAll('main section');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        navLinks.forEach(function(link) { link.classList.remove('active'); });
+        var active = document.querySelector('nav .links a[href="#' + entry.target.id + '"]');
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-80px 0px -60% 0px', threshold: 0 });
+  sections.forEach(function(s) { observer.observe(s); });
+});
+</script>
+
+</body>
+</html>
