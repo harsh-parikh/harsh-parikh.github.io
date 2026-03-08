@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toddler Piano</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    overflow: hidden;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    user-select: none;
+    -webkit-user-select: none;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* Starfield background */
+  .stars {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    animation: twinkle 2s ease-in-out infinite alternate;
+  }
+  @keyframes twinkle {
+    0% { opacity: 0.3; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1.2); }
+  }
+
+  /* Splash screen */
+  #splash {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    cursor: pointer;
+    transition: opacity 0.5s;
+  }
+  #splash h1 {
+    font-size: clamp(2rem, 6vw, 5rem);
+    color: white;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    margin-bottom: 1rem;
+    animation: bounce 1.5s ease-in-out infinite;
+  }
+  #splash p {
+    font-size: clamp(1rem, 2.5vw, 1.8rem);
+    color: rgba(255,255,255,0.85);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  .splash-keys {
+    display: flex;
+    gap: 12px;
+    margin: 2rem 0;
+  }
+  .splash-key {
+    width: clamp(40px, 6vw, 70px);
+    height: clamp(50px, 8vw, 90px);
+    background: white;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    animation: wave 1.5s ease-in-out infinite;
+  }
+  .splash-key:nth-child(2) { animation-delay: 0.15s; }
+  .splash-key:nth-child(3) { animation-delay: 0.3s; }
+  .splash-key:nth-child(4) { animation-delay: 0.45s; }
+  .splash-key:nth-child(5) { animation-delay: 0.6s; }
+  .splash-key:nth-child(6) { animation-delay: 0.75s; }
+  .splash-key:nth-child(7) { animation-delay: 0.9s; }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+  }
+  @keyframes wave {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  /* Lock button */
+  #lock-btn {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 500;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  }
+  #lock-btn.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  #lock-btn.unlocked {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    color: rgba(255,255,255,0.7);
+  }
+  #lock-btn.locked {
+    background: #e74c3c;
+    color: white;
+    animation: lockPulse 2s ease-in-out infinite;
+  }
+  @keyframes lockPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.5); }
+    50% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
+  }
+
+  /* Piano container */
+  #piano-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 55%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 10;
+    padding: 0 2vw 0 2vw;
+  }
+
+  #piano {
+    display: flex;
+    position: relative;
+    height: 100%;
+    max-width: 100%;
+  }
+
+  .white-key {
+    position: relative;
+    width: clamp(36px, 4.8vw, 72px);
+    height: 100%;
+    background: linear-gradient(180deg, #f8f8f8 0%, #e8e8e8 85%, #d0d0d0 100%);
+    border: 1px solid #bbb;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    cursor: pointer;
+    z-index: 1;
+    transition: background 0.06s, box-shadow 0.06s;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15), inset 0 -3px 6px rgba(0,0,0,0.05);
+  }
+  .white-key:hover {
+    background: linear-gradient(180deg, #fff 0%, #f0f0f0 85%, #ddd 100%);
+  }
+  .white-key.active {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15), inset 0 2px 6px rgba(0,0,0,0.1);
+  }
+
+  .black-key {
+    position: absolute;
+    width: clamp(22px, 3vw, 44px);
+    height: 60%;
+    background: linear-gradient(180deg, #333 0%, #1a1a1a 70%, #111 100%);
+    border-radius: 0 0 6px 6px;
+    z-index: 2;
+    cursor: pointer;
+    transition: background 0.06s, box-shadow 0.06s;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4), inset 0 -2px 4px rgba(0,0,0,0.3);
+    top: 0;
+  }
+  .black-key:hover {
+    background: linear-gradient(180deg, #444 0%, #222 70%, #1a1a1a 100%);
+  }
+  .black-key.active {
+    background: linear-gradient(180deg, #555 0%, #333 100%);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  }
+
+  /* Colour glow on press */
+  .white-key.active {
+    position: relative;
+    overflow: hidden;
+  }
+  .key-glow {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 0 0 8px 8px;
+    opacity: 0;
+    transition: opacity 0.15s;
+    pointer-events: none;
+  }
+  .white-key.active .key-glow { opacity: 0.6; }
+  .black-key.active .key-glow { opacity: 0.7; }
+
+  /* Note bubble animation */
+  .note-bubble {
+    position: fixed;
+    pointer-events: none;
+    z-index: 100;
+    font-size: 2.5rem;
+    animation: floatUp 1.8s ease-out forwards;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+  }
+  @keyframes floatUp {
+    0% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+    60% { opacity: 0.8; }
+    100% { opacity: 0; transform: translateY(-200px) scale(1.5) rotate(20deg); }
+  }
+
+  /* Colour ripple effect */
+  .ripple {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 5;
+    animation: rippleExpand 1s ease-out forwards;
+  }
+  @keyframes rippleExpand {
+    0% { transform: scale(0); opacity: 0.5; }
+    100% { transform: scale(4); opacity: 0; }
+  }
+
+  /* Note name label */
+  .note-label {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: clamp(0.6rem, 1vw, 0.9rem);
+    color: #999;
+    pointer-events: none;
+    font-weight: 600;
+    opacity: 0.5;
+  }
+  .black-key .note-label {
+    color: #777;
+    bottom: 8px;
+  }
+
+  /* Fullscreen re-entry button */
+  #fullscreen-btn {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    z-index: 500;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+  }
+  #fullscreen-btn.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  #fullscreen-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+  }
+  #fullscreen-btn.hidden-fs {
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- Starfield -->
+<div class="stars" id="stars"></div>
+
+<!-- Splash Screen -->
+<div id="splash">
+  <h1>Toddler Piano</h1>
+  <div class="splash-keys">
+    <div class="splash-key" style="background:linear-gradient(180deg,#ff6b6b,#ee5a24)"></div>
+    <div class="splash-key" style="background:linear-gradient(180deg,#feca57,#ff9f43)"></div>
+    <div class="splash-key" style="background:linear-gradient(180deg,#48dbfb,#0abde3)"></div>
+    <div class="splash-key" style="background:linear-gradient(180deg,#ff9ff3,#f368e0)"></div>
+    <div class="splash-key" style="background:linear-gradient(180deg,#55efc4,#00b894)"></div>
+    <div class="splash-key" style="background:linear-gradient(180deg,#a29bfe,#6c5ce7)"></div>
+    <div class="splash-key" style="background:linear-gradient(180deg,#fd79a8,#e84393)"></div>
+  </div>
+  <p>Tap or click anywhere to start!</p>
+</div>
+
+<!-- Lock Button -->
+<button id="lock-btn" class="unlocked" title="Lock fullscreen (prevents Escape from exiting)">
+  <svg id="lock-icon" viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+    <path id="lock-path" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9z"/>
+  </svg>
+</button>
+
+<!-- Fullscreen Re-entry Button -->
+<button id="fullscreen-btn" title="Enter fullscreen">
+  <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor">
+    <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+  </svg>
+</button>
+
+<!-- Piano -->
+<div id="piano-container">
+  <div id="piano"></div>
+</div>
+
+<script>
+// ─── Audio Engine ───────────────────────────────────────────
+let audioCtx = null;
+
+function ensureAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+// Piano note frequencies (C3 to C5 — 25 notes)
+const NOTES = [
+  { name: 'C3',  freq: 130.81, type: 'white' },
+  { name: 'C#3', freq: 138.59, type: 'black' },
+  { name: 'D3',  freq: 146.83, type: 'white' },
+  { name: 'D#3', freq: 155.56, type: 'black' },
+  { name: 'E3',  freq: 164.81, type: 'white' },
+  { name: 'F3',  freq: 174.61, type: 'white' },
+  { name: 'F#3', freq: 185.00, type: 'black' },
+  { name: 'G3',  freq: 196.00, type: 'white' },
+  { name: 'G#3', freq: 207.65, type: 'black' },
+  { name: 'A3',  freq: 220.00, type: 'white' },
+  { name: 'A#3', freq: 233.08, type: 'black' },
+  { name: 'B3',  freq: 246.94, type: 'white' },
+  { name: 'C4',  freq: 261.63, type: 'white' },
+  { name: 'C#4', freq: 277.18, type: 'black' },
+  { name: 'D4',  freq: 293.66, type: 'white' },
+  { name: 'D#4', freq: 311.13, type: 'black' },
+  { name: 'E4',  freq: 329.63, type: 'white' },
+  { name: 'F4',  freq: 349.23, type: 'white' },
+  { name: 'F#4', freq: 369.99, type: 'black' },
+  { name: 'G4',  freq: 392.00, type: 'white' },
+  { name: 'G#4', freq: 415.30, type: 'black' },
+  { name: 'A4',  freq: 440.00, type: 'white' },
+  { name: 'A#4', freq: 466.16, type: 'black' },
+  { name: 'B4',  freq: 493.88, type: 'white' },
+  { name: 'C5',  freq: 523.25, type: 'white' },
+];
+
+const GLOW_COLORS = [
+  '#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#55efc4',
+  '#a29bfe', '#fd79a8', '#f39c12', '#00cec9', '#e17055',
+  '#6c5ce7', '#00b894', '#e84393', '#fdcb6e', '#74b9ff',
+];
+
+const NOTE_EMOJIS = ['🎵', '🎶', '🎹', '🌟', '✨', '💫', '🎼', '🎵', '⭐'];
+
+function playNote(freq) {
+  const ctx = ensureAudioCtx();
+  const now = ctx.currentTime;
+
+  // Main oscillator (piano-like)
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'triangle';
+  osc.frequency.value = freq;
+  gain.gain.setValueAtTime(0.35, now);
+  gain.gain.exponentialRampToValueAtTime(0.25, now + 0.05);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 1.8);
+  osc.connect(gain);
+
+  // Harmonic for warmth
+  const osc2 = ctx.createOscillator();
+  const gain2 = ctx.createGain();
+  osc2.type = 'sine';
+  osc2.frequency.value = freq * 2;
+  gain2.gain.setValueAtTime(0.08, now);
+  gain2.gain.exponentialRampToValueAtTime(0.001, now + 1.0);
+  osc2.connect(gain2);
+
+  // Third harmonic for brightness
+  const osc3 = ctx.createOscillator();
+  const gain3 = ctx.createGain();
+  osc3.type = 'sine';
+  osc3.frequency.value = freq * 3;
+  gain3.gain.setValueAtTime(0.03, now);
+  gain3.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+  osc3.connect(gain3);
+
+  gain.connect(ctx.destination);
+  gain2.connect(ctx.destination);
+  gain3.connect(ctx.destination);
+
+  osc.start(now);
+  osc2.start(now);
+  osc3.start(now);
+  osc.stop(now + 2);
+  osc2.stop(now + 1.2);
+  osc3.stop(now + 0.8);
+}
+
+// ─── Build Piano ────────────────────────────────────────────
+const pianoEl = document.getElementById('piano');
+const keyElements = [];
+let whiteIndex = 0;
+
+NOTES.forEach((note, i) => {
+  const el = document.createElement('div');
+  el.dataset.index = i;
+
+  // Glow overlay
+  const glow = document.createElement('div');
+  glow.className = 'key-glow';
+  el.appendChild(glow);
+
+  // Note name label
+  const label = document.createElement('div');
+  label.className = 'note-label';
+  label.textContent = note.name.replace('#', '♯');
+  el.appendChild(label);
+
+  if (note.type === 'white') {
+    el.className = 'white-key';
+    pianoEl.appendChild(el);
+    whiteIndex++;
+  } else {
+    el.className = 'black-key';
+    // Position over the gap between white keys
+    const whiteKeyWidth = Math.min(Math.max(36, window.innerWidth * 0.048), 72);
+    const blackKeyWidth = Math.min(Math.max(22, window.innerWidth * 0.03), 44);
+    const offset = whiteIndex * whiteKeyWidth - blackKeyWidth / 2 - 0.5;
+    el.style.left = offset + 'px';
+    pianoEl.appendChild(el);
+  }
+  keyElements.push(el);
+});
+
+function repositionBlackKeys() {
+  let wi = 0;
+  NOTES.forEach((note, i) => {
+    if (note.type === 'white') {
+      wi++;
+    } else {
+      const whiteKeyWidth = Math.min(Math.max(36, window.innerWidth * 0.048), 72);
+      const blackKeyWidth = Math.min(Math.max(22, window.innerWidth * 0.03), 44);
+      const offset = wi * whiteKeyWidth - blackKeyWidth / 2 - 0.5;
+      keyElements[i].style.left = offset + 'px';
+    }
+  });
+}
+window.addEventListener('resize', repositionBlackKeys);
+
+// ─── Visual Effects ─────────────────────────────────────────
+function spawnBubble(keyEl) {
+  const rect = keyEl.getBoundingClientRect();
+  const bubble = document.createElement('div');
+  bubble.className = 'note-bubble';
+  bubble.textContent = NOTE_EMOJIS[Math.floor(Math.random() * NOTE_EMOJIS.length)];
+  bubble.style.left = (rect.left + rect.width / 2 - 20) + 'px';
+  bubble.style.top = (rect.top - 10) + 'px';
+  document.body.appendChild(bubble);
+  setTimeout(() => bubble.remove(), 1800);
+}
+
+function spawnRipple(keyEl, noteIndex) {
+  const rect = keyEl.getBoundingClientRect();
+  const ripple = document.createElement('div');
+  ripple.className = 'ripple';
+  const color = GLOW_COLORS[noteIndex % GLOW_COLORS.length];
+  ripple.style.background = color;
+  ripple.style.width = '80px';
+  ripple.style.height = '80px';
+  ripple.style.left = (rect.left + rect.width / 2 - 40) + 'px';
+  ripple.style.top = (rect.top + rect.height / 3 - 40) + 'px';
+  document.body.appendChild(ripple);
+  setTimeout(() => ripple.remove(), 1000);
+}
+
+function activateKey(index) {
+  if (index < 0 || index >= NOTES.length) return;
+  const note = NOTES[index];
+  const el = keyElements[index];
+  const color = GLOW_COLORS[index % GLOW_COLORS.length];
+
+  playNote(note.freq);
+  el.classList.add('active');
+  el.querySelector('.key-glow').style.background =
+    `linear-gradient(0deg, ${color}88 0%, ${color}22 100%)`;
+
+  spawnBubble(el);
+  spawnRipple(el, index);
+
+  setTimeout(() => el.classList.remove('active'), 300);
+}
+
+// ─── Keyboard → Note Mapping ────────────────────────────────
+// Map every key to a note index (deterministic but spread across range)
+function keyToNoteIndex(key) {
+  let hash = 0;
+  const s = key.toLowerCase();
+  for (let i = 0; i < s.length; i++) {
+    hash = ((hash << 5) - hash + s.charCodeAt(i)) | 0;
+  }
+  return ((hash % NOTES.length) + NOTES.length) % NOTES.length;
+}
+
+// ─── Lock / Fullscreen ──────────────────────────────────────
+let isLocked = false;
+let mouseTimer = null;
+const lockBtn = document.getElementById('lock-btn');
+
+const fullscreenBtn = document.getElementById('fullscreen-btn');
+
+function updateFullscreenBtnVisibility() {
+  if (document.fullscreenElement) {
+    fullscreenBtn.classList.add('hidden-fs');
+  } else {
+    fullscreenBtn.classList.remove('hidden-fs');
+  }
+}
+
+function showControls() {
+  lockBtn.classList.add('visible');
+  if (!document.fullscreenElement) {
+    fullscreenBtn.classList.add('visible');
+  }
+  clearTimeout(mouseTimer);
+  mouseTimer = setTimeout(() => {
+    if (!isLocked) lockBtn.classList.remove('visible');
+    fullscreenBtn.classList.remove('visible');
+  }, 3000);
+}
+
+document.addEventListener('mousemove', showControls);
+
+fullscreenBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  document.documentElement.requestFullscreen().catch(() => {});
+});
+
+lockBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  isLocked = !isLocked;
+  if (isLocked) {
+    lockBtn.classList.remove('unlocked');
+    lockBtn.classList.add('locked');
+    lockBtn.title = 'Fullscreen locked (click to unlock)';
+    document.getElementById('lock-path').setAttribute('d',
+      'M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9z');
+  } else {
+    lockBtn.classList.remove('locked');
+    lockBtn.classList.add('unlocked');
+    lockBtn.title = 'Lock fullscreen (prevents Escape from exiting)';
+    document.getElementById('lock-path').setAttribute('d',
+      'M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6h2c0-1.66 1.34-3 3-3s3 1.34 3 3v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2z');
+  }
+});
+
+// Intercept Escape when locked
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && isLocked) {
+    e.preventDefault();
+    e.stopPropagation();
+    // Re-enter fullscreen if browser exited it
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    }
+    return;
+  }
+  // Play note for any key
+  const idx = keyToNoteIndex(e.key);
+  activateKey(idx);
+});
+
+// If browser fires fullscreenchange (Escape was pressed before JS could catch it)
+document.addEventListener('fullscreenchange', () => {
+  if (!document.fullscreenElement && isLocked) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  }
+  updateFullscreenBtnVisibility();
+});
+
+// ─── Touch / Click on Keys ──────────────────────────────────
+pianoEl.addEventListener('pointerdown', (e) => {
+  const keyEl = e.target.closest('.white-key, .black-key');
+  if (!keyEl) return;
+  const idx = parseInt(keyEl.dataset.index);
+  activateKey(idx);
+});
+
+// ─── Splash Screen ──────────────────────────────────────────
+const splash = document.getElementById('splash');
+
+splash.addEventListener('click', () => {
+  ensureAudioCtx();
+  document.documentElement.requestFullscreen().catch(() => {});
+  splash.style.opacity = '0';
+  setTimeout(() => { splash.style.display = 'none'; }, 500);
+});
+
+// Also allow any key to dismiss splash
+document.addEventListener('keydown', function splashDismiss(e) {
+  if (splash.style.display !== 'none') {
+    ensureAudioCtx();
+    document.documentElement.requestFullscreen().catch(() => {});
+    splash.style.opacity = '0';
+    setTimeout(() => { splash.style.display = 'none'; }, 500);
+  }
+}, { once: true });
+
+// ─── Star Background ────────────────────────────────────────
+const starsEl = document.getElementById('stars');
+for (let i = 0; i < 60; i++) {
+  const star = document.createElement('div');
+  star.className = 'star';
+  const size = Math.random() * 4 + 1;
+  const colors = ['#fff', '#ffeaa7', '#dfe6e9', '#74b9ff', '#a29bfe'];
+  star.style.width = size + 'px';
+  star.style.height = size + 'px';
+  star.style.background = colors[Math.floor(Math.random() * colors.length)];
+  star.style.left = Math.random() * 100 + '%';
+  star.style.top = Math.random() * 50 + '%';
+  star.style.animationDelay = (Math.random() * 3) + 's';
+  star.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
+  starsEl.appendChild(star);
+}
+</script>
+</body>
+</html>
