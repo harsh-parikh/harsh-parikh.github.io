@@ -158,46 +158,52 @@
     position: relative;
     width: clamp(36px, 4.8vw, 72px);
     height: 100%;
-    background: linear-gradient(180deg, #f8f8f8 0%, #e8e8e8 85%, #d0d0d0 100%);
-    border: 1px solid #bbb;
+    border: 1px solid rgba(255,255,255,0.3);
     border-top: none;
-    border-radius: 0 0 8px 8px;
+    border-radius: 0 0 10px 10px;
     cursor: pointer;
     z-index: 1;
-    transition: background 0.06s, box-shadow 0.06s;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.15), inset 0 -3px 6px rgba(0,0,0,0.05);
+    transition: filter 0.08s, box-shadow 0.08s, transform 0.08s;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12), inset 0 -4px 8px rgba(0,0,0,0.06);
+    overflow: hidden;
   }
   .white-key:hover {
-    background: linear-gradient(180deg, #fff 0%, #f0f0f0 85%, #ddd 100%);
+    filter: brightness(1.05);
   }
   .white-key.active {
-    box-shadow: 0 2px 4px rgba(0,0,0,0.15), inset 0 2px 6px rgba(0,0,0,0.1);
+    filter: brightness(1.15) saturate(1.3);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12), inset 0 2px 8px rgba(0,0,0,0.08);
+    transform: scaleY(0.98);
+    transform-origin: top;
   }
 
   .black-key {
     position: absolute;
     width: clamp(22px, 3vw, 44px);
     height: 60%;
-    background: linear-gradient(180deg, #333 0%, #1a1a1a 70%, #111 100%);
-    border-radius: 0 0 6px 6px;
+    border-radius: 0 0 7px 7px;
     z-index: 2;
     cursor: pointer;
-    transition: background 0.06s, box-shadow 0.06s;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.4), inset 0 -2px 4px rgba(0,0,0,0.3);
+    transition: filter 0.08s, box-shadow 0.08s, transform 0.08s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.35), inset 0 -3px 6px rgba(0,0,0,0.2);
     top: 0;
+    border: 1px solid rgba(0,0,0,0.15);
+    border-top: none;
+    overflow: hidden;
   }
   .black-key:hover {
-    background: linear-gradient(180deg, #444 0%, #222 70%, #1a1a1a 100%);
+    filter: brightness(1.1);
   }
   .black-key.active {
-    background: linear-gradient(180deg, #555 0%, #333 100%);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    filter: brightness(1.2) saturate(1.3);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    transform: scaleY(0.97);
+    transform-origin: top;
   }
 
   /* Colour glow on press */
   .white-key.active {
     position: relative;
-    overflow: hidden;
   }
   .key-glow {
     position: absolute;
@@ -248,13 +254,13 @@
     left: 50%;
     transform: translateX(-50%);
     font-size: clamp(0.6rem, 1vw, 0.9rem);
-    color: #999;
     pointer-events: none;
-    font-weight: 600;
-    opacity: 0.5;
+    font-weight: 700;
+    opacity: 0.45;
+    color: rgba(0,0,0,0.25);
   }
   .black-key .note-label {
-    color: #777;
+    color: rgba(255,255,255,0.35);
     bottom: 8px;
   }
 
@@ -371,9 +377,42 @@ const NOTES = [
 ];
 
 const GLOW_COLORS = [
-  '#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#55efc4',
-  '#a29bfe', '#fd79a8', '#f39c12', '#00cec9', '#e17055',
-  '#6c5ce7', '#00b894', '#e84393', '#fdcb6e', '#74b9ff',
+  '#FFB3BA', '#FFDFBA', '#FFFFBA', '#BAFFC9', '#BAE1FF',
+  '#E8BAFF', '#FFB3D9', '#C9FFE5', '#BAD4FF', '#FFD9BA',
+  '#D9BAFF', '#BAFFD9', '#FFBAE1', '#FFFABA', '#C4BAFF',
+];
+
+// Pastel palette for white keys (15 white keys C3→C5)
+const WHITE_KEY_COLORS = [
+  ['#FFD1D1', '#FFBABA'],  // soft rose
+  ['#FFE0C2', '#FFD1A8'],  // peach
+  ['#FFF3C4', '#FFE8A1'],  // buttercream
+  ['#D4F5D4', '#B8EDC0'],  // mint
+  ['#D1ECFF', '#B8DEFF'],  // baby blue
+  ['#E8D5F5', '#D9BFF0'],  // lavender
+  ['#FFD6E8', '#FFC2DA'],  // pink
+  ['#D1FFE8', '#B8F5D9'],  // seafoam
+  ['#D5E8FF', '#BFD9FF'],  // periwinkle
+  ['#FFF0D1', '#FFE4B5'],  // vanilla
+  ['#E0D1FF', '#D1BFFF'],  // lilac
+  ['#CFFFD1', '#B5F0B8'],  // pistachio
+  ['#FFD1E8', '#FFC0DB'],  // blush
+  ['#FFFDD1', '#FFF8B5'],  // lemon cream
+  ['#D1D8FF', '#C0CAFF'],  // soft indigo
+];
+
+// Deeper pastel tones for black keys (10 black keys)
+const BLACK_KEY_COLORS = [
+  ['#C9A0A0', '#B08888'],  // dusty rose
+  ['#C9B28A', '#B09A72'],  // warm taupe
+  ['#A0C9A0', '#88B088'],  // sage
+  ['#8AAAC9', '#7292B0'],  // steel blue
+  ['#B08AC9', '#9A72B0'],  // amethyst
+  ['#C9A08A', '#B08872'],  // clay
+  ['#8AC9B2', '#72B09A'],  // teal
+  ['#A08AC9', '#8872B0'],  // grape
+  ['#C98AA0', '#B07288'],  // mauve
+  ['#8AC9C9', '#72B0B0'],  // seafoam dark
 ];
 
 const NOTE_EMOJIS = ['🎵', '🎶', '🎹', '🌟', '✨', '💫', '🎼', '🎵', '⭐'];
@@ -426,6 +465,7 @@ function playNote(freq) {
 const pianoEl = document.getElementById('piano');
 const keyElements = [];
 let whiteIndex = 0;
+let blackIndex = 0;
 
 NOTES.forEach((note, i) => {
   const el = document.createElement('div');
@@ -444,16 +484,23 @@ NOTES.forEach((note, i) => {
 
   if (note.type === 'white') {
     el.className = 'white-key';
+    const [top, bot] = WHITE_KEY_COLORS[whiteIndex % WHITE_KEY_COLORS.length];
+    el.style.background = `linear-gradient(180deg, ${top} 0%, ${bot} 85%, ${bot}cc 100%)`;
+    label.style.color = bot.replace('#', '#') + '99';
     pianoEl.appendChild(el);
     whiteIndex++;
   } else {
     el.className = 'black-key';
+    const [top, bot] = BLACK_KEY_COLORS[blackIndex % BLACK_KEY_COLORS.length];
+    el.style.background = `linear-gradient(180deg, ${top} 0%, ${bot} 70%, ${bot}dd 100%)`;
+    label.style.color = top + 'aa';
     // Position over the gap between white keys
     const whiteKeyWidth = Math.min(Math.max(36, window.innerWidth * 0.048), 72);
     const blackKeyWidth = Math.min(Math.max(22, window.innerWidth * 0.03), 44);
     const offset = whiteIndex * whiteKeyWidth - blackKeyWidth / 2 - 0.5;
     el.style.left = offset + 'px';
     pianoEl.appendChild(el);
+    blackIndex++;
   }
   keyElements.push(el);
 });
@@ -579,26 +626,99 @@ lockBtn.addEventListener('click', (e) => {
   }
 });
 
-// Intercept Escape when locked
-document.addEventListener('keydown', (e) => {
+// ─── Key Interception ────────────────────────────────────────
+// In fullscreen: block ALL default browser behaviour so the toddler
+// can mash keys freely without opening help, devtools, printing, etc.
+function handleKey(e) {
+  const inFS = !!document.fullscreenElement;
+
+  // Escape handling (lock logic)
   if (e.key === 'Escape' && isLocked) {
     e.preventDefault();
     e.stopPropagation();
-    // Re-enter fullscreen if browser exited it
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch(() => {});
     }
     return;
   }
-  // Play note for any key
+
+  if (inFS) {
+    // Allow only Escape (when unlocked) to exit fullscreen naturally.
+    // Block everything else: F-keys, Ctrl/Cmd combos, Alt combos, Tab, etc.
+    if (e.key !== 'Escape') {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }
+
+  // Play a note for every keypress (even blocked ones)
   const idx = keyToNoteIndex(e.key);
   activateKey(idx);
+}
+
+// Capture phase so we intercept before the browser acts
+document.addEventListener('keydown', handleKey, true);
+
+// Also block keyup defaults in fullscreen (some shortcuts trigger on keyup)
+document.addEventListener('keyup', (e) => {
+  if (document.fullscreenElement && e.key !== 'Escape') {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+}, true);
+
+// Block keyboard shortcuts that use Ctrl/Alt/Meta combos
+document.addEventListener('keypress', (e) => {
+  if (document.fullscreenElement) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+}, true);
+
+// Prevent right-click context menu (toddlers might accidentally trigger it)
+document.addEventListener('contextmenu', (e) => {
+  if (document.fullscreenElement) {
+    e.preventDefault();
+  }
 });
+
+// Prevent middle-click paste / auto-scroll
+document.addEventListener('auxclick', (e) => {
+  if (document.fullscreenElement) {
+    e.preventDefault();
+  }
+});
+
+// Prevent drag events
+document.addEventListener('dragstart', (e) => {
+  if (document.fullscreenElement) {
+    e.preventDefault();
+  }
+});
+
+// ─── Keyboard Lock API ───────────────────────────────────────
+// Captures OS-level keys (F3 Mission Control, F11, Cmd+Tab, etc.)
+// Only works in fullscreen in Chromium browsers.
+function lockKeyboard() {
+  if (navigator.keyboard && navigator.keyboard.lock) {
+    navigator.keyboard.lock().catch(() => {});
+  }
+}
+function unlockKeyboard() {
+  if (navigator.keyboard && navigator.keyboard.unlock) {
+    navigator.keyboard.unlock();
+  }
+}
 
 // If browser fires fullscreenchange (Escape was pressed before JS could catch it)
 document.addEventListener('fullscreenchange', () => {
-  if (!document.fullscreenElement && isLocked) {
-    document.documentElement.requestFullscreen().catch(() => {});
+  if (document.fullscreenElement) {
+    lockKeyboard();
+  } else {
+    unlockKeyboard();
+    if (isLocked) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    }
   }
   updateFullscreenBtnVisibility();
 });
