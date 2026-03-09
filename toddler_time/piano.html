@@ -699,9 +699,19 @@ document.addEventListener('dragstart', (e) => {
 // ─── Keyboard Lock API ───────────────────────────────────────
 // Captures OS-level keys (F3 Mission Control, F11, Cmd+Tab, etc.)
 // Only works in fullscreen in Chromium browsers.
+// Lock system keys EXCEPT Escape — Escape is handled by our own JS lock logic
+const SYSTEM_KEYS_TO_LOCK = [
+  'F1','F2','F3','F4','F5','F6','F7','F8','F9','F10','F11','F12',
+  'MetaLeft','MetaRight','AltLeft','AltRight','ControlLeft','ControlRight',
+  'Tab','CapsLock','BrowserBack','BrowserForward','BrowserRefresh',
+  'BrowserHome','LaunchMail','MediaPlayPause','MediaTrackNext',
+  'MediaTrackPrevious','MediaStop','AudioVolumeUp','AudioVolumeDown',
+  'AudioVolumeMute',
+];
+
 function lockKeyboard() {
   if (navigator.keyboard && navigator.keyboard.lock) {
-    navigator.keyboard.lock().catch(() => {});
+    navigator.keyboard.lock(SYSTEM_KEYS_TO_LOCK).catch(() => {});
   }
 }
 function unlockKeyboard() {
