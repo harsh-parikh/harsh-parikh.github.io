@@ -1,8 +1,8 @@
 {
   "scholar_id": "uCrw1ZMAAAAJ",
   "author": "Harsh Parikh",
-  "fetched_at": "2026-03-28T17:38:35.331628+00:00",
-  "count": 38,
+  "fetched_at": "2026-03-28T17:53:47.308663+00:00",
+  "count": 39,
   "publications": [
     {
       "title": "Demystifying Prediction Powered Inference",
@@ -18,6 +18,23 @@
       "citations": 2,
       "url": "https://arxiv.org/abs/2601.20819",
       "scholar_id": "uCrw1ZMAAAAJ:ldfaerwXgEUC"
+    },
+    {
+      "title": "Lasting Income Costs of Mental and Physical Illness",
+      "authors": [
+        "Emily K. Johnson",
+        "Harsh Parikh",
+        "Catherine K. Ettman",
+        "Ge Ge",
+        "Liza Sopina",
+        "Angela Y. Chang"
+      ],
+      "authors_raw": "Emily K. Johnson and Harsh Parikh and Catherine K. Ettman and Ge Ge and Liza Sopina and Angela Y. Chang",
+      "venue": "JAMA Health Forum",
+      "year": "2026",
+      "citations": 0,
+      "url": "",
+      "scholar_id": "uCrw1ZMAAAAJ:ZHo1McVdvXMC"
     },
     {
       "title": "When Does Agroforestry Income Reduce Deforestation? Evidence from a Natural Experiment in Madagascar",
