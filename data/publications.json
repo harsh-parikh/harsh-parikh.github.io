@@ -293,6 +293,18 @@
       "scholar_id": "uCrw1ZMAAAAJ:u-x6o8ySG0sC"
     },
     {
+      "title": "Graph Machine Learning based Doubly Robust Estimator for Network Causal Effects",
+      "authors": [
+        ""
+      ],
+      "authors_raw": "",
+      "venue": "AISTATS",
+      "year": "2025",
+      "citations": 4,
+      "url": "",
+      "scholar_id": "uCrw1ZMAAAAJ:R3hNpaxXUhUC"
+    },
+    {
       "title": "How many patients do you need? Investigating trial designs for anti‐seizure treatment in acute brain injury patients",
       "authors": [
         "Harsh Parikh",
@@ -328,18 +340,6 @@
       "citations": 4,
       "url": "https://proceedings.mlr.press/v238/parikh24a.html",
       "scholar_id": "uCrw1ZMAAAAJ:e5wmG9Sq2KIC"
-    },
-    {
-      "title": "Graph Machine Learning based Doubly Robust Estimator for Network Causal Effects",
-      "authors": [
-        ""
-      ],
-      "authors_raw": "",
-      "venue": "",
-      "year": "2024",
-      "citations": 4,
-      "url": "",
-      "scholar_id": "uCrw1ZMAAAAJ:R3hNpaxXUhUC"
     },
     {
       "title": "Towards Enhancing Data Equity in Public Health Data Science",
@@ -383,7 +383,7 @@
         ""
       ],
       "authors_raw": "",
-      "venue": "",
+      "venue": "AISTATS",
       "year": "2025",
       "citations": 2,
       "url": "",
@@ -395,7 +395,7 @@
         ""
       ],
       "authors_raw": "",
-      "venue": "",
+      "venue": "NeurIPS",
       "year": "2025",
       "citations": 2,
       "url": "",
@@ -551,7 +551,7 @@
         ""
       ],
       "authors_raw": "",
-      "venue": "",
+      "venue": "NeurIPS",
       "year": "2025",
       "citations": 0,
       "url": "",
