@@ -1,0 +1,25 @@
+{
+  "_comment": "Manual venue/note overrides for publications where Google Scholar has stale metadata. Keys are lowercased title substrings.",
+  "overrides": [
+    {
+      "match": "graph machine learning based doubly robust estimator",
+      "venue": "AISTATS",
+      "year": "2025"
+    },
+    {
+      "match": "cautionary tale on integrating studies with disparate outcome",
+      "venue": "NeurIPS",
+      "year": "2025"
+    },
+    {
+      "match": "data fusion for partial identification of causal effects",
+      "venue": "NeurIPS",
+      "year": "2025"
+    },
+    {
+      "match": "regularizing extrapolation in causal inference",
+      "venue": "AISTATS",
+      "year": "2025"
+    }
+  ]
+}

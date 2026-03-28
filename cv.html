@@ -511,12 +511,24 @@ function toggleTheme(){const h=document.documentElement,c=h.getAttribute('data-t
     }
   }
 
-  fetch('./data/publications.json')
-    .then(r => { if(!r.ok) throw new Error(r.status); return r.json(); })
-    .then(renderPubs)
-    .catch(() => {
-      document.getElementById('scholar-pub-list').innerHTML = '<p style="color:var(--text-dim)">Publications data unavailable. <a href="https://scholar.google.com/citations?user=uCrw1ZMAAAAJ" target="_blank">View on Google Scholar →</a></p>';
+  Promise.all([
+    fetch('./data/publications.json').then(r => { if(!r.ok) throw new Error(r.status); return r.json(); }),
+    fetch('./data/overrides.json').then(r => r.ok ? r.json() : { overrides: [] }).catch(() => ({ overrides: [] }))
+  ]).then(([data, ov]) => {
+    // Apply venue/year overrides
+    (ov.overrides || []).forEach(o => {
+      const match = o.match.toLowerCase();
+      data.publications.forEach(p => {
+        if (p.title.toLowerCase().includes(match)) {
+          if (o.venue) p.venue = o.venue;
+          if (o.year) p.year = o.year;
+        }
+      });
     });
+    renderPubs(data);
+  }).catch(() => {
+    document.getElementById('scholar-pub-list').innerHTML = '<p style="color:var(--text-dim)">Publications data unavailable. <a href="https://scholar.google.com/citations?user=uCrw1ZMAAAAJ" target="_blank">View on Google Scholar →</a></p>';
+  });
 })();
 </script>
 </body>

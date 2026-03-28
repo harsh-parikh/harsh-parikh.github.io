@@ -1,7 +1,7 @@
 {
   "scholar_id": "uCrw1ZMAAAAJ",
   "author": "Harsh Parikh",
-  "fetched_at": "2026-03-28T17:53:47.308663+00:00",
+  "fetched_at": "2026-03-28T18:08:55.470919+00:00",
   "count": 39,
   "publications": [
     {
@@ -332,159 +332,118 @@
     {
       "title": "Graph Machine Learning based Doubly Robust Estimator for Network Causal Effects",
       "authors": [
-        "Seyedeh Baharan Khatami",
-        "Harsh Parikh",
-        "Haowei Chen",
-        "Sudeepa Roy",
-        "Babak Salimi"
+        ""
       ],
-      "authors_raw": "Seyedeh Baharan Khatami and Harsh Parikh and Haowei Chen and Sudeepa Roy and Babak Salimi",
-      "venue": "arXiv e-prints",
+      "authors_raw": "",
+      "venue": "",
       "year": "2024",
       "citations": 4,
-      "url": "https://ui.adsabs.harvard.edu/abs/2024arXiv240311332B/abstract",
+      "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:R3hNpaxXUhUC"
     },
     {
       "title": "Towards Enhancing Data Equity in Public Health Data Science",
       "authors": [
-        "Yiran Wang",
-        "Alicia E Boyd",
-        "Lillian Rountree",
-        "Yi Ren",
-        "Kate Nyhan",
-        "Ruchit Nagar",
-        "Jackson Higginbottom",
-        "Megan L Ranney",
-        "Harsh Parikh",
-        "Bhramar Mukherjee"
+        ""
       ],
-      "authors_raw": "Yiran Wang and Alicia E Boyd and Lillian Rountree and Yi Ren and Kate Nyhan and Ruchit Nagar and Jackson Higginbottom and Megan L Ranney and Harsh Parikh and Bhramar Mukherjee",
-      "venue": "arXiv preprint arXiv:2508.20301",
+      "authors_raw": "",
+      "venue": "",
       "year": "2025",
       "citations": 3,
-      "url": "https://arxiv.org/abs/2508.20301",
+      "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:35N4QoGY0k4C"
     },
     {
       "title": "Heterogeneous Treatment Effects in Social Networks",
       "authors": [
-        "Amir Gilad",
-        "Harsh Parikh",
-        "Sudeepa Roy",
-        "Babak Salimi"
+        ""
       ],
-      "authors_raw": "Amir Gilad and Harsh Parikh and Sudeepa Roy and Babak Salimi",
-      "venue": "arXiv preprint arXiv:2105.10591",
+      "authors_raw": "",
+      "venue": "",
       "year": "2021",
       "citations": 3,
-      "url": "https://arxiv.org/abs/2105.10591",
+      "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:roLk4NBRz8UC"
     },
     {
       "title": "Demystifying Prediction Powered Inference",
       "authors": [
-        "Yilin Song",
-        "Dan M Kluger",
-        "Harsh Parikh",
-        "Tian Gu"
+        ""
       ],
-      "authors_raw": "Yilin Song and Dan M Kluger and Harsh Parikh and Tian Gu",
-      "venue": "arXiv preprint arXiv:2601.20819",
+      "authors_raw": "",
+      "venue": "",
       "year": "2026",
       "citations": 2,
-      "url": "https://arxiv.org/abs/2601.20819",
+      "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:ldfaerwXgEUC"
     },
     {
       "title": "Regularizing Extrapolation in Causal Inference",
       "authors": [
-        "David Arbour",
-        "Harsh Parikh",
-        "Bijan Niknam",
-        "Elizabeth Stuart",
-        "Kara Rudolph",
-        "Avi Feller"
+        ""
       ],
-      "authors_raw": "David Arbour and Harsh Parikh and Bijan Niknam and Elizabeth Stuart and Kara Rudolph and Avi Feller",
-      "venue": "arXiv preprint arXiv:2509.17180",
+      "authors_raw": "",
+      "venue": "",
       "year": "2025",
       "citations": 2,
-      "url": "https://arxiv.org/abs/2509.17180",
+      "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:ns9cj8rnVeAC"
     },
     {
       "title": "A Cautionary Tale on Integrating Studies with Disparate Outcome Measures for Causal Inference",
       "authors": [
-        "Harsh Parikh",
-        "Trang Quynh Nguyen",
-        "Elizabeth A Stuart",
-        "Kara E Rudolph",
-        "Caleb H Miles"
+        ""
       ],
-      "authors_raw": "Harsh Parikh and Trang Quynh Nguyen and Elizabeth A Stuart and Kara E Rudolph and Caleb H Miles",
-      "venue": "arXiv preprint arXiv:2505.11014",
+      "authors_raw": "",
+      "venue": "",
       "year": "2025",
       "citations": 2,
-      "url": "https://arxiv.org/abs/2505.11014",
+      "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:YFjsv_pBGBYC"
     },
     {
       "title": "Precision mental health: predicting heterogeneous treatment effects for depression through data integration",
       "authors": [
-        "Carly L Brantner",
-        "Trang Quynh Nguyen",
-        "Harsh Parikh",
-        "Congwen Zhao",
-        "Hwanhee Hong",
-        "Elizabeth A Stuart"
+        ""
       ],
-      "authors_raw": "Carly L Brantner and Trang Quynh Nguyen and Harsh Parikh and Congwen Zhao and Hwanhee Hong and Elizabeth A Stuart",
-      "venue": "Journal of the Royal Statistical Society Series C: Applied Statistics",
+      "authors_raw": "",
+      "venue": "",
       "year": "2025",
       "citations": 1,
-      "url": "https://academic.oup.com/jrsssc/advance-article-abstract/doi/10.1093/jrsssc/qlaf068/8378251",
+      "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:O3NaXMp0MMsC"
     },
     {
       "title": "Causal inference for high-stakes decisions",
       "authors": [
-        "Harsh J Parikh"
+        ""
       ],
-      "authors_raw": "Harsh J Parikh",
+      "authors_raw": "",
       "venue": "",
       "year": "2023",
       "citations": 1,
-      "url": "https://search.proquest.com/openview/1c011ab1b173a132b6defc6c2a48f485/1?pq-origsite=gscholar&cbl=18750&diss=y",
+      "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:mVmsd5A6BfQC"
     },
     {
       "title": "Gargling affect on salivary electrochemical parameters to predict blood glucose",
       "authors": [
-        "Sarul Malik",
-        "Shalini Gupta",
-        "Harsh Parikh",
-        "Sneh Anand"
+        ""
       ],
-      "authors_raw": "Sarul Malik and Shalini Gupta and Harsh Parikh and Sneh Anand",
-      "venue": "2016 International Conference on Computational Techniques in Information and Communication Technologies (ICCTICT)",
+      "authors_raw": "",
+      "venue": "",
       "year": "2016",
       "citations": 1,
-      "url": "https://ieeexplore.ieee.org/abstract/document/7514650/",
+      "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:9yKSN-GCB0IC"
     },
     {
       "title": "Lasting Income Costs of Mental and Physical Illness",
       "authors": [
-        "Emily K. Johnson",
-        "Harsh Parikh",
-        "Catherine K. Ettman",
-        "Ge Ge",
-        "Liza Sopina",
-        "Angela Y. Chang"
+        ""
       ],
-      "authors_raw": "Emily K. Johnson and Harsh Parikh and Catherine K. Ettman and Ge Ge and Liza Sopina and Angela Y. Chang",
-      "venue": "JAMA Health Forum",
+      "authors_raw": "",
+      "venue": "",
       "year": "2026",
       "citations": 0,
       "url": "",
@@ -493,193 +452,145 @@
     {
       "title": "When Does Agroforestry Income Reduce Deforestation? Evidence from a Natural Experiment in Madagascar",
       "authors": [
-        "Camille DeSisto",
-        "Ranaivo Rasolofoson",
-        "Michelle Foley",
-        "Harsh Parikh"
+        ""
       ],
-      "authors_raw": "Camille DeSisto and Ranaivo Rasolofoson and Michelle Foley and Harsh Parikh",
-      "venue": "arXiv preprint arXiv:2603.13706",
+      "authors_raw": "",
+      "venue": "",
       "year": "2026",
       "citations": 0,
-      "url": "https://arxiv.org/abs/2603.13706",
+      "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:SeFeTyx0c_EC"
     },
     {
       "title": "TEA-Time: Transporting Effects Across Time",
       "authors": [
-        "Harsh Parikh",
-        "Gabriel Levin-Konigsberg",
-        "Dominique Perrault-Joncas",
-        "Alexander Volfovsky"
+        ""
       ],
-      "authors_raw": "Harsh Parikh and Gabriel Levin-Konigsberg and Dominique Perrault-Joncas and Alexander Volfovsky",
-      "venue": "arXiv preprint arXiv:2603.07018",
+      "authors_raw": "",
+      "venue": "",
       "year": "2026",
       "citations": 0,
-      "url": "https://arxiv.org/abs/2603.07018",
+      "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:HoB7MX3m0LUC"
     },
     {
       "title": "Controllable Generative Sandbox for Causal Inference",
       "authors": [
-        "Qi Zhang",
-        "Harsh Parikh",
-        "Ashley Naimi",
-        "Razieh Nabi",
-        "Christopher Kim",
-        "Timothy Lash"
+        ""
       ],
-      "authors_raw": "Qi Zhang and Harsh Parikh and Ashley Naimi and Razieh Nabi and Christopher Kim and Timothy Lash",
-      "venue": "arXiv preprint arXiv:2603.03587",
+      "authors_raw": "",
+      "venue": "",
       "year": "2026",
       "citations": 0,
-      "url": "https://arxiv.org/abs/2603.03587",
+      "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:g5m5HwL7SMYC"
     },
     {
       "title": "Why are there many equally good models? An Anatomy of the Rashomon Effect",
       "authors": [
-        "Harsh Parikh"
+        ""
       ],
-      "authors_raw": "Harsh Parikh",
-      "venue": "arXiv preprint arXiv:2601.06730",
+      "authors_raw": "",
+      "venue": "",
       "year": "2026",
       "citations": 0,
-      "url": "https://arxiv.org/abs/2601.06730",
+      "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:2P1L_qKh6hAC"
     },
     {
       "title": "Ten Core Concepts for Ensuring Data Equity in Public Health",
       "authors": [
-        "Yiran Wang",
-        "Alicia E Boyd",
-        "Lillian Rountree",
-        "Yi Ren",
-        "Kate Nyhan",
-        "Ruchit Nagar",
-        "Jackson Higginbottom",
-        "Megan L Ranney",
-        "Harsh Parikh",
-        "Bhramar Mukherjee"
+        ""
       ],
-      "authors_raw": "Yiran Wang and Alicia E Boyd and Lillian Rountree and Yi Ren and Kate Nyhan and Ruchit Nagar and Jackson Higginbottom and Megan L Ranney and Harsh Parikh and Bhramar Mukherjee",
-      "venue": "JAMA Health Forum",
+      "authors_raw": "",
+      "venue": "",
       "year": "2026",
       "citations": 0,
-      "url": "https://jamanetwork.com/journals/jama-health-forum/fullarticle/2843724",
+      "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:70eg2SAEIzsC"
     },
     {
       "title": "Demystifying Proximal Causal Inference",
       "authors": [
-        "Grace V Ringlein",
-        "Trang Quynh Nguyen",
-        "Peter P Zandi",
-        "Elizabeth A Stuart",
-        "Harsh Parikh"
+        ""
       ],
-      "authors_raw": "Grace V Ringlein and Trang Quynh Nguyen and Peter P Zandi and Elizabeth A Stuart and Harsh Parikh",
-      "venue": "arXiv preprint arXiv:2512.24413",
+      "authors_raw": "",
+      "venue": "",
       "year": "2025",
       "citations": 0,
-      "url": "https://arxiv.org/abs/2512.24413",
+      "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:vV6vV6tmYwMC"
     },
     {
       "title": "Breast cancer and income loss in Denmark: heterogeneous outcomes and longitudinal effects",
       "authors": [
-        "Emily K Johnson",
-        "Harsh Parikh",
-        "Kim Rose Olsen",
-        "Angela Y Chang",
-        "Liza Sopina"
+        ""
       ],
-      "authors_raw": "Emily K Johnson and Harsh Parikh and Kim Rose Olsen and Angela Y Chang and Liza Sopina",
-      "venue": "Nature Communications",
+      "authors_raw": "",
+      "venue": "",
       "year": "2025",
       "citations": 0,
-      "url": "https://www.nature.com/articles/s41467-025-66524-y",
+      "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:hMod-77fHWUC"
     },
     {
-      "title": "Representativeness and Generalizability of NCI-Funded Multi-Modality Randomized Clinical Trials (RCTs): A Case Study of Locally-Advanced Non-Small Cell Lung Cancer (LA-NSCLC) Based on RTOG-0617 and the National Cancer Database (NCDB)",
+      "title": "Representativeness and Generalizability of NCI-Funded Multi-Modality Randomized Clinical Trials (RCTs): A Case Study of Locally-Advanced Non-Small Cell Lung Cancer (LA-NSCLC …",
       "authors": [
-        "CFPM de Sousa",
-        "H Parikh",
-        "JD Bradley",
-        "E Stuart",
-        "C Hu"
+        ""
       ],
-      "authors_raw": "CFPM de Sousa and H Parikh and JD Bradley and E Stuart and C Hu",
-      "venue": "International Journal of Radiation Oncology, Biology, Physics",
+      "authors_raw": "",
+      "venue": "",
       "year": "2025",
       "citations": 0,
-      "url": "https://www.redjournal.org/article/S0360-3016(25)04244-0/abstract",
+      "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:RGFaLdJalmkC"
     },
     {
       "title": "Data Fusion for Partial Identification of Causal Effects",
       "authors": [
-        "Quinn Lanners",
-        "Cynthia Rudin",
-        "Alexander Volfovsky",
-        "Harsh Parikh"
+        ""
       ],
-      "authors_raw": "Quinn Lanners and Cynthia Rudin and Alexander Volfovsky and Harsh Parikh",
-      "venue": "arXiv preprint arXiv:2505.24296",
+      "authors_raw": "",
+      "venue": "",
       "year": "2025",
       "citations": 0,
-      "url": "https://arxiv.org/abs/2505.24296",
+      "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:BqipwSGYUEgC"
     },
     {
       "title": "Synthetic Control as Balancing Scores",
       "authors": [
-        "Harsh Parikh"
+        ""
       ],
-      "authors_raw": "Harsh Parikh",
-      "venue": "International Conference on Learning Representation (ICLR)",
+      "authors_raw": "",
+      "venue": "",
       "year": "2023",
       "citations": 0,
-      "url": "https://openreview.net/pdf?id=AFLNyWMg4D2",
+      "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:dhFuZR0502QC"
     },
     {
       "title": "AME: Interpretable Almost Exact Matching for Causal Inference",
       "authors": [
-        "Haoning Jiang",
-        "Thomas Howell",
-        "Neha R Gupta",
-        "Vittorio Orlandi",
-        "Marco Morucci",
-        "Harsh Parikh",
-        "Sudeepa Roy",
-        "Cynthia Rudin",
-        "Alexander Volfovsky"
+        ""
       ],
-      "authors_raw": "Haoning Jiang and Thomas Howell and Neha R Gupta and Vittorio Orlandi and Marco Morucci and Harsh Parikh and Sudeepa Roy and Cynthia Rudin and Alexander Volfovsky",
-      "venue": "NeurIPS 2021 Competitions and Demonstrations Track",
+      "authors_raw": "",
+      "venue": "",
       "year": "2022",
       "citations": 0,
-      "url": "https://proceedings.mlr.press/v176/jiang22b.html",
+      "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:_Qo2XoVZTnwC"
     },
     {
       "title": "Almost-Exact Matching for Interpretable and Trustworthy Causal Inference",
       "authors": [
-        "Quinn Michael Lanners",
-        "Harsh Parikh",
-        "Srikar Katta",
-        "David Page",
-        "Cynthia Rudin",
-        "Alexander Volfovsky"
+        ""
       ],
-      "authors_raw": "Quinn Michael Lanners and Harsh Parikh and Srikar Katta and David Page and Cynthia Rudin and Alexander Volfovsky",
-      "venue": "2025 Joint Mathematics Meetings (JMM 2025)",
+      "authors_raw": "",
+      "venue": "",
       "year": "",
       "citations": 0,
-      "url": "https://meetings.ams.org/math/jmm2025/meetingapp.cgi/Paper/40332",
+      "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:JV2RwH3_ST0C"
     }
   ]
