@@ -473,6 +473,7 @@ function toggleTheme(){const h=document.documentElement,c=h.getAttribute('data-t
     if(!data || !data.publications){ container.innerHTML = '<p style="color:var(--text-dim)">Could not load publications.</p>'; return; }
 
     const pubs = data.publications.filter(p => !shouldExclude(p.title));
+    pubs.sort((a, b) => b.citations - a.citations);
     const total = pubs.length;
     let html = '';
 
