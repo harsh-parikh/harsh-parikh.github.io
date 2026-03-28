@@ -2,7 +2,7 @@
   "scholar_id": "uCrw1ZMAAAAJ",
   "author": "Harsh Parikh",
   "fetched_at": "2026-03-28T18:08:55.470919+00:00",
-  "count": 39,
+  "count": 38,
   "publications": [
     {
       "title": "Validating causal inference methods",
@@ -208,18 +208,6 @@
       "citations": 8,
       "url": "https://assets.pubpub.org/jcjvqwck/Huang%20&%20Parikh%20(2024)_Just%20Accepted-01723833367992.pdf",
       "scholar_id": "uCrw1ZMAAAAJ:HDshCWvjkbEC"
-    },
-    {
-      "title": "Emerging market equity benchmarks for Japanese investors: countries, sectors or styles? H. Parikh",
-      "authors": [
-        "Harsh Parikh"
-      ],
-      "authors_raw": "Harsh Parikh",
-      "venue": "Journal of Asset Management",
-      "year": "2019",
-      "citations": 6,
-      "url": "https://link.springer.com/article/10.1057/s41260-019-00123-7",
-      "scholar_id": "uCrw1ZMAAAAJ:M05iB0D1s5AC"
     },
     {
       "title": "Investigating the\" wisdom of crowds\" at scale",
