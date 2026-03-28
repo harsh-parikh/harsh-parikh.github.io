@@ -87,8 +87,8 @@ def main():
     pubs = fetch_publications()
     print(f"Found {len(pubs)} publications")
 
-    # Sort by year descending, then by citation count descending
-    pubs.sort(key=lambda p: (-(int(p["year"]) if p["year"].isdigit() else 0), -p["citations"]))
+    # Sort by citation count descending (primary), then year descending (secondary)
+    pubs.sort(key=lambda p: (-p["citations"], -(int(p["year"]) if p["year"].isdigit() else 0)))
 
     output = {
         "scholar_id": SCHOLAR_ID,
