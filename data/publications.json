@@ -72,7 +72,12 @@
       "citations": 34,
       "url": "https://www.thelancet.com/journals/landig/article/PIIS2589-7500(23)00088-2/fulltext",
       "scholar_id": "uCrw1ZMAAAAJ:9ZlFYXVOiuMC",
-      "note": "co-first author"
+      "note": "co-first author",
+      "co_first": [
+        "harsh parikh",
+        "kentaro hoffman",
+        "haoqi sun"
+      ]
     },
     {
       "title": "Non‐invasive platform to estimate fasting blood glucose levels from salivary electrochemical parameters",
@@ -333,7 +338,11 @@
       "citations": 4,
       "url": "https://proceedings.mlr.press/v238/parikh24a.html",
       "scholar_id": "uCrw1ZMAAAAJ:e5wmG9Sq2KIC",
-      "note": "co-first author"
+      "note": "co-first author",
+      "co_first": [
+        "harsh parikh",
+        "quinn m lanners"
+      ]
     },
     {
       "title": "Towards Enhancing Data Equity in Public Health Data Science",
@@ -403,7 +412,11 @@
       "citations": 2,
       "url": "https://arxiv.org/abs/2509.17180",
       "scholar_id": "uCrw1ZMAAAAJ:ns9cj8rnVeAC",
-      "note": "co-first author"
+      "note": "co-first author",
+      "co_first": [
+        "david arbour",
+        "harsh parikh"
+      ]
     },
     {
       "title": "A Cautionary Tale on Integrating Studies with Disparate Outcome Measures for Causal Inference",
