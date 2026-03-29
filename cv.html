@@ -518,17 +518,17 @@ var DATA = {"scholar_id": "uCrw1ZMAAAAJ", "author": "Harsh Parikh", "fetched_at"
 
 function isMe(n){n=n.toLowerCase().replace(/\./g,'').trim();return n==='harsh parikh'||n==='harsh j parikh'||n==='h parikh'||(n.charAt(0)==='h'&&n.slice(-6)==='parikh')}
 function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML}
-function fmtA(arr){return arr.map(function(a){return isMe(a)?'<span class="pub-me">'+esc(a)+'</span>':esc(a)}).join(', ')}
+function fmtA(arr){return arr.map(function(a){return isMe(a)?'<span class="pub-me">'+esc(a)+'<\/span>':esc(a)}).join(', ')}
 var pubs=DATA.publications;
 pubs.sort(function(a,b){return (parseInt(b.year)||0)-(parseInt(a.year)||0)||b.citations-a.citations});
 var total=pubs.length,html='';
 for(var i=0;i<total;i++){
   var p=pubs[i],num=total-i;
-  var venue=p.venue?'<span class="pub-venue">'+esc(p.venue)+'</span>':'';
+  var venue=p.venue?'<span class="pub-venue">'+esc(p.venue)+'<\/span>':'';
   var year=p.year?', '+esc(p.year):'';
-  var cite=p.citations>0?' <span class="pub-note">'+p.citations+' cited</span>':'';
-  var ttl=p.url?'<a href="'+esc(p.url)+'" target="_blank" style="color:var(--text-bright)">'+esc(p.title)+'</a>':esc(p.title);
-  html+='<div class="pub-entry" data-num="'+num+'.">'+fmtA(p.authors)+'. '+ttl+(venue?'. '+venue:'')+year+cite+'</div>';
+  var cite=p.citations>0?' <span class="pub-note">'+p.citations+' cited<\/span>':'';
+  var ttl=p.url?'<a href="'+esc(p.url)+'" target="_blank" style="color:var(--text-bright)">'+esc(p.title)+'<\/a>':esc(p.title);
+  html+='<div class="pub-entry" data-num="'+num+'.">'+fmtA(p.authors)+'. '+ttl+(venue?'. '+venue:'')+year+cite+'<\/div>';
 }
 document.getElementById('scholar-pub-list').innerHTML=html;
 var meta=document.getElementById('scholar-meta');
