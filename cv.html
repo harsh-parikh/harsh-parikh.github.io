@@ -559,7 +559,7 @@ function toggleTheme(){const h=document.documentElement,c=h.getAttribute('data-t
       html += '<div class="pub-entry" data-num="' + num + '.">'
         + formatAuthors(p.authors) + '. '
         + (p.url ? '<a href="' + escHtml(p.url) + '" target="_blank" style="color:var(--text-bright)">' + escHtml(p.title) + '</a>' : escHtml(p.title))
-        + '. ' + venue + year + cite
+        + (venue ? '. ' + venue : '') + year + cite
         + '</div>\n';
     });
 
