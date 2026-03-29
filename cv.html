@@ -573,7 +573,7 @@ function toggleTheme(){const h=document.documentElement,c=h.getAttribute('data-t
 
   Promise.all([
     fetch('./data/publications.json').then(r => { if(!r.ok) throw new Error(r.status); return r.json(); }),
-    fetch('./data/overrides.json').then(r => r.ok ? r.json() : { overrides: [] }).catch(() => ({ overrides: [] }))
+    fetch('./data/overrides.json').then(r => r.ok ? r.json() : { overrides: [], exclude: [] }).catch(() => ({ overrides: [], exclude: [] }))
   ]).then(([data, ov]) => {
     // Apply venue/year overrides
     (ov.overrides || []).forEach(o => {
@@ -585,6 +585,11 @@ function toggleTheme(){const h=document.documentElement,c=h.getAttribute('data-t
         }
       });
     });
+    // Apply exclusions
+    const excl = (ov.exclude || []).map(e => e.toLowerCase());
+    if (excl.length) {
+      data.publications = data.publications.filter(p => !excl.some(e => p.title.toLowerCase().includes(e)));
+    }
     renderPubs(data);
   }).catch(() => {
     document.getElementById('scholar-pub-list').innerHTML = '<p style="color:var(--text-dim)">Publications data unavailable. <a href="https://scholar.google.com/citations?user=uCrw1ZMAAAAJ" target="_blank">View on Google Scholar →</a></p>';
