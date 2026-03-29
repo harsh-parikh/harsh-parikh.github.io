@@ -13,7 +13,7 @@
         "Eric Tchetgen Tchetgen"
       ],
       "authors_raw": "Harsh Parikh and Carlos Varjao and Louise Xu and Eric Tchetgen Tchetgen",
-      "venue": "International conference on machine learning",
+      "venue": "International Conference on Machine Learning (ICML)",
       "year": "2022",
       "citations": 75,
       "url": "https://proceedings.mlr.press/v162/parikh22a.html",
@@ -113,7 +113,7 @@
         "Durai Sundar"
       ],
       "authors_raw": "Shayoni Dutta and Spandan Madan and Harsh Parikh and Durai Sundar",
-      "venue": "Bmc Genomics",
+      "venue": "BMC Genomics",
       "year": "2016",
       "citations": 13,
       "url": "https://link.springer.com/article/10.1186/s12864-016-3323-9",
@@ -128,7 +128,7 @@
         "Alexander Volfovsky"
       ],
       "authors_raw": "Srikar Katta and Harsh Parikh and Cynthia Rudin and Alexander Volfovsky",
-      "venue": "International Conference on Artificial Intelligence and Statistics",
+      "venue": "International Conference on Artificial Intelligence and Statistics (AISTATS)",
       "year": "2024",
       "citations": 11,
       "url": "https://proceedings.mlr.press/v238/katta24a.html",
@@ -175,7 +175,7 @@
         "David Page"
       ],
       "authors_raw": "Quinn Lanners and Harsh Parikh and Alexander Volfovsky and Cynthia Rudin and David Page",
-      "venue": "Uncertainty in Artificial Intelligence",
+      "venue": "Conference on Uncertainty in Artificial Intelligence (UAI)",
       "year": "2023",
       "citations": 9,
       "url": "https://proceedings.mlr.press/v216/lanners23a.html",
@@ -286,7 +286,7 @@
         ""
       ],
       "authors_raw": "",
-      "venue": "AISTATS",
+      "venue": "International Conference on Artificial Intelligence and Statistics (AISTATS)",
       "year": "2025",
       "citations": 4,
       "url": "",
@@ -323,7 +323,7 @@
         "Alexander Volfovsky"
       ],
       "authors_raw": "Harsh Parikh and Quinn M Lanners and Zade Akras and Sahar Zafar and M Brandon Westover and Cynthia Rudin and Alexander Volfovsky",
-      "venue": "International Conference on Artificial Intelligence and Statistics",
+      "venue": "International Conference on Artificial Intelligence and Statistics (AISTATS)",
       "year": "2024",
       "citations": 4,
       "url": "https://proceedings.mlr.press/v238/parikh24a.html",
@@ -371,8 +371,8 @@
         ""
       ],
       "authors_raw": "",
-      "venue": "AISTATS",
-      "year": "2025",
+      "venue": "International Conference on Artificial Intelligence and Statistics (AISTATS)",
+      "year": "2026",
       "citations": 2,
       "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:ns9cj8rnVeAC"
@@ -383,7 +383,7 @@
         ""
       ],
       "authors_raw": "",
-      "venue": "NeurIPS",
+      "venue": "Advances in Neural Information Processing Systems (NeurIPS)",
       "year": "2025",
       "citations": 2,
       "url": "",
@@ -539,7 +539,7 @@
         ""
       ],
       "authors_raw": "",
-      "venue": "NeurIPS",
+      "venue": "Advances in Neural Information Processing Systems (NeurIPS)",
       "year": "2025",
       "citations": 0,
       "url": "",

@@ -3,23 +3,23 @@
   "overrides": [
     {
       "match": "graph machine learning based doubly robust estimator",
-      "venue": "AISTATS",
+      "venue": "International Conference on Artificial Intelligence and Statistics (AISTATS)",
       "year": "2025"
     },
     {
       "match": "cautionary tale on integrating studies with disparate outcome",
-      "venue": "NeurIPS",
+      "venue": "Advances in Neural Information Processing Systems (NeurIPS)",
       "year": "2025"
     },
     {
       "match": "data fusion for partial identification of causal effects",
-      "venue": "NeurIPS",
+      "venue": "Advances in Neural Information Processing Systems (NeurIPS)",
       "year": "2025"
     },
     {
       "match": "regularizing extrapolation in causal inference",
-      "venue": "AISTATS",
-      "year": "2025"
+      "venue": "International Conference on Artificial Intelligence and Statistics (AISTATS)",
+      "year": "2026"
     }
   ]
 }
