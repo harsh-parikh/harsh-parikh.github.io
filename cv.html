@@ -520,7 +520,7 @@ function isMe(n){n=n.toLowerCase().replace(/\./g,'').trim();return n==='harsh pa
 function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML}
 function fmtA(arr){return arr.map(function(a){return isMe(a)?'<span class="pub-me">'+esc(a)+'</span>':esc(a)}).join(', ')}
 var pubs=DATA.publications;
-pubs.sort(function(a,b){return b.citations-a.citations||(parseInt(b.year)||0)-(parseInt(a.year)||0)});
+pubs.sort(function(a,b){return (parseInt(b.year)||0)-(parseInt(a.year)||0)||b.citations-a.citations});
 var total=pubs.length,html='';
 for(var i=0;i<total;i++){
   var p=pubs[i],num=total-i;
