@@ -1,1 +1,2 @@
-scholarly>=1.7.0
+# No external dependencies — fetch_scholar.py uses only stdlib (urllib + re).
+# Kept as a placeholder so `pip install -r requirements.txt` stays a no-op.
