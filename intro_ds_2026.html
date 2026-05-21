@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>BIS5XX: Introduction to Health Data Science — Harsh Parikh, Yale</title>
+<title>BIS 527: Introduction to Health Data Science — Harsh Parikh, Yale</title>
 <meta name="description" content="Introduction to Health Data Science. Yale School of Public Health, Department of Biostatistics. Fall 2026. Instructor: Harsh Parikh, Ph.D." />
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
@@ -158,6 +158,126 @@ section { margin-bottom: 72px; scroll-margin-top: 80px; }
   nav .links { display: none; }
   .hero .meta { gap: 24px; }
 }
+
+/* ============== Chatbot widget ============== */
+.chat-fab {
+  position: fixed; bottom: 24px; right: 24px;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--accent); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+  z-index: 200; transition: transform 0.2s, box-shadow 0.2s;
+}
+.chat-fab:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(0,0,0,0.45); }
+.chat-fab svg { width: 24px; height: 24px; stroke: #fff; stroke-width: 2; fill: none; }
+html.light .chat-fab svg { stroke: #fff; }
+.chat-fab.hidden { display: none; }
+
+.chat-panel {
+  position: fixed; bottom: 92px; right: 24px;
+  width: 380px; max-width: calc(100vw - 32px);
+  height: 560px; max-height: calc(100vh - 120px);
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 16px; display: flex; flex-direction: column;
+  z-index: 201; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  overflow: hidden;
+  opacity: 0; transform: translateY(8px) scale(0.98);
+  pointer-events: none; transition: opacity 0.18s ease, transform 0.18s ease;
+}
+.chat-panel.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+html.light .chat-panel { box-shadow: 0 20px 60px rgba(20,30,60,0.18); }
+
+.chat-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px; border-bottom: 1px solid var(--border); background: var(--bg-card);
+}
+.chat-header .title { font-family: 'DM Serif Display', serif; font-size: 16px; color: var(--text); }
+.chat-header .subtitle { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+.chat-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 22px; line-height: 1; padding: 2px 8px; border-radius: 6px; }
+.chat-close:hover { color: var(--text); background: var(--bg-card-hover); }
+
+.chat-messages {
+  flex: 1; overflow-y: auto; padding: 16px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.chat-messages::-webkit-scrollbar { width: 6px; }
+.chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.chat-msg {
+  max-width: 92%; padding: 10px 13px; border-radius: 12px;
+  font-size: 13px; line-height: 1.55;
+}
+.chat-msg.bot { align-self: flex-start; background: var(--bg-card); border: 1px solid var(--border-light); color: var(--text); }
+.chat-msg.user { align-self: flex-end; background: rgba(126,184,255,0.14); color: var(--text); border: 1px solid rgba(126,184,255,0.22); }
+html.light .chat-msg.user { background: rgba(37,99,235,0.08); border-color: rgba(37,99,235,0.18); }
+.chat-msg p { margin: 0; }
+.chat-msg p + p, .chat-msg p + ul { margin-top: 6px; }
+.chat-msg ul { padding-left: 18px; margin: 6px 0 0 0; }
+.chat-msg li { margin-bottom: 3px; }
+.chat-msg strong { color: var(--white); font-weight: 600; }
+.chat-msg a { color: var(--accent); }
+.chat-msg .source-link {
+  display: block; margin-top: 8px; padding-top: 8px;
+  border-top: 1px solid var(--border-light);
+  font-size: 11px; color: var(--text-dim);
+}
+.chat-msg .source-link a { color: var(--accent); text-decoration: none; }
+.chat-msg .source-link a:hover { text-decoration: underline; }
+
+.chat-suggestions { display: flex; flex-direction: column; gap: 6px; margin-top: 2px; }
+.chat-suggestion {
+  background: transparent; border: 1px solid var(--border);
+  color: var(--text-muted); padding: 8px 12px; border-radius: 18px;
+  font-size: 12px; cursor: pointer; text-align: left;
+  font-family: inherit; transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.chat-suggestion:hover { color: var(--text); border-color: var(--text-muted); background: var(--bg-card); }
+
+.chat-typing {
+  display: flex; gap: 4px; padding: 12px 14px;
+  background: var(--bg-card); border: 1px solid var(--border-light);
+  border-radius: 12px; align-self: flex-start; width: fit-content;
+}
+.chat-typing span {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--text-dim); opacity: 0.4;
+  animation: chat-bounce 1.2s infinite;
+}
+.chat-typing span:nth-child(2) { animation-delay: 0.15s; }
+.chat-typing span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes chat-bounce {
+  0%, 60%, 100% { opacity: 0.4; transform: translateY(0); }
+  30% { opacity: 1; transform: translateY(-3px); }
+}
+
+.chat-form {
+  display: flex; gap: 8px; padding: 12px;
+  border-top: 1px solid var(--border); background: var(--bg-card);
+}
+.chat-input {
+  flex: 1; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 10px; padding: 9px 12px; color: var(--text);
+  font-family: inherit; font-size: 13px; outline: none;
+  transition: border-color 0.15s;
+}
+.chat-input:focus { border-color: var(--accent); }
+.chat-send {
+  background: var(--accent); color: #fff; border: none;
+  border-radius: 10px; padding: 0 14px; cursor: pointer;
+  font-weight: 600; font-size: 13px; font-family: inherit;
+}
+.chat-send:hover { filter: brightness(1.1); }
+.chat-send:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.chat-disclaimer {
+  font-size: 10px; color: var(--text-dim); padding: 0 12px 8px;
+  text-align: center; background: var(--bg-card); border-top: 1px solid var(--border-light);
+}
+
+@media (max-width: 480px) {
+  .chat-panel { width: calc(100vw - 16px); right: 8px; bottom: 84px; height: calc(100vh - 100px); }
+  .chat-fab { bottom: 16px; right: 16px; }
+}
 </style>
 </head>
 <body>
@@ -165,7 +285,7 @@ section { margin-bottom: 72px; scroll-margin-top: 80px; }
 <!-- Nav -->
 <nav>
   <div class="wrap inner">
-    <div><span class="logo">BIS5XX</span><span>Fall 2026</span></div>
+    <div><span class="logo">BIS 527</span><span>Fall 2026</span></div>
     <div style="display:flex;align-items:center">
       <div class="links">
         <a href="#about">About</a>
@@ -460,6 +580,489 @@ document.addEventListener('DOMContentLoaded', function() {
   }, { rootMargin: '-80px 0px -60% 0px', threshold: 0 });
   sections.forEach(function(s) { observer.observe(s); });
 });
+</script>
+
+<!-- ============== Syllabus Chatbot ============== -->
+<button class="chat-fab" id="chat-fab" aria-label="Ask the syllabus" title="Ask a question about the course">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+  </svg>
+</button>
+
+<aside class="chat-panel" id="chat-panel" role="dialog" aria-label="Syllabus assistant" aria-modal="false">
+  <div class="chat-header">
+    <div>
+      <div class="title">Ask the syllabus</div>
+      <div class="subtitle">BIS 527 · Fall 2026</div>
+    </div>
+    <button class="chat-close" id="chat-close" aria-label="Close chat">&times;</button>
+  </div>
+  <div class="chat-messages" id="chat-messages" aria-live="polite"></div>
+  <form class="chat-form" id="chat-form" autocomplete="off">
+    <input class="chat-input" id="chat-input" type="text" placeholder="e.g. When is HW 1 due?" autocomplete="off" />
+    <button class="chat-send" type="submit">Send</button>
+  </form>
+  <div class="chat-disclaimer">Answers are drawn from the syllabus on this page.</div>
+</aside>
+
+<script>
+(function() {
+  // ---------- Knowledge base ----------
+  // Each entry: keywords (for matching), phrases (multi-word boost), section anchor, title, HTML answer.
+  var KB = [
+    {
+      id: 'course-basics',
+      keywords: ['course','class','bis527','527','bis','name','title','code','overview','what','about','health','data','science'],
+      phrases: ['what is this course','course name','course code','what course'],
+      section: '#about', title: 'About the course',
+      answer: '<p>This is <strong>BIS 527: Introduction to Health Data Science</strong>, offered Fall 2026 by the Yale School of Public Health, Department of Biostatistics. It covers three modules: data structures &amp; algorithms, machine learning, and causal inference — with applications in public health.</p>'
+    },
+    {
+      id: 'meeting-time',
+      keywords: ['when','time','meet','meeting','schedule','session','sessions','length','minutes','long','often','days'],
+      phrases: ['class meeting','how long','how often','when does the class','class time'],
+      section: '#about', title: 'When the class meets',
+      answer: '<p>The class meets <strong>twice a week</strong>, with each session lasting <strong>80 minutes</strong>. Specific days and times will be posted on Canvas.</p>'
+    },
+    {
+      id: 'instructor',
+      keywords: ['instructor','professor','teacher','harsh','parikh','email','contact','prof','teach','teaches'],
+      phrases: ['who is the instructor','who teaches','contact the instructor','email the instructor'],
+      section: '#about', title: 'Instructor',
+      answer: '<p>The instructor is <strong>Harsh Parikh, Ph.D.</strong>, Assistant Professor of Biostatistics. Email: <a href="mailto:harsh.parikh@yale.edu">harsh.parikh@yale.edu</a>.</p>'
+    },
+    {
+      id: 'office-hours',
+      keywords: ['office','hours','oh','room','location','where','when','help','available'],
+      phrases: ['office hours','where are office hours','when are office hours'],
+      section: '#about', title: 'Office hours',
+      answer: '<p>The instructor holds <strong>1 hour of office hours per week</strong> at <strong>60 College St, Room 200</strong> (exact day/time TBD; posted on Canvas). Each TF also holds 1 office hour per week.</p>'
+    },
+    {
+      id: 'tfs',
+      keywords: ['tf','tfs','ta','tas','teaching','fellow','fellows','assistant','assistants'],
+      phrases: ['teaching fellow','teaching assistant','who are the tfs'],
+      section: '#about', title: 'Teaching Fellows',
+      answer: '<p>The course will have <strong>3–4 Teaching Fellows</strong> (names TBD). Each TF holds 1 office hour per week.</p>'
+    },
+    {
+      id: 'prereqs',
+      keywords: ['prerequisite','prerequisites','prereq','prereqs','requirement','requirements','need','background','before','required','knowledge'],
+      phrases: ['prerequisites for','what do i need','prereqs','what background'],
+      section: '#about', title: 'Prerequisites',
+      answer: '<p>Foundational knowledge (or concurrent enrollment) in:</p><ul><li><strong>Linear algebra</strong> — vectors, matrices, basic operations</li><li><strong>Set theory</strong> — notation, union/intersection/complement</li><li><strong>Probability</strong> — random variables, distributions, Bayes’ rule</li><li><strong>Programming</strong> — any language; Python helpful but not required</li></ul>'
+    },
+    {
+      id: 'who-should-take',
+      keywords: ['enroll','enrolling','should','take','for','audience','mph','phd','ms','undergrad','undergraduate','graduate','student','students','who'],
+      phrases: ['who should take','who can enroll','is this for me','who is this for'],
+      section: '#about', title: 'Who should enroll',
+      answer: '<p>This course is <strong>required for MS/PhD students in Biostatistics</strong>. It is also appropriate for MPH students with a quantitative focus, advanced undergraduates (with permission), and Stats &amp; DS or CS graduate students.</p>'
+    },
+    {
+      id: 'programming',
+      keywords: ['python','language','programming','code','coding','r','matlab','java','software','tool','tools','libraries','library'],
+      phrases: ['programming language','what language','do i need python','software stack'],
+      section: '#materials', title: 'Programming & software',
+      answer: '<p>The course uses <strong>Python</strong>. The full stack: Python 3, NumPy, Pandas, Scikit-learn, PyTorch, Matplotlib, Seaborn, Jupyter, and Overleaf (LaTeX) for writing.</p>'
+    },
+    {
+      id: 'textbooks',
+      keywords: ['textbook','textbooks','book','books','reading','readings','required','buy','purchase','resource','resources'],
+      phrases: ['required textbook','do i need to buy','what books','what readings'],
+      section: '#materials', title: 'Textbooks',
+      answer: '<p>There is <strong>no single required textbook</strong>. All readings are freely available online:</p><ul><li><a href="https://mcube.lab.nycu.edu.tw/~cfung/docs/books/cormen2001algorithms.pdf" target="_blank">CLRS — Introduction to Algorithms</a></li><li><a href="https://users.cs.duke.edu/~cynthia/teaching.html" target="_blank">IAML — Intuition for the Algorithms of ML</a> (Rudin)</li><li><a href="https://www.statlearning.com" target="_blank">ISLR</a></li><li><a href="https://arxiv.org/pdf/2305.18793" target="_blank">FCCI — A First Course in Causal Inference</a> (Ding)</li><li><a href="https://mixtape.scunning.com/" target="_blank">Causal Inference: The Mixtape</a></li><li><a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank">Python Data Science Handbook</a></li></ul>'
+    },
+    {
+      id: 'modules',
+      keywords: ['module','modules','topic','topics','cover','covers','unit','units','part','parts','section','sections'],
+      phrases: ['what modules','course modules','what topics','what does the course cover'],
+      section: '#schedule', title: 'Modules',
+      answer: '<p>The course has three modules:</p><ul><li><strong>M1 (Wks 1–4):</strong> Data Structures &amp; Algorithms — lists, arrays, sorting, trees, graphs, dynamic programming</li><li><strong>M2 (Wks 5–9):</strong> Machine Learning &amp; AI — statistical learning, linear methods, nonparametric methods, neural nets, clustering</li><li><strong>M3 (Wks 10–12):</strong> Causal Inference — potential outcomes, DAGs, matching, weighting, difference-in-differences</li></ul>'
+    },
+    {
+      id: 'objectives',
+      keywords: ['objective','objectives','goal','goals','learn','learning','outcome','outcomes','lo','los','will'],
+      phrases: ['learning objectives','what will i learn','course goals','course outcomes'],
+      section: '#objectives', title: 'Learning objectives',
+      answer: '<p>By the end of the course you will be able to: (1) <strong>formulate</strong> precise estimands from natural-language problems, (2) <strong>decompose</strong> complex problems into tractable sub-problems, (3) <strong>implement</strong> data science methods in Python, (4) <strong>interpret</strong> results in context, (5) <strong>communicate</strong> findings to varied audiences, and (6) <strong>evaluate</strong> the appropriateness of analytical approaches.</p>'
+    },
+    {
+      id: 'weekly-schedule',
+      keywords: ['week','weekly','schedule','lecture','lectures','topic','topics','covered','calendar','syllabus'],
+      phrases: ['weekly schedule','lecture topics','what do we cover','class schedule'],
+      section: '#schedule', title: 'Weekly schedule',
+      answer: '<p>12-week schedule:</p><ul><li><strong>Wk 1:</strong> Course intro &amp; problem formulation</li><li><strong>Wks 1–2:</strong> Lists, arrays, sorting</li><li><strong>Wk 3:</strong> Trees &amp; graph traversal</li><li><strong>Wk 4:</strong> Dynamic programming</li><li><strong>Wk 5:</strong> Statistical learning</li><li><strong>Wk 6:</strong> Linear methods</li><li><strong>Wk 7:</strong> Nonparametric methods</li><li><strong>Wk 8:</strong> Neural networks</li><li><strong>Wk 9:</strong> Clustering</li><li><strong>Wk 10:</strong> Potential outcomes &amp; DAGs</li><li><strong>Wk 11:</strong> Matching &amp; weighting; DiD</li><li><strong>Wk 12:</strong> Project presentations &amp; data equity</li></ul>'
+    },
+    {
+      id: 'grade-weights',
+      keywords: ['grade','grades','grading','weight','weights','percent','percentage','percentages','worth','count','breakdown','evaluation','assessment','assessments','components'],
+      phrases: ['grade breakdown','how is the grade','grading scheme','how much is worth','final grade'],
+      section: '#assessments', title: 'Grade breakdown',
+      answer: '<p>Your final grade is composed of:</p><ul><li><strong>36%</strong> — Homework Assignments (4 total, 9% each)</li><li><strong>30%</strong> — Course Project</li><li><strong>18%</strong> — Scribe Notes (2 total, 9% each)</li><li><strong>11%</strong> — In-Class Quizzes</li><li><strong>5%</strong> — Participation</li></ul>'
+    },
+    {
+      id: 'grade-scale',
+      keywords: ['scale','letter','honors','pass','fail','hp','cutoff','cutoffs','threshold','thresholds','ysph'],
+      phrases: ['grading scale','letter grade','cutoff for honors','what is honors','passing grade'],
+      section: '#assessments', title: 'Grading scale',
+      answer: '<p>YSPH uses Honors / High Pass / Pass / Fail:</p><ul><li><strong>≥ 90%</strong> — Honors (H)</li><li><strong>80–89%</strong> — High Pass (HP)</li><li><strong>65–79%</strong> — Pass (P)</li><li><strong>&lt; 65%</strong> — Fail (F)</li></ul>'
+    },
+    {
+      id: 'homework',
+      keywords: ['homework','hw','assignment','assignments','problem','problems','pset','psets','due','dates','release','released'],
+      phrases: ['how many homework','homework due','when is hw','homework schedule'],
+      section: '#assessments', title: 'Homework',
+      answer: '<p>There are <strong>4 homework assignments</strong>, roughly every 3 weeks, each worth 9% (36% total). They contain conceptual, programming, and applied problems.</p><ul><li><strong>HW 1:</strong> released Wk 2 → due <strong>Wk 4</strong></li><li><strong>HW 2:</strong> released Wk 5 → due <strong>Wk 7</strong></li><li><strong>HW 3:</strong> released Wk 8 → due <strong>Wk 10</strong></li><li><strong>HW 4:</strong> released Wk 10 → due <strong>Wk 12</strong></li></ul>'
+    },
+    {
+      id: 'project',
+      keywords: ['project','team','teams','group','groups','proposal','report','poster','final','capstone','presentation','presentations'],
+      phrases: ['course project','group project','team project','final project','project deliverable','project deliverables'],
+      section: '#assessments', title: 'Course project',
+      answer: '<p>The course project is <strong>team-based (3–4 students)</strong> and worth 30%. Deliverables:</p><ul><li><strong>Team formation:</strong> Wk 3</li><li><strong>Proposal:</strong> Wk 4</li><li><strong>Progress report:</strong> Wk 8</li><li><strong>Poster session:</strong> Wk 12 (in class)</li><li><strong>Final report:</strong> Finals Week</li></ul>'
+    },
+    {
+      id: 'scribe',
+      keywords: ['scribe','scribes','note','notes','latex','lecture'],
+      phrases: ['scribe notes','lecture notes','what are scribe'],
+      section: '#assessments', title: 'Scribe notes',
+      answer: '<p>Each student writes <strong>2 sets of scribe notes</strong> over the semester (9% each, 18% total). These are detailed LaTeX lecture notes — with extensions beyond what was covered in class — that document a given lecture for the rest of the class.</p>'
+    },
+    {
+      id: 'quizzes',
+      keywords: ['quiz','quizzes','test','tests','exam','exams','final','midterm','closed','book'],
+      phrases: ['in-class quiz','how many quizzes','are there exams','is there a final exam'],
+      section: '#assessments', title: 'Quizzes',
+      answer: '<p>There are short <strong>5–10 minute in-class quizzes</strong> on readings and lecture material (11% total). There are <strong>no traditional midterm or final exams</strong> — the course project takes that role. <strong>No AI is permitted on quizzes.</strong></p>'
+    },
+    {
+      id: 'participation',
+      keywords: ['participation','participate','attendance','attend','discussion','forum','engagement','engage'],
+      phrases: ['class participation','attendance policy'],
+      section: '#assessments', title: 'Participation',
+      answer: '<p>Participation is worth <strong>5%</strong> based on class engagement, discussions, and forum contributions. Participation grades are released at <strong>midterm and end of semester</strong> so you can calibrate expectations early.</p>'
+    },
+    {
+      id: 'late-policy',
+      keywords: ['late','extension','extensions','deadline','miss','missed','emergency','submit'],
+      phrases: ['late policy','late submission','can i turn in late','extension request','miss a deadline'],
+      section: '#assessments', title: 'Late policy',
+      answer: '<p>Late submissions are <strong>not accepted</strong>. If you have a documented emergency, contact the instructor <em>before</em> the deadline to discuss.</p>'
+    },
+    {
+      id: 'turnaround',
+      keywords: ['turnaround','feedback','graded','return','returned','back','timeline'],
+      phrases: ['grading turnaround','when will i get','feedback timeline','when do we get grades'],
+      section: '#assessments', title: 'Grading turnaround',
+      answer: '<p>Homework and scribe notes are graded and returned within <strong>1 week</strong>. Participation grades are released at the <strong>midterm and end of semester</strong>.</p>'
+    },
+    {
+      id: 'ai-policy',
+      keywords: ['ai','chatgpt','claude','copilot','llm','gpt','gemini','tool','tools','allowed','use','using','permitted','disclose','disclosure'],
+      phrases: ['can i use ai','ai policy','is chatgpt allowed','use copilot','ai tools','large language model'],
+      section: '#policies', title: 'AI policy',
+      answer: '<p>AI assistants (ChatGPT, Claude, Copilot, etc.) are <strong>permitted as learning aids</strong> for homework and scribe notes — with conditions:</p><ul><li>You must <strong>understand</strong> everything you submit</li><li>You must <strong>disclose</strong> all AI use at the top of submissions; submissions without acknowledgment will not be accepted</li><li>You own all accuracy — AI hallucinations are your responsibility</li><li><strong>No AI on quizzes.</strong></li></ul>'
+    },
+    {
+      id: 'collaboration',
+      keywords: ['collaborate','collaboration','work','together','classmate','classmates','discuss','discussion','share','sharing','partner'],
+      phrases: ['can i work together','collaborate with classmates','discuss homework','work with others','can i share'],
+      section: '#policies', title: 'Collaboration policy',
+      answer: '<p>Discussion with classmates is <strong>encouraged</strong>, but:</p><ul><li>All <strong>written solutions must be your own</strong></li><li>All <strong>code must be written individually</strong></li><li><strong>Acknowledge</strong> all collaborators and resources</li><li>Do not share answers, code, or LaTeX files</li></ul>'
+    },
+    {
+      id: 'devices',
+      keywords: ['laptop','laptops','phone','phones','ipad','tablet','device','devices','electronic','computer','computers','screen','notes','handwritten'],
+      phrases: ['can i bring my laptop','are laptops allowed','phones in class','take notes on laptop'],
+      section: '#policies', title: 'Electronic devices',
+      answer: '<p>Mobile phones, iPads, and laptops are <strong>not permitted during lectures</strong>. Handwritten notes encourage deeper processing. Exceptions are available for documented accommodations. <strong>No devices during quizzes</strong> under any circumstances.</p>'
+    },
+    {
+      id: 'integrity',
+      keywords: ['integrity','cheat','cheating','plagiarism','plagiarize','capi','honor','misconduct','violation','violations'],
+      phrases: ['academic integrity','honor code','plagiarism policy','what happens if i cheat'],
+      section: '#policies', title: 'Academic integrity',
+      answer: '<p>All students must follow the YSPH <strong>Code of Academic and Professional Integrity (CAPI)</strong>. Violations — plagiarism, unauthorized collaboration, undisclosed AI use, fabrication — are referred to the CAPI Committee. Penalties can include expulsion.</p>'
+    },
+    {
+      id: 'canvas',
+      keywords: ['canvas','lms','platform','login'],
+      phrases: ['where is canvas','canvas link','canvas page'],
+      section: '#about', title: 'Canvas',
+      answer: '<p>The course Canvas page is at <a href="https://canvas.yale.edu" target="_blank">canvas.yale.edu</a>. Log in with your Yale NetID.</p>'
+    },
+    {
+      id: 'website',
+      keywords: ['website','site','web','page','github','url','link'],
+      phrases: ['course website','where is the website','class website'],
+      section: '#about', title: 'Course website',
+      answer: '<p>The course website is <a href="https://harshparikh.github.io/intro_ds_2026.html" target="_blank">harshparikh.github.io/intro_ds_2026.html</a>.</p>'
+    },
+    {
+      id: 'accessibility',
+      keywords: ['accessibility','accommodation','accommodations','disability','sas','student','services','accessible'],
+      phrases: ['disability services','request accommodations','student accessibility'],
+      section: '#resources', title: 'Accessibility',
+      answer: '<p>Yale Student Accessibility Services (SAS): email <a href="mailto:sas@yale.edu">sas@yale.edu</a> or call <strong>203-432-2324</strong>.</p>'
+    },
+    {
+      id: 'mental-health',
+      keywords: ['mental','health','wellness','counselor','counseling','therapy','stress','anxiety','depression','988','crisis','support','help','overwhelmed'],
+      phrases: ['mental health','wellness counselor','crisis hotline','i feel overwhelmed'],
+      section: '#resources', title: 'Mental health',
+      answer: '<p>YSPH Wellness Counselor: <a href="mailto:diane.frankel-gramelis@yale.edu">Diane Frankel-Gramelis</a>. For crisis support, dial <strong>988</strong> (24/7 Suicide &amp; Crisis Lifeline).</p>'
+    },
+    {
+      id: 'writing',
+      keywords: ['writing','writing-lab','consult','consultation','paper','essay','draft','editing'],
+      phrases: ['writing support','graduate writing lab','help with writing'],
+      section: '#resources', title: 'Writing support',
+      answer: '<p>The Yale Graduate Writing Lab offers free consultations. Book at <a href="https://yale.mywconline.net" target="_blank">yale.mywconline.net</a>.</p>'
+    },
+    {
+      id: 'title-ix',
+      keywords: ['title','ix','harassment','discrimination','sexual','misconduct','oiea'],
+      phrases: ['title ix','sexual harassment','title nine'],
+      section: '#resources', title: 'Title IX',
+      answer: '<p>Deputy Title IX Coordinator: <a href="mailto:kelly.shay@yale.edu">Kelly Shay</a>. More info at the <a href="https://oiea.yale.edu/" target="_blank">Office of Institutional Equity &amp; Accessibility</a>.</p>'
+    },
+    {
+      id: 'inclusivity',
+      keywords: ['inclusive','inclusivity','inclusion','diversity','community','practice','equity','belonging'],
+      phrases: ['diversity and inclusion','community of practice','feel included'],
+      section: '#resources', title: 'Inclusivity',
+      answer: '<p>Office of Community &amp; Practice: contact <a href="mailto:mayur.desai@yale.edu">Mayur Desai</a> or <a href="mailto:randi.mccray@yale.edu">Randi McCray</a>.</p>'
+    },
+    {
+      id: 'safety',
+      keywords: ['safety','emergency','fire','classroom','evacuation','preparedness'],
+      phrases: ['classroom safety','in case of emergency','what to do in emergency'],
+      section: '#resources', title: 'Classroom safety',
+      answer: '<p>See <a href="https://emergency.yale.edu" target="_blank">emergency.yale.edu</a> and the <a href="https://emergency.yale.edu/be-prepared/classroom-preparedness" target="_blank">Classroom Preparedness</a> guide.</p>'
+    }
+  ];
+
+  var STOPWORDS = new Set(['a','an','the','is','are','was','were','be','been','being','do','does','did','have','has','had','of','in','on','at','for','to','from','by','with','about','as','this','that','these','those','i','im','ive','you','your','we','they','my','our','their','it','its','me','please','tell','want','know','need','can','could','will','would','should','shall','may','might','must','and','or','but','if','then','so','than','there','here','any','some','what','when','where','how','why','who','which'])
+
+  // Multi-word synonyms applied to the raw query string first.
+  var PHRASE_SYNS = [
+    [/problem\s+sets?/g, 'homework'],
+    [/p\s*sets?/g, 'homework'],
+    [/large\s+language\s+models?/g, 'ai'],
+    [/lang\.?\s*models?/g, 'ai'],
+    [/letter\s+grade/g, 'grading scale'],
+    [/honor\s+code/g, 'academic integrity'],
+    [/team\s+project/g, 'project'],
+    [/group\s+project/g, 'project'],
+    [/final\s+project/g, 'project'],
+    [/finals?\s+week/g, 'project'],
+    [/office\s*hours?/g, 'office hours'],
+    [/teaching\s+fellows?/g, 'tf'],
+    [/teaching\s+assistants?/g, 'tf'],
+    [/grad\s+student/g, 'graduate student']
+  ];
+
+  // Single-word synonyms applied after tokenization.
+  var WORD_SYNS = {
+    'hw': 'homework', 'pset': 'homework', 'psets': 'homework',
+    'assignment': 'homework', 'assignments': 'homework',
+    'prof': 'instructor', 'professor': 'instructor', 'teacher': 'instructor',
+    'chatgpt': 'ai', 'gpt': 'ai', 'claude': 'ai', 'copilot': 'ai', 'llm': 'ai', 'llms': 'ai', 'gemini': 'ai',
+    'pct': 'percentage', 'percent': 'percentage', 'percents': 'percentage', 'percentages': 'percentage',
+    'ta': 'tf', 'tas': 'tf', 'fellows': 'tf', 'fellow': 'tf',
+    'modules': 'module', 'topics': 'topic',
+    'textbooks': 'textbook', 'books': 'book', 'readings': 'reading',
+    'lectures': 'lecture', 'classes': 'class', 'sessions': 'session',
+    'allowed': 'permitted', 'use': 'allowed',
+    'graded': 'grading', 'grades': 'grading',
+    'deadlines': 'deadline', 'dates': 'deadline', 'due': 'deadline',
+    'plagiarize': 'plagiarism', 'cheat': 'cheating', 'cheating': 'plagiarism'
+  };
+
+  function normalize(s) {
+    return s.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+  }
+
+  function applyPhraseSyns(s) {
+    PHRASE_SYNS.forEach(function(pair) { s = s.replace(pair[0], pair[1]); });
+    return s;
+  }
+
+  function tokenize(text) {
+    var norm = applyPhraseSyns(normalize(text));
+    return norm.split(' ')
+      .filter(function(t) { return t.length > 0 && !STOPWORDS.has(t); })
+      .map(function(t) { return WORD_SYNS[t] || t; });
+  }
+
+  function score(qTokens, qStr, chunk) {
+    var s = 0;
+    var seen = new Set();
+    var kwSet = new Set(chunk.keywords.map(function(k) { return WORD_SYNS[k] || k; }));
+
+    // Direct keyword hits (each unique query token can score once per chunk).
+    qTokens.forEach(function(t) {
+      if (kwSet.has(t) && !seen.has(t)) { s += 2; seen.add(t); }
+    });
+
+    // Substring fuzzy match (only for longer tokens, to avoid noise).
+    qTokens.forEach(function(t) {
+      if (t.length < 4) return;
+      kwSet.forEach(function(k) {
+        if (k === t) return;
+        if (k.length < 4) return;
+        if (k.indexOf(t) !== -1 || t.indexOf(k) !== -1) { s += 0.4; }
+      });
+    });
+
+    // Phrase bonuses.
+    (chunk.phrases || []).forEach(function(p) {
+      if (qStr.indexOf(p) !== -1) s += 5;
+    });
+
+    // Title word bonus.
+    normalize(chunk.title).split(' ').forEach(function(tw) {
+      if (tw.length > 2 && qTokens.indexOf(tw) !== -1) s += 1;
+    });
+
+    return s;
+  }
+
+  function findMatches(query) {
+    var qStr = applyPhraseSyns(normalize(query));
+    var qTokens = tokenize(query);
+    if (qTokens.length === 0) return [];
+    var scored = KB.map(function(c) { return { chunk: c, s: score(qTokens, qStr, c) }; });
+    scored.sort(function(a, b) { return b.s - a.s; });
+    return scored.filter(function(x) { return x.s >= 2; }).slice(0, 2);
+  }
+
+  var SECTION_NAMES = {
+    '#about': 'About',
+    '#objectives': 'Learning Objectives',
+    '#schedule': 'Schedule',
+    '#assessments': 'Assessments',
+    '#materials': 'Materials',
+    '#policies': 'Policies',
+    '#resources': 'Resources'
+  };
+
+  // ---------- UI wiring ----------
+  var fab = document.getElementById('chat-fab');
+  var panel = document.getElementById('chat-panel');
+  var closeBtn = document.getElementById('chat-close');
+  var messages = document.getElementById('chat-messages');
+  var form = document.getElementById('chat-form');
+  var input = document.getElementById('chat-input');
+  var greeted = false;
+
+  fab.addEventListener('click', function() {
+    panel.classList.add('open');
+    if (!greeted) { greeted = true; greet(); }
+    setTimeout(function() { input.focus(); }, 180);
+  });
+  closeBtn.addEventListener('click', function() { panel.classList.remove('open'); });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && panel.classList.contains('open')) panel.classList.remove('open');
+  });
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var q = input.value.trim();
+    if (!q) return;
+    input.value = '';
+    addUserMessage(q);
+    setTimeout(function() { respond(q); }, 250);
+  });
+
+  function addUserMessage(text) {
+    var div = document.createElement('div');
+    div.className = 'chat-msg user';
+    div.textContent = text;
+    messages.appendChild(div);
+    scrollDown();
+  }
+
+  function addBotMessage(html) {
+    var div = document.createElement('div');
+    div.className = 'chat-msg bot';
+    div.innerHTML = html;
+    messages.appendChild(div);
+    scrollDown();
+    return div;
+  }
+
+  function showTyping() {
+    var div = document.createElement('div');
+    div.className = 'chat-typing';
+    div.id = 'chat-typing-indicator';
+    div.innerHTML = '<span></span><span></span><span></span>';
+    messages.appendChild(div);
+    scrollDown();
+  }
+
+  function hideTyping() {
+    var t = document.getElementById('chat-typing-indicator');
+    if (t) t.remove();
+  }
+
+  function scrollDown() { messages.scrollTop = messages.scrollHeight; }
+
+  function sourceFooter(section) {
+    var name = SECTION_NAMES[section] || 'Syllabus';
+    return '<div class="source-link">Source: <a href="' + section + '">' + name + ' →</a></div>';
+  }
+
+  function greet() {
+    addBotMessage('<p>Hi! I can answer questions about the BIS 527 syllabus — grading, deadlines, policies, readings, and more. If I can’t find an answer here, I’ll point you to the instructor.</p>');
+    var suggestions = [
+      "What's the grade breakdown?",
+      "Can I use ChatGPT for homework?",
+      "When is HW 1 due?",
+      "What are the prerequisites?",
+      "Are laptops allowed in class?"
+    ];
+    var wrap = document.createElement('div');
+    wrap.className = 'chat-suggestions';
+    suggestions.forEach(function(s) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'chat-suggestion';
+      btn.textContent = s;
+      btn.addEventListener('click', function() {
+        addUserMessage(s);
+        wrap.remove();
+        setTimeout(function() { respond(s); }, 200);
+      });
+      wrap.appendChild(btn);
+    });
+    messages.appendChild(wrap);
+    scrollDown();
+  }
+
+  function respond(query) {
+    showTyping();
+    setTimeout(function() {
+      hideTyping();
+      var matches = findMatches(query);
+      if (matches.length === 0) {
+        addBotMessage('<p>I couldn’t find an answer to that in the syllabus. Please email the instructor at <a href="mailto:harsh.parikh@yale.edu?subject=BIS%20527%20Question">harsh.parikh@yale.edu</a> or ask during office hours.</p>');
+        return;
+      }
+      var top = matches[0];
+      addBotMessage(top.chunk.answer + sourceFooter(top.chunk.section));
+
+      // Include a second match only if it is clearly also relevant.
+      if (matches.length > 1 && matches[1].s >= Math.max(3, top.s * 0.65) && matches[1].chunk.id !== top.chunk.id) {
+        var second = matches[1].chunk;
+        setTimeout(function() {
+          addBotMessage('<p style="font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px">Related</p>' + second.answer + sourceFooter(second.section));
+        }, 300);
+      }
+    }, 380);
+  }
+})();
 </script>
 
 </body>
