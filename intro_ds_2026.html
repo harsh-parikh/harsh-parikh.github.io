@@ -608,236 +608,283 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 (function() {
   // ---------- Knowledge base ----------
-  // Each entry: keywords (for matching), phrases (multi-word boost), section anchor, title, HTML answer.
+  // Each entry has tiered keywords:
+  //   strong  — distinctive terms that uniquely identify this topic (high weight)
+  //   weak    — generic/related words that only count when reinforced (low weight)
+  //   phrases — multi-word substrings of the raw query that signal strong intent
+  // A chunk is only returned if it has SOME signal: a strong hit, a phrase hit,
+  // a title hit, or at least 2 weak hits. This avoids matching on single generic
+  // words like "class" or "course".
   var KB = [
     {
       id: 'course-basics',
-      keywords: ['course','class','bis527','527','bis','name','title','code','overview','what','about','health','data','science'],
-      phrases: ['what is this course','course name','course code','what course'],
+      strong: ['bis527','527','bis','overview','description'],
+      weak: ['course','name','title','code','health','data','science'],
+      phrases: ['what is this course','course name','course code','what course','tell me about the course','about this course'],
       section: '#about', title: 'About the course',
       answer: '<p>This is <strong>BIS 527: Introduction to Health Data Science</strong>, offered Fall 2026 by the Yale School of Public Health, Department of Biostatistics. It covers three modules: data structures &amp; algorithms, machine learning, and causal inference — with applications in public health.</p>'
     },
     {
       id: 'meeting-time',
-      keywords: ['when','time','meet','meeting','schedule','session','sessions','length','minutes','long','often','days'],
-      phrases: ['class meeting','how long','how often','when does the class','class time'],
+      strong: ['meet','meeting','session','sessions'],
+      weak: ['time','schedule','length','minutes','long','often','days','class','when'],
+      phrases: ['class meeting','how long is the class','how often does','when does the class','class time','when is class','when do we meet','meeting time'],
       section: '#about', title: 'When the class meets',
       answer: '<p>The class meets <strong>twice a week</strong>, with each session lasting <strong>80 minutes</strong>. Specific days and times will be posted on Canvas.</p>'
     },
     {
       id: 'instructor',
-      keywords: ['instructor','professor','teacher','harsh','parikh','email','contact','prof','teach','teaches'],
-      phrases: ['who is the instructor','who teaches','contact the instructor','email the instructor'],
+      strong: ['instructor','professor','harsh','parikh','prof'],
+      weak: ['teacher','email','contact','teach','teaches'],
+      phrases: ['who is the instructor','who teaches','contact the instructor','email the instructor','who is teaching'],
       section: '#about', title: 'Instructor',
       answer: '<p>The instructor is <strong>Harsh Parikh, Ph.D.</strong>, Assistant Professor of Biostatistics. Email: <a href="mailto:harsh.parikh@yale.edu">harsh.parikh@yale.edu</a>.</p>'
     },
     {
       id: 'office-hours',
-      keywords: ['office','hours','oh','room','location','where','when','help','available'],
-      phrases: ['office hours','where are office hours','when are office hours'],
+      strong: ['office'],
+      weak: ['hours','room','location','help','available'],
+      phrases: ['office hours','where are office hours','when are office hours','can i come to office'],
       section: '#about', title: 'Office hours',
       answer: '<p>The instructor holds <strong>1 hour of office hours per week</strong> at <strong>60 College St, Room 200</strong> (exact day/time TBD; posted on Canvas). Each TF also holds 1 office hour per week.</p>'
     },
     {
       id: 'tfs',
-      keywords: ['tf','tfs','ta','tas','teaching','fellow','fellows','assistant','assistants'],
-      phrases: ['teaching fellow','teaching assistant','who are the tfs'],
+      strong: ['tf','tfs','fellow','fellows'],
+      weak: ['ta','tas','teaching','assistant','assistants'],
+      phrases: ['teaching fellow','teaching assistant','who are the tfs','contact a tf','contact the tf'],
       section: '#about', title: 'Teaching Fellows',
       answer: '<p>The course will have <strong>3–4 Teaching Fellows</strong> (names TBD). Each TF holds 1 office hour per week.</p>'
     },
     {
       id: 'prereqs',
-      keywords: ['prerequisite','prerequisites','prereq','prereqs','requirement','requirements','need','background','before','required','knowledge'],
-      phrases: ['prerequisites for','what do i need','prereqs','what background'],
+      strong: ['prerequisite','prerequisites','prereq','prereqs'],
+      weak: ['requirement','requirements','background','required','knowledge'],
+      phrases: ['prerequisites for','what do i need to know','prereqs','what background','what should i know before'],
       section: '#about', title: 'Prerequisites',
       answer: '<p>Foundational knowledge (or concurrent enrollment) in:</p><ul><li><strong>Linear algebra</strong> — vectors, matrices, basic operations</li><li><strong>Set theory</strong> — notation, union/intersection/complement</li><li><strong>Probability</strong> — random variables, distributions, Bayes’ rule</li><li><strong>Programming</strong> — any language; Python helpful but not required</li></ul>'
     },
     {
       id: 'who-should-take',
-      keywords: ['enroll','enrolling','should','take','for','audience','mph','phd','ms','undergrad','undergraduate','graduate','student','students','who'],
-      phrases: ['who should take','who can enroll','is this for me','who is this for'],
+      strong: ['enroll','enrollment','enrolling'],
+      weak: ['audience','mph','phd','ms','undergrad','undergraduate','graduate','student','students'],
+      phrases: ['who should take','who can enroll','is this for me','who is this for','can i take this','am i allowed to take'],
       section: '#about', title: 'Who should enroll',
       answer: '<p>This course is <strong>required for MS/PhD students in Biostatistics</strong>. It is also appropriate for MPH students with a quantitative focus, advanced undergraduates (with permission), and Stats &amp; DS or CS graduate students.</p>'
     },
     {
       id: 'programming',
-      keywords: ['python','language','programming','code','coding','r','matlab','java','software','tool','tools','libraries','library'],
-      phrases: ['programming language','what language','do i need python','software stack'],
+      strong: ['python','language','programming'],
+      weak: ['r','code','coding','software','tool','tools','libraries','library','matlab','java'],
+      phrases: ['programming language','what language','do i need python','software stack','what programming','what coding'],
       section: '#materials', title: 'Programming & software',
       answer: '<p>The course uses <strong>Python</strong>. The full stack: Python 3, NumPy, Pandas, Scikit-learn, PyTorch, Matplotlib, Seaborn, Jupyter, and Overleaf (LaTeX) for writing.</p>'
     },
     {
       id: 'textbooks',
-      keywords: ['textbook','textbooks','book','books','reading','readings','required','buy','purchase','resource','resources'],
-      phrases: ['required textbook','do i need to buy','what books','what readings'],
+      strong: ['textbook','textbooks','book','books'],
+      weak: ['reading','readings','buy','purchase','resource','resources'],
+      phrases: ['required textbook','do i need to buy','what books','what readings','what should i read'],
       section: '#materials', title: 'Textbooks',
       answer: '<p>There is <strong>no single required textbook</strong>. All readings are freely available online:</p><ul><li><a href="https://mcube.lab.nycu.edu.tw/~cfung/docs/books/cormen2001algorithms.pdf" target="_blank">CLRS — Introduction to Algorithms</a></li><li><a href="https://users.cs.duke.edu/~cynthia/teaching.html" target="_blank">IAML — Intuition for the Algorithms of ML</a> (Rudin)</li><li><a href="https://www.statlearning.com" target="_blank">ISLR</a></li><li><a href="https://arxiv.org/pdf/2305.18793" target="_blank">FCCI — A First Course in Causal Inference</a> (Ding)</li><li><a href="https://mixtape.scunning.com/" target="_blank">Causal Inference: The Mixtape</a></li><li><a href="https://jakevdp.github.io/PythonDataScienceHandbook/" target="_blank">Python Data Science Handbook</a></li></ul>'
     },
     {
       id: 'modules',
-      keywords: ['module','modules','topic','topics','cover','covers','unit','units','part','parts','section','sections'],
-      phrases: ['what modules','course modules','what topics','what does the course cover'],
+      strong: ['module','modules'],
+      weak: ['topic','topics','cover','covers','unit','units','part','parts'],
+      phrases: ['what modules','course modules','what does the course cover','what topics are covered'],
       section: '#schedule', title: 'Modules',
       answer: '<p>The course has three modules:</p><ul><li><strong>M1 (Wks 1–4):</strong> Data Structures &amp; Algorithms — lists, arrays, sorting, trees, graphs, dynamic programming</li><li><strong>M2 (Wks 5–9):</strong> Machine Learning &amp; AI — statistical learning, linear methods, nonparametric methods, neural nets, clustering</li><li><strong>M3 (Wks 10–12):</strong> Causal Inference — potential outcomes, DAGs, matching, weighting, difference-in-differences</li></ul>'
     },
     {
       id: 'objectives',
-      keywords: ['objective','objectives','goal','goals','learn','learning','outcome','outcomes','lo','los','will'],
-      phrases: ['learning objectives','what will i learn','course goals','course outcomes'],
+      strong: ['objective','objectives','goal','goals'],
+      weak: ['outcome','outcomes','learn','learning'],
+      phrases: ['learning objectives','what will i learn','course goals','course outcomes','what am i going to learn'],
       section: '#objectives', title: 'Learning objectives',
       answer: '<p>By the end of the course you will be able to: (1) <strong>formulate</strong> precise estimands from natural-language problems, (2) <strong>decompose</strong> complex problems into tractable sub-problems, (3) <strong>implement</strong> data science methods in Python, (4) <strong>interpret</strong> results in context, (5) <strong>communicate</strong> findings to varied audiences, and (6) <strong>evaluate</strong> the appropriateness of analytical approaches.</p>'
     },
     {
       id: 'weekly-schedule',
-      keywords: ['week','weekly','schedule','lecture','lectures','topic','topics','covered','calendar','syllabus'],
-      phrases: ['weekly schedule','lecture topics','what do we cover','class schedule'],
+      strong: ['week','weekly','schedule','calendar','syllabus'],
+      weak: ['lecture','lectures','topic','topics','covered'],
+      phrases: ['weekly schedule','lecture topics','what do we cover each week','class schedule','full schedule'],
       section: '#schedule', title: 'Weekly schedule',
       answer: '<p>12-week schedule:</p><ul><li><strong>Wk 1:</strong> Course intro &amp; problem formulation</li><li><strong>Wks 1–2:</strong> Lists, arrays, sorting</li><li><strong>Wk 3:</strong> Trees &amp; graph traversal</li><li><strong>Wk 4:</strong> Dynamic programming</li><li><strong>Wk 5:</strong> Statistical learning</li><li><strong>Wk 6:</strong> Linear methods</li><li><strong>Wk 7:</strong> Nonparametric methods</li><li><strong>Wk 8:</strong> Neural networks</li><li><strong>Wk 9:</strong> Clustering</li><li><strong>Wk 10:</strong> Potential outcomes &amp; DAGs</li><li><strong>Wk 11:</strong> Matching &amp; weighting; DiD</li><li><strong>Wk 12:</strong> Project presentations &amp; data equity</li></ul>'
     },
     {
       id: 'grade-weights',
-      keywords: ['grade','grades','grading','weight','weights','percent','percentage','percentages','worth','count','breakdown','evaluation','assessment','assessments','components'],
-      phrases: ['grade breakdown','how is the grade','grading scheme','how much is worth','final grade'],
+      strong: ['grade','grades','grading','breakdown','percent','percentage'],
+      weak: ['weight','weights','worth','count','evaluation','assessment','assessments','components'],
+      phrases: ['grade breakdown','how is the grade','grading scheme','how much is worth','final grade','how am i graded'],
       section: '#assessments', title: 'Grade breakdown',
       answer: '<p>Your final grade is composed of:</p><ul><li><strong>36%</strong> — Homework Assignments (4 total, 9% each)</li><li><strong>30%</strong> — Course Project</li><li><strong>18%</strong> — Scribe Notes (2 total, 9% each)</li><li><strong>11%</strong> — In-Class Quizzes</li><li><strong>5%</strong> — Participation</li></ul>'
     },
     {
       id: 'grade-scale',
-      keywords: ['scale','letter','honors','pass','fail','hp','cutoff','cutoffs','threshold','thresholds','ysph'],
-      phrases: ['grading scale','letter grade','cutoff for honors','what is honors','passing grade'],
+      strong: ['honors','cutoff','cutoffs','scale'],
+      weak: ['pass','fail','hp','letter','threshold','ysph','passing'],
+      phrases: ['grading scale','letter grade','cutoff for honors','what is honors','passing grade','what counts as honors'],
       section: '#assessments', title: 'Grading scale',
       answer: '<p>YSPH uses Honors / High Pass / Pass / Fail:</p><ul><li><strong>≥ 90%</strong> — Honors (H)</li><li><strong>80–89%</strong> — High Pass (HP)</li><li><strong>65–79%</strong> — Pass (P)</li><li><strong>&lt; 65%</strong> — Fail (F)</li></ul>'
     },
     {
       id: 'homework',
-      keywords: ['homework','hw','assignment','assignments','problem','problems','pset','psets','due','dates','release','released'],
-      phrases: ['how many homework','homework due','when is hw','homework schedule'],
+      strong: ['homework','hw'],
+      weak: ['assignment','assignments','problem','problems','pset','psets','due','dates','release','released','deadline'],
+      phrases: ['how many homework','homework due','when is hw','homework schedule','when are assignments','homework deadline'],
       section: '#assessments', title: 'Homework',
       answer: '<p>There are <strong>4 homework assignments</strong>, roughly every 3 weeks, each worth 9% (36% total). They contain conceptual, programming, and applied problems.</p><ul><li><strong>HW 1:</strong> released Wk 2 → due <strong>Wk 4</strong></li><li><strong>HW 2:</strong> released Wk 5 → due <strong>Wk 7</strong></li><li><strong>HW 3:</strong> released Wk 8 → due <strong>Wk 10</strong></li><li><strong>HW 4:</strong> released Wk 10 → due <strong>Wk 12</strong></li></ul>'
     },
     {
       id: 'project',
-      keywords: ['project','team','teams','group','groups','proposal','report','poster','final','capstone','presentation','presentations'],
-      phrases: ['course project','group project','team project','final project','project deliverable','project deliverables'],
+      strong: ['project','capstone'],
+      weak: ['team','teams','group','groups','proposal','poster','presentation','presentations'],
+      phrases: ['course project','group project','team project','final project','project deliverable','project deliverables','what is the project'],
       section: '#assessments', title: 'Course project',
       answer: '<p>The course project is <strong>team-based (3–4 students)</strong> and worth 30%. Deliverables:</p><ul><li><strong>Team formation:</strong> Wk 3</li><li><strong>Proposal:</strong> Wk 4</li><li><strong>Progress report:</strong> Wk 8</li><li><strong>Poster session:</strong> Wk 12 (in class)</li><li><strong>Final report:</strong> Finals Week</li></ul>'
     },
     {
       id: 'scribe',
-      keywords: ['scribe','scribes','note','notes','latex','lecture'],
-      phrases: ['scribe notes','lecture notes','what are scribe'],
+      strong: ['scribe','scribes'],
+      weak: ['note','notes','latex'],
+      phrases: ['scribe notes','what are scribe','what is a scribe','scribing'],
       section: '#assessments', title: 'Scribe notes',
       answer: '<p>Each student writes <strong>2 sets of scribe notes</strong> over the semester (9% each, 18% total). These are detailed LaTeX lecture notes — with extensions beyond what was covered in class — that document a given lecture for the rest of the class.</p>'
     },
     {
       id: 'quizzes',
-      keywords: ['quiz','quizzes','test','tests','exam','exams','final','midterm','closed','book'],
-      phrases: ['in-class quiz','how many quizzes','are there exams','is there a final exam'],
-      section: '#assessments', title: 'Quizzes',
+      strong: ['quiz','quizzes','exam','exams','midterm'],
+      weak: ['test','tests','final'],
+      phrases: ['in-class quiz','how many quizzes','are there exams','is there a final exam','is there a midterm','final exam'],
+      section: '#assessments', title: 'Quizzes & exams',
       answer: '<p>There are short <strong>5–10 minute in-class quizzes</strong> on readings and lecture material (11% total). There are <strong>no traditional midterm or final exams</strong> — the course project takes that role. <strong>No AI is permitted on quizzes.</strong></p>'
     },
     {
       id: 'participation',
-      keywords: ['participation','participate','attendance','attend','discussion','forum','engagement','engage'],
-      phrases: ['class participation','attendance policy'],
+      strong: ['participation','participate'],
+      weak: ['engagement','engage','forum','discussion'],
+      phrases: ['class participation','how is participation graded','participation grade'],
       section: '#assessments', title: 'Participation',
       answer: '<p>Participation is worth <strong>5%</strong> based on class engagement, discussions, and forum contributions. Participation grades are released at <strong>midterm and end of semester</strong> so you can calibrate expectations early.</p>'
     },
     {
+      id: 'attendance',
+      strong: ['attendance','attend','attending','attended','absent','absence','absences','skip','skipping','skipped'],
+      weak: ['miss','missing','present','show','come','lecture','class','mandatory','required'],
+      phrases: ['can i skip','do i need to attend','attendance policy','miss class','skip class','skip lecture','miss a lecture','need to come','need to be in class','have to come to class','do i have to attend','is attendance required','is class mandatory'],
+      section: '#assessments', title: 'Attendance',
+      answer: '<p>The syllabus doesn’t state a formal attendance policy, but a few things tie your grade to being in class:</p><ul><li><strong>Participation (5%)</strong> is based on class engagement, discussion, and forum contributions — showing up matters.</li><li><strong>In-class quizzes (11%)</strong> happen during lectures and cannot be made up.</li><li><strong>Electronic devices are not permitted during lectures</strong>, so the course is structured around being present and engaged.</li></ul><p>For documented emergencies or other circumstances, contact the instructor in advance.</p>'
+    },
+    {
       id: 'late-policy',
-      keywords: ['late','extension','extensions','deadline','miss','missed','emergency','submit'],
-      phrases: ['late policy','late submission','can i turn in late','extension request','miss a deadline'],
+      strong: ['late','extension','extensions'],
+      weak: ['deadline','miss','missed','emergency','submit'],
+      phrases: ['late policy','late submission','can i turn in late','extension request','miss a deadline','submit late'],
       section: '#assessments', title: 'Late policy',
       answer: '<p>Late submissions are <strong>not accepted</strong>. If you have a documented emergency, contact the instructor <em>before</em> the deadline to discuss.</p>'
     },
     {
       id: 'turnaround',
-      keywords: ['turnaround','feedback','graded','return','returned','back','timeline'],
-      phrases: ['grading turnaround','when will i get','feedback timeline','when do we get grades'],
+      strong: ['turnaround','feedback'],
+      weak: ['graded','return','returned','back','timeline'],
+      phrases: ['grading turnaround','when will i get my grade','feedback timeline','when do we get grades','how soon do we get'],
       section: '#assessments', title: 'Grading turnaround',
       answer: '<p>Homework and scribe notes are graded and returned within <strong>1 week</strong>. Participation grades are released at the <strong>midterm and end of semester</strong>.</p>'
     },
     {
       id: 'ai-policy',
-      keywords: ['ai','chatgpt','claude','copilot','llm','gpt','gemini','tool','tools','allowed','use','using','permitted','disclose','disclosure'],
-      phrases: ['can i use ai','ai policy','is chatgpt allowed','use copilot','ai tools','large language model'],
+      strong: ['ai','chatgpt','claude','copilot','llm','gpt','gemini'],
+      weak: ['tool','tools','allowed','permitted','disclose','disclosure','using','use'],
+      phrases: ['can i use ai','ai policy','is chatgpt allowed','use copilot','ai tools','large language model','am i allowed to use ai','is ai allowed','ai for homework','ai for assignments','use ai for','use ai on','ai allowed for','is ai permitted','allowed for assignments','allowed for homework'],
       section: '#policies', title: 'AI policy',
       answer: '<p>AI assistants (ChatGPT, Claude, Copilot, etc.) are <strong>permitted as learning aids</strong> for homework and scribe notes — with conditions:</p><ul><li>You must <strong>understand</strong> everything you submit</li><li>You must <strong>disclose</strong> all AI use at the top of submissions; submissions without acknowledgment will not be accepted</li><li>You own all accuracy — AI hallucinations are your responsibility</li><li><strong>No AI on quizzes.</strong></li></ul>'
     },
     {
       id: 'collaboration',
-      keywords: ['collaborate','collaboration','work','together','classmate','classmates','discuss','discussion','share','sharing','partner'],
-      phrases: ['can i work together','collaborate with classmates','discuss homework','work with others','can i share'],
+      strong: ['collaborate','collaboration','collaborating'],
+      weak: ['work','together','classmate','classmates','discuss','share','sharing','partner'],
+      phrases: ['can i work together','collaborate with classmates','discuss homework','work with others','can i share','work with a partner','study group'],
       section: '#policies', title: 'Collaboration policy',
       answer: '<p>Discussion with classmates is <strong>encouraged</strong>, but:</p><ul><li>All <strong>written solutions must be your own</strong></li><li>All <strong>code must be written individually</strong></li><li><strong>Acknowledge</strong> all collaborators and resources</li><li>Do not share answers, code, or LaTeX files</li></ul>'
     },
     {
       id: 'devices',
-      keywords: ['laptop','laptops','phone','phones','ipad','tablet','device','devices','electronic','computer','computers','screen','notes','handwritten'],
-      phrases: ['can i bring my laptop','are laptops allowed','phones in class','take notes on laptop'],
+      strong: ['laptop','laptops','phone','phones','ipad','tablet','device','devices','electronic'],
+      weak: ['computer','computers','screen','handwritten'],
+      phrases: ['can i bring my laptop','are laptops allowed','phones in class','take notes on laptop','use my laptop','use my phone'],
       section: '#policies', title: 'Electronic devices',
       answer: '<p>Mobile phones, iPads, and laptops are <strong>not permitted during lectures</strong>. Handwritten notes encourage deeper processing. Exceptions are available for documented accommodations. <strong>No devices during quizzes</strong> under any circumstances.</p>'
     },
     {
       id: 'integrity',
-      keywords: ['integrity','cheat','cheating','plagiarism','plagiarize','capi','honor','misconduct','violation','violations'],
-      phrases: ['academic integrity','honor code','plagiarism policy','what happens if i cheat'],
+      strong: ['integrity','plagiarism','plagiarize','cheat','cheating','capi'],
+      weak: ['honor','misconduct','violation','violations','fabrication'],
+      phrases: ['academic integrity','honor code','plagiarism policy','what happens if i cheat','academic dishonesty'],
       section: '#policies', title: 'Academic integrity',
       answer: '<p>All students must follow the YSPH <strong>Code of Academic and Professional Integrity (CAPI)</strong>. Violations — plagiarism, unauthorized collaboration, undisclosed AI use, fabrication — are referred to the CAPI Committee. Penalties can include expulsion.</p>'
     },
     {
       id: 'canvas',
-      keywords: ['canvas','lms','platform','login'],
-      phrases: ['where is canvas','canvas link','canvas page'],
+      strong: ['canvas','lms'],
+      weak: ['platform','login'],
+      phrases: ['where is canvas','canvas link','canvas page','log in to canvas'],
       section: '#about', title: 'Canvas',
       answer: '<p>The course Canvas page is at <a href="https://canvas.yale.edu" target="_blank">canvas.yale.edu</a>. Log in with your Yale NetID.</p>'
     },
     {
       id: 'website',
-      keywords: ['website','site','web','page','github','url','link'],
-      phrases: ['course website','where is the website','class website'],
+      strong: ['website','site','github'],
+      weak: ['web','page','link','url'],
+      phrases: ['course website','where is the website','class website','where can i find the syllabus'],
       section: '#about', title: 'Course website',
       answer: '<p>The course website is <a href="https://harshparikh.github.io/intro_ds_2026.html" target="_blank">harshparikh.github.io/intro_ds_2026.html</a>.</p>'
     },
     {
       id: 'accessibility',
-      keywords: ['accessibility','accommodation','accommodations','disability','sas','student','services','accessible'],
-      phrases: ['disability services','request accommodations','student accessibility'],
+      strong: ['accessibility','accommodation','accommodations','disability','sas'],
+      weak: ['accessible','services'],
+      phrases: ['disability services','request accommodations','student accessibility','i have a disability'],
       section: '#resources', title: 'Accessibility',
       answer: '<p>Yale Student Accessibility Services (SAS): email <a href="mailto:sas@yale.edu">sas@yale.edu</a> or call <strong>203-432-2324</strong>.</p>'
     },
     {
       id: 'mental-health',
-      keywords: ['mental','health','wellness','counselor','counseling','therapy','stress','anxiety','depression','988','crisis','support','help','overwhelmed'],
-      phrases: ['mental health','wellness counselor','crisis hotline','i feel overwhelmed'],
+      strong: ['mental','wellness','counselor','counseling','therapy','crisis','988','overwhelmed'],
+      weak: ['stress','anxiety','depression','support','help','struggling'],
+      phrases: ['mental health','wellness counselor','crisis hotline','i feel overwhelmed','i need help','i am struggling','feeling stressed'],
       section: '#resources', title: 'Mental health',
       answer: '<p>YSPH Wellness Counselor: <a href="mailto:diane.frankel-gramelis@yale.edu">Diane Frankel-Gramelis</a>. For crisis support, dial <strong>988</strong> (24/7 Suicide &amp; Crisis Lifeline).</p>'
     },
     {
       id: 'writing',
-      keywords: ['writing','writing-lab','consult','consultation','paper','essay','draft','editing'],
-      phrases: ['writing support','graduate writing lab','help with writing'],
+      strong: ['writing'],
+      weak: ['lab','consult','consultation','paper','essay','draft','editing'],
+      phrases: ['writing support','graduate writing lab','help with writing','writing center'],
       section: '#resources', title: 'Writing support',
       answer: '<p>The Yale Graduate Writing Lab offers free consultations. Book at <a href="https://yale.mywconline.net" target="_blank">yale.mywconline.net</a>.</p>'
     },
     {
       id: 'title-ix',
-      keywords: ['title','ix','harassment','discrimination','sexual','misconduct','oiea'],
-      phrases: ['title ix','sexual harassment','title nine'],
+      strong: ['title','ix','oiea'],
+      weak: ['harassment','discrimination','sexual','misconduct'],
+      phrases: ['title ix','sexual harassment','title nine','report harassment'],
       section: '#resources', title: 'Title IX',
       answer: '<p>Deputy Title IX Coordinator: <a href="mailto:kelly.shay@yale.edu">Kelly Shay</a>. More info at the <a href="https://oiea.yale.edu/" target="_blank">Office of Institutional Equity &amp; Accessibility</a>.</p>'
     },
     {
       id: 'inclusivity',
-      keywords: ['inclusive','inclusivity','inclusion','diversity','community','practice','equity','belonging'],
-      phrases: ['diversity and inclusion','community of practice','feel included'],
+      strong: ['inclusivity','inclusion','diversity'],
+      weak: ['inclusive','community','equity','belonging'],
+      phrases: ['diversity and inclusion','community of practice','feel included','dei'],
       section: '#resources', title: 'Inclusivity',
       answer: '<p>Office of Community &amp; Practice: contact <a href="mailto:mayur.desai@yale.edu">Mayur Desai</a> or <a href="mailto:randi.mccray@yale.edu">Randi McCray</a>.</p>'
     },
     {
       id: 'safety',
-      keywords: ['safety','emergency','fire','classroom','evacuation','preparedness'],
-      phrases: ['classroom safety','in case of emergency','what to do in emergency'],
+      strong: ['safety','evacuation','preparedness'],
+      weak: ['emergency','fire','classroom'],
+      phrases: ['classroom safety','in case of emergency','what to do in emergency','fire alarm'],
       section: '#resources', title: 'Classroom safety',
       answer: '<p>See <a href="https://emergency.yale.edu" target="_blank">emergency.yale.edu</a> and the <a href="https://emergency.yale.edu/be-prepared/classroom-preparedness" target="_blank">Classroom Preparedness</a> guide.</p>'
     }
@@ -845,12 +892,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
   var STOPWORDS = new Set(['a','an','the','is','are','was','were','be','been','being','do','does','did','have','has','had','of','in','on','at','for','to','from','by','with','about','as','this','that','these','those','i','im','ive','you','your','we','they','my','our','their','it','its','me','please','tell','want','know','need','can','could','will','would','should','shall','may','might','must','and','or','but','if','then','so','than','there','here','any','some','what','when','where','how','why','who','which'])
 
-  // Multi-word synonyms applied to the raw query string first.
+  // Multi-word and brand-name synonyms applied to the raw query string first.
+  // Brand-name expansions (chatgpt -> ai, etc.) must happen here, not in
+  // WORD_SYNS, so that phrase substrings like "can i use ai" can match a
+  // query that mentions "chatgpt".
   var PHRASE_SYNS = [
-    [/problem\s+sets?/g, 'homework'],
-    [/p\s*sets?/g, 'homework'],
+    [/chatgpts?/g, 'ai'],
+    [/copilots?/g, 'ai'],
+    [/\bclaude\b/g, 'ai'],
+    [/\bgpts?\b/g, 'ai'],
+    [/\bllms?\b/g, 'ai'],
+    [/\bgemini\b/g, 'ai'],
+    [/\bbard\b/g, 'ai'],
     [/large\s+language\s+models?/g, 'ai'],
     [/lang\.?\s*models?/g, 'ai'],
+    [/problem\s+sets?/g, 'homework'],
+    [/p\s*sets?/g, 'homework'],
     [/letter\s+grade/g, 'grading scale'],
     [/honor\s+code/g, 'academic integrity'],
     [/team\s+project/g, 'project'],
@@ -863,18 +920,18 @@ document.addEventListener('DOMContentLoaded', function() {
     [/grad\s+student/g, 'graduate student']
   ];
 
-  // Single-word synonyms applied after tokenization.
+  // Single-word synonyms applied after tokenization. Only true synonyms —
+  // never map one ordinary verb to another distinct concept (that's what
+  // broke "can I use chatgpt" earlier: `use -> allowed -> permitted`).
   var WORD_SYNS = {
     'hw': 'homework', 'pset': 'homework', 'psets': 'homework',
     'assignment': 'homework', 'assignments': 'homework',
     'prof': 'instructor', 'professor': 'instructor', 'teacher': 'instructor',
-    'chatgpt': 'ai', 'gpt': 'ai', 'claude': 'ai', 'copilot': 'ai', 'llm': 'ai', 'llms': 'ai', 'gemini': 'ai',
     'pct': 'percentage', 'percent': 'percentage', 'percents': 'percentage', 'percentages': 'percentage',
     'ta': 'tf', 'tas': 'tf', 'fellows': 'tf', 'fellow': 'tf',
     'modules': 'module', 'topics': 'topic',
     'textbooks': 'textbook', 'books': 'book', 'readings': 'reading',
     'lectures': 'lecture', 'classes': 'class', 'sessions': 'session',
-    'allowed': 'permitted', 'use': 'allowed',
     'graded': 'grading', 'grades': 'grading',
     'deadlines': 'deadline', 'dates': 'deadline', 'due': 'deadline',
     'plagiarize': 'plagiarism', 'cheat': 'cheating', 'cheating': 'plagiarism'
@@ -896,46 +953,50 @@ document.addEventListener('DOMContentLoaded', function() {
       .map(function(t) { return WORD_SYNS[t] || t; });
   }
 
+  // Tiered scoring: a chunk only matches if it has REAL signal — at least one
+  // strong-keyword hit, one phrase match, one title-word match, or two weak hits.
+  // This prevents single generic words ("class", "course") from triggering the
+  // wrong topic.
   function score(qTokens, qStr, chunk) {
     var s = 0;
+    var strongHits = 0, weakHits = 0, phraseHits = 0, titleHits = 0;
     var seen = new Set();
-    var kwSet = new Set(chunk.keywords.map(function(k) { return WORD_SYNS[k] || k; }));
 
-    // Direct keyword hits (each unique query token can score once per chunk).
+    var strongSet = new Set((chunk.strong || []).map(function(k) { return WORD_SYNS[k] || k; }));
+    var weakSet   = new Set((chunk.weak   || []).map(function(k) { return WORD_SYNS[k] || k; }));
+
     qTokens.forEach(function(t) {
-      if (kwSet.has(t) && !seen.has(t)) { s += 2; seen.add(t); }
+      if (seen.has(t)) return;
+      seen.add(t);
+      if (strongSet.has(t)) { s += 3; strongHits++; }
+      else if (weakSet.has(t)) { s += 0.8; weakHits++; }
     });
 
-    // Substring fuzzy match (only for longer tokens, to avoid noise).
-    qTokens.forEach(function(t) {
-      if (t.length < 4) return;
-      kwSet.forEach(function(k) {
-        if (k === t) return;
-        if (k.length < 4) return;
-        if (k.indexOf(t) !== -1 || t.indexOf(k) !== -1) { s += 0.4; }
-      });
-    });
-
-    // Phrase bonuses.
     (chunk.phrases || []).forEach(function(p) {
-      if (qStr.indexOf(p) !== -1) s += 5;
+      if (qStr.indexOf(p) !== -1) { s += 5; phraseHits++; }
     });
 
-    // Title word bonus.
     normalize(chunk.title).split(' ').forEach(function(tw) {
-      if (tw.length > 2 && qTokens.indexOf(tw) !== -1) s += 1;
+      if (tw.length > 3 && !STOPWORDS.has(tw) && qTokens.indexOf(tw) !== -1) {
+        s += 1.5; titleHits++;
+      }
     });
 
-    return s;
+    var hasSignal = strongHits > 0 || phraseHits > 0 || titleHits > 0 || weakHits >= 2;
+    return { score: s, hasSignal: hasSignal };
   }
 
   function findMatches(query) {
     var qStr = applyPhraseSyns(normalize(query));
     var qTokens = tokenize(query);
     if (qTokens.length === 0) return [];
-    var scored = KB.map(function(c) { return { chunk: c, s: score(qTokens, qStr, c) }; });
+    var scored = KB.map(function(c) {
+      var r = score(qTokens, qStr, c);
+      return { chunk: c, s: r.score, hasSignal: r.hasSignal };
+    });
+    scored = scored.filter(function(x) { return x.hasSignal && x.s >= 2.5; });
     scored.sort(function(a, b) { return b.s - a.s; });
-    return scored.filter(function(x) { return x.s >= 2; }).slice(0, 2);
+    return scored.slice(0, 2);
   }
 
   var SECTION_NAMES = {
