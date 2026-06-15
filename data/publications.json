@@ -1,9 +1,26 @@
 {
   "scholar_id": "uCrw1ZMAAAAJ",
   "author": "Harsh Parikh",
-  "fetched_at": "2026-04-27T15:36:22.498343+00:00",
-  "count": 40,
+  "fetched_at": "2026-06-15T11:44:01.004326+00:00",
+  "count": 42,
   "publications": [
+    {
+      "title": "A Double Machine Learning Approach for Combining Experimental and Observational Studies",
+      "authors_raw": "Harsh Parikh and Marco Morucci and Vittorio Orlandi and Sudeepa Roy and Cynthia Rudin and Alexander Volfovsky",
+      "authors": [
+        "Harsh Parikh",
+        "Marco Morucci",
+        "Vittorio Orlandi",
+        "Sudeepa Roy",
+        "Cynthia Rudin",
+        "Alexander Volfovsky"
+      ],
+      "venue": "Observational Studies",
+      "year": "2026",
+      "citations": 11,
+      "url": "https://muse.jhu.edu/pub/56/article/973068/summary",
+      "scholar_id": "uCrw1ZMAAAAJ:J_g5lzvAfSwC"
+    },
     {
       "title": "Demystifying Prediction Powered Inference",
       "authors_raw": "Yilin Song and Dan M Kluger and Harsh Parikh and Tian Gu",
@@ -15,10 +32,31 @@
       ],
       "venue": "arXiv preprint arXiv:2601.20819",
       "year": "2026",
-      "citations": 3,
+      "citations": 8,
       "url": "https://arxiv.org/abs/2601.20819",
       "scholar_id": "uCrw1ZMAAAAJ:ldfaerwXgEUC",
       "note": "co-senior/corresponding author"
+    },
+    {
+      "title": "Ten Core Concepts for Ensuring Data Equity in Public Health",
+      "authors_raw": "Yiran Wang and Alicia E Boyd and Lillian Rountree and Yi Ren and Kate Nyhan and Ruchit Nagar and Jackson Higginbottom and Megan L Ranney and Harsh Parikh and Bhramar Mukherjee",
+      "authors": [
+        "Yiran Wang",
+        "Alicia E Boyd",
+        "Lillian Rountree",
+        "Yi Ren",
+        "Kate Nyhan",
+        "Ruchit Nagar",
+        "Jackson Higginbottom",
+        "Megan L Ranney",
+        "Harsh Parikh",
+        "Bhramar Mukherjee"
+      ],
+      "venue": "JAMA Health Forum",
+      "year": "2026",
+      "citations": 3,
+      "url": "https://jamanetwork.com/journals/jama-health-forum/fullarticle/2843724",
+      "scholar_id": "uCrw1ZMAAAAJ:70eg2SAEIzsC"
     },
     {
       "title": "Regularizing Extrapolation in Causal Inference",
@@ -43,25 +81,35 @@
       ]
     },
     {
-      "title": "Ten Core Concepts for Ensuring Data Equity in Public Health",
-      "authors_raw": "Yiran Wang and Alicia E Boyd and Lillian Rountree and Yi Ren and Kate Nyhan and Ruchit Nagar and Jackson Higginbottom and Megan L Ranney and Harsh Parikh and Bhramar Mukherjee",
+      "title": "Why are there many equally good models? An Anatomy of the Rashomon Effect",
+      "authors_raw": "Harsh Parikh",
       "authors": [
-        "Yiran Wang",
-        "Alicia E Boyd",
-        "Lillian Rountree",
-        "Yi Ren",
-        "Kate Nyhan",
-        "Ruchit Nagar",
-        "Jackson Higginbottom",
-        "Megan L Ranney",
-        "Harsh Parikh",
-        "Bhramar Mukherjee"
+        "Harsh Parikh"
       ],
-      "venue": "JAMA Health Forum",
+      "venue": "arXiv preprint arXiv:2601.06730",
       "year": "2026",
       "citations": 1,
-      "url": "https://jamanetwork.com/journals/jama-health-forum/fullarticle/2843724",
-      "scholar_id": "uCrw1ZMAAAAJ:70eg2SAEIzsC"
+      "url": "https://arxiv.org/abs/2601.06730",
+      "scholar_id": "uCrw1ZMAAAAJ:2P1L_qKh6hAC"
+    },
+    {
+      "title": "The case for an integrated biobanking initiative in South Asia",
+      "authors_raw": "M Salvatore, Y Wang, P Syal, B Wahl, H Parikh, V Deo, NK Bhatraju, ...",
+      "authors": [
+        "M Salvatore",
+        "Y Wang",
+        "P Syal",
+        "B Wahl",
+        "H Parikh",
+        "V Deo",
+        "NK Bhatraju",
+        "..."
+      ],
+      "venue": "The Lancet Regional Health-Southeast Asia 49",
+      "year": "2026",
+      "citations": 0,
+      "url": "",
+      "scholar_id": "uCrw1ZMAAAAJ:fPk4N6BV_jEC"
     },
     {
       "title": "The Experienced Burden of Disease In Denmark: A Comparison of the Economic and Social Effects of 15 Chronic Diseases",
@@ -79,6 +127,21 @@
       "citations": 0,
       "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:3s1wT3WcHBgC"
+    },
+    {
+      "title": "Mind the Sim-to-Real Gap & Think Like a Scientist",
+      "authors_raw": "H Parikh, G Levin-Konigsberg, D Perrault-Joncas, A Volfovsky",
+      "authors": [
+        "H Parikh",
+        "G Levin-Konigsberg",
+        "D Perrault-Joncas",
+        "A Volfovsky"
+      ],
+      "venue": "arXiv preprint arXiv:2605.21458",
+      "year": "2026",
+      "citations": 0,
+      "url": "",
+      "scholar_id": "uCrw1ZMAAAAJ:u_35RYKgDlwC"
     },
     {
       "title": "Data (in) equities in data science: Dissecting systemic and systematic biases in pulse oximetry",
@@ -176,18 +239,6 @@
       "scholar_id": "uCrw1ZMAAAAJ:g5m5HwL7SMYC"
     },
     {
-      "title": "Why are there many equally good models? An Anatomy of the Rashomon Effect",
-      "authors_raw": "Harsh Parikh",
-      "authors": [
-        "Harsh Parikh"
-      ],
-      "venue": "arXiv preprint arXiv:2601.06730",
-      "year": "2026",
-      "citations": 0,
-      "url": "https://arxiv.org/abs/2601.06730",
-      "scholar_id": "uCrw1ZMAAAAJ:2P1L_qKh6hAC"
-    },
-    {
       "title": "Who Are We Missing?: A Principled Approach to Characterizing the Underrepresented Population",
       "authors_raw": "Harsh Parikh and Rachael K Ross and Elizabeth Stuart and Kara E Rudolph",
       "authors": [
@@ -198,26 +249,9 @@
       ],
       "venue": "Journal of the American Statistical Association",
       "year": "2025",
-      "citations": 13,
+      "citations": 15,
       "url": "https://www.tandfonline.com/doi/abs/10.1080/01621459.2025.2495319",
       "scholar_id": "uCrw1ZMAAAAJ:mB3voiENLucC"
-    },
-    {
-      "title": "A Double Machine Learning Approach for Combining Experimental and Observational Studies",
-      "authors_raw": "Harsh Parikh and Marco Morucci and Vittorio Orlandi and Sudeepa Roy and Cynthia Rudin and Alexander Volfovsky",
-      "authors": [
-        "Harsh Parikh",
-        "Marco Morucci",
-        "Vittorio Orlandi",
-        "Sudeepa Roy",
-        "Cynthia Rudin",
-        "Alexander Volfovsky"
-      ],
-      "venue": "Observational Studies",
-      "year": "2025",
-      "citations": 10,
-      "url": "https://muse.jhu.edu/pub/56/article/973068/summary",
-      "scholar_id": "uCrw1ZMAAAAJ:J_g5lzvAfSwC"
     },
     {
       "title": "Towards Enhancing Data Equity in Public Health Data Science",
@@ -236,9 +270,24 @@
       ],
       "venue": "arXiv preprint arXiv:2508.20301",
       "year": "2025",
-      "citations": 5,
+      "citations": 7,
       "url": "https://arxiv.org/abs/2508.20301",
       "scholar_id": "uCrw1ZMAAAAJ:35N4QoGY0k4C"
+    },
+    {
+      "title": "Data fusion for partial identification of causal effects",
+      "authors_raw": "Quinn Lanners and Cynthia Rudin and Alexander Volfovsky and Harsh Parikh",
+      "authors": [
+        "Quinn Lanners",
+        "Cynthia Rudin",
+        "Alexander Volfovsky",
+        "Harsh Parikh"
+      ],
+      "venue": "Advances in Neural Information Processing Systems (NeurIPS)",
+      "year": "2025",
+      "citations": 4,
+      "url": "https://arxiv.org/abs/2505.24296",
+      "scholar_id": "uCrw1ZMAAAAJ:BqipwSGYUEgC"
     },
     {
       "title": "Graph Machine Learning based Doubly Robust Estimator for Network Causal Effects",
@@ -257,6 +306,22 @@
       "scholar_id": "uCrw1ZMAAAAJ:R3hNpaxXUhUC"
     },
     {
+      "title": "A cautionary tale on integrating studies with disparate outcome measures for causal inference",
+      "authors_raw": "Harsh Parikh and Trang Quynh Nguyen and Elizabeth A Stuart and Kara E Rudolph and Caleb H Miles",
+      "authors": [
+        "Harsh Parikh",
+        "Trang Quynh Nguyen",
+        "Elizabeth A Stuart",
+        "Kara E Rudolph",
+        "Caleb H Miles"
+      ],
+      "venue": "Advances in Neural Information Processing Systems (NeurIPS)",
+      "year": "2025",
+      "citations": 3,
+      "url": "https://arxiv.org/abs/2505.11014",
+      "scholar_id": "uCrw1ZMAAAAJ:YFjsv_pBGBYC"
+    },
+    {
       "title": "Demystifying Proximal Causal Inference",
       "authors_raw": "Grace V Ringlein and Trang Quynh Nguyen and Peter P Zandi and Elizabeth A Stuart and Harsh Parikh",
       "authors": [
@@ -271,22 +336,6 @@
       "citations": 2,
       "url": "https://arxiv.org/abs/2512.24413",
       "scholar_id": "uCrw1ZMAAAAJ:vV6vV6tmYwMC"
-    },
-    {
-      "title": "A Cautionary Tale on Integrating Studies with Disparate Outcome Measures for Causal Inference",
-      "authors_raw": "Harsh Parikh and Trang Quynh Nguyen and Elizabeth A Stuart and Kara E Rudolph and Caleb H Miles",
-      "authors": [
-        "Harsh Parikh",
-        "Trang Quynh Nguyen",
-        "Elizabeth A Stuart",
-        "Kara E Rudolph",
-        "Caleb H Miles"
-      ],
-      "venue": "Advances in Neural Information Processing Systems (NeurIPS)",
-      "year": "2025",
-      "citations": 2,
-      "url": "https://arxiv.org/abs/2505.11014",
-      "scholar_id": "uCrw1ZMAAAAJ:YFjsv_pBGBYC"
     },
     {
       "title": "Precision mental health: predicting heterogeneous treatment effects for depression through data integration",
@@ -338,21 +387,6 @@
       "scholar_id": "uCrw1ZMAAAAJ:RGFaLdJalmkC"
     },
     {
-      "title": "Data Fusion for Partial Identification of Causal Effects",
-      "authors_raw": "Quinn Lanners and Cynthia Rudin and Alexander Volfovsky and Harsh Parikh",
-      "authors": [
-        "Quinn Lanners",
-        "Cynthia Rudin",
-        "Alexander Volfovsky",
-        "Harsh Parikh"
-      ],
-      "venue": "Advances in Neural Information Processing Systems (NeurIPS)",
-      "year": "2025",
-      "citations": 0,
-      "url": "https://arxiv.org/abs/2505.24296",
-      "scholar_id": "uCrw1ZMAAAAJ:BqipwSGYUEgC"
-    },
-    {
       "title": "Interpretable causal inference for analyzing wearable, sensor, and distributional data",
       "authors_raw": "Srikar Katta and Harsh Parikh and Cynthia Rudin and Alexander Volfovsky",
       "authors": [
@@ -363,12 +397,12 @@
       ],
       "venue": "International Conference on Artificial Intelligence and Statistics (AISTATS)",
       "year": "2024",
-      "citations": 12,
+      "citations": 13,
       "url": "https://proceedings.mlr.press/v238/katta24a.html",
       "scholar_id": "uCrw1ZMAAAAJ:hFOr9nPyWt4C"
     },
     {
-      "title": "Towards generalizing inferences from trials to target populations",
+      "title": "Toward generalizing inferences from trials to target populations",
       "authors_raw": "Melody Y Huang and Harsh Parikh",
       "authors": [
         "Melody Y Huang",
@@ -376,7 +410,7 @@
       ],
       "venue": "Harvard Data Science Review",
       "year": "2024",
-      "citations": 8,
+      "citations": 9,
       "url": "https://assets.pubpub.org/jcjvqwck/Huang%20&%20Parikh%20(2024)_Just%20Accepted-01723833367992.pdf",
       "scholar_id": "uCrw1ZMAAAAJ:HDshCWvjkbEC"
     },
@@ -441,7 +475,7 @@
       ],
       "venue": "The Lancet Digital Health",
       "year": "2023",
-      "citations": 35,
+      "citations": 36,
       "url": "https://www.thelancet.com/journals/landig/article/PIIS2589-7500(23)00088-2/fulltext",
       "scholar_id": "uCrw1ZMAAAAJ:9ZlFYXVOiuMC",
       "note": "co-first author",
@@ -463,7 +497,7 @@
       ],
       "venue": "Conference on Uncertainty in Artificial Intelligence (UAI)",
       "year": "2023",
-      "citations": 9,
+      "citations": 11,
       "url": "https://proceedings.mlr.press/v216/lanners23a.html",
       "scholar_id": "uCrw1ZMAAAAJ:ZeXyd9-uunAC"
     },
@@ -502,7 +536,7 @@
       ],
       "venue": "International Conference on Machine Learning (ICML)",
       "year": "2022",
-      "citations": 77,
+      "citations": 82,
       "url": "https://proceedings.mlr.press/v162/parikh22a.html",
       "scholar_id": "uCrw1ZMAAAAJ:5nxA0vEk-isC"
     },
@@ -516,7 +550,7 @@
       ],
       "venue": "Journal of Machine Learning Research",
       "year": "2022",
-      "citations": 49,
+      "citations": 51,
       "url": "http://www.jmlr.org/papers/v23/21-0053.html",
       "scholar_id": "uCrw1ZMAAAAJ:Wp0gIr-vW9MC"
     },
@@ -584,7 +618,7 @@
       ],
       "venue": "Healthcare Technology Letters",
       "year": "2019",
-      "citations": 17,
+      "citations": 18,
       "url": "https://ietresearch.onlinelibrary.wiley.com/doi/abs/10.1049/htl.2018.5081",
       "scholar_id": "uCrw1ZMAAAAJ:UeHWp8X0CEIC"
     },
