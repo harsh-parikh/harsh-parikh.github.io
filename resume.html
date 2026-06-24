@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harsh Parikh — Resume</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --serif:'Newsreader',Georgia,serif;
+    --sans:'DM Sans',-apple-system,sans-serif;
+    --mono:'JetBrains Mono',monospace;
+    --ink:#221d17;
+    --body:#473f37;
+    --muted:#867c6f;
+    --accent:#9a6d3c;
+    --accent-soft:#b6895a;
+    --line:#e7e0d4;
+    --sidebar:#f6f2ea;
+    --paper:#ffffff;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:#cfc8bd;font-family:var(--sans);color:var(--body);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  ::selection{background:rgba(154,109,60,0.18)}
+  a{color:inherit;text-decoration:none}
+
+  .page{
+    width:8.5in;height:11in;margin:24px auto;background:var(--paper);
+    position:relative;overflow:hidden;box-shadow:0 18px 60px rgba(0,0,0,0.22);
+    display:grid;grid-template-columns:2.6in 1fr;grid-template-rows:auto 1fr;
+  }
+
+  /* ── Masthead ── */
+  .masthead{grid-column:1 / -1;padding:0.42in 0.5in 0.2in;border-bottom:1px solid var(--line);position:relative}
+  .masthead::after{content:'';position:absolute;left:0.5in;bottom:-1px;width:0.62in;height:3px;background:var(--accent)}
+  .name{font-family:var(--serif);font-weight:500;font-size:33pt;line-height:0.95;letter-spacing:-0.6px;color:var(--ink)}
+  .name .sur{color:var(--accent)}
+  .role{font-weight:500;font-size:10.5pt;color:var(--ink);margin-top:8px;letter-spacing:0.2px}
+  .role .dot{color:var(--accent-soft);margin:0 7px}
+  .tag{font-family:var(--serif);font-style:italic;font-size:10.5pt;color:var(--muted);margin-top:5px;max-width:none;white-space:nowrap;line-height:1.38}
+
+  /* ── Columns ── */
+  .aside{background:var(--sidebar);padding:0.28in 0.32in 0.22in 0.5in;border-right:1px solid var(--line)}
+  .main{padding:0.28in 0.5in 0.22in 0.32in}
+
+  .block{margin-bottom:9px}
+  .block:last-child{margin-bottom:0}
+  .aside .block{margin-bottom:12px}
+  .h{font-family:var(--mono);font-size:7.3pt;font-weight:500;letter-spacing:1.7px;text-transform:uppercase;color:var(--accent);margin-bottom:5px;display:flex;align-items:center;gap:7px}
+  .aside .h{margin-bottom:6px}
+  .h::after{content:'';flex:1;height:1px;background:var(--line)}
+
+  /* contact */
+  .contact{font-size:8.2pt;line-height:1.4}
+  .contact div{display:flex;gap:8px;align-items:baseline;margin-bottom:2px}
+  .contact .k{color:var(--accent-soft);font-family:var(--mono);font-size:6.6pt;letter-spacing:0.4px;text-transform:uppercase;min-width:0.46in;flex-shrink:0}
+  .contact .v{color:var(--ink)}
+
+  /* education / training */
+  .edu{margin-bottom:8px}
+  .edu:last-child{margin-bottom:0}
+  .edu .deg{font-family:var(--serif);font-size:10pt;font-weight:600;color:var(--ink);line-height:1.12}
+  .edu .org{font-size:7.9pt;color:var(--body);margin-top:1px;line-height:1.28}
+  .edu .yr{font-family:var(--mono);font-size:6.8pt;color:var(--muted);margin-top:1.5px;letter-spacing:0.3px}
+  .edu .yr .star{color:var(--accent)}
+
+  /* chips */
+  .chips{display:flex;flex-wrap:wrap;gap:4px}
+  .chips span{font-size:7.6pt;font-weight:500;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:30px;padding:2px 8px;line-height:1.2}
+  .tools{font-size:8.2pt;color:var(--body);line-height:1.5;margin-top:8px}
+  .tools b{font-family:var(--mono);font-size:6.6pt;letter-spacing:0.4px;text-transform:uppercase;color:var(--accent-soft);font-weight:500;display:block;margin-bottom:2px}
+
+  /* awards list */
+  .li{display:flex;gap:7px;font-size:8.3pt;line-height:1.3;margin-bottom:7px;color:var(--body)}
+  .li:last-child{margin-bottom:0}
+  .li .mk{color:var(--accent);font-size:6.6pt;line-height:1.7;flex-shrink:0}
+  .li b{color:var(--ink);font-weight:600}
+  .svc{font-size:8.1pt;line-height:1.4;color:var(--body)}
+  .svc b{color:var(--ink);font-weight:600}
+
+  /* profile */
+  .profile{font-size:9.4pt;line-height:1.44;color:var(--body)}
+  .profile b{color:var(--ink);font-weight:600}
+
+  /* experience / positions */
+  .job{margin-bottom:7px;position:relative;padding-left:14px}
+  .job:last-child{margin-bottom:0}
+  .job::before{content:'';position:absolute;left:0;top:4.5px;width:5px;height:5px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 2.5px rgba(154,109,60,0.15)}
+  .job::after{content:'';position:absolute;left:2px;top:12px;bottom:-8px;width:1px;background:var(--line)}
+  .job:last-child::after{display:none}
+  .job .top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .job .ti{font-family:var(--serif);font-size:10.8pt;font-weight:600;color:var(--ink);line-height:1.1}
+  .job .when{font-family:var(--mono);font-size:7pt;color:var(--muted);white-space:nowrap;letter-spacing:0.3px}
+  .job .org{font-size:8.5pt;color:var(--accent-soft);font-weight:600;margin-top:1px}
+  .job .desc{font-size:8.4pt;color:var(--body);line-height:1.33;margin-top:2px}
+
+  /* research themes grid */
+  .themes{display:grid;grid-template-columns:1fr 1fr;gap:6px 16px}
+  .theme{font-size:8.4pt;line-height:1.34;color:var(--body)}
+  .theme b{display:block;font-family:var(--serif);font-size:9.6pt;font-weight:600;color:var(--ink);line-height:1.1;margin-bottom:1.5px}
+
+  .hint{position:fixed;right:18px;bottom:18px;background:var(--ink);color:#fff;font-family:var(--mono);font-size:11px;letter-spacing:0.4px;padding:9px 15px;border-radius:30px;box-shadow:0 6px 20px rgba(0,0,0,0.25);cursor:pointer;border:none;z-index:50}
+  .hint:hover{background:var(--accent)}
+
+  @media print{
+    @page{size:Letter;margin:0}
+    html,body{background:#fff}
+    .page{width:auto;height:auto;margin:0;box-shadow:none}
+    .hint{display:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header class="masthead">
+    <div class="name">Harsh <span class="sur">Parikh</span></div>
+    <div class="role">Assistant Professor of Biostatistics<span class="dot">·</span>Yale University</div>
+    <div class="tag">Machine learning–aided causal inference for high-stakes decisions in medicine, public health, and the social sciences.</div>
+  </header>
+
+  <!-- ───────── SIDEBAR ───────── -->
+  <aside class="aside">
+
+    <div class="block">
+      <div class="h">Contact</div>
+      <div class="contact">
+        <div><span class="k">Email</span><span class="v"><a href="mailto:harsh.parikh@yale.edu">harsh.parikh@yale.edu</a></span></div>
+        <div><span class="k">Web</span><span class="v"><a href="https://harsh-parikh.github.io">harsh-parikh.github.io</a></span></div>
+        <div><span class="k">GitHub</span><span class="v">github.com/harsh-parikh</span></div>
+        <div><span class="k">Based</span><span class="v">New Haven, Connecticut</span></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="h">Training</div>
+      <div class="edu">
+        <div class="deg">Postdoctoral Fellow, Biostatistics</div>
+        <div class="org">Johns Hopkins University · Stuart &amp; Rudolph</div>
+        <div class="yr">2023–2025</div>
+      </div>
+      <div class="edu">
+        <div class="deg">Ph.D., Computer Science</div>
+        <div class="org">Duke University · Rudin, Volfovsky &amp; Roy</div>
+        <div class="yr">2023 &nbsp;<span class="star">★</span> Outstanding Dissertation Award</div>
+      </div>
+      <div class="edu">
+        <div class="deg">M.S., Economics &amp; Computation</div>
+        <div class="org">Duke University · Conitzer &amp; Becker</div>
+        <div class="yr">2018</div>
+      </div>
+      <div class="edu">
+        <div class="deg">B.Tech., Computer Science &amp; Engineering</div>
+        <div class="org">Indian Institute of Technology (IIT) Delhi</div>
+        <div class="yr">2015</div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="h">Selected Awards</div>
+      <div class="li"><span class="mk">◆</span><span><b>AI at Yale Seed Grant</b>, $100K — Office of the Provost (2026)</span></div>
+      <div class="li"><span class="mk">◆</span><span><b>Future Leader in Data Science &amp; AI</b> — MIDAS, Michigan (2024)</span></div>
+      <div class="li"><span class="mk">◆</span><span><b>Outstanding PhD Dissertation Award</b> — Duke CS (2023)</span></div>
+      <div class="li"><span class="mk">◆</span><span><b>Amazon Graduate Research Fellowship</b> (2020–2022)</span></div>
+      <div class="li"><span class="mk">◆</span><span><b>Two Sigma PhD Fellowship</b>, Finalist (2022)</span></div>
+    </div>
+
+    <div class="block">
+      <div class="h">Service</div>
+      <div class="svc"><b>Reviewer:</b> JASA, JRSS-A/B, JMLR, PNAS, Nature Human Behaviour; NeurIPS, ICML, AISTATS. <b>Co-organizer:</b> FDS Workshop on AI for Social Science Research Methods, Yale (2026).</div>
+    </div>
+
+  </aside>
+
+  <!-- ───────── MAIN ───────── -->
+  <main class="main">
+
+    <div class="block">
+      <div class="h">Profile</div>
+      <p class="profile">I lead the <b>Causal Evidence and Decisions Studio (CEADS)</b> at Yale, developing machine&#8209;learning&#8209;aided causal inference methods for high&#8209;stakes decisions where standard assumptions break down—spanning medicine, public health, ecology, and the social sciences.</p>
+    </div>
+
+    <div class="block">
+      <div class="h">Current Positions &amp; Affiliations</div>
+      <div class="job">
+        <div class="top"><span class="ti">Assistant Professor of Biostatistics</span><span class="when">2025 — Present</span></div>
+        <div class="org">Yale School of Public Health · Yale University</div>
+        <div class="desc">PI on the AI at Yale Seed Grant. Affiliated faculty at Foundations of Data Science and the Institution for Social and Policy Studies (ISPS).</div>
+      </div>
+      <div class="job">
+        <div class="top"><span class="ti">Assistant Professor (Secondary Appointment)</span><span class="when">2025 — Present</span></div>
+        <div class="org">Department of Statistics &amp; Data Science · Yale University</div>
+      </div>
+      <div class="job">
+        <div class="top"><span class="ti">Applied Scientist III</span><span class="when">2025 — Present</span></div>
+        <div class="org">Amazon · Supply Chain Optimization Technologies (SCOT)</div>
+        <div class="desc">Causal inference and decision systems for large-scale supply-chain optimization.</div>
+      </div>
+      <div class="job">
+        <div class="top"><span class="ti">Guest Researcher</span><span class="when">2025 — Present</span></div>
+        <div class="org">Danish Centre for Health Economics (DaCHE) · U. of Southern Denmark</div>
+        <div class="desc">Causal methods for the experienced socio-economic burden of disease.</div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="h">Research Program</div>
+      <div class="themes">
+        <div class="theme"><b>Data Fusion</b>Combining experimental &amp; observational data; partial identification; transportability beyond common support.</div>
+        <div class="theme"><b>Interpretable ML</b>Matching methods (MALTS, AME), the Rashomon effect, and regularized extrapolation.</div>
+        <div class="theme"><b>Causal Networks</b>Graph-ML estimators for network effects and transporting effects across social networks.</div>
+        <div class="theme"><b>Decisions &amp; Equity</b>Optimal treatment regimes, trial design, and data equity in public health.</div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="h">Selected Experience</div>
+      <div class="job">
+        <div class="top"><span class="ti">Research Intern · Core Data Science</span><span class="when">2022</span></div>
+        <div class="org">Meta (Facebook)</div>
+        <div class="desc">Methods for inferring network interference in randomized controlled trials.</div>
+      </div>
+      <div class="job">
+        <div class="top"><span class="ti">Applied Scientist Intern</span><span class="when">2020, 2021</span></div>
+        <div class="org">Amazon · Seller Fees &amp; Profitability</div>
+        <div class="desc">Evaluated and benchmarked causal inference methods for profitability decisions.</div>
+      </div>
+      <div class="job">
+        <div class="top"><span class="ti">Research Engineer · Data Fusion &amp; Graph Analytics</span><span class="when">2015 — 2016</span></div>
+        <div class="org">IBM India Research Laboratory</div>
+        <div class="desc">Social-network data analysis and graph analytics for law-enforcement applications.</div>
+      </div>
+      <div class="job">
+        <div class="top"><span class="ti">Research Intern · Int'l Development</span><span class="when">2017</span></div>
+        <div class="org">The Urban Institute · Washington, DC</div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="h">Expertise</div>
+      <div class="chips">
+        <span>Causal Inference</span><span>Semiparametric Statistics</span><span>Interpretable ML</span><span>Data Fusion</span><span>Transportability</span><span>Causal Networks</span><span>Health Economics</span>
+      </div>
+      <div class="tools"><b>Programming</b>Python · R · SQL · STATA · MATLAB · C/C++</div>
+    </div>
+
+  </main>
+
+</div>
+
+<button class="hint" onclick="window.print()">↓ Save as PDF</button>
+
+</body>
+</html>
