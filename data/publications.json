@@ -1,7 +1,7 @@
 {
   "scholar_id": "uCrw1ZMAAAAJ",
   "author": "Harsh Parikh",
-  "fetched_at": "2026-06-15T11:44:01.004326+00:00",
+  "fetched_at": "2026-06-24T19:01:20.020907+00:00",
   "count": 42,
   "publications": [
     {
@@ -32,7 +32,7 @@
       ],
       "venue": "arXiv preprint arXiv:2601.20819",
       "year": "2026",
-      "citations": 8,
+      "citations": 10,
       "url": "https://arxiv.org/abs/2601.20819",
       "scholar_id": "uCrw1ZMAAAAJ:ldfaerwXgEUC",
       "note": "co-senior/corresponding author"
@@ -54,7 +54,7 @@
       ],
       "venue": "JAMA Health Forum",
       "year": "2026",
-      "citations": 3,
+      "citations": 4,
       "url": "https://jamanetwork.com/journals/jama-health-forum/fullarticle/2843724",
       "scholar_id": "uCrw1ZMAAAAJ:70eg2SAEIzsC"
     },
@@ -79,6 +79,23 @@
         "david arbour",
         "harsh parikh"
       ]
+    },
+    {
+      "title": "Precision mental health: predicting heterogeneous treatment effects for depression through data integration",
+      "authors_raw": "Carly L Brantner and Trang Quynh Nguyen and Harsh Parikh and Congwen Zhao and Hwanhee Hong and Elizabeth A Stuart",
+      "authors": [
+        "Carly L Brantner",
+        "Trang Quynh Nguyen",
+        "Harsh Parikh",
+        "Congwen Zhao",
+        "Hwanhee Hong",
+        "Elizabeth A Stuart"
+      ],
+      "venue": "Journal of the Royal Statistical Society Series C: Applied Statistics",
+      "year": "2026",
+      "citations": 1,
+      "url": "https://academic.oup.com/jrsssc/advance-article-abstract/doi/10.1093/jrsssc/qlaf068/8378251",
+      "scholar_id": "uCrw1ZMAAAAJ:O3NaXMp0MMsC"
     },
     {
       "title": "Why are there many equally good models? An Anatomy of the Rashomon Effect",
@@ -338,23 +355,6 @@
       "scholar_id": "uCrw1ZMAAAAJ:vV6vV6tmYwMC"
     },
     {
-      "title": "Precision mental health: predicting heterogeneous treatment effects for depression through data integration",
-      "authors_raw": "Carly L Brantner and Trang Quynh Nguyen and Harsh Parikh and Congwen Zhao and Hwanhee Hong and Elizabeth A Stuart",
-      "authors": [
-        "Carly L Brantner",
-        "Trang Quynh Nguyen",
-        "Harsh Parikh",
-        "Congwen Zhao",
-        "Hwanhee Hong",
-        "Elizabeth A Stuart"
-      ],
-      "venue": "Journal of the Royal Statistical Society Series C: Applied Statistics",
-      "year": "2025",
-      "citations": 1,
-      "url": "https://academic.oup.com/jrsssc/advance-article-abstract/doi/10.1093/jrsssc/qlaf068/8378251",
-      "scholar_id": "uCrw1ZMAAAAJ:O3NaXMp0MMsC"
-    },
-    {
       "title": "Breast cancer and income loss in Denmark: heterogeneous outcomes and longitudinal effects",
       "authors_raw": "Emily K Johnson and Harsh Parikh and Kim Rose Olsen and Angela Y Chang and Liza Sopina",
       "authors": [
@@ -415,6 +415,29 @@
       "scholar_id": "uCrw1ZMAAAAJ:HDshCWvjkbEC"
     },
     {
+      "title": "Safe and interpretable estimation of optimal treatment regimes",
+      "authors_raw": "Harsh Parikh and Quinn M Lanners and Zade Akras and Sahar Zafar and M Brandon Westover and Cynthia Rudin and Alexander Volfovsky",
+      "authors": [
+        "Harsh Parikh",
+        "Quinn M Lanners",
+        "Zade Akras",
+        "Sahar Zafar",
+        "M Brandon Westover",
+        "Cynthia Rudin",
+        "Alexander Volfovsky"
+      ],
+      "venue": "International Conference on Artificial Intelligence and Statistics (AISTATS)",
+      "year": "2024",
+      "citations": 5,
+      "url": "https://proceedings.mlr.press/v238/parikh24a.html",
+      "scholar_id": "uCrw1ZMAAAAJ:e5wmG9Sq2KIC",
+      "note": "co-first author",
+      "co_first": [
+        "harsh parikh",
+        "quinn m lanners"
+      ]
+    },
+    {
       "title": "How many patients do you need? Investigating trial designs for anti‐seizure treatment in acute brain injury patients",
       "authors_raw": "Harsh Parikh and Haoqi Sun and Rajesh Amerineni and Eric S Rosenthal and Alexander Volfovsky and Cynthia Rudin and M Brandon Westover and Sahar F Zafar",
       "authors": [
@@ -432,29 +455,6 @@
       "citations": 4,
       "url": "https://onlinelibrary.wiley.com/doi/abs/10.1002/acn3.52059",
       "scholar_id": "uCrw1ZMAAAAJ:hC7cP41nSMkC"
-    },
-    {
-      "title": "Safe and interpretable estimation of optimal treatment regimes",
-      "authors_raw": "Harsh Parikh and Quinn M Lanners and Zade Akras and Sahar Zafar and M Brandon Westover and Cynthia Rudin and Alexander Volfovsky",
-      "authors": [
-        "Harsh Parikh",
-        "Quinn M Lanners",
-        "Zade Akras",
-        "Sahar Zafar",
-        "M Brandon Westover",
-        "Cynthia Rudin",
-        "Alexander Volfovsky"
-      ],
-      "venue": "International Conference on Artificial Intelligence and Statistics (AISTATS)",
-      "year": "2024",
-      "citations": 4,
-      "url": "https://proceedings.mlr.press/v238/parikh24a.html",
-      "scholar_id": "uCrw1ZMAAAAJ:e5wmG9Sq2KIC",
-      "note": "co-first author",
-      "co_first": [
-        "harsh parikh",
-        "quinn m lanners"
-      ]
     },
     {
       "title": "Effects of epileptiform activity on discharge outcome in critically ill patients in the USA: a retrospective cross-sectional study",
@@ -602,7 +602,7 @@
       ],
       "venue": "Proceedings of the 2020 ACM SIGMOD international conference on management of …",
       "year": "2020",
-      "citations": 66,
+      "citations": 67,
       "url": "https://dl.acm.org/doi/abs/10.1145/3318464.3389759",
       "scholar_id": "uCrw1ZMAAAAJ:LkGwnXOMwfcC"
     },
