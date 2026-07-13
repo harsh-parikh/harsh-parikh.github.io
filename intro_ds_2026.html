@@ -312,7 +312,8 @@ html.light .chat-msg.user { background: rgba(37,99,235,0.08); border-color: rgba
     <p class="tagline">Translating real-world public health problems into precise questions, applying appropriate analytical tools, and communicating findings effectively.</p>
     <div class="meta">
       <div class="meta-item"><div class="label">Instructor</div><div class="value">Harsh Parikh, Ph.D.</div></div>
-      <div class="meta-item"><div class="label">Schedule</div><div class="value">80 min · 2× / week</div></div>
+      <div class="meta-item"><div class="label">Schedule</div><div class="value">Tue &amp; Thu, 8:30–9:50am</div></div>
+      <div class="meta-item"><div class="label">Location</div><div class="value">47 College St, Rm 106 A/B</div></div>
       <div class="meta-item"><div class="label">Format</div><div class="value">Lectures + Cases + Labs</div></div>
       <div class="meta-item"><div class="label">Language</div><div class="value">Python</div></div>
     </div>
@@ -344,15 +345,20 @@ html.light .chat-msg.user { background: rgba(37,99,235,0.08); border-color: rgba
   </div>
 
   <div class="card" style="margin-bottom:16px">
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:32px">
       <div>
         <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px">Harsh Parikh, Ph.D.</div>
         <div style="font-size:13px;color:var(--text-muted)">Assistant Professor, Biostatistics</div>
         <a href="mailto:harsh.parikh@yale.edu" style="font-size:13px">harsh.parikh@yale.edu</a>
       </div>
       <div>
+        <div class="card-label" style="margin-bottom:6px">Lectures</div>
+        <div style="font-size:14px;color:var(--text-muted)">Tue &amp; Thu, 8:30–9:50am</div>
+        <div style="font-size:13px;color:var(--text-dim)">47 College St, Rm 106 A/B</div>
+      </div>
+      <div>
         <div class="card-label" style="margin-bottom:6px">Office Hours</div>
-        <div style="font-size:14px;color:var(--text-muted)">TBD — 1 hour / week</div>
+        <div style="font-size:14px;color:var(--text-muted)">Thu, 10–11am</div>
         <div style="font-size:13px;color:var(--text-dim)">60 College St, Rm 200</div>
       </div>
       <div>
@@ -627,10 +633,10 @@ document.addEventListener('DOMContentLoaded', function() {
     {
       id: 'meeting-time',
       strong: ['meet','meeting','session','sessions'],
-      weak: ['time','schedule','length','minutes','long','often','days','class','when'],
-      phrases: ['class meeting','how long is the class','how often does','when does the class','class time','when is class','when do we meet','meeting time'],
+      weak: ['time','schedule','length','minutes','long','often','days','class','when','where','room','building','address','location'],
+      phrases: ['class meeting','how long is the class','how often does','when does the class','class time','when is class','when do we meet','meeting time','where is class','where does the class meet','class location','where do we meet'],
       section: '#about', title: 'When the class meets',
-      answer: '<p>The class meets <strong>twice a week</strong>, with each session lasting <strong>80 minutes</strong>. Specific days and times will be posted on Canvas.</p>'
+      answer: '<p>The class meets <strong>Tuesdays and Thursdays, 8:30–9:50am</strong>, at <strong>47 College St, Room 106 A/B</strong>.</p>'
     },
     {
       id: 'instructor',
@@ -646,7 +652,7 @@ document.addEventListener('DOMContentLoaded', function() {
       weak: ['hours','room','location','help','available'],
       phrases: ['office hours','where are office hours','when are office hours','can i come to office'],
       section: '#about', title: 'Office hours',
-      answer: '<p>The instructor holds <strong>1 hour of office hours per week</strong> at <strong>60 College St, Room 200</strong> (exact day/time TBD; posted on Canvas). Each TF also holds 1 office hour per week.</p>'
+      answer: '<p>The instructor holds office hours <strong>Thursdays, 10–11am</strong>, at <strong>60 College St, Room 200</strong>. Each TF also holds 1 office hour per week.</p>'
     },
     {
       id: 'tfs',
