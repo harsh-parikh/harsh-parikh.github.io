@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BIS 527: Introduction to Health Data Science — Flyer</title>
+<style>
+@font-face { font-family: 'Source Sans 3'; font-style: normal; font-weight: 400; src: url('fontfiles/SourceSans3-400.woff2') format('woff2'); }
+@font-face { font-family: 'Source Sans 3'; font-style: normal; font-weight: 500; src: url('fontfiles/SourceSans3-500.woff2') format('woff2'); }
+@font-face { font-family: 'Source Sans 3'; font-style: normal; font-weight: 600; src: url('fontfiles/SourceSans3-600.woff2') format('woff2'); }
+@font-face { font-family: 'Source Sans 3'; font-style: normal; font-weight: 700; src: url('fontfiles/SourceSans3-700.woff2') format('woff2'); }
+@font-face { font-family: 'Source Serif 4'; font-style: normal; font-weight: 400; src: url('fontfiles/SourceSerif4-400.woff2') format('woff2'); }
+@font-face { font-family: 'Source Serif 4'; font-style: normal; font-weight: 600; src: url('fontfiles/SourceSerif4-600.woff2') format('woff2'); }
+@font-face { font-family: 'Source Serif 4'; font-style: normal; font-weight: 700; src: url('fontfiles/SourceSerif4-700.woff2') format('woff2'); }
+
+:root {
+  --yale: #00356b;
+  --yale-dark: #00203f;
+  --yale-mid: #2f5f97;
+  --yale-light: #7ba0cc;
+  --paper: #faf9f6;
+  --ink: #16233a;
+  --ink-muted: #52627c;
+  --ink-dim: #8695ab;
+  --rule: rgba(0,53,107,0.15);
+}
+html.dark {
+  --bg-page: var(--yale);
+  --bg-band: var(--paper);
+  --band-text: var(--yale);
+  --band-sub: #4a5a72;
+  --page-text: #ffffff;
+  --page-muted: #b9c9e2;
+  --page-dim: #7f96bb;
+  --rule2: rgba(255,255,255,0.22);
+  --swatch1: #ffffff; --swatch2: #bcd0ea; --swatch3: #7ba0cc;
+  --cta-bg: #ffffff; --cta-text: var(--yale);
+}
+html.light, html:not(.dark) {
+  --bg-page: var(--paper);
+  --bg-band: var(--yale);
+  --band-text: #ffffff;
+  --band-sub: #c3d3e8;
+  --page-text: var(--yale-dark);
+  --page-muted: var(--ink-muted);
+  --page-dim: var(--ink-dim);
+  --rule2: var(--rule);
+  --swatch1: var(--yale); --swatch2: var(--yale-mid); --swatch3: var(--yale-light);
+  --cta-bg: var(--yale); --cta-text: #ffffff;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #3a3a3a; font-family: 'Source Sans 3', sans-serif; -webkit-font-smoothing: antialiased; }
+
+/* on-screen chrome, hidden in the PDF export */
+.controls {
+  max-width: 8.5in;
+  margin: 0 auto;
+  padding: 16px 4px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.ctrl-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: 'Source Sans 3', sans-serif; font-size: 13px; font-weight: 600;
+  color: #eee; background: #1f1f1f; border: 1px solid #444; border-radius: 8px;
+  padding: 9px 14px; cursor: pointer; text-decoration: none;
+}
+.ctrl-btn:hover { background: #2b2b2b; }
+.ctrl-btn svg { width: 15px; height: 15px; }
+
+.sheet {
+  width: 8.5in;
+  min-height: 11in;
+  margin: 0 auto 24px;
+  background: var(--bg-page);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.35);
+}
+
+/* Header band */
+.band {
+  background: var(--bg-band);
+  padding: 0.55in 0.68in 0.5in;
+}
+.eyebrow { font-size: 10.5px; letter-spacing: 2px; text-transform: uppercase; color: var(--band-sub); font-weight: 600; margin-bottom: 20px; }
+.code { font-family: 'Source Sans 3', sans-serif; font-size: 13px; letter-spacing: 3px; color: var(--band-sub); font-weight: 700; margin-bottom: 10px; }
+.band h1 {
+  font-family: 'Source Serif 4', serif;
+  font-weight: 600;
+  font-size: 34px;
+  line-height: 1.15;
+  letter-spacing: -0.2px;
+  color: var(--band-text);
+  white-space: nowrap;
+  margin-bottom: 18px;
+}
+.band .tagline { font-size: 14.5px; line-height: 1.65; color: var(--band-sub); max-width: 5.3in; font-weight: 400; }
+
+/* Body */
+.body { padding: 0.5in 0.68in 0.55in; }
+
+.schedule {
+  padding-bottom: 0.34in;
+  margin-bottom: 0.34in;
+  border-bottom: 3px solid var(--rule2);
+}
+.schedule-label { font-size: 10.5px; letter-spacing: 2px; text-transform: uppercase; color: var(--page-dim); font-weight: 700; margin-bottom: 12px; }
+.schedule-grid { display: flex; align-items: baseline; gap: 0.45in; flex-wrap: wrap; margin-bottom: 10px; }
+.schedule-days { font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 38px; color: var(--page-text); line-height: 1; }
+.schedule-time { font-family: 'Source Sans 3', sans-serif; font-size: 19px; font-weight: 600; color: var(--page-text); }
+.schedule-loc { font-size: 14px; color: var(--page-muted); }
+.schedule-loc strong { color: var(--page-text); font-weight: 600; }
+
+.modules { display: flex; gap: 26px; margin-bottom: 0.34in; padding-bottom: 0.34in; border-bottom: 1px solid var(--rule2); }
+.module { flex: 1; }
+.module .sw { width: 22px; height: 5px; border-radius: 2px; margin-bottom: 10px; }
+.module .name { font-size: 14.5px; color: var(--page-text); font-weight: 600; line-height: 1.4; }
+
+.grid-3 { display: flex; gap: 26px; margin-bottom: 0.36in; }
+.info-card { flex: 1; }
+.info-card .k { font-size: 10.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--page-dim); font-weight: 700; margin-bottom: 8px; }
+.info-card .v { font-size: 14.5px; color: var(--page-text); font-weight: 600; line-height: 1.5; }
+.info-card .v2 { font-size: 12.5px; color: var(--page-muted); margin-top: 4px; line-height: 1.55; }
+
+.cta {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--cta-bg); color: var(--cta-text);
+  border-radius: 10px;
+  padding: 0.24in 0.32in;
+  margin-bottom: 0.36in;
+}
+.cta .msg { font-family: 'Source Serif 4', serif; font-size: 17.5px; font-weight: 600; }
+.cta a { color: var(--cta-text); font-family: 'Source Sans 3', sans-serif; font-weight: 700; font-size: 13.5px; text-decoration: underline; text-underline-offset: 3px; }
+
+.footer { display: flex; align-items: center; justify-content: space-between; padding-top: 0.26in; border-top: 1px solid var(--rule2); }
+.footer-left .fn { font-size: 14.5px; font-weight: 700; color: var(--page-text); margin-bottom: 3px; }
+.footer-left .ft { font-size: 12px; color: var(--page-muted); margin-bottom: 2px; }
+.footer-left a { color: var(--page-text); }
+.footer-right { text-align: right; white-space: nowrap; flex-shrink: 0; }
+.qr-box { width: 0.85in; height: 0.85in; background: #ffffff; border-radius: 6px; padding: 6px; display: inline-block; vertical-align: middle; }
+.qr-box img { width: 100%; height: 100%; display: block; }
+.footer-right .site { display: inline-block; vertical-align: middle; margin-right: 14px; font-family: 'Source Sans 3', sans-serif; font-size: 11px; color: var(--page-dim); text-align: right; line-height: 1.6; font-weight: 500; }
+.footer-right .site span { white-space: nowrap; }
+
+@media print {
+  body { background: #fff; }
+  .controls { display: none; }
+  .sheet { box-shadow: none; margin: 0; }
+  @page { size: 8.5in 11in; margin: 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <button class="ctrl-btn" id="theme-toggle" onclick="toggleTheme()">
+    <svg id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg id="icon-sun" style="display:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    <span id="theme-label">Dark mode</span>
+  </button>
+  <a class="ctrl-btn" id="download-link" href="BIS527_Flyer_Light.pdf" download="BIS527_Flyer.pdf">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Download PDF
+  </a>
+</div>
+
+<div class="sheet">
+  <div class="band">
+    <div class="eyebrow">Yale School of Public Health &nbsp;·&nbsp; Department of Biostatistics &nbsp;·&nbsp; Fall 2026</div>
+    <div class="code">BIS&nbsp;527</div>
+    <h1>Introduction to Health Data Science</h1>
+    <p class="tagline">Translating real-world public health problems into precise questions, applying appropriate analytical tools, and communicating findings effectively.</p>
+  </div>
+
+  <div class="body">
+    <div class="schedule">
+      <div class="schedule-label">Lecture Schedule</div>
+      <div class="schedule-grid">
+        <div class="schedule-days">Tue &amp; Thu</div>
+        <div class="schedule-time">8:30&ndash;9:50&nbsp;AM</div>
+      </div>
+      <div class="schedule-loc"><strong>47 College St, Room 106 A/B</strong> &nbsp;·&nbsp; New Haven, CT</div>
+    </div>
+
+    <div class="modules">
+      <div class="module"><div class="sw" style="background:var(--swatch1)"></div><div class="name">Data Structures &amp; Algorithms</div></div>
+      <div class="module"><div class="sw" style="background:var(--swatch2)"></div><div class="name">Machine Learning &amp; AI</div></div>
+      <div class="module"><div class="sw" style="background:var(--swatch3)"></div><div class="name">Causal Inference</div></div>
+    </div>
+
+    <div class="grid-3">
+      <div class="info-card">
+        <div class="k">Who Should Enroll</div>
+        <div class="v">MPH, Undergrads &amp; Grad Students</div>
+        <div class="v2">Open to MPH (quant. focus), advanced undergrads, and Stats &amp; DS / CS grad students — also required for Biostatistics MS/PhD</div>
+      </div>
+      <div class="info-card">
+        <div class="k">Format</div>
+        <div class="v">Lecture-Based</div>
+        <div class="v2">Case studies and hands-on labs are built into class sessions — no separate lab or discussion sections</div>
+      </div>
+      <div class="info-card">
+        <div class="k">Language</div>
+        <div class="v">Python</div>
+        <div class="v2">NumPy, Pandas, Scikit-learn, PyTorch</div>
+      </div>
+    </div>
+
+    <div class="cta">
+      <div class="msg">Questions? Reach out before add/drop closes.</div>
+      <a href="mailto:harsh.parikh@yale.edu">harsh.parikh@yale.edu →</a>
+    </div>
+
+    <div class="footer">
+      <div class="footer-left">
+        <div class="fn">Harsh Parikh, Ph.D.</div>
+        <div class="ft">Assistant Professor, Biostatistics</div>
+        <div class="ft"><a href="mailto:harsh.parikh@yale.edu">harsh.parikh@yale.edu</a></div>
+      </div>
+      <div class="footer-right">
+        <div class="site"><span>harsh-parikh.github.io</span><br><span>/intro_ds_2026</span></div>
+        <div class="qr-box"><img src="qr.png" /></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function applyTheme(dark) {
+  document.documentElement.classList.toggle('dark', dark);
+  document.getElementById('icon-moon').style.display = dark ? 'none' : 'block';
+  document.getElementById('icon-sun').style.display = dark ? 'block' : 'none';
+  document.getElementById('theme-label').textContent = dark ? 'Light mode' : 'Dark mode';
+  document.getElementById('download-link').href = dark ? 'BIS527_Flyer_Dark.pdf' : 'BIS527_Flyer_Light.pdf';
+  try { localStorage.setItem('bis527-flyer-theme', dark ? 'dark' : 'light'); } catch (e) {}
+}
+function toggleTheme() {
+  applyTheme(!document.documentElement.classList.contains('dark'));
+}
+(function () {
+  var saved = null;
+  try { saved = localStorage.getItem('bis527-flyer-theme'); } catch (e) {}
+  applyTheme(saved === 'dark');
+})();
+</script>
+
+</body>
+</html>
