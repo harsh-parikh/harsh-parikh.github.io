@@ -1,9 +1,25 @@
 {
   "scholar_id": "uCrw1ZMAAAAJ",
   "author": "Harsh Parikh",
-  "fetched_at": "2026-06-24T19:01:20.020907+00:00",
-  "count": 42,
+  "fetched_at": "2026-08-03T09:18:55.175227+00:00",
+  "count": 44,
   "publications": [
+    {
+      "title": "Demystifying prediction powered inference",
+      "authors_raw": "Yilin Song and Dan M Kluger and Harsh Parikh and Tian Gu",
+      "authors": [
+        "Yilin Song",
+        "Dan M Kluger",
+        "Harsh Parikh",
+        "Tian Gu"
+      ],
+      "venue": "arXiv preprint arXiv:2601.20819",
+      "year": "2026",
+      "citations": 13,
+      "url": "https://arxiv.org/abs/2601.20819",
+      "scholar_id": "uCrw1ZMAAAAJ:ldfaerwXgEUC",
+      "note": "co-senior/corresponding author"
+    },
     {
       "title": "A Double Machine Learning Approach for Combining Experimental and Observational Studies",
       "authors_raw": "Harsh Parikh and Marco Morucci and Vittorio Orlandi and Sudeepa Roy and Cynthia Rudin and Alexander Volfovsky",
@@ -22,23 +38,7 @@
       "scholar_id": "uCrw1ZMAAAAJ:J_g5lzvAfSwC"
     },
     {
-      "title": "Demystifying Prediction Powered Inference",
-      "authors_raw": "Yilin Song and Dan M Kluger and Harsh Parikh and Tian Gu",
-      "authors": [
-        "Yilin Song",
-        "Dan M Kluger",
-        "Harsh Parikh",
-        "Tian Gu"
-      ],
-      "venue": "arXiv preprint arXiv:2601.20819",
-      "year": "2026",
-      "citations": 10,
-      "url": "https://arxiv.org/abs/2601.20819",
-      "scholar_id": "uCrw1ZMAAAAJ:ldfaerwXgEUC",
-      "note": "co-senior/corresponding author"
-    },
-    {
-      "title": "Ten Core Concepts for Ensuring Data Equity in Public Health",
+      "title": "Ten core concepts for ensuring data equity in public health",
       "authors_raw": "Yiran Wang and Alicia E Boyd and Lillian Rountree and Yi Ren and Kate Nyhan and Ruchit Nagar and Jackson Higginbottom and Megan L Ranney and Harsh Parikh and Bhramar Mukherjee",
       "authors": [
         "Yiran Wang",
@@ -54,12 +54,12 @@
       ],
       "venue": "JAMA Health Forum",
       "year": "2026",
-      "citations": 4,
+      "citations": 5,
       "url": "https://jamanetwork.com/journals/jama-health-forum/fullarticle/2843724",
       "scholar_id": "uCrw1ZMAAAAJ:70eg2SAEIzsC"
     },
     {
-      "title": "Regularizing Extrapolation in Causal Inference",
+      "title": "Regularizing extrapolation in causal inference",
       "authors_raw": "David Arbour and Harsh Parikh and Bijan Niknam and Elizabeth Stuart and Kara Rudolph and Avi Feller",
       "authors": [
         "David Arbour",
@@ -71,7 +71,7 @@
       ],
       "venue": "International Conference on Artificial Intelligence and Statistics (AISTATS)",
       "year": "2026",
-      "citations": 3,
+      "citations": 5,
       "url": "https://arxiv.org/abs/2509.17180",
       "scholar_id": "uCrw1ZMAAAAJ:ns9cj8rnVeAC",
       "note": "co-first author",
@@ -108,6 +108,23 @@
       "citations": 1,
       "url": "https://arxiv.org/abs/2601.06730",
       "scholar_id": "uCrw1ZMAAAAJ:2P1L_qKh6hAC"
+    },
+    {
+      "title": "Towards Optimal Estimators for Randomized Control Trials",
+      "authors_raw": "H Parikh, G Levin-Konigsberg, N Tripuraneni, D Madeka, MI Jordan, ...",
+      "authors": [
+        "H Parikh",
+        "G Levin-Konigsberg",
+        "N Tripuraneni",
+        "D Madeka",
+        "MI Jordan",
+        "..."
+      ],
+      "venue": "arXiv preprint arXiv:2607.23254",
+      "year": "2026",
+      "citations": 0,
+      "url": "",
+      "scholar_id": "uCrw1ZMAAAAJ:dfsIfKJdRG4C"
     },
     {
       "title": "The case for an integrated biobanking initiative in South Asia",
@@ -266,12 +283,27 @@
       ],
       "venue": "Journal of the American Statistical Association",
       "year": "2025",
-      "citations": 15,
+      "citations": 17,
       "url": "https://www.tandfonline.com/doi/abs/10.1080/01621459.2025.2495319",
       "scholar_id": "uCrw1ZMAAAAJ:mB3voiENLucC"
     },
     {
-      "title": "Towards Enhancing Data Equity in Public Health Data Science",
+      "title": "Data fusion for partial identification of causal effects",
+      "authors_raw": "Quinn Lanners and Cynthia Rudin and Alexander Volfovsky and Harsh Parikh",
+      "authors": [
+        "Quinn Lanners",
+        "Cynthia Rudin",
+        "Alexander Volfovsky",
+        "Harsh Parikh"
+      ],
+      "venue": "Advances in Neural Information Processing Systems (NeurIPS)",
+      "year": "2025",
+      "citations": 6,
+      "url": "https://arxiv.org/abs/2505.24296",
+      "scholar_id": "uCrw1ZMAAAAJ:BqipwSGYUEgC"
+    },
+    {
+      "title": "Towards enhancing data equity in public health data science",
       "authors_raw": "Yiran Wang and Alicia E Boyd and Lillian Rountree and Yi Ren and Kate Nyhan and Ruchit Nagar and Jackson Higginbottom and Megan L Ranney and Harsh Parikh and Bhramar Mukherjee",
       "authors": [
         "Yiran Wang",
@@ -287,24 +319,23 @@
       ],
       "venue": "arXiv preprint arXiv:2508.20301",
       "year": "2025",
-      "citations": 7,
+      "citations": 6,
       "url": "https://arxiv.org/abs/2508.20301",
       "scholar_id": "uCrw1ZMAAAAJ:35N4QoGY0k4C"
     },
     {
-      "title": "Data fusion for partial identification of causal effects",
-      "authors_raw": "Quinn Lanners and Cynthia Rudin and Alexander Volfovsky and Harsh Parikh",
+      "title": "Sudeepa Roy, Cynthia Rudin, and Alexander Volfovsky",
+      "authors_raw": "H Parikh, M Morucci, V Orlandi",
       "authors": [
-        "Quinn Lanners",
-        "Cynthia Rudin",
-        "Alexander Volfovsky",
-        "Harsh Parikh"
+        "H Parikh",
+        "M Morucci",
+        "V Orlandi"
       ],
-      "venue": "Advances in Neural Information Processing Systems (NeurIPS)",
+      "venue": "A double machine learning approach for combining experimental and …",
       "year": "2025",
-      "citations": 4,
-      "url": "https://arxiv.org/abs/2505.24296",
-      "scholar_id": "uCrw1ZMAAAAJ:BqipwSGYUEgC"
+      "citations": 5,
+      "url": "",
+      "scholar_id": "uCrw1ZMAAAAJ:cFHS6HbyZ2cC"
     },
     {
       "title": "Graph Machine Learning based Doubly Robust Estimator for Network Causal Effects",
@@ -318,7 +349,7 @@
       ],
       "venue": "International Conference on Artificial Intelligence and Statistics (AISTATS)",
       "year": "2025",
-      "citations": 4,
+      "citations": 5,
       "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:R3hNpaxXUhUC"
     },
@@ -366,7 +397,7 @@
       ],
       "venue": "Nature Communications",
       "year": "2025",
-      "citations": 1,
+      "citations": 2,
       "url": "https://www.nature.com/articles/s41467-025-66524-y",
       "scholar_id": "uCrw1ZMAAAAJ:hMod-77fHWUC"
     },
@@ -397,7 +428,7 @@
       ],
       "venue": "International Conference on Artificial Intelligence and Statistics (AISTATS)",
       "year": "2024",
-      "citations": 13,
+      "citations": 15,
       "url": "https://proceedings.mlr.press/v238/katta24a.html",
       "scholar_id": "uCrw1ZMAAAAJ:hFOr9nPyWt4C"
     },
@@ -475,7 +506,7 @@
       ],
       "venue": "The Lancet Digital Health",
       "year": "2023",
-      "citations": 36,
+      "citations": 38,
       "url": "https://www.thelancet.com/journals/landig/article/PIIS2589-7500(23)00088-2/fulltext",
       "scholar_id": "uCrw1ZMAAAAJ:9ZlFYXVOiuMC",
       "note": "co-first author",
@@ -536,7 +567,7 @@
       ],
       "venue": "International Conference on Machine Learning (ICML)",
       "year": "2022",
-      "citations": 82,
+      "citations": 84,
       "url": "https://proceedings.mlr.press/v162/parikh22a.html",
       "scholar_id": "uCrw1ZMAAAAJ:5nxA0vEk-isC"
     },
@@ -550,7 +581,7 @@
       ],
       "venue": "Journal of Machine Learning Research",
       "year": "2022",
-      "citations": 51,
+      "citations": 50,
       "url": "http://www.jmlr.org/papers/v23/21-0053.html",
       "scholar_id": "uCrw1ZMAAAAJ:Wp0gIr-vW9MC"
     },
@@ -602,7 +633,7 @@
       ],
       "venue": "Proceedings of the 2020 ACM SIGMOD international conference on management of …",
       "year": "2020",
-      "citations": 67,
+      "citations": 68,
       "url": "https://dl.acm.org/doi/abs/10.1145/3318464.3389759",
       "scholar_id": "uCrw1ZMAAAAJ:LkGwnXOMwfcC"
     },
@@ -632,7 +663,7 @@
       ],
       "venue": "Observational Studies",
       "year": "2019",
-      "citations": 11,
+      "citations": 10,
       "url": "https://muse.jhu.edu/pub/56/article/793361/summary",
       "scholar_id": "uCrw1ZMAAAAJ:_FxGoFyzp5QC"
     },
@@ -647,7 +678,7 @@
       ],
       "venue": "BMC Genomics",
       "year": "2016",
-      "citations": 13,
+      "citations": 11,
       "url": "https://link.springer.com/article/10.1186/s12864-016-3323-9",
       "scholar_id": "uCrw1ZMAAAAJ:2osOgNQ5qMEC"
     },
@@ -677,7 +708,7 @@
       ],
       "venue": "Biosystems",
       "year": "2015",
-      "citations": 9,
+      "citations": 8,
       "url": "https://www.sciencedirect.com/science/article/pii/S0303264715000027",
       "scholar_id": "uCrw1ZMAAAAJ:u5HHmVD_uO8C"
     },
