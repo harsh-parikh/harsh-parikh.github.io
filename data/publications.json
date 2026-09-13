@@ -1,8 +1,8 @@
 {
   "scholar_id": "uCrw1ZMAAAAJ",
   "author": "Harsh Parikh",
-  "fetched_at": "2026-08-03T09:18:55.175227+00:00",
-  "count": 44,
+  "fetched_at": "2026-08-24T06:34:43.697250+00:00",
+  "count": 46,
   "publications": [
     {
       "title": "Demystifying prediction powered inference",
@@ -15,7 +15,7 @@
       ],
       "venue": "arXiv preprint arXiv:2601.20819",
       "year": "2026",
-      "citations": 13,
+      "citations": 14,
       "url": "https://arxiv.org/abs/2601.20819",
       "scholar_id": "uCrw1ZMAAAAJ:ldfaerwXgEUC",
       "note": "co-senior/corresponding author"
@@ -33,7 +33,7 @@
       ],
       "venue": "Observational Studies",
       "year": "2026",
-      "citations": 11,
+      "citations": 12,
       "url": "https://muse.jhu.edu/pub/56/article/973068/summary",
       "scholar_id": "uCrw1ZMAAAAJ:J_g5lzvAfSwC"
     },
@@ -81,6 +81,18 @@
       ]
     },
     {
+      "title": "Why are there many equally good models? An Anatomy of the Rashomon Effect",
+      "authors_raw": "Harsh Parikh",
+      "authors": [
+        "Harsh Parikh"
+      ],
+      "venue": "arXiv preprint arXiv:2601.06730",
+      "year": "2026",
+      "citations": 2,
+      "url": "https://arxiv.org/abs/2601.06730",
+      "scholar_id": "uCrw1ZMAAAAJ:2P1L_qKh6hAC"
+    },
+    {
       "title": "Precision mental health: predicting heterogeneous treatment effects for depression through data integration",
       "authors_raw": "Carly L Brantner and Trang Quynh Nguyen and Harsh Parikh and Congwen Zhao and Hwanhee Hong and Elizabeth A Stuart",
       "authors": [
@@ -98,16 +110,39 @@
       "scholar_id": "uCrw1ZMAAAAJ:O3NaXMp0MMsC"
     },
     {
-      "title": "Why are there many equally good models? An Anatomy of the Rashomon Effect",
-      "authors_raw": "Harsh Parikh",
+      "title": "Lasting Income Costs of Mental and Physical Illness",
+      "authors_raw": "EK Johnson, H Parikh, CK Ettman, G Ge, L Sopina, AY Chang",
       "authors": [
-        "Harsh Parikh"
+        "EK Johnson",
+        "H Parikh",
+        "CK Ettman",
+        "G Ge",
+        "L Sopina",
+        "AY Chang"
       ],
-      "venue": "arXiv preprint arXiv:2601.06730",
+      "venue": "JAMA Health Forum",
       "year": "2026",
       "citations": 1,
-      "url": "https://arxiv.org/abs/2601.06730",
-      "scholar_id": "uCrw1ZMAAAAJ:2P1L_qKh6hAC"
+      "url": "",
+      "scholar_id": "uCrw1ZMAAAAJ:ZHo1McVdvXMC"
+    },
+    {
+      "title": "Frailty and low utilization of curative-intent surgical resection in non-metastatic pancreatic cancer",
+      "authors_raw": "L Raymond-King, S McGrath, B Mukherjee, Y Wang, H Parikh, J Rothen, ...",
+      "authors": [
+        "L Raymond-King",
+        "S McGrath",
+        "B Mukherjee",
+        "Y Wang",
+        "H Parikh",
+        "J Rothen",
+        "..."
+      ],
+      "venue": "JNCI Cancer Spectrum, pkag078",
+      "year": "2026",
+      "citations": 0,
+      "url": "",
+      "scholar_id": "uCrw1ZMAAAAJ:yD5IFk8b50cC"
     },
     {
       "title": "Towards Optimal Estimators for Randomized Control Trials",
@@ -209,23 +244,6 @@
       "scholar_id": "uCrw1ZMAAAAJ:rO6llkc54NcC"
     },
     {
-      "title": "Lasting Income Costs of Mental and Physical Illness",
-      "authors_raw": "EK Johnson, H Parikh, CK Ettman, G Ge, L Sopina, AY Chang",
-      "authors": [
-        "EK Johnson",
-        "H Parikh",
-        "CK Ettman",
-        "G Ge",
-        "L Sopina",
-        "AY Chang"
-      ],
-      "venue": "JAMA Health Forum",
-      "year": "2026",
-      "citations": 0,
-      "url": "",
-      "scholar_id": "uCrw1ZMAAAAJ:ZHo1McVdvXMC"
-    },
-    {
       "title": "When Does Agroforestry Income Reduce Deforestation? Evidence from a Natural Experiment in Madagascar",
       "authors_raw": "Camille DeSisto and Ranaivo Rasolofoson and Michelle Foley and Harsh Parikh",
       "authors": [
@@ -283,7 +301,7 @@
       ],
       "venue": "Journal of the American Statistical Association",
       "year": "2025",
-      "citations": 17,
+      "citations": 18,
       "url": "https://www.tandfonline.com/doi/abs/10.1080/01621459.2025.2495319",
       "scholar_id": "uCrw1ZMAAAAJ:mB3voiENLucC"
     },
@@ -381,7 +399,7 @@
       ],
       "venue": "arXiv preprint arXiv:2512.24413",
       "year": "2025",
-      "citations": 2,
+      "citations": 3,
       "url": "https://arxiv.org/abs/2512.24413",
       "scholar_id": "uCrw1ZMAAAAJ:vV6vV6tmYwMC"
     },
@@ -441,7 +459,7 @@
       ],
       "venue": "Harvard Data Science Review",
       "year": "2024",
-      "citations": 9,
+      "citations": 10,
       "url": "https://assets.pubpub.org/jcjvqwck/Huang%20&%20Parikh%20(2024)_Just%20Accepted-01723833367992.pdf",
       "scholar_id": "uCrw1ZMAAAAJ:HDshCWvjkbEC"
     },
@@ -528,7 +546,7 @@
       ],
       "venue": "Conference on Uncertainty in Artificial Intelligence (UAI)",
       "year": "2023",
-      "citations": 11,
+      "citations": 12,
       "url": "https://proceedings.mlr.press/v216/lanners23a.html",
       "scholar_id": "uCrw1ZMAAAAJ:ZeXyd9-uunAC"
     },
@@ -567,7 +585,7 @@
       ],
       "venue": "International Conference on Machine Learning (ICML)",
       "year": "2022",
-      "citations": 84,
+      "citations": 86,
       "url": "https://proceedings.mlr.press/v162/parikh22a.html",
       "scholar_id": "uCrw1ZMAAAAJ:5nxA0vEk-isC"
     },
@@ -581,7 +599,7 @@
       ],
       "venue": "Journal of Machine Learning Research",
       "year": "2022",
-      "citations": 50,
+      "citations": 51,
       "url": "http://www.jmlr.org/papers/v23/21-0053.html",
       "scholar_id": "uCrw1ZMAAAAJ:Wp0gIr-vW9MC"
     },
@@ -633,7 +651,7 @@
       ],
       "venue": "Proceedings of the 2020 ACM SIGMOD international conference on management of …",
       "year": "2020",
-      "citations": 68,
+      "citations": 70,
       "url": "https://dl.acm.org/doi/abs/10.1145/3318464.3389759",
       "scholar_id": "uCrw1ZMAAAAJ:LkGwnXOMwfcC"
     },
@@ -666,6 +684,20 @@
       "citations": 10,
       "url": "https://muse.jhu.edu/pub/56/article/793361/summary",
       "scholar_id": "uCrw1ZMAAAAJ:_FxGoFyzp5QC"
+    },
+    {
+      "title": "The impact of market conditions on active equity management",
+      "authors_raw": "H Parikh, K McQuiston, S Zhi",
+      "authors": [
+        "H Parikh",
+        "K McQuiston",
+        "S Zhi"
+      ],
+      "venue": "The Journal of Portfolio Management 44 (3), 89-101",
+      "year": "2018",
+      "citations": 7,
+      "url": "",
+      "scholar_id": "uCrw1ZMAAAAJ:a0OBvERweLwC"
     },
     {
       "title": "An ensemble micro neural network approach for elucidating interactions between zinc finger proteins and their target DNA",
