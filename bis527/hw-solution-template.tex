@@ -1,0 +1,364 @@
+% =============================================================================
+% BIS 527: Introduction to Health Data Science
+% HOMEWORK SOLUTION TEMPLATE -- write your answers in this file.
+%
+% HOW TO USE THIS FILE
+%   1. Copy it and rename it:  hw1-yourlastname.tex
+%   2. Fill in \yourname, \yournetid, \hwnumber just below.
+%   3. Fill in the two required blocks: collaborators and AI declaration.
+%   4. Write your answer under each \part. Delete parts you did not attempt --
+%      but say so in Problem 7 rather than staying silent.
+%   5. Compile, then submit to Canvas the files the assignment asks for --
+%      always hw1-yourlastname.pdf and hw1-yourlastname.tex, plus
+%      hw1-yourlastname.py when the assignment has a programming problem.
+%      Homework 1 has one, in Problem 1, so all three are required.
+%
+% This file compiles as handed to you. If it stops compiling, the last thing
+% you typed is the culprit -- LaTeX errors are almost always local.
+%
+% NOTHING IN THIS COURSE IS HANDWRITTEN. That includes figures and diagrams --
+% draw them with tikz, or plot them in Python and \includegraphics the result.
+% Scans and photographs of written work are not accepted.
+%
+% Never used LaTeX? Open a free Overleaf account, upload this file, press
+% Recompile. That is the whole workflow.
+%
+% The problem stubs below match HOMEWORK 1. For later assignments, delete
+% them and add \problem / \part lines matching that assignment.
+% =============================================================================
+
+\documentclass[11pt]{article}
+
+\usepackage{fullpage}
+\usepackage{mathptmx}
+\usepackage{latexsym}
+\usepackage{graphicx}
+\usepackage{amsmath, amssymb, amsthm, amsfonts}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+\hypersetup{colorlinks=true, linkcolor=blue!50!black,
+            citecolor=blue!50!black, urlcolor=blue!50!black}
+
+% =============================================================================
+% FILL THESE IN
+% =============================================================================
+\newcommand{\yourname}{Your Name}
+\newcommand{\yournetid}{abc12}
+\newcommand{\hwnumber}{1}
+
+% =============================================================================
+% Machinery -- you should not need to edit below this line.
+% =============================================================================
+\newcommand{\handout}[5]{
+   \noindent
+   \begin{center}
+   \framebox{
+      \vbox{
+    \hbox to 6.28in { {\bf BIS 527: Introduction to Health Data Science} \hfill #2 }
+       \vspace{4mm}
+       \hbox to 6.28in { {\Large \hfill #5  \hfill} }
+       \vspace{2mm}
+       \hbox to 6.28in { {\it #3 \hfill #4} }
+      }
+   }
+   \end{center}
+   \vspace*{4mm}
+}
+\newcommand{\hwheader}{%
+  \handout{\hwnumber}{Fall 2026}{\yourname}{NetID: \yournetid}
+          {Homework \hwnumber{} --- Solutions}
+}
+
+% --- Required declaration blocks --------------------------------------------
+\newcommand{\collaborators}[1]{%
+  \noindent\fbox{\parbox{\dimexpr\textwidth-2\fboxsep-2\fboxrule\relax}{%
+    \small\textbf{Collaborators.} #1}}
+  \vspace{2mm}
+}
+\newcommand{\aideclaration}[1]{%
+  \noindent\fbox{\parbox{\dimexpr\textwidth-2\fboxsep-2\fboxrule\relax}{%
+    \small\textbf{AI use declaration.} #1}}
+  \vspace{4mm}
+}
+
+% --- Problem / part structure -----------------------------------------------
+\newcommand{\problem}[2]{%
+  \vspace{4mm}
+  \noindent{\large\bfseries Problem #1.} {\large #2}
+  \par\vspace{1mm}\hrule\vspace{2mm}
+}
+\newenvironment{parts}{\begin{enumerate}[label=\textbf{(\alph*)}, leftmargin=*]}
+                      {\end{enumerate}}
+
+\newcommand{\inductionparts}{%
+  \par\smallskip
+  \noindent\textbf{Base case.}\par\vspace{18mm}
+  \noindent\textbf{Inductive hypothesis.}\par\vspace{18mm}
+  \noindent\textbf{Inductive step.}\par\vspace{30mm}
+}
+
+% --- A box for "I got stuck here". Using it earns full credit. ---------------
+\newcommand{\stuck}[1]{%
+  \par\vspace{1mm}
+  \noindent{\color{red!50!black}$\triangleright$ \textbf{Where I got stuck:} #1}
+  \par\vspace{1mm}
+}
+
+\newtheorem{claim}{Claim}
+\newtheorem{definition}{Definition}
+
+\lstdefinestyle{pythonstyle}{
+  language=Python,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue!50!black}\bfseries,
+  commentstyle=\color{gray}\itshape,
+  stringstyle=\color{red!50!black},
+  numbers=left, numberstyle=\tiny\color{gray},
+  showstringspaces=false, breaklines=true,
+  frame=single, framesep=3pt, tabsize=4
+}
+\lstset{style=pythonstyle}
+
+\begin{document}
+
+\hwheader
+
+% =============================================================================
+% BOTH BOXES BELOW ARE REQUIRED. Do not delete either one.
+% =============================================================================
+
+\collaborators{%
+  Name everyone you discussed these problems with. Write ``None'' if you
+  worked alone.
+}
+
+\aideclaration{%
+  Name the \textbf{tool}. Say \textbf{what it did} (drafted prose? checked
+  algebra? wrote code? found references?). Say \textbf{what you verified, and
+  how}. Say \textbf{what you did not verify}.
+  \par\smallskip
+  Claiming more checking than you actually did is worse than admitting the gap.
+  An undeclared use, or an inaccuracy traced to one, scores zero.
+  \par\smallskip
+  If you used no AI tools, write: ``No AI tools were used.''
+}
+
+% =============================================================================
+\problem{1}{Implementation and measurement}
+
+\emph{Code in the \texttt{.py} file. Tables, figures and answers here.}
+
+\begin{parts}
+  \item Implementations and test results.
+    \begin{center}
+    \begin{tabular}{llccc}
+      \toprule
+      test & $t$ & expected & \texttt{linear} & \texttt{binary} \\
+      \midrule
+      first position    & & & & \\
+      last position     & & & & \\
+      interior position & & & & \\
+      absent            & & & & \\
+      $n = 0$           & & & & \\
+      $n = 1$           & & & & \\
+      duplicates        & & & & \\
+      \bottomrule
+    \end{tabular}
+    \end{center}
+
+  \item Comparison counts at $n = 15$, and the two worst cases.
+    \begin{center}
+    \begin{tabular}{l*{8}{c}}
+      \toprule
+      target $t$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+      \midrule
+      \texttt{linear} & & & & & & & & \\
+      \texttt{binary} & & & & & & & & \\
+      \bottomrule
+    \end{tabular}
+    \end{center}
+    Worst case, \texttt{linear}: \qquad Worst case, \texttt{binary}:
+    \begin{center}
+    \begin{tabular}{lcccccc}
+      \toprule
+      $n$ & $1$ & $2$ & $3$ & $4$ & $7$ & $8$ \\
+      \midrule
+      worst case, \texttt{binary} & & & & & & \\
+      \bottomrule
+    \end{tabular}
+    \end{center}
+
+  \item The $n$ at which recursive \texttt{linear} first fails, the error, and
+    the reason; whether recursive \texttt{binary} fails at $n = 2^{20}$; and the
+    two loop versions.
+    \begin{lstlisting}[numbers=none]
+def linear_loop(A, lo, hi, t):
+    # your loop here
+
+def binary_loop(A, lo, hi, t):
+    # your loop here
+    \end{lstlisting}
+
+  \item Timings, repetitions used and how you chose them, and the figure.
+    \begin{center}
+    \begin{tabular}{lccccc}
+      \toprule
+      $n$ & $10^3$ & $10^4$ & $10^5$ & $10^6$ & $10^7$ \\
+      \midrule
+      \texttt{linear\_loop} & & & & & \\
+      \texttt{binary\_loop} & & & & & \\
+      \bottomrule
+    \end{tabular}
+    \end{center}
+    % \begin{center}
+    %   \includegraphics[width=0.7\textwidth]{timing-plot.png}
+    % \end{center}
+
+  \item Fitted slopes, expected slopes, what $\Theta(\log n)$ looks like on
+    these axes, and any anomaly with its probable cause.
+
+    Slope, \texttt{linear}: \qquad Slope, \texttt{binary}:
+\end{parts}
+
+% =============================================================================
+\problem{2}{Completeness: does the procedure halt?}
+
+\begin{parts}
+  \item A measure for \texttt{linear} and one for \texttt{binary}: the quantity,
+    why it is a non-negative integer, and why it strictly decreases.
+
+    \emph{Measure for \texttt{linear}:} \qquad
+    \emph{Measure for \texttt{binary}:}
+
+  \item The procedure \texttt{down}:
+    \begin{enumerate}[label=\textbf{(\roman*)}, leftmargin=*]
+      \item the $k \geq 0$ on which it halts, and the arguments for one $k$ on
+        which it does not;
+      \item the requirement in the definition of a measure that fails, and the
+        call at which it first fails;
+      \item the one-line change, and a measure for your version.
+    \end{enumerate}
+
+  \item The modified \texttt{binary} does not halt: array, target, sequence of
+    calls, and where the measure stops decreasing.
+    \begin{center}
+    \begin{tabular}{ccc}
+      \toprule
+      call & \texttt{mid} & measure \\
+      \midrule
+      1 & & \\
+      2 & & \\
+      3 & & \\
+      \bottomrule
+    \end{tabular}
+    \end{center}
+
+  \item Boundary cases: length $0$ and length $1$, for both procedures.
+
+  \item Two procedures:
+    \begin{enumerate}[label=\textbf{(\roman*)}, leftmargin=*]
+      \item halts on every input, not correct;
+      \item correct whenever it returns, does not always halt.
+    \end{enumerate}
+\end{parts}
+
+% =============================================================================
+\problem{3}{Correctness: does it return the right answer?}
+
+\begin{parts}
+  \item The claim for \texttt{linear}, as one precise sentence covering both
+    outcomes.
+
+  \item Proof for \texttt{linear}, by induction on $d$.
+    \inductionparts
+
+  \item The claim for \texttt{binary}, and its proof by induction on $d$. The
+    step has three branches; handle all three.
+    \inductionparts
+    \stuck{If one branch defeated you, state which and how far you got.}
+
+  \item The step that fails without sortedness, and an unsorted array of length
+    $5$ on which \texttt{binary} returns \textsc{Not-Found} although $t$ is
+    present.
+    \begin{center}
+    \begin{tabular}{cccc}
+      \toprule
+      call & \texttt{lo}, \texttt{hi} & \texttt{mid} & branch taken \\
+      \midrule
+      1 & & & \\
+      2 & & & \\
+      3 & & & \\
+      \bottomrule
+    \end{tabular}
+    \end{center}
+
+  \item Duplicates:
+    \begin{enumerate}[label=\textbf{(\roman*)}, leftmargin=*]
+      \item what each procedure returns, and whether the claim is violated;
+      \item \texttt{binary} modified to return the smallest such index;
+      \item the claim it satisfies, and which branch of the proof changes.
+    \end{enumerate}
+\end{parts}
+
+% =============================================================================
+\problem{4}{Time and space: what does the procedure cost?}
+
+\begin{parts}
+  \item Recurrences with base cases, why the floor, the solutions, the check
+    against Problem~1(b), the values at $n = 10{,}000$, and the best cases.
+
+    $T_{\text{lin}}(n) = $ \qquad $T_{\text{bin}}(n) = $
+    \begin{center}
+    \begin{tabular}{lccccccc}
+      \toprule
+      $n$ & $1$ & $2$ & $3$ & $4$ & $7$ & $8$ & $15$ \\
+      \midrule
+      counted in Problem~1(b) & & & & & & & \\
+      your formula & & & & & & & \\
+      \bottomrule
+    \end{tabular}
+    \end{center}
+
+  \item $\mathbb{E}[C] = (n+1)/2$ for \texttt{linear}, in $\Theta$ terms, and
+    whether averaging changes the choice.
+
+  \item Depths and extra space; the account of the Problem~1(c) failure; the
+    space of the loop versions; and the comparison table.
+    \begin{center}
+    \begin{tabular}{lccccc}
+      \toprule
+      & worst & best & space, recursive & space, loop & needs sorted \\
+      \midrule
+      \texttt{linear} & & & & & \\
+      \texttt{binary} & & & & & \\
+      \bottomrule
+    \end{tabular}
+    \end{center}
+
+  \item Sorted linked list: running time of each in $\Theta$ terms, the
+    operation whose cost changed, and which procedure changes more.
+
+  \item The registry:
+    \begin{enumerate}[label=\textbf{(\roman*)}, leftmargin=*]
+      \item the two totals, $q^\ast$, and its values;
+      \item cost of one insertion, locating separated from making room;
+      \item the property a storage scheme would need for $O(\log n)$ throughout.
+    \end{enumerate}
+    \begin{center}
+    \begin{tabular}{lccc}
+      \toprule
+      $n$ & $10^3$ & $10^6$ & $10^9$ \\
+      \midrule
+      $q^\ast$ & & & \\
+      \bottomrule
+    \end{tabular}
+    \end{center}
+\end{parts}
+
+\end{document}

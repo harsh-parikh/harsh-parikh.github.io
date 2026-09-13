@@ -1,0 +1,539 @@
+% =============================================================================
+% BIS 527: Introduction to Health Data Science
+% SCRIBE NOTES TEMPLATE
+%
+% -----------------------------------------------------------------------------
+% NEVER USED LATEX BEFORE? START HERE.
+% -----------------------------------------------------------------------------
+% LaTeX is a typesetting system. You write a plain text file (this one, ending
+% in .tex), then a program turns it into a PDF. You do not see the formatting
+% while you type, the way you would in Word. You describe what things ARE
+% ("this is a section heading") and LaTeX decides how they LOOK.
+%
+% Three things to know before you touch anything:
+%
+%   1. A line starting with % is a COMMENT. LaTeX ignores it. Everything you
+%      are reading now is a comment. You can delete all of it.
+%
+%   2. A word starting with a backslash is a COMMAND, for example \section.
+%      Text in curly braces {} after a command is what the command acts on.
+%      So \section{Motivation} makes a section heading that reads "Motivation".
+%
+%   3. A blank line starts a new paragraph. One blank line is enough. Extra
+%      blank lines change nothing. A line break WITHOUT a blank line does not
+%      start a new paragraph, so you can wrap long lines however you like.
+%
+% Special characters. These have meaning in LaTeX, so to print them literally
+% you put a backslash first:  \%  \$  \&  \#  \_  \{  \}
+% Quotation marks are two backticks and two apostrophes: ``like this''
+% A dash between numbers (a range) is two hyphens: 1908--1922
+%
+% -----------------------------------------------------------------------------
+% HOW TO GET A PDF OUT OF THIS FILE
+% -----------------------------------------------------------------------------
+% EASIEST: use Overleaf (overleaf.com). Make a free account, create a project,
+% upload this file and scribe-refs.bib, and press Recompile. Nothing to install.
+%
+% ON YOUR OWN MACHINE: install TeX Live (or MacTeX on a Mac), then run these
+% four commands in the folder that holds this file. The order matters.
+%
+%     pdflatex scribe-lec03-yourname
+%     bibtex   scribe-lec03-yourname
+%     pdflatex scribe-lec03-yourname
+%     pdflatex scribe-lec03-yourname
+%
+% Why four? The first pass writes down which sources you cited. bibtex looks
+% them up in scribe-refs.bib. The last two passes put the citations and the
+% cross-references in place. If your citations show up as [?], you skipped a
+% pass. Run all four again.
+%
+% -----------------------------------------------------------------------------
+% WHAT TO DO WITH THIS FILE
+% -----------------------------------------------------------------------------
+%   1. Copy it and rename the copy   scribe-lec<NN>-<yourlastname>.tex
+%      for example  scribe-lec03-nguyen.tex
+%   2. Fill in the four \renewcommand lines just after \begin{document}.
+%   3. Write your chapter in the sections below.
+%   4. Submit BOTH the .tex source and the compiled .pdf on Canvas.
+%
+% You will also need scribe-refs.bib, the shared bibliography file, in the same
+% folder. It is on the course website.
+%
+% -----------------------------------------------------------------------------
+% WHAT A SCRIBE NOTE IS
+% -----------------------------------------------------------------------------
+% Each note is an INDEPENDENT TEXTBOOK CHAPTER. A reader who attended no
+% lecture and read no other chapter must be able to follow it start to finish.
+% It is not a transcript.
+%
+%   - Define every symbol you use, in this chapter, even if another chapter
+%     already defined it. Repetition across chapters is correct.
+%   - Do not write "as we saw in Lecture 2" in place of content. State the
+%     result again, in full.
+%   - Say at the start what background you assume, if you assume any.
+%
+% LENGTH: 7 to 8 pages, roughly 2,400 words including tables and figures.
+% This is a limit, not a target. A shorter chapter that covers the material
+% beats a longer one. Three habits blow the budget: stating an idea, then
+% restating it as an aside, then again as an example; a worked example that
+% repeats arithmetic done earlier; and a long list where only two entries
+% carry the argument.
+%
+% -----------------------------------------------------------------------------
+% HOW TO WRITE IT
+% -----------------------------------------------------------------------------
+%   1. NO ANTHROPOMORPHIZATION. An algorithm does not know, want, decide, or
+%      look at anything. Neither does a field, a method, or a model. Write
+%      "the procedure compares A[mid] with t", not "the procedure looks at the
+%      middle element". Write "a researcher draws on statistics for the limits
+%      of what the observations support", not "statistics tells us the limits".
+%      A thing may act mechanically (a step applies, a procedure halts, a rule
+%      assigns treatment). An abstraction may not perform a linguistic, formal,
+%      or evaluative act (a word does not name, a model does not formalize, a
+%      lineage does not judge).
+%
+%   2. ONE CLAIM PER SENTENCE. Do not join several arguments with semicolons.
+%
+%   3. EVERY SENTENCE MUST ASSERT SOMETHING. Cut sentences that only announce
+%      what is coming. "Take the compound at face value." "Two short histories
+%      lie behind data science." "The commitment was not always kept." Each of
+%      those makes the reader wait for the next sentence to learn anything.
+%      Open each paragraph on its claim.
+%
+%   4. NO RHETORIC. Cut "genuinely", "remarkably", "the whole game", "notice
+%      that", "habits of mind", and second-person flourishes.
+%
+%   5. NO NOTATION OR JARGON WITHOUT A DEFINITION FIRST. If you write $\Theta$,
+%      define $\Theta$. If you write "stable sort", define it.
+%
+%   6. MOTIVATION BEFORE FORMALISM, and a concrete example before the general
+%      statement. A reader new to the material must be able to follow it.
+%
+% Use bolded run-in headers (\paragraph{Setup.}) to signal structure inside a
+% section, and \emph{} for emphasis. Declare symbols in prose, and use := for
+% definitions.
+%
+% -----------------------------------------------------------------------------
+% THE SECTION SKELETON
+% -----------------------------------------------------------------------------
+% The skeleton below is the default, so that the notes read as one book rather
+% than twelve separate documents. It is a suggestion, not a rule. Depart from
+% it where the material does not fit it, and say why in a comment at the top of
+% your file. The instructor example on the course website departs from it in
+% four places and explains each one.
+%
+% -----------------------------------------------------------------------------
+% NOTHING IN THIS COURSE IS HANDWRITTEN. That includes figures: use TikZ, or
+% plot in Python and include the image file. Photographs of written work are
+% not accepted. Board diagrams from lecture must be redrawn, not photographed.
+% =============================================================================
+
+
+% =============================================================================
+% PREAMBLE
+% -----------------------------------------------------------------------------
+% Everything between here and \begin{document} sets up the formatting. You do
+% not need to change any of it. Each line is explained so you know what it
+% does, not because you have to edit it.
+% =============================================================================
+
+% The document class. "article" is the standard class for short documents.
+% 12pt is the font size and letterpaper is the page size, both required.
+\documentclass[12pt,letterpaper]{article}
+
+% A "package" adds features. \usepackage loads one.
+
+\usepackage[margin=1in]{geometry}   % page margins, 1 inch on all four sides
+\usepackage{setspace}               % control over line spacing
+\onehalfspacing                     % one-and-a-half spacing, required
+
+% Fonts and mathematics. The order of these five lines matters: newtxmath
+% redefines two commands that amssymb and amsthm also define, so loading them
+% in a different order gives an error. Leave this block alone.
+\usepackage[T1]{fontenc}            % modern font encoding, fixes accented letters
+\usepackage{amsmath}                % the standard mathematics package
+\usepackage{amssymb}                % extra mathematical symbols
+\let\Bbbk\relax                     % clears a name clash before newtxmath
+\usepackage{newtxtext}              % Times text font
+\usepackage{newtxmath}              % Times mathematics font
+\let\openbox\relax                  % clears a second name clash
+\usepackage{amsthm}                 % theorem, definition and proof environments
+
+\usepackage{microtype}              % small spacing improvements, purely cosmetic
+\usepackage{graphicx}               % lets you include image files
+\usepackage{booktabs}               % better horizontal rules in tables
+\usepackage{xcolor}                 % colours, used by the links and code style
+\usepackage{listings}               % typesetting source code
+\usepackage{algorithm}              % a float for pseudocode
+\usepackage{algpseudocode}          % the pseudocode commands themselves
+\usepackage{caption}                % control over caption formatting
+\usepackage{natbib}                 % author-year citations, \citet and \citep
+\usepackage{etoolbox}               % used by the three \AtBeginEnvironment lines
+
+% The 1.5 spacing requirement is for body text. Reference lists, tables and
+% code are read as blocks, not as running prose, so they are set tight.
+\AtBeginEnvironment{thebibliography}{\small\setstretch{1.0}}
+\setlength{\bibsep}{2pt}
+\AtBeginEnvironment{algorithmic}{\setstretch{1.0}}
+\AtBeginEnvironment{tabular}{\setstretch{1.0}}
+\captionsetup{font={small,stretch=1.0}, skip=4pt}
+
+\usepackage{hyperref}               % makes citations and references clickable
+\usepackage{titlesec}               % control over heading size and spacing
+
+\hypersetup{colorlinks=true, linkcolor=blue!45!black,
+            citecolor=blue!45!black, urlcolor=blue!45!black,
+            pdflang={en-US}}
+
+% Heading sizes and the space above and below them.
+\titleformat{\section}{\large\bfseries}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.7em}{}
+\titlespacing*{\section}{0pt}{1.0\baselineskip}{0.3\baselineskip}
+\titlespacing*{\subsection}{0pt}{0.8\baselineskip}{0.25\baselineskip}
+
+% --- The title block ---------------------------------------------------------
+% \newcommand defines a new command. These four are placeholders. You do not
+% edit them here; you override them after \begin{document}, which is where a
+% reader of your file will look for them.
+\newcommand{\lecturenumber}{N}
+\newcommand{\lecturetitle}{Title of This Lecture}
+\newcommand{\scribename}{Your Name}
+\newcommand{\scribenetid}{abc12}
+
+% This command draws the title block using the four values above. The % at the
+% end of some lines is not a comment marker here; it stops LaTeX from inserting
+% an unwanted space. Leave them in.
+\newcommand{\makescribetitle}{%
+  \begin{center}
+    {\LARGE\bfseries Lecture \lecturenumber: \lecturetitle\par}
+    \vspace{1.2em}
+    {\large \scribename\par}
+    \vspace{0.2em}
+    {\normalsize \texttt{\scribenetid @yale.edu}\par}
+    \vspace{0.9em}
+    {\normalsize BIS 527: Introduction to Health Data Science\\
+     Yale School of Public Health\\
+     Lecturer: Harsh Parikh \quad\textbullet\quad Fall 2026\par}
+  \end{center}
+  \vspace{0.8em}
+}
+
+% --- The TL;DR block ---------------------------------------------------------
+% \newenvironment defines a new environment, that is, a pair of commands you
+% write as \begin{name} ... \end{name}. This one sets your summary in a
+% narrower measure so it reads as a summary and not as the first paragraph.
+\newenvironment{tldr}{%
+  \begin{center}
+    \bfseries\large TL;DR
+  \end{center}
+  \vspace{-0.4em}
+  \begin{quote}\setstretch{1.25}\normalsize\noindent\ignorespaces
+}{%
+  \end{quote}\vspace{0.8em}
+}
+
+% --- The AI use declaration --------------------------------------------------
+% Draws a box around whatever you pass it. Course policy is below, at the point
+% where you fill it in.
+\newcommand{\aideclaration}[1]{%
+  \begin{center}
+  \fbox{\parbox{0.93\textwidth}{\setstretch{1.15}\small
+    \textbf{AI use declaration.} #1}}
+  \end{center}
+  \vspace*{0.8em}
+}
+
+% --- Numbered environments for formal statements -----------------------------
+% These give you \begin{definition} ... \end{definition} and so on. LaTeX
+% numbers them for you and keeps the numbering consistent if you move things.
+%
+% Definitions, examples and remarks are set in upright type. Theorems and the
+% things that behave like theorems are set in italic, which is the usual
+% convention. Lemma, corollary and proposition share one counter with theorem,
+% so you get Theorem 1, Lemma 2, Theorem 3 and never two things numbered 1.
+%
+% You do not need to declare a "proof" environment. amsthm supplies it, and it
+% ends with a small hollow square, the QED symbol. See the example below.
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+\newtheorem{remark}{Remark}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+
+% --- How Python code is displayed --------------------------------------------
+\lstdefinestyle{pythonstyle}{
+  language=Python,
+  basicstyle=\ttfamily\small\setstretch{1.0},
+  keywordstyle=\color{blue!45!black}\bfseries,
+  commentstyle=\color{gray}\itshape,
+  stringstyle=\color{red!45!black},
+  numbers=left, numberstyle=\tiny\color{gray},
+  showstringspaces=false, breaklines=true,
+  frame=single, framesep=3pt, tabsize=4
+}
+\lstset{style=pythonstyle}
+
+
+% =============================================================================
+% YOUR CHAPTER STARTS HERE
+% =============================================================================
+\begin{document}
+
+% --- FILL IN THESE FOUR LINES ------------------------------------------------
+% \renewcommand replaces the placeholder values set in the preamble.
+% Keep the curly braces. Do not put a full stop inside them.
+\renewcommand{\lecturenumber}{N}                  % e.g. 3
+\renewcommand{\lecturetitle}{Title of This Lecture}% e.g. Sorting and Complexity
+\renewcommand{\scribename}{Your Name}             % e.g. Alex Nguyen
+\renewcommand{\scribenetid}{abc12}                % your NetID, no @yale.edu
+
+\makescribetitle   % draws the title block from the four values above
+
+
+% --- TL;DR -------------------------------------------------------------------
+% 50 to 100 words. Say what the lecture established: the question it opened
+% with, the main results or definitions, and what they are good for. Someone
+% deciding whether to read your chapter should be able to tell from this block
+% alone whether it covers what they need.
+%
+% Write this LAST. It is a summary of what you actually wrote, not a plan for
+% what you intend to write.
+\begin{tldr}
+Replace this text with your summary.
+\end{tldr}
+
+
+% --- AI USE DECLARATION (REQUIRED) -------------------------------------------
+% Course policy: you may use AI for anything, but you must declare the use, and
+% auditing the output is your responsibility. An undeclared use, or an
+% inaccuracy traced to one, scores zero.
+%
+% A real declaration has four parts:
+%   1. Name the TOOL.
+%   2. Say WHAT IT DID.
+%   3. Say WHAT YOU VERIFIED, and how.
+%   4. Say WHAT YOU DID NOT VERIFY.
+%
+% Part 4 is the one people leave out and the one that protects you. Claiming
+% more checking than you did is worse than admitting the gap.
+%
+% If you used no AI tools, write:
+%   No AI tools were used in preparing this note.
+\aideclaration{Replace this text. Name the tool, say what it did, say what you
+verified and how, and say what you did not verify.}
+
+
+% =============================================================================
+\section{Motivation}
+% A concrete problem, before any formalism. State the question the lecture
+% answers, in terms a reader outside the field would follow. Where the material
+% is health-related, use a health example.
+
+
+% =============================================================================
+\section{Setup and Notation}
+
+\paragraph{Notation.}
+% Declare every symbol in prose before it is used. For example: "Let $A$ be an
+% array of $n$ records, indexed $A[1], \dots, A[n]$. We write $t$ for the
+% target value." Use := for definitions.
+
+
+% =============================================================================
+\section{Main Development}
+% One idea per section. Give the informal statement, then the formal one, then
+% the argument. Split this into as many sections as the material needs.
+
+
+% =============================================================================
+\section{Worked Example}
+% Explicit numbers, carried through to a result. A reader should be able to
+% reproduce every step. If the lecture used no numbers, delete this section and
+% say so in a comment at the top of your file.
+
+
+% =============================================================================
+\section{Summary}
+% What the chapter established, as a short list.
+
+
+% =============================================================================
+% SYNTAX EXAMPLES -- DELETE THIS ENTIRE SECTION BEFORE SUBMITTING
+% -----------------------------------------------------------------------------
+% Everything below shows you the syntax for the things you are most likely to
+% need. Copy what you need into the sections above, then delete from this
+% comment down to \end{document} and put the bibliography lines back.
+% =============================================================================
+\section*{Syntax examples (delete before submitting)}
+
+\subsection*{Emphasis and quotation}
+Use \emph{emphasis} for a term you are introducing. Quotation marks are
+``two backticks and two apostrophes''. A number range uses two hyphens,
+as in 1908--1922.
+
+\subsection*{Citing a source}
+Both commands pull from \texttt{scribe-refs.bib}. Use \verb|\citep| when the
+citation sits in brackets at the end of a claim, and \verb|\citet| when the
+author's name is part of your sentence.
+
+Randomization separates an intervention from ordinary variation
+\citep{fisher1935design}. \citet{tukey1962future} argued that data analysis
+extends beyond mathematical statistics.
+
+To cite a source that is not yet in \texttt{scribe-refs.bib}, open that file
+and add an entry. Copy the shape of an entry that is already there. The key,
+the first thing inside the braces, is what you type inside \verb|\citep{...}|.
+
+\subsection*{Mathematics}
+Mathematics inside a sentence goes between dollar signs, like $n \log n$.
+Mathematics on its own line goes in an \texttt{equation} environment, which
+numbers it so you can refer back to it:
+\begin{equation}\label{eq:mean}
+  \bar{x} := \frac{1}{n} \sum_{i=1}^{n} x_i .
+\end{equation}
+Refer to it with \verb|\eqref|, as in Equation~\eqref{eq:mean}. The tilde in
+\verb|Equation~\eqref| is a space that will never break across a line.
+
+\subsection*{A definition, and referring back to it}
+\begin{definition}[Sorted array]
+\label{def:sorted}
+An array $A$ of length $n$ is \emph{sorted} if $A[i] \le A[i+1]$ for every
+$i$ from $1$ to $n-1$.
+\end{definition}
+
+Definition~\ref{def:sorted} is what binary search requires. The pattern is
+always the same: put a \verb|\label{...}| inside the thing you want to name,
+then write \verb|\ref{...}| with the same text wherever you refer to it.
+LaTeX fills in the number, so it stays correct when you move things around.
+The same works for sections, tables, figures and equations.
+
+\subsection*{A theorem and its proof}
+State the claim in a \texttt{theorem} environment and argue it in a
+\texttt{proof} environment. The proof ends with a hollow square, which LaTeX
+adds for you. Everything inside a theorem is set in italic by convention, so
+do not add italics yourself.
+
+\begin{theorem}[Cost of binary search]
+\label{thm:binary}
+Let $A$ be a sorted array of $n \ge 1$ entries in the sense of
+Definition~\ref{def:sorted}, and let $t$ be the target value. Binary search on
+$A$ executes the body of its loop at most $\lfloor \log_2 n \rfloor + 1$ times.
+\end{theorem}
+
+\begin{proof}
+Write $m_k$ for the number of entries still under consideration after $k$
+iterations, so that $m_0 = n$. One iteration compares $A[mid]$ with $t$ and
+then either returns or discards $A[mid]$ together with everything on one side
+of it. Each of the two remaining pieces holds at most $\lfloor m_k / 2 \rfloor$
+entries, so
+\begin{equation}\label{eq:halving}
+  m_{k+1} \le \left\lfloor \frac{m_k}{2} \right\rfloor
+  \qquad\text{and therefore}\qquad
+  m_k \le \left\lfloor \frac{n}{2^k} \right\rfloor .
+\end{equation}
+The loop runs only while at least one entry remains, so it stops at the first
+$k$ with $\lfloor n / 2^k \rfloor = 0$. That inequality holds exactly when
+$2^k > n$, which first occurs at $k = \lfloor \log_2 n \rfloor + 1$. The body
+therefore runs at most $\lfloor \log_2 n \rfloor + 1$ times.
+\end{proof}
+
+A proof that ends on a displayed equation puts the square in the wrong place.
+Write \verb|\qedhere| at the end of the display to fix it. A result you are
+quoting rather than proving needs no proof environment, but it does need a
+citation. \texttt{lemma}, \texttt{corollary} and \texttt{proposition} work the
+same way as \texttt{theorem} and share its numbering, so a lemma following
+Theorem~\ref{thm:binary} would be Lemma~2.
+
+\subsection*{Lists}
+An unnumbered list:
+\begin{itemize}
+  \item first point
+  \item second point
+\end{itemize}
+A numbered list uses \texttt{enumerate} in place of \texttt{itemize}.
+
+\subsection*{A table}
+\begin{table}[h]
+\centering
+\begin{tabular}{lrr}
+\toprule
+Method & Comparisons & Time \\
+\midrule
+Linear search & $n$        & $O(n)$ \\
+Binary search & $\log_2 n$ & $O(\log n)$ \\
+\bottomrule
+\end{tabular}
+\caption{Put the caption below a table. The \texttt{lrr} says there are three
+columns, the first left-aligned and the other two right-aligned.}
+\label{tab:search}
+\end{table}
+
+\subsection*{A figure}
+Save your plot as a PDF or PNG in the same folder, then write this. The
+\texttt{width} setting scales the image to seven tenths of the text width.
+
+\begin{verbatim}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.7\textwidth]{myplot.pdf}
+  \caption{Put the caption below a figure. Say what the reader should see.}
+  \label{fig:myplot}
+\end{figure}
+\end{verbatim}
+
+Draw figures in Python or with TikZ. Photographs of handwritten work are not
+accepted.
+
+\subsection*{Python code}
+\begin{lstlisting}
+def binary_search(a, t):
+    lo, hi = 0, len(a) - 1
+    while lo <= hi:
+        mid = (lo + hi) // 2
+        if a[mid] == t:
+            return mid
+        if a[mid] < t:
+            lo = mid + 1
+        else:
+            hi = mid - 1
+    return None
+\end{lstlisting}
+
+\subsection*{Pseudocode}
+Tables, figures and pseudocode are \emph{floats}. LaTeX moves them to wherever
+they fit best on the page, which may not be where you typed them. The
+\texttt{[h]} asks for "here if possible" and is only a request. Do not fight
+it, and never write "the table below". Refer to floats by number, as in
+Table~\ref{tab:search}.
+
+\begin{algorithm}[h]
+\caption{Binary search}
+\begin{algorithmic}[1]
+  \State $lo \gets 1$, $hi \gets n$
+  \While{$lo \le hi$}
+    \State $mid \gets \lfloor (lo + hi)/2 \rfloor$
+    \If{$A[mid] = t$} \State \Return $mid$ \EndIf
+    \If{$A[mid] < t$} \State $lo \gets mid + 1$
+    \Else \State $hi \gets mid - 1$ \EndIf
+  \EndWhile
+  \State \Return \textsc{Not Found}
+\end{algorithmic}
+\end{algorithm}
+
+% =============================================================================
+% END OF THE PART YOU DELETE
+% =============================================================================
+
+
+% --- The bibliography --------------------------------------------------------
+% These two lines print the reference list. "apalike" is the citation style.
+% "scribe-refs" is the bibliography file, without the .bib on the end. Only the
+% sources you actually cited will appear.
+\bibliographystyle{apalike}
+\bibliography{scribe-refs}
+
+\end{document}
