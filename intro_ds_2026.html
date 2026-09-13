@@ -15,7 +15,7 @@
   --border-light: rgba(255,255,255,0.04);
   --text: #e8e8ec;
   --text-muted: #8a8a9a;
-  --text-dim: #5a5a6a;
+  --text-dim: #78788c;
   --accent: #7eb8ff;
   --white: #ffffff;
   --m1: #5b9df5;
@@ -31,7 +31,7 @@ html.light {
   --border-light: rgba(0,0,0,0.05);
   --text: #1a1a2e;
   --text-muted: #5a5a7a;
-  --text-dim: #8a8a9a;
+  --text-dim: #707082;
   --accent: #2563eb;
   --white: #0a0a0f;
   --m1: #2563eb;
@@ -155,6 +155,7 @@ section { margin-bottom: 72px; scroll-margin-top: 80px; }
 @media (max-width: 768px) {
   .grid-2, .grid-3, .grid-4, .grid-3-2 { grid-template-columns: 1fr; }
   .sched-row { grid-template-columns: 1fr; gap: 8px; }
+  .card div[style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
   nav .links { display: none; }
   .hero .meta { gap: 24px; }
 }
@@ -285,7 +286,7 @@ html.light .chat-msg.user { background: rgba(37,99,235,0.08); border-color: rgba
 <!-- Nav -->
 <nav>
   <div class="wrap inner">
-    <div><span class="logo">BIS 527</span><span>Fall 2026</span></div>
+    <div class="logo">BIS 527<span>Fall 2026</span></div>
     <div style="display:flex;align-items:center">
       <div class="links">
         <a href="#about">About</a>
@@ -326,7 +327,7 @@ html.light .chat-msg.user { background: rgba(37,99,235,0.08); border-color: rgba
 <!-- ABOUT -->
 <section id="about">
   <div class="section-label">Overview</div>
-  <div class="section-title">About This Course</div>
+  <h2 class="section-title">About This Course</h2>
 
   <div class="grid-2" style="margin-bottom:16px">
     <div class="card">
@@ -397,7 +398,7 @@ html.light .chat-msg.user { background: rgba(37,99,235,0.08); border-color: rgba
 <!-- OBJECTIVES -->
 <section id="objectives">
   <div class="section-label">Learning</div>
-  <div class="section-title">Learning Objectives</div>
+  <h2 class="section-title">Learning Objectives</h2>
   <p style="font-size:15px;color:var(--text-muted);line-height:1.7;margin-bottom:24px;max-width:600px">By the end of this course, students will be able to:</p>
   <div class="grid-2">
     <div class="card lo-card"><div class="lo-num">1</div><div><div class="lo-verb">Formulate</div><div class="lo-desc">precise mathematical or statistical questions from natural language problems, identifying meaningful estimands</div></div></div>
@@ -412,7 +413,7 @@ html.light .chat-msg.user { background: rgba(37,99,235,0.08); border-color: rgba
 <!-- SCHEDULE -->
 <section id="schedule">
   <div class="section-label">12 Weeks</div>
-  <div class="section-title">Course Schedule</div>
+  <h2 class="section-title">Course Schedule</h2>
   <div class="mod-legend">
     <div class="item"><div class="dot" style="background:var(--m1)"></div>M1: Data Structures &amp; Algorithms</div>
     <div class="item"><div class="dot" style="background:var(--m2)"></div>M2: Machine Learning &amp; AI</div>
@@ -437,7 +438,7 @@ html.light .chat-msg.user { background: rgba(37,99,235,0.08); border-color: rgba
 <!-- ASSESSMENTS -->
 <section id="assessments">
   <div class="section-label">Evaluation</div>
-  <div class="section-title">Assessments &amp; Grading</div>
+  <h2 class="section-title">Assessments &amp; Grading</h2>
   <div class="grid-3-2" style="margin-bottom:16px">
     <div class="card">
       <div class="card-label">Grade Components</div>
@@ -507,7 +508,7 @@ html.light .chat-msg.user { background: rgba(37,99,235,0.08); border-color: rgba
 <!-- MATERIALS -->
 <section id="materials">
   <div class="section-label">Readings &amp; Software</div>
-  <div class="section-title">Materials</div>
+  <h2 class="section-title">Materials</h2>
   <div class="card" style="margin-bottom:16px">
     <div class="card-label">Course Files</div>
     <div class="grid-2" style="gap:8px 32px;font-size:13px;line-height:1.8">
@@ -553,7 +554,7 @@ html.light .chat-msg.user { background: rgba(37,99,235,0.08); border-color: rgba
 <!-- POLICIES -->
 <section id="policies">
   <div class="section-label">Expectations</div>
-  <div class="section-title">Course Policies</div>
+  <h2 class="section-title">Course Policies</h2>
   <div class="grid-2">
     <div class="card">
       <div class="card-label">AI Policy</div>
@@ -587,7 +588,7 @@ html.light .chat-msg.user { background: rgba(37,99,235,0.08); border-color: rgba
 <!-- RESOURCES -->
 <section id="resources">
   <div class="section-label">Support</div>
-  <div class="section-title">Resources</div>
+  <h2 class="section-title">Resources</h2>
   <div class="grid-3">
     <div class="card"><div class="card-label">Accessibility</div><p style="font-size:13px;color:var(--text-muted);line-height:1.6">Yale Student Accessibility Services (SAS). Email <a href="mailto:sas@yale.edu">sas@yale.edu</a> or call 203-432-2324.</p></div>
     <div class="card"><div class="card-label">Mental Health</div><p style="font-size:13px;color:var(--text-muted);line-height:1.6">YSPH Wellness Counselor: <a href="mailto:diane.frankel-gramelis@yale.edu">Diane Frankel-Gramelis</a>. 988 Lifeline: dial <strong style="color:var(--text)">988</strong> (24/7).</p></div>
