@@ -412,8 +412,8 @@ html.light .chat-msg.user { background: rgba(37,99,235,0.08); border-color: rgba
       <div>
         <div class="card-label" style="margin-bottom:6px">Teaching Fellows</div>
         <div style="font-size:13px;color:var(--text-muted);line-height:1.7">
-          <div><a href="mailto:christopher.alvarez@yale.edu?subject=BIS%20527">Christopher Alvarez</a> <span style="color:var(--text-dim)">· OH <a href="https://yale.instructure.com/courses/122186/announcements" target="_blank">on Canvas</a></span></div>
-          <div><a href="mailto:swaha.bhattacharya@yale.edu?subject=BIS%20527">Swaha Bhattacharya</a> <span style="color:var(--text-dim)">· OH <a href="https://yale.instructure.com/courses/122186/announcements" target="_blank">on Canvas</a></span></div>
+          <div><a href="mailto:christopher.alvarez@yale.edu?subject=BIS%20527">Christopher Alvarez</a> <span style="color:var(--text-dim)">· Mon 11am–1pm, Zoom (<a href="https://yale.instructure.com/courses/122186/announcements" target="_blank">link on Canvas</a>)</span></div>
+          <div><a href="mailto:swaha.bhattacharya@yale.edu?subject=BIS%20527">Swaha Bhattacharya</a> <span style="color:var(--text-dim)">· Fri 1–2pm, hybrid · Kline Tower, 11th floor, or Zoom (<a href="https://yale.instructure.com/courses/122186/announcements" target="_blank">link on Canvas</a>)</span></div>
           <div><a href="mailto:yukta.nagaraj@yale.edu?subject=BIS%20527">Yukta Nagaraj</a> <span style="color:var(--text-dim)">· Tue 2–3pm, Zoom (<a href="https://yale.instructure.com/courses/122186/announcements/857768" target="_blank">link on Canvas</a>)</span></div>
         </div>
       </div>
@@ -586,7 +586,7 @@ html.light .chat-msg.user { background: rgba(37,99,235,0.08); border-color: rgba
   <div class="grid-2" style="margin-top:16px">
     <div class="card" id="project" style="grid-column:1/-1">
       <div class="card-label">Course Project</div>
-      <p style="font-size:13px;color:var(--text-muted);line-height:1.7">Teams of 4 to 5, worth 30%. Enter your team name and members on <a href="https://yale.instructure.com/courses/122186" target="_blank">Canvas</a> by <strong style="color:var(--text)">Fri Sep 18</strong>. Project ideas, collaborators, and data links are posted on <a href="https://yale.instructure.com/courses/122186/announcements" target="_blank">Canvas</a>; your own idea is welcome. Projects are judged on curiosity and scientific thinking, not novelty. Three check-ins: proposal (week 4), mid-point check-in (week 8), final presentation (poster session in class, week 12) with a written report in finals week. See <a href="#dates">Key Dates</a>.</p>
+      <p style="font-size:13px;color:var(--text-muted);line-height:1.7">Teams of 4 to 5, worth 30%. Enter your team name and members on <a href="https://yale.instructure.com/courses/122186" target="_blank">Canvas</a> by <strong style="color:var(--text)">Fri Sep 18</strong>. A list of <a href="bis527/bis527-project-ideas.pdf">potential project ideas</a> (PDF), with collaborators and data links, is on this page; your own idea is welcome. Projects are judged on curiosity and scientific thinking, not novelty. Three check-ins: proposal (week 4), mid-point check-in (week 8), final presentation (poster session in class, week 12) with a written report in finals week. See <a href="#dates">Key Dates</a>.</p>
     </div>
     <div class="card" id="homework">
       <div class="card-label">Homework</div>
@@ -631,7 +631,8 @@ html.light .chat-msg.user { background: rgba(37,99,235,0.08); border-color: rgba
       <div>
         <div style="font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:4px">On Canvas</div>
         <div><a href="https://yale.instructure.com/courses/122186/assignments" target="_blank">Scribe assignments by lecture</a></div>
-        <div><a href="https://yale.instructure.com/courses/122186/announcements" target="_blank">Project ideas and TF office hours</a></div>
+        <div><a href="bis527/bis527-project-ideas.pdf">Potential project ideas (PDF)</a> <span style="color:var(--text-dim)">· 10 starting points with contacts and data sources</span></div>
+        <div><a href="https://yale.instructure.com/courses/122186/announcements" target="_blank">TF office hours</a> <span style="color:var(--text-dim)">· Canvas announcements</span></div>
         <div><a href="https://yale.instructure.com/courses/122186/files" target="_blank">Name-card template</a></div>
         <div><a href="https://yale.instructure.com/courses/122186/grades" target="_blank">Quiz scores</a></div>
       </div>
@@ -790,7 +791,7 @@ document.addEventListener('DOMContentLoaded', function() {
       weak: ['pdf','latex','scribe','solution','homework','where','find','get'],
       phrases: ['course files','where can i find','where do i get','scribe template','solution template','example scribe','example note','download the','latex template'],
       section: '#materials', title: 'Course files',
-      answer: '<p>All downloads are under <a href="#files">Course Files</a>:</p><ul><li>Homework 1: <a href="bis527/hw1-search-and-complexity.pdf">PDF</a> (submit on <a href="https://yale.instructure.com/courses/122186/assignments/603775" target="_blank">Canvas</a>)</li><li>Homework solution template: <a href="bis527/hw-solution-template.tex">.tex</a> · <a href="bis527/hw-solution-template.pdf">.pdf</a></li><li>Scribe template: <a href="bis527/scribe-template.tex">.tex</a> · <a href="bis527/scribe-template.pdf">.pdf</a> · <a href="bis527/scribe-refs.bib">.bib</a></li><li>Example scribe notes: <a href="bis527/example-lec01-what-is-data-science.pdf">Lecture 1</a>, <a href="bis527/scribe-lec02-parikh.pdf">Lecture 2</a></li></ul><p>On Canvas only: <a href="https://yale.instructure.com/courses/122186/assignments" target="_blank">scribe assignments</a>, <a href="https://yale.instructure.com/courses/122186/announcements" target="_blank">project ideas</a>, and the <a href="https://yale.instructure.com/courses/122186/files" target="_blank">name-card template</a>.</p>'
+      answer: '<p>All downloads are under <a href="#files">Course Files</a>:</p><ul><li>Homework 1: <a href="bis527/hw1-search-and-complexity.pdf">PDF</a> (submit on <a href="https://yale.instructure.com/courses/122186/assignments/603775" target="_blank">Canvas</a>)</li><li>Homework solution template: <a href="bis527/hw-solution-template.tex">.tex</a> · <a href="bis527/hw-solution-template.pdf">.pdf</a></li><li>Scribe template: <a href="bis527/scribe-template.tex">.tex</a> · <a href="bis527/scribe-template.pdf">.pdf</a> · <a href="bis527/scribe-refs.bib">.bib</a></li><li>Example scribe notes: <a href="bis527/example-lec01-what-is-data-science.pdf">Lecture 1</a>, <a href="bis527/scribe-lec02-parikh.pdf">Lecture 2</a></li><li>Potential project ideas: <a href="bis527/bis527-project-ideas.pdf">PDF</a></li></ul><p>On Canvas only: <a href="https://yale.instructure.com/courses/122186/assignments" target="_blank">scribe assignments</a> and the <a href="https://yale.instructure.com/courses/122186/files" target="_blank">name-card template</a>.</p>'
     },
     {
       id: 'calendar',
@@ -830,7 +831,7 @@ document.addEventListener('DOMContentLoaded', function() {
       weak: ['hours','room','location','help','available'],
       phrases: ['office hours','where are office hours','when are office hours','can i come to office'],
       section: '#about', title: 'Office hours',
-      answer: '<p>The instructor holds office hours <strong>Thursdays, 10–11am</strong>, at <strong>60 College St, Room 200</strong>. TF office hours: Yukta Nagaraj, <strong>Tuesdays 2–3pm on Zoom</strong> (<a href="https://yale.instructure.com/courses/122186/announcements/857768" target="_blank">link in her Canvas announcement</a>); Christopher Alvarez and Swaha Bhattacharya post theirs in <a href="https://yale.instructure.com/courses/122186/announcements" target="_blank">Canvas announcements</a>.</p>'
+      answer: '<p>The instructor holds office hours <strong>Thursdays, 10–11am</strong>, at <strong>60 College St, Room 200</strong>. TF office hours: Christopher Alvarez, <strong>Mondays 11am–1pm on Zoom</strong>. Swaha Bhattacharya, <strong>Fridays 1–2pm</strong>, hybrid: in person on the 11th floor of Kline Tower or on Zoom (<a href="https://yale.instructure.com/courses/122186/announcements" target="_blank">link on Canvas</a>). Yukta Nagaraj, <strong>Tuesdays 2–3pm on Zoom</strong> (<a href="https://yale.instructure.com/courses/122186/announcements/857768" target="_blank">link in her Canvas announcement</a>). Zoom links are posted in <a href="https://yale.instructure.com/courses/122186/announcements" target="_blank">Canvas announcements</a>.</p>'
     },
     {
       id: 'tfs',
@@ -838,7 +839,7 @@ document.addEventListener('DOMContentLoaded', function() {
       weak: ['ta','tas','teaching','assistant','assistants'],
       phrases: ['teaching fellow','teaching assistant','who are the tfs','contact a tf','contact the tf'],
       section: '#about', title: 'Teaching Fellows',
-      answer: '<p>The Teaching Fellows are <strong>Christopher Alvarez</strong> (<a href="mailto:christopher.alvarez@yale.edu">christopher.alvarez@yale.edu</a>), <strong>Swaha Bhattacharya</strong> (<a href="mailto:swaha.bhattacharya@yale.edu">swaha.bhattacharya@yale.edu</a>), and <strong>Yukta Nagaraj</strong> (<a href="mailto:yukta.nagaraj@yale.edu">yukta.nagaraj@yale.edu</a>). They grade participation and quizzes. Yukta holds office hours Tuesdays 2–3pm on Zoom (<a href="https://yale.instructure.com/courses/122186/announcements/857768" target="_blank">link on Canvas</a>); the others post theirs in <a href="https://yale.instructure.com/courses/122186/announcements" target="_blank">Canvas announcements</a>.</p>'
+      answer: '<p>The Teaching Fellows are <strong>Christopher Alvarez</strong> (<a href="mailto:christopher.alvarez@yale.edu">christopher.alvarez@yale.edu</a>), <strong>Swaha Bhattacharya</strong> (<a href="mailto:swaha.bhattacharya@yale.edu">swaha.bhattacharya@yale.edu</a>), and <strong>Yukta Nagaraj</strong> (<a href="mailto:yukta.nagaraj@yale.edu">yukta.nagaraj@yale.edu</a>). They grade participation and quizzes. Office hours: Christopher Mondays 11am–1pm on Zoom, Swaha Fridays 1–2pm (hybrid: Kline Tower 11th floor or Zoom), Yukta Tuesdays 2–3pm on Zoom (<a href="https://yale.instructure.com/courses/122186/announcements/857768" target="_blank">link on Canvas</a>). Zoom links are posted in <a href="https://yale.instructure.com/courses/122186/announcements" target="_blank">Canvas announcements</a>.</p>'
     },
     {
       id: 'prereqs',
@@ -926,7 +927,7 @@ document.addEventListener('DOMContentLoaded', function() {
       weak: ['team','teams','group','groups','proposal','poster','presentation','presentations'],
       phrases: ['course project','group project','team project','final project','project deliverable','project deliverables','what is the project'],
       section: '#assessments', title: 'Course project',
-      answer: '<p>The course project is <strong>team-based (4–5 students)</strong> and worth 30%. Project ideas, collaborators, and data links are posted on <a href="https://yale.instructure.com/courses/122186/announcements" target="_blank">Canvas</a>; you may also choose your own. Three check-ins:</p><ul><li><strong>Team formation:</strong> Wk 3, due Fri Sep 18 (enter team name and members on <a href="https://yale.instructure.com/courses/122186" target="_blank">Canvas</a>)</li><li><strong>Proposal:</strong> Wk 4</li><li><strong>Mid-point check-in:</strong> Wk 8</li><li><strong>Poster session:</strong> Wk 12 (in class)</li><li><strong>Final report:</strong> Finals Week</li></ul>'
+      answer: '<p>The course project is <strong>team-based (4–5 students)</strong> and worth 30%. A list of <a href="bis527/bis527-project-ideas.pdf">potential project ideas</a> (PDF), with collaborators and data links, is on the course website; you may also choose your own. Three check-ins:</p><ul><li><strong>Team formation:</strong> Wk 3, due Fri Sep 18 (enter team name and members on <a href="https://yale.instructure.com/courses/122186" target="_blank">Canvas</a>)</li><li><strong>Proposal:</strong> Wk 4</li><li><strong>Mid-point check-in:</strong> Wk 8</li><li><strong>Poster session:</strong> Wk 12 (in class)</li><li><strong>Final report:</strong> Finals Week</li></ul>'
     },
     {
       id: 'scribe',
@@ -1014,7 +1015,7 @@ document.addEventListener('DOMContentLoaded', function() {
       weak: ['platform','login'],
       phrases: ['where is canvas','canvas link','canvas page','log in to canvas'],
       section: '#about', title: 'Canvas',
-      answer: '<p>The course Canvas page is <a href="https://yale.instructure.com/courses/122186" target="_blank">BIS 527 01 (FA26)</a> on yale.instructure.com; log in with your Yale NetID. Useful pages: <a href="https://yale.instructure.com/courses/122186/assignments" target="_blank">Assignments</a> (homework, scribe notes by lecture), <a href="https://yale.instructure.com/courses/122186/announcements" target="_blank">Announcements</a> (project ideas, TF office hours), <a href="https://yale.instructure.com/courses/122186/files" target="_blank">Files</a> (name-card template), <a href="https://yale.instructure.com/courses/122186/grades" target="_blank">Grades</a>.</p>'
+      answer: '<p>The course Canvas page is <a href="https://yale.instructure.com/courses/122186" target="_blank">BIS 527 01 (FA26)</a> on yale.instructure.com; log in with your Yale NetID. Useful pages: <a href="https://yale.instructure.com/courses/122186/assignments" target="_blank">Assignments</a> (homework, scribe notes by lecture), <a href="https://yale.instructure.com/courses/122186/announcements" target="_blank">Announcements</a> (TF office hours), <a href="https://yale.instructure.com/courses/122186/files" target="_blank">Files</a> (name-card template), <a href="https://yale.instructure.com/courses/122186/grades" target="_blank">Grades</a>.</p>'
     },
     {
       id: 'website',
