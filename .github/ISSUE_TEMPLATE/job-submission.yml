@@ -1,0 +1,139 @@
+name: Suggest a job
+description: Suggest a post-PhD job for the Job Board review queue
+title: "[Job submission]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping students find strong opportunities. Submissions are public and enter a review queue; they do not appear on the Job Board until the role, deadline, and links have been verified.
+
+  - type: input
+    id: job-title
+    attributes:
+      label: Job title
+      placeholder: Assistant Professor of Statistics
+    validations:
+      required: true
+
+  - type: input
+    id: organization
+    attributes:
+      label: Organization
+      placeholder: University or company
+    validations:
+      required: true
+
+  - type: input
+    id: location
+    attributes:
+      label: Location
+      description: Use a city and state/province when available; use Remote or Multiple locations when appropriate.
+      placeholder: New Haven, CT, USA
+    validations:
+      required: true
+
+  - type: input
+    id: country
+    attributes:
+      label: Country or region
+      placeholder: United States
+    validations:
+      required: true
+
+  - type: dropdown
+    id: job-type
+    attributes:
+      label: Job type
+      options:
+        - Postdoc
+        - Fellowship
+        - Faculty
+        - Industry
+        - Research
+    validations:
+      required: true
+
+  - type: input
+    id: focus-areas
+    attributes:
+      label: Focus areas
+      description: Separate multiple areas with commas.
+      placeholder: Statistics, causal inference, machine learning
+    validations:
+      required: true
+
+  - type: dropdown
+    id: deadline-kind
+    attributes:
+      label: Deadline kind
+      options:
+        - Specific date
+        - Rolling or open until filled
+        - Not listed
+    validations:
+      required: true
+
+  - type: input
+    id: deadline
+    attributes:
+      label: Deadline
+      description: For a specific deadline, enter YYYY-MM-DD. Otherwise leave this blank.
+      placeholder: "2026-11-15"
+
+  - type: input
+    id: apply-url
+    attributes:
+      label: Official application URL
+      description: Use the employer, university, fellowship, or official application page.
+      placeholder: https://...
+    validations:
+      required: true
+
+  - type: input
+    id: source-url
+    attributes:
+      label: Source URL
+      description: Link to the page that states the role details and deadline. This may be the same as the application URL.
+      placeholder: https://...
+    validations:
+      required: true
+
+  - type: textarea
+    id: short-description
+    attributes:
+      label: Short description
+      description: In two or three sentences, describe the role, eligibility, and start date if known.
+      placeholder: This position seeks...
+    validations:
+      required: true
+
+  - type: input
+    id: compensation
+    attributes:
+      label: Compensation
+      description: Optional. Include only compensation stated by the source.
+      placeholder: $80,000–$95,000
+
+  - type: dropdown
+    id: remote-friendly
+    attributes:
+      label: Remote-friendly
+      options:
+        - "No"
+        - "Yes"
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-notes
+    attributes:
+      label: Additional notes
+      description: Optional context for the reviewer; this is not published automatically.
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Confirmation
+      options:
+        - label: I checked that this role is currently open and intended for applicants who have, or will soon have, a PhD.
+          required: true

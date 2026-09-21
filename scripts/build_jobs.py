@@ -24,6 +24,7 @@ FIELDNAMES = [
     "country",
     "type",
     "focus",
+    "posted",
     "deadline",
     "deadline_label",
     "apply_url",
@@ -48,14 +49,21 @@ REQUIRED_TEXT = {
     "description",
     "verified",
 }
-ALLOWED_TYPES = {"postdoc", "fellowship", "faculty", "industry"}
+ALLOWED_TYPES = {"postdoc", "fellowship", "faculty", "industry", "research"}
 TYPE_NAMES = {
     "faculty": "Faculty",
     "postdoc": "Postdoc",
     "fellowship": "Fellowship",
     "industry": "Industry",
+    "research": "Research",
 }
-TYPE_ICONS = {"faculty": "◎", "postdoc": "△", "fellowship": "✦", "industry": "◫"}
+TYPE_ICONS = {
+    "faculty": "◎",
+    "postdoc": "△",
+    "fellowship": "✦",
+    "industry": "◫",
+    "research": "◇",
+}
 ID_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 
 
@@ -101,6 +109,7 @@ def load_jobs() -> list[dict[str, object]]:
 
         jobs: list[dict[str, object]] = []
         seen_ids: set[str] = set()
+        seen_roles: set[tuple[str, str]] = set()
         for row_number, raw in enumerate(reader, start=2):
             if raw.get(None):
                 raise JobDataError(f"row {row_number}: found more values than CSV columns")
@@ -116,6 +125,17 @@ def load_jobs() -> list[dict[str, object]]:
                 raise JobDataError(f"row {row_number}: duplicate id {job_id}")
             seen_ids.add(job_id)
 
+            role_key = (
+                re.sub(r"[^a-z0-9]+", " ", row["organization"].casefold()).strip(),
+                re.sub(r"[^a-z0-9]+", " ", row["title"].casefold()).strip(),
+            )
+            if role_key in seen_roles:
+                raise JobDataError(
+                    f"row {row_number}: duplicate organization/title pair "
+                    f"{row['organization']} / {row['title']}"
+                )
+            seen_roles.add(role_key)
+
             if row["type"] not in ALLOWED_TYPES:
                 allowed = ", ".join(sorted(ALLOWED_TYPES))
                 raise JobDataError(f"row {row_number}: type must be one of {allowed}")
@@ -129,6 +149,7 @@ def load_jobs() -> list[dict[str, object]]:
                     raise JobDataError(f"row {row_number}: {field} must be an https URL")
 
             deadline = parse_iso_date(row["deadline"], "deadline", row_number)
+            posted = parse_iso_date(row["posted"], "posted", row_number)
             verified = parse_iso_date(row["verified"], "verified", row_number)
             if verified is None:
                 raise JobDataError(f"row {row_number}: verified is required")
@@ -137,6 +158,7 @@ def load_jobs() -> list[dict[str, object]]:
                 {
                     **row,
                     "focus_items": focus,
+                    "posted_date": posted,
                     "deadline_date": deadline,
                     "verified_date": verified,
                     "remote_value": parse_bool(row["remote"], "remote", row_number),
@@ -152,7 +174,10 @@ def load_jobs() -> list[dict[str, object]]:
 def deadline_status(job: dict[str, object], today: date) -> str:
     deadline = job["deadline_date"]
     if deadline is None:
-        return "open"
+        label = str(job["deadline_label"]).casefold()
+        if "rolling" in label or "open" in label:
+            return "open"
+        return "unknown"
     days = (deadline - today).days
     if days < 0:
         return "expired"
@@ -209,8 +234,12 @@ def render_card(job: dict[str, object], today: date) -> str:
     deadline_iso = deadline.isoformat() if isinstance(deadline, date) else ""
     featured = "true" if job["featured_value"] else "false"
     status = deadline_status(job, today)
+    posted = job["posted_date"]
+    posted_copy = ""
+    if isinstance(posted, date):
+        posted_copy = f"posted {posted.strftime('%b')} {posted.day} · "
 
-    return f'''        <article class="job-card" data-id="{attr(job['id'])}" data-kind="{attr(kind)}" data-focus="{attr('|'.join(focus_items))}" data-country="{attr(job['country'])}" data-search="{attr(search)}" data-deadline="{attr(deadline_iso)}" data-deadline-label="{attr(job['deadline_label'])}" data-verified="{attr(job['verified'])}" data-featured="{featured}" data-organization="{attr(job['organization'])}">
+    return f'''        <article class="job-card" data-id="{attr(job['id'])}" data-kind="{attr(kind)}" data-focus="{attr('|'.join(focus_items))}" data-country="{attr(job['country'])}" data-search="{attr(search)}" data-posted="{attr(job['posted'])}" data-deadline="{attr(deadline_iso)}" data-deadline-label="{attr(job['deadline_label'])}" data-verified="{attr(job['verified'])}" data-featured="{featured}" data-organization="{attr(job['organization'])}">
           <div class="card-top">
             <span class="type-badge">{TYPE_ICONS[kind]} {TYPE_NAMES[kind]}</span>
             <button class="bookmark" type="button" data-save="{attr(job['id'])}" aria-label="Save to bookmarks" title="Save this job">☆</button>
@@ -227,7 +256,7 @@ def render_card(job: dict[str, object], today: date) -> str:
             <a class="apply" href="{attr(job['apply_url'])}" target="_blank" rel="noopener">View role <span aria-hidden="true">↗</span></a>
           </div>
           <div class="card-foot">
-            <span class="verified">✓ verified {text(job['verified'])}</span>
+            <span class="verified">{text(posted_copy)}checked {text(job['verified'])}</span>
             <a class="source" href="{attr(job['source_url'])}" target="_blank" rel="noopener">source</a>
           </div>
         </article>'''
@@ -262,7 +291,7 @@ def build_document(document: str, jobs: list[dict[str, object]]) -> tuple[str, i
     faculty = sum(job["type"] == "faculty" for job in active)
     regions = len({str(job["country"]) for job in active})
     last_verified = max(job["verified_date"] for job in (active or jobs))
-    updated = f"Last verified {last_verified.strftime('%B')} {last_verified.day}, {last_verified.year}"
+    updated = f"Last checked {last_verified.strftime('%B')} {last_verified.day}, {last_verified.year}"
 
     replacements = {
         "TOTAL": str(len(active)),
