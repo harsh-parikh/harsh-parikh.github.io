@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="A curated, regularly updated board of post-PhD opportunities in statistics, data science, machine learning, and artificial intelligence.">
+<title>Post-PhD Job Board · Harsh Parikh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --serif:'Newsreader',Georgia,serif;
+  --sans:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'DM Mono','SFMono-Regular',Consolas,monospace;
+  --max:1180px;
+  --faculty:#ad8cff;
+  --postdoc:#49d6be;
+  --fellowship:#f4b55f;
+  --industry:#6aa9ff;
+  --urgent:#ff6b7a;
+  --soon:#f4b55f;
+  --open:#65c78a;
+  --ease:.28s cubic-bezier(.22,.8,.32,1);
+}
+[data-theme="dark"]{
+  --bg:#090c12;
+  --surface:#10151f;
+  --surface-2:#151b27;
+  --surface-3:#1b2230;
+  --line:rgba(255,255,255,.09);
+  --line-strong:rgba(255,255,255,.15);
+  --text:#eef2f7;
+  --muted:#9aa5b5;
+  --dim:#697587;
+  --accent:#d2a879;
+  --glow:rgba(89,117,255,.16);
+  --shadow:rgba(0,0,0,.28);
+}
+[data-theme="light"]{
+  --bg:#f5f3ee;
+  --surface:#fffdfa;
+  --surface-2:#efede7;
+  --surface-3:#e5e1d8;
+  --line:rgba(24,30,40,.10);
+  --line-strong:rgba(24,30,40,.18);
+  --text:#19202a;
+  --muted:#586373;
+  --dim:#818a96;
+  --accent:#8e5e31;
+  --glow:rgba(63,96,214,.10);
+  --shadow:rgba(42,35,25,.08);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;transition:background var(--ease),color var(--ease)}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;background:radial-gradient(900px 500px at 80% -5%,var(--glow),transparent 70%),radial-gradient(700px 420px at -10% 35%,color-mix(in srgb,var(--postdoc) 7%,transparent),transparent 72%)}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.34;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:72px 72px;mask-image:linear-gradient(to bottom,black,transparent 70%)}
+a{color:inherit}
+button,input,select{font:inherit}
+button{color:inherit}
+::selection{background:color-mix(in srgb,var(--industry) 35%,transparent)}
+.shell{width:min(calc(100% - 40px),var(--max));margin:0 auto}
+.topbar{height:64px;border-bottom:1px solid var(--line);display:flex;align-items:center;position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 84%,transparent);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.topbar .shell{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-family:var(--serif);font-size:18px;white-space:nowrap}
+.brand-mark{width:30px;height:30px;border:1px solid var(--line-strong);border-radius:9px;display:grid;place-items:center;color:var(--accent);font-family:var(--mono);font-size:12px;background:var(--surface)}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.nav-link,.theme-button{height:36px;border:1px solid var(--line);border-radius:9px;background:var(--surface);display:inline-flex;align-items:center;justify-content:center;color:var(--muted);text-decoration:none;font-size:12px;font-weight:600;transition:all var(--ease)}
+.nav-link{padding:0 14px}
+.theme-button{width:36px;cursor:pointer}
+.nav-link:hover,.theme-button:hover{color:var(--text);border-color:var(--line-strong);transform:translateY(-1px)}
+.hero{padding:82px 0 46px;position:relative;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,.7fr);gap:70px;align-items:end}
+.eyebrow{font:400 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.18em;color:var(--accent);display:flex;align-items:center;gap:10px;margin-bottom:22px}
+.live-dot{width:7px;height:7px;border-radius:99px;background:var(--open);box-shadow:0 0 0 5px color-mix(in srgb,var(--open) 15%,transparent)}
+h1{font:500 clamp(50px,8vw,91px)/.9 var(--serif);letter-spacing:-.045em;margin:0;max-width:800px}
+h1 em{font-weight:400;color:var(--accent)}
+.hero-copy{font-size:16px;line-height:1.75;color:var(--muted);max-width:700px;margin:28px 0 0}
+.hero-aside{border:1px solid var(--line);border-radius:18px;background:color-mix(in srgb,var(--surface) 88%,transparent);box-shadow:0 24px 70px var(--shadow);overflow:hidden}
+.aside-top{padding:20px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.aside-label{font:400 10px/1 var(--mono);color:var(--dim);letter-spacing:.13em;text-transform:uppercase}
+.robot-mark{font:400 13px/1 var(--mono);color:var(--postdoc)}
+.aside-body{padding:22px}
+.aside-body strong{font:500 23px/1.2 var(--serif);display:block;margin-bottom:8px}
+.aside-body p{font-size:12px;line-height:1.65;color:var(--muted);margin:0}
+.signal{display:grid;grid-template-columns:repeat(12,1fr);gap:5px;margin-top:22px;align-items:end;height:30px}
+.signal span{border-radius:2px;background:var(--line-strong);height:var(--h)}
+.signal span:nth-child(4n+1){background:var(--faculty)}
+.signal span:nth-child(4n+2){background:var(--postdoc)}
+.signal span:nth-child(4n+3){background:var(--fellowship)}
+.signal span:nth-child(4n+4){background:var(--industry)}
+.stats{border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.stats .shell{display:grid;grid-template-columns:repeat(4,1fr)}
+.stat{padding:24px 22px;border-right:1px solid var(--line)}
+.stat:first-child{padding-left:0}
+.stat:last-child{border-right:0}
+.stat-value{font:500 28px/1 var(--serif);letter-spacing:-.02em}
+.stat-label{font:400 10px/1.3 var(--mono);color:var(--dim);text-transform:uppercase;letter-spacing:.12em;margin-top:8px}
+.board{padding:46px 0 90px}
+.board-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:24px}
+.board-title h2{font:500 33px/1.1 var(--serif);margin:0 0 8px}
+.board-title p{font-size:13px;color:var(--muted);margin:0}
+.updated{font:400 10px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--dim);text-align:right}
+.controls{background:color-mix(in srgb,var(--surface) 94%,transparent);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:20px;box-shadow:0 14px 44px var(--shadow)}
+.search-row{display:grid;grid-template-columns:minmax(220px,1fr) 190px 190px;gap:10px}
+.search-wrap{position:relative}
+.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--dim);font-family:var(--mono)}
+.search-wrap input,.select-wrap select{width:100%;height:44px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text);outline:none;transition:border var(--ease),box-shadow var(--ease)}
+.search-wrap input{padding:0 16px 0 40px}
+.select-wrap select{padding:0 38px 0 13px;appearance:none;cursor:pointer}
+.select-wrap{position:relative}
+.select-wrap::after{content:'⌄';position:absolute;right:14px;top:9px;color:var(--dim);pointer-events:none}
+.search-wrap input:focus,.select-wrap select:focus{border-color:color-mix(in srgb,var(--industry) 65%,transparent);box-shadow:0 0 0 3px color-mix(in srgb,var(--industry) 13%,transparent)}
+.filter-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:13px;margin-top:13px;border-top:1px solid var(--line)}
+.pills{display:flex;flex-wrap:wrap;gap:7px}
+.pill{border:1px solid var(--line);border-radius:99px;background:transparent;color:var(--muted);padding:7px 12px;font:500 11px/1 var(--mono);cursor:pointer;transition:all var(--ease)}
+.pill:hover{border-color:var(--line-strong);color:var(--text)}
+.pill.active{background:var(--text);border-color:var(--text);color:var(--bg)}
+.pill[data-filter="faculty"].active{background:var(--faculty);border-color:var(--faculty);color:#15101d}
+.pill[data-filter="postdoc"].active{background:var(--postdoc);border-color:var(--postdoc);color:#071613}
+.pill[data-filter="fellowship"].active{background:var(--fellowship);border-color:var(--fellowship);color:#1d1307}
+.pill[data-filter="industry"].active{background:var(--industry);border-color:var(--industry);color:#07121d}
+.saved-toggle{border:0;background:transparent;color:var(--dim);font:500 11px/1 var(--mono);cursor:pointer;white-space:nowrap;padding:8px}
+.saved-toggle.active{color:var(--fellowship)}
+.result-line{display:flex;align-items:center;justify-content:space-between;margin:25px 2px 14px;color:var(--dim);font:400 11px/1 var(--mono)}
+.legend{display:flex;gap:16px;align-items:center}
+.legend span{display:flex;gap:6px;align-items:center}
+.legend i{width:7px;height:7px;border-radius:99px;background:currentColor}
+.legend .urgent{color:var(--urgent)}
+.legend .soon{color:var(--soon)}
+.legend .open{color:var(--open)}
+.job-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.job-card{position:relative;display:flex;flex-direction:column;min-height:310px;border:1px solid var(--line);border-radius:16px;background:color-mix(in srgb,var(--surface) 96%,transparent);padding:22px;overflow:hidden;transition:transform var(--ease),border var(--ease),box-shadow var(--ease)}
+.job-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--kind-color)}
+.job-card:hover{transform:translateY(-3px);border-color:var(--line-strong);box-shadow:0 22px 55px var(--shadow)}
+.job-card[data-kind="faculty"]{--kind-color:var(--faculty)}
+.job-card[data-kind="postdoc"]{--kind-color:var(--postdoc)}
+.job-card[data-kind="fellowship"]{--kind-color:var(--fellowship)}
+.job-card[data-kind="industry"]{--kind-color:var(--industry)}
+.card-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.type-badge{font:500 10px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--kind-color);border:1px solid color-mix(in srgb,var(--kind-color) 30%,transparent);background:color-mix(in srgb,var(--kind-color) 8%,transparent);border-radius:6px;padding:6px 8px}
+.bookmark{border:0;background:transparent;padding:3px;color:var(--dim);cursor:pointer;font-size:20px;line-height:1;transition:all var(--ease)}
+.bookmark:hover,.bookmark.saved{color:var(--fellowship);transform:scale(1.08)}
+.job-card h3{font:600 20px/1.32 var(--sans);letter-spacing:-.02em;margin:0 42px 8px 0}
+.org{font:500 12px/1.4 var(--mono);color:var(--accent);margin-bottom:14px}
+.description{font-size:13px;line-height:1.65;color:var(--muted);margin:0 0 18px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}
+.tag{font:400 10px/1 var(--mono);border:1px solid var(--line);border-radius:5px;color:var(--dim);padding:5px 7px;background:var(--bg)}
+.meta{margin-top:auto;border-top:1px solid var(--line);padding-top:15px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end}
+.meta-lines{display:flex;flex-direction:column;gap:8px}
+.meta-line{display:flex;align-items:flex-start;gap:8px;color:var(--muted);font-size:11px;line-height:1.4}
+.meta-icon{font-family:var(--mono);color:var(--dim);width:13px;flex:0 0 13px}
+.deadline{font-weight:600}
+.deadline.urgent{color:var(--urgent)}
+.deadline.soon{color:var(--soon)}
+.deadline.open{color:var(--open)}
+.apply{align-self:end;display:inline-flex;align-items:center;gap:7px;text-decoration:none;border:1px solid var(--line-strong);border-radius:9px;padding:10px 12px;font-size:11px;font-weight:700;background:var(--surface-2);transition:all var(--ease);white-space:nowrap}
+.apply:hover{background:var(--kind-color);border-color:var(--kind-color);color:#111722}
+.card-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding-top:13px;border-top:1px dashed var(--line)}
+.verified{font:400 9px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
+.source{font:500 10px/1 var(--mono);color:var(--dim);text-underline-offset:3px}
+.source:hover{color:var(--text)}
+.empty,.error{grid-column:1/-1;border:1px dashed var(--line-strong);border-radius:16px;text-align:center;padding:70px 24px;background:var(--surface)}
+.empty strong,.error strong{font:500 25px/1.2 var(--serif);display:block;margin-bottom:8px}
+.empty p,.error p{font-size:13px;color:var(--muted);margin:0}
+.loading{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.skeleton{height:310px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(100deg,var(--surface) 30%,var(--surface-2) 50%,var(--surface) 70%);background-size:300% 100%;animation:pulse 1.5s ease infinite}
+@keyframes pulse{to{background-position:-150% 0}}
+.board-note{margin-top:28px;padding:19px 22px;border:1px solid var(--line);border-radius:14px;background:var(--surface);display:flex;align-items:center;justify-content:space-between;gap:20px}
+.board-note p{font-size:12px;line-height:1.6;color:var(--muted);margin:0;max-width:760px}
+.submit-link{border-radius:8px;padding:10px 13px;text-decoration:none;background:var(--text);color:var(--bg);font-size:11px;font-weight:700;white-space:nowrap}
+footer{border-top:1px solid var(--line);padding:32px 0 48px;color:var(--dim);font:400 10px/1.6 var(--mono)}
+.footer-row{display:flex;justify-content:space-between;gap:20px;align-items:center}
+.footer-row a{text-underline-offset:3px}
+@media(max-width:900px){
+  .hero{padding-top:58px}.hero-grid{grid-template-columns:1fr;gap:38px}.hero-aside{max-width:440px}.job-grid{grid-template-columns:1fr}.search-row{grid-template-columns:1fr 1fr}.search-wrap{grid-column:1/-1}.stats .shell{grid-template-columns:repeat(2,1fr)}.stat:nth-child(2){border-right:0}.stat:nth-child(-n+2){border-bottom:1px solid var(--line)}.stat:nth-child(3){padding-left:0}
+}
+@media(max-width:600px){
+  .shell{width:min(calc(100% - 28px),var(--max))}.topbar{height:58px}.brand{font-size:16px}.brand-mark{width:28px;height:28px}.nav-link{display:none}.hero{padding:48px 0 36px}h1{font-size:53px}.hero-copy{font-size:14px}.stats .shell{grid-template-columns:1fr 1fr}.stat{padding:18px 12px}.stat-value{font-size:24px}.board{padding-top:34px}.board-head{align-items:flex-start;flex-direction:column}.updated{text-align:left}.search-row{grid-template-columns:1fr}.search-wrap{grid-column:auto}.filter-row{align-items:flex-start;flex-direction:column}.saved-toggle{padding-left:0}.job-card{padding:19px;min-height:0}.job-card h3{font-size:18px;margin-right:25px}.meta{grid-template-columns:1fr}.apply{justify-content:center;width:100%;margin-top:5px}.legend{display:none}.board-note,.footer-row{align-items:flex-start;flex-direction:column}.submit-link{width:100%;text-align:center}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="shell">
+    <a class="brand" href="./index.html"><span class="brand-mark">HP</span><span>Harsh Parikh</span></a>
+    <div class="nav-actions">
+      <a class="nav-link" href="./index.html">← Back to portfolio</a>
+      <button class="theme-button" id="themeButton" type="button" aria-label="Toggle light and dark theme">◐</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="shell hero-grid">
+      <div>
+        <div class="eyebrow"><span class="live-dot"></span>Curated opportunities · updated regularly</div>
+        <h1>Your next <em>chapter.</em></h1>
+        <p class="hero-copy">A signal-rich board for post-PhD careers in statistics, data science, machine learning, and AI—spanning postdocs, fellowships, faculty searches, and research roles in industry.</p>
+      </div>
+      <aside class="hero-aside" aria-label="About the updater">
+        <div class="aside-top"><span class="aside-label">Board monitor</span><span class="robot-mark">● AUTO</span></div>
+        <div class="aside-body">
+          <strong>Human-curated.<br>Agent-maintained.</strong>
+          <p>A scheduled research agent checks authoritative sources, verifies deadlines, adds new roles, and retires stale listings.</p>
+          <div class="signal" aria-hidden="true">
+            <span style="--h:35%"></span><span style="--h:62%"></span><span style="--h:46%"></span><span style="--h:88%"></span><span style="--h:55%"></span><span style="--h:76%"></span><span style="--h:42%"></span><span style="--h:68%"></span><span style="--h:92%"></span><span style="--h:52%"></span><span style="--h:81%"></span><span style="--h:64%"></span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="stats" aria-label="Board summary">
+    <div class="shell">
+      <div class="stat"><div class="stat-value" id="totalStat">—</div><div class="stat-label">Active listings</div></div>
+      <div class="stat"><div class="stat-value" id="soonStat">—</div><div class="stat-label">Closing in 30 days</div></div>
+      <div class="stat"><div class="stat-value" id="facultyStat">—</div><div class="stat-label">Faculty searches</div></div>
+      <div class="stat"><div class="stat-value" id="regionsStat">—</div><div class="stat-label">Countries / regions</div></div>
+    </div>
+  </section>
+
+  <section class="board">
+    <div class="shell">
+      <div class="board-head">
+        <div class="board-title">
+          <h2>Open opportunities</h2>
+          <p>Search broadly, filter quickly, then verify on the original posting.</p>
+        </div>
+        <div class="updated" id="updatedLabel">Loading the latest board…</div>
+      </div>
+
+      <div class="controls" aria-label="Job filters">
+        <div class="search-row">
+          <label class="search-wrap">
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <input id="searchInput" type="search" placeholder="Search role, organization, field, location…" autocomplete="off">
+          </label>
+          <label class="select-wrap">
+            <select id="focusSelect" aria-label="Filter by field"><option value="all">All fields</option></select>
+          </label>
+          <label class="select-wrap">
+            <select id="sortSelect" aria-label="Sort jobs">
+              <option value="deadline">Deadline: soonest</option>
+              <option value="newest">Recently verified</option>
+              <option value="organization">Organization A–Z</option>
+            </select>
+          </label>
+        </div>
+        <div class="filter-row">
+          <div class="pills" role="group" aria-label="Filter by opportunity type">
+            <button class="pill active" type="button" data-filter="all">All</button>
+            <button class="pill" type="button" data-filter="postdoc">Postdocs</button>
+            <button class="pill" type="button" data-filter="fellowship">Fellowships</button>
+            <button class="pill" type="button" data-filter="faculty">Faculty</button>
+            <button class="pill" type="button" data-filter="industry">Industry</button>
+          </div>
+          <button class="saved-toggle" id="savedToggle" type="button">☆ Saved <span id="savedCount">0</span></button>
+        </div>
+      </div>
+
+      <div class="result-line">
+        <span id="resultCount">Loading opportunities…</span>
+        <div class="legend" aria-label="Deadline color key"><span class="urgent"><i></i>≤ 14 days</span><span class="soon"><i></i>≤ 30 days</span><span class="open"><i></i>Rolling</span></div>
+      </div>
+
+      <div class="job-grid" id="jobGrid" aria-live="polite">
+        <div class="loading"><div class="skeleton"></div><div class="skeleton"></div></div>
+      </div>
+
+      <div class="board-note">
+        <p><strong>Know a strong opening?</strong> This board prioritizes roles suitable for PhD graduates and early-career researchers. Listings are informational; requirements and deadlines can change, so the linked source is always definitive.</p>
+        <a class="submit-link" href="mailto:harsh.parikh@yale.edu?subject=Post-PhD%20job%20board%20submission">Suggest a job ↗</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="shell footer-row">
+    <span>© 2026 Harsh Parikh · A community resource for quantitative researchers.</span>
+    <a href="./index.html">harsh-parikh.github.io</a>
+  </div>
+</footer>
+
+<script>
+const state={jobs:[],type:'all',focus:'all',query:'',sort:'deadline',savedOnly:false};
+const typeNames={faculty:'Faculty',postdoc:'Postdoc',fellowship:'Fellowship',industry:'Industry'};
+const typeIcons={faculty:'◎',postdoc:'△',fellowship:'✦',industry:'◫'};
+const $=selector=>document.querySelector(selector);
+const esc=value=>String(value??'').replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+const dayMs=86400000;
+const today=()=>{const now=new Date();return new Date(now.getFullYear(),now.getMonth(),now.getDate())};
+const parseDate=value=>{if(!value)return null;const[y,m,d]=value.split('-').map(Number);return new Date(y,m-1,d)};
+const daysLeft=job=>job.deadline?Math.ceil((parseDate(job.deadline)-today())/dayMs):null;
+const deadlineState=job=>{const days=daysLeft(job);if(days===null)return'open';if(days<0)return'expired';if(days<=14)return'urgent';if(days<=30)return'soon';return'later'};
+const getSaved=()=>new Set(JSON.parse(localStorage.getItem('savedJobs')||'[]'));
+const saveSet=set=>localStorage.setItem('savedJobs',JSON.stringify([...set]));
+
+function setTheme(theme){document.documentElement.setAttribute('data-theme',theme);localStorage.setItem('theme',theme)}
+const savedTheme=localStorage.getItem('theme');
+setTheme(savedTheme||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
+$('#themeButton').addEventListener('click',()=>setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark'));
+
+function deadlineCopy(job){
+  const days=daysLeft(job);
+  if(days===null)return job.deadlineLabel;
+  if(days<0)return `Closed ${job.deadlineLabel}`;
+  if(days===0)return `${job.deadlineLabel} · today`;
+  if(days===1)return `${job.deadlineLabel} · 1 day left`;
+  return `${job.deadlineLabel} · ${days} days left`;
+}
+
+function jobCard(job){
+  const saved=getSaved().has(job.id);
+  const status=deadlineState(job);
+  const compensation=job.compensation?`<div class="meta-line"><span class="meta-icon">$</span><span>${esc(job.compensation)}</span></div>`:'';
+  const remote=job.remote?' · remote-friendly':'';
+  return `<article class="job-card" data-kind="${esc(job.type)}">
+    <div class="card-top">
+      <span class="type-badge">${typeIcons[job.type]||'•'} ${esc(typeNames[job.type]||job.type)}</span>
+      <button class="bookmark ${saved?'saved':''}" type="button" data-save="${esc(job.id)}" aria-label="${saved?'Remove from':'Save to'} bookmarks" title="Save this job">${saved?'★':'☆'}</button>
+    </div>
+    <h3>${esc(job.title)}</h3>
+    <div class="org">${esc(job.organization)}</div>
+    <p class="description">${esc(job.description)}</p>
+    <div class="tags">${job.focus.map(tag=>`<span class="tag">${esc(tag)}</span>`).join('')}</div>
+    <div class="meta">
+      <div class="meta-lines">
+        <div class="meta-line"><span class="meta-icon">⌖</span><span>${esc(job.location)}${remote}</span></div>
+        <div class="meta-line"><span class="meta-icon">◷</span><span class="deadline ${status}">${esc(deadlineCopy(job))}</span></div>
+        ${compensation}
+      </div>
+      <a class="apply" href="${esc(job.applyUrl)}" target="_blank" rel="noopener">View role <span aria-hidden="true">↗</span></a>
+    </div>
+    <div class="card-foot">
+      <span class="verified">✓ verified ${esc(job.verified)}</span>
+      <a class="source" href="${esc(job.sourceUrl)}" target="_blank" rel="noopener">source</a>
+    </div>
+  </article>`;
+}
+
+function filteredJobs(){
+  const saved=getSaved();
+  const query=state.query.trim().toLowerCase();
+  const jobs=state.jobs.filter(job=>{
+    if(deadlineState(job)==='expired')return false;
+    if(state.type!=='all'&&job.type!==state.type)return false;
+    if(state.focus!=='all'&&!job.focus.includes(state.focus))return false;
+    if(state.savedOnly&&!saved.has(job.id))return false;
+    if(query){
+      const haystack=[job.title,job.organization,job.location,job.description,...job.focus].join(' ').toLowerCase();
+      if(!haystack.includes(query))return false;
+    }
+    return true;
+  });
+  jobs.sort((a,b)=>{
+    if(state.sort==='newest')return b.verified.localeCompare(a.verified)||Number(b.featured)-Number(a.featured);
+    if(state.sort==='organization')return a.organization.localeCompare(b.organization);
+    const ad=a.deadline?parseDate(a.deadline).getTime():Infinity;
+    const bd=b.deadline?parseDate(b.deadline).getTime():Infinity;
+    return ad-bd||Number(b.featured)-Number(a.featured);
+  });
+  return jobs;
+}
+
+function render(){
+  const jobs=filteredJobs();
+  $('#resultCount').textContent=`${jobs.length} ${jobs.length===1?'opportunity':'opportunities'} shown`;
+  $('#jobGrid').innerHTML=jobs.length?jobs.map(jobCard).join(''):`<div class="empty"><strong>No roles match those filters.</strong><p>Try a broader field, another category, or clear the search.</p></div>`;
+  document.querySelectorAll('[data-save]').forEach(button=>button.addEventListener('click',()=>{
+    const saved=getSaved(),id=button.dataset.save;
+    saved.has(id)?saved.delete(id):saved.add(id);
+    saveSet(saved);updateSaved();render();
+  }));
+}
+
+function updateSaved(){
+  const count=getSaved().size;
+  $('#savedCount').textContent=count;
+  $('#savedToggle').classList.toggle('active',state.savedOnly);
+}
+
+function populateFocus(){
+  const fields=[...new Set(state.jobs.flatMap(job=>job.focus))].sort();
+  $('#focusSelect').innerHTML='<option value="all">All fields</option>'+fields.map(field=>`<option value="${esc(field)}">${esc(field)}</option>`).join('');
+}
+
+function updateStats(){
+  const active=state.jobs.filter(job=>deadlineState(job)!=='expired');
+  const soon=active.filter(job=>{const days=daysLeft(job);return days!==null&&days<=30}).length;
+  const faculty=active.filter(job=>job.type==='faculty').length;
+  const regionKeys=new Set(active.map(job=>job.location.split(',').pop().trim()));
+  $('#totalStat').textContent=active.length;
+  $('#soonStat').textContent=soon;
+  $('#facultyStat').textContent=faculty;
+  $('#regionsStat').textContent=regionKeys.size;
+}
+
+async function loadJobs(){
+  try{
+    const response=await fetch('./data/jobs.json',{cache:'no-store'});
+    if(!response.ok)throw new Error(`HTTP ${response.status}`);
+    const payload=await response.json();
+    state.jobs=payload.jobs||[];
+    populateFocus();updateStats();updateSaved();
+    const updated=parseDate(payload.meta.lastUpdated);
+    $('#updatedLabel').textContent=`Last verified ${updated.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}`;
+    const requestedType=new URLSearchParams(location.search).get('type');
+    if(typeNames[requestedType]){
+      state.type=requestedType;
+      document.querySelectorAll('.pill').forEach(pill=>pill.classList.toggle('active',pill.dataset.filter===requestedType));
+    }
+    render();
+  }catch(error){
+    console.error(error);
+    $('#resultCount').textContent='Board unavailable';
+    $('#jobGrid').innerHTML='<div class="error"><strong>We could not load the board.</strong><p>Please refresh the page or try again shortly.</p></div>';
+    $('#updatedLabel').textContent='Unable to read job data';
+  }
+}
+
+document.querySelectorAll('.pill').forEach(pill=>pill.addEventListener('click',()=>{
+  state.type=pill.dataset.filter;
+  document.querySelectorAll('.pill').forEach(item=>item.classList.toggle('active',item===pill));
+  render();
+}));
+$('#searchInput').addEventListener('input',event=>{state.query=event.target.value;render()});
+$('#focusSelect').addEventListener('change',event=>{state.focus=event.target.value;render()});
+$('#sortSelect').addEventListener('change',event=>{state.sort=event.target.value;render()});
+$('#savedToggle').addEventListener('click',()=>{state.savedOnly=!state.savedOnly;updateSaved();render()});
+loadJobs();
+</script>
+</body>
+</html>
