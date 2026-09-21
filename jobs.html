@@ -375,8 +375,6 @@ function populateFilters(){
   $('#countrySelect').innerHTML='<option value="all">All locations</option>'+countries.map(country=>`<option value="${esc(country)}">${esc(country)}</option>`).join('');
 }
 
-}
-
 function updateStats(){
   const active=state.jobs.filter(job=>deadlineState(job)!=='expired');
   const soon=active.filter(job=>{const days=daysLeft(job);return days!==null&&days<=30}).length;
