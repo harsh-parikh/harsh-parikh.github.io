@@ -119,6 +119,7 @@ h1{font:500 clamp(52px,8vw,88px)/.95 var(--serif);letter-spacing:-.045em;margin:
 .legend .open{color:var(--open)}
 .job-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .job-card{position:relative;display:flex;flex-direction:column;min-height:310px;border:1px solid var(--line);border-radius:16px;background:color-mix(in srgb,var(--surface) 96%,transparent);padding:22px;overflow:hidden;transition:transform var(--ease),border var(--ease),box-shadow var(--ease)}
+.job-card[hidden]{display:none}
 .job-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--kind-color)}
 .job-card:hover{transform:translateY(-3px);border-color:var(--line-strong);box-shadow:0 22px 55px var(--shadow)}
 .job-card[data-kind="faculty"]{--kind-color:var(--faculty)}
@@ -148,12 +149,10 @@ h1{font:500 clamp(52px,8vw,88px)/.95 var(--serif);letter-spacing:-.045em;margin:
 .verified{font:400 9px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
 .source{font:500 10px/1 var(--mono);color:var(--dim);text-underline-offset:3px}
 .source:hover{color:var(--text)}
-.empty,.error{grid-column:1/-1;border:1px dashed var(--line-strong);border-radius:16px;text-align:center;padding:70px 24px;background:var(--surface)}
-.empty strong,.error strong{font:500 25px/1.2 var(--serif);display:block;margin-bottom:8px}
-.empty p,.error p{font-size:13px;color:var(--muted);margin:0}
-.loading{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-.skeleton{height:310px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(100deg,var(--surface) 30%,var(--surface-2) 50%,var(--surface) 70%);background-size:300% 100%;animation:pulse 1.5s ease infinite}
-@keyframes pulse{to{background-position:-150% 0}}
+.empty{grid-column:1/-1;border:1px dashed var(--line-strong);border-radius:16px;text-align:center;padding:70px 24px;background:var(--surface)}
+.empty[hidden]{display:none}
+.empty strong{font:500 25px/1.2 var(--serif);display:block;margin-bottom:8px}
+.empty p{font-size:13px;color:var(--muted);margin:0}
 .board-note{margin-top:28px;padding:19px 22px;border:1px solid var(--line);border-radius:14px;background:var(--surface);display:flex;align-items:center;justify-content:space-between;gap:20px}
 .board-note p{font-size:12px;line-height:1.6;color:var(--muted);margin:0;max-width:760px}
 .submit-link{border-radius:8px;padding:10px 13px;text-decoration:none;background:var(--text);color:var(--bg);font-size:11px;font-weight:700;white-space:nowrap}
@@ -193,10 +192,10 @@ footer{border-top:1px solid var(--line);padding:32px 0 48px;color:var(--dim);fon
 
   <section class="stats" aria-label="Board summary">
     <div class="shell">
-      <div class="stat"><div class="stat-value" id="totalStat">—</div><div class="stat-label">Active listings</div></div>
-      <div class="stat"><div class="stat-value" id="soonStat">—</div><div class="stat-label">Closing in 30 days</div></div>
-      <div class="stat"><div class="stat-value" id="facultyStat">—</div><div class="stat-label">Faculty searches</div></div>
-      <div class="stat"><div class="stat-value" id="regionsStat">—</div><div class="stat-label">Countries / regions</div></div>
+      <div class="stat"><div class="stat-value" id="totalStat"><!-- GENERATED:TOTAL:START -->18<!-- GENERATED:TOTAL:END --></div><div class="stat-label">Active listings</div></div>
+      <div class="stat"><div class="stat-value" id="soonStat"><!-- GENERATED:SOON:START -->4<!-- GENERATED:SOON:END --></div><div class="stat-label">Closing in 30 days</div></div>
+      <div class="stat"><div class="stat-value" id="facultyStat"><!-- GENERATED:FACULTY:START -->10<!-- GENERATED:FACULTY:END --></div><div class="stat-label">Faculty searches</div></div>
+      <div class="stat"><div class="stat-value" id="regionsStat"><!-- GENERATED:REGIONS:START -->8<!-- GENERATED:REGIONS:END --></div><div class="stat-label">Countries / regions</div></div>
     </div>
   </section>
 
@@ -207,7 +206,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 48px;color:var(--dim);fon
           <h2>Open opportunities</h2>
           <p>Search broadly, filter quickly, then verify on the original posting.</p>
         </div>
-        <div class="updated" id="updatedLabel">Loading the latest board…</div>
+        <div class="updated" id="updatedLabel"><!-- GENERATED:UPDATED:START -->Last verified September 21, 2026<!-- GENERATED:UPDATED:END --></div>
       </div>
 
       <div class="controls" aria-label="Job filters">
@@ -244,12 +243,400 @@ footer{border-top:1px solid var(--line);padding:32px 0 48px;color:var(--dim);fon
       </div>
 
       <div class="result-line">
-        <span id="resultCount">Loading opportunities…</span>
+        <span id="resultCount"><!-- GENERATED:RESULT_COUNT:START -->18 opportunities shown<!-- GENERATED:RESULT_COUNT:END --></span>
         <div class="legend" aria-label="Deadline color key"><span class="urgent"><i></i>≤ 14 days</span><span class="soon"><i></i>≤ 30 days</span><span class="open"><i></i>Rolling</span></div>
       </div>
 
       <div class="job-grid" id="jobGrid" aria-live="polite">
-        <div class="loading"><div class="skeleton"></div><div class="skeleton"></div></div>
+        <!-- GENERATED:JOBS:START -->
+        <article class="job-card" data-id="dhaka-statistics-assistant-professor-2026" data-kind="faculty" data-focus="Statistics" data-country="Bangladesh" data-search="assistant professor, statistics (2 posts) university of dhaka dhaka, bangladesh bangladesh two permanent faculty posts in the department of statistics. open to bangladeshi nationals; review the degree and academic-record requirements carefully. statistics" data-deadline="2026-09-28" data-deadline-label="Sep 28, 2026" data-verified="2026-09-21" data-featured="true" data-organization="University of Dhaka">
+          <div class="card-top">
+            <span class="type-badge">◎ Faculty</span>
+            <button class="bookmark" type="button" data-save="dhaka-statistics-assistant-professor-2026" aria-label="Save to bookmarks" title="Save this job">☆</button>
+          </div>
+          <h3>Assistant Professor, Statistics (2 posts)</h3>
+          <div class="org">University of Dhaka</div>
+          <p class="description">Two permanent faculty posts in the Department of Statistics. Open to Bangladeshi nationals; review the degree and academic-record requirements carefully.</p>
+          <div class="tags"><span class="tag">Statistics</span></div>
+          <div class="meta">
+            <div class="meta-lines">
+              <div class="meta-line"><span class="meta-icon">⌖</span><span>Dhaka, Bangladesh</span></div>
+              <div class="meta-line"><span class="meta-icon">◷</span><span class="deadline urgent" data-deadline-copy>Sep 28, 2026 · 7 days left</span></div>
+              <div class="meta-line"><span class="meta-icon">$</span><span>Grade 6 · Tk. 35,500–67,010</span></div>
+            </div>
+            <a class="apply" href="https://jobs.du.ac.bd/job_details/343" target="_blank" rel="noopener">View role <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="card-foot">
+            <span class="verified">✓ verified 2026-09-21</span>
+            <a class="source" href="https://jobs.du.ac.bd/job_details/343" target="_blank" rel="noopener">source</a>
+          </div>
+        </article>
+        <article class="job-card" data-id="columbia-ai-data-science-policy-2026" data-kind="faculty" data-focus="AI|Data Science|Public Policy" data-country="United States" data-search="assistant professor of ai &amp; data science for public policy columbia university · sipa new york, ny, usa united states tenure-track role for scholars developing ai, machine learning, or data-science methods with real-world public-policy impact. expected start july 2027. ai data science public policy" data-deadline="2026-09-30" data-deadline-label="Sep 30, 2026 · full consideration" data-verified="2026-09-21" data-featured="true" data-organization="Columbia University · SIPA">
+          <div class="card-top">
+            <span class="type-badge">◎ Faculty</span>
+            <button class="bookmark" type="button" data-save="columbia-ai-data-science-policy-2026" aria-label="Save to bookmarks" title="Save this job">☆</button>
+          </div>
+          <h3>Assistant Professor of AI &amp; Data Science for Public Policy</h3>
+          <div class="org">Columbia University · SIPA</div>
+          <p class="description">Tenure-track role for scholars developing AI, machine learning, or data-science methods with real-world public-policy impact. Expected start July 2027.</p>
+          <div class="tags"><span class="tag">AI</span><span class="tag">Data Science</span><span class="tag">Public Policy</span></div>
+          <div class="meta">
+            <div class="meta-lines">
+              <div class="meta-line"><span class="meta-icon">⌖</span><span>New York, NY, USA</span></div>
+              <div class="meta-line"><span class="meta-icon">◷</span><span class="deadline urgent" data-deadline-copy>Sep 30, 2026 · full consideration · 9 days left</span></div>
+            </div>
+            <a class="apply" href="https://apply.interfolio.com/190715" target="_blank" rel="noopener">View role <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="card-foot">
+            <span class="verified">✓ verified 2026-09-21</span>
+            <a class="source" href="https://academicjobsonline.org/ajo/jobs/32487" target="_blank" rel="noopener">source</a>
+          </div>
+        </article>
+        <article class="job-card" data-id="duke-statistical-science-parp-2027" data-kind="postdoc" data-focus="Statistics|Data Science|Teaching" data-country="United States" data-search="postdoctoral assistant research professor duke university · statistical science durham, nc, usa united states two-year teaching-focused appointment beginning july 2027, with a possible final third year. applicants should have a phd in statistics, biostatistics, data science, or a related field. statistics data science teaching" data-deadline="2026-10-05" data-deadline-label="Oct 5, 2026 · guaranteed consideration" data-verified="2026-09-21" data-featured="true" data-organization="Duke University · Statistical Science">
+          <div class="card-top">
+            <span class="type-badge">△ Postdoc</span>
+            <button class="bookmark" type="button" data-save="duke-statistical-science-parp-2027" aria-label="Save to bookmarks" title="Save this job">☆</button>
+          </div>
+          <h3>Postdoctoral Assistant Research Professor</h3>
+          <div class="org">Duke University · Statistical Science</div>
+          <p class="description">Two-year teaching-focused appointment beginning July 2027, with a possible final third year. Applicants should have a PhD in statistics, biostatistics, data science, or a related field.</p>
+          <div class="tags"><span class="tag">Statistics</span><span class="tag">Data Science</span><span class="tag">Teaching</span></div>
+          <div class="meta">
+            <div class="meta-lines">
+              <div class="meta-line"><span class="meta-icon">⌖</span><span>Durham, NC, USA</span></div>
+              <div class="meta-line"><span class="meta-icon">◷</span><span class="deadline urgent" data-deadline-copy>Oct 5, 2026 · guaranteed consideration · 14 days left</span></div>
+            </div>
+            <a class="apply" href="https://academicjobsonline.org/ajo/jobs/32663" target="_blank" rel="noopener">View role <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="card-foot">
+            <span class="verified">✓ verified 2026-09-21</span>
+            <a class="source" href="https://academicjobsonline.org/ajo/jobs/32663" target="_blank" rel="noopener">source</a>
+          </div>
+        </article>
+        <article class="job-card" data-id="duke-kunshan-data-cs-teaching-2027" data-kind="faculty" data-focus="Data Science|AI|Machine Learning|Teaching" data-country="China" data-search="faculty positions, data science &amp; computer science duke kunshan university kunshan, china china multiple teaching-stream faculty positions in data science, computer science, or related fields for the 2027–28 academic year. data science ai machine learning teaching" data-deadline="2026-10-12" data-deadline-label="Oct 12, 2026" data-verified="2026-09-21" data-featured="false" data-organization="Duke Kunshan University">
+          <div class="card-top">
+            <span class="type-badge">◎ Faculty</span>
+            <button class="bookmark" type="button" data-save="duke-kunshan-data-cs-teaching-2027" aria-label="Save to bookmarks" title="Save this job">☆</button>
+          </div>
+          <h3>Faculty Positions, Data Science &amp; Computer Science</h3>
+          <div class="org">Duke Kunshan University</div>
+          <p class="description">Multiple teaching-stream faculty positions in data science, computer science, or related fields for the 2027–28 academic year.</p>
+          <div class="tags"><span class="tag">Data Science</span><span class="tag">AI</span><span class="tag">Machine Learning</span><span class="tag">Teaching</span></div>
+          <div class="meta">
+            <div class="meta-lines">
+              <div class="meta-line"><span class="meta-icon">⌖</span><span>Kunshan, China</span></div>
+              <div class="meta-line"><span class="meta-icon">◷</span><span class="deadline soon" data-deadline-copy>Oct 12, 2026 · 21 days left</span></div>
+            </div>
+            <a class="apply" href="https://academicjobsonline.org/ajo/jobs/32543" target="_blank" rel="noopener">View role <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="card-foot">
+            <span class="verified">✓ verified 2026-09-21</span>
+            <a class="source" href="https://academicjobsonline.org/ajo/jobs/32543" target="_blank" rel="noopener">source</a>
+          </div>
+        </article>
+        <article class="job-card" data-id="stanford-statistics-assistant-professor-2027" data-kind="faculty" data-focus="Statistics|Probability|Data Science" data-country="United States" data-search="assistant professor of statistics stanford university stanford, ca, usa united states tenure-track position in any area of statistics or probability, broadly understood, with an expected september 2027 start. statistics probability data science" data-deadline="2026-11-01" data-deadline-label="Nov 1, 2026 · guaranteed consideration" data-verified="2026-09-21" data-featured="true" data-organization="Stanford University">
+          <div class="card-top">
+            <span class="type-badge">◎ Faculty</span>
+            <button class="bookmark" type="button" data-save="stanford-statistics-assistant-professor-2027" aria-label="Save to bookmarks" title="Save this job">☆</button>
+          </div>
+          <h3>Assistant Professor of Statistics</h3>
+          <div class="org">Stanford University</div>
+          <p class="description">Tenure-track position in any area of statistics or probability, broadly understood, with an expected September 2027 start.</p>
+          <div class="tags"><span class="tag">Statistics</span><span class="tag">Probability</span><span class="tag">Data Science</span></div>
+          <div class="meta">
+            <div class="meta-lines">
+              <div class="meta-line"><span class="meta-icon">⌖</span><span>Stanford, CA, USA</span></div>
+              <div class="meta-line"><span class="meta-icon">◷</span><span class="deadline later" data-deadline-copy>Nov 1, 2026 · guaranteed consideration · 41 days left</span></div>
+              <div class="meta-line"><span class="meta-icon">$</span><span>$138,586–$168,435 · academic year</span></div>
+            </div>
+            <a class="apply" href="https://facultypositions.stanford.edu/jobs/assistant-professor-department-of-statistics-stanford-university-california-united-states" target="_blank" rel="noopener">View role <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="card-foot">
+            <span class="verified">✓ verified 2026-09-21</span>
+            <a class="source" href="https://academicjobsonline.org/ajo/jobs/32447" target="_blank" rel="noopener">source</a>
+          </div>
+        </article>
+        <article class="job-card" data-id="nus-ai-gravitational-waves-postdoc-2027" data-kind="postdoc" data-focus="Statistical ML|AI for Science|Bayesian Methods" data-country="Singapore" data-search="postdoctoral research fellow · ai for science national university of singapore singapore singapore research fellowships spanning statistical machine learning and gravitational-wave astronomy. relevant areas include simulation-based inference, gaussian processes, bayesian optimization, rl, and model misspecification. statistical ml ai for science bayesian methods" data-deadline="2026-11-15" data-deadline-label="Nov 15, 2026 · full consideration" data-verified="2026-09-21" data-featured="true" data-organization="National University of Singapore">
+          <div class="card-top">
+            <span class="type-badge">△ Postdoc</span>
+            <button class="bookmark" type="button" data-save="nus-ai-gravitational-waves-postdoc-2027" aria-label="Save to bookmarks" title="Save this job">☆</button>
+          </div>
+          <h3>Postdoctoral Research Fellow · AI for Science</h3>
+          <div class="org">National University of Singapore</div>
+          <p class="description">Research fellowships spanning statistical machine learning and gravitational-wave astronomy. Relevant areas include simulation-based inference, Gaussian processes, Bayesian optimization, RL, and model misspecification.</p>
+          <div class="tags"><span class="tag">Statistical ML</span><span class="tag">AI for Science</span><span class="tag">Bayesian Methods</span></div>
+          <div class="meta">
+            <div class="meta-lines">
+              <div class="meta-line"><span class="meta-icon">⌖</span><span>Singapore</span></div>
+              <div class="meta-line"><span class="meta-icon">◷</span><span class="deadline later" data-deadline-copy>Nov 15, 2026 · full consideration · 55 days left</span></div>
+              <div class="meta-line"><span class="meta-icon">$</span><span>Competitive salary + travel support</span></div>
+            </div>
+            <a class="apply" href="https://academicjobsonline.org/ajo/jobs/32777" target="_blank" rel="noopener">View role <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="card-foot">
+            <span class="verified">✓ verified 2026-09-21</span>
+            <a class="source" href="https://academicjobsonline.org/ajo/jobs/32777" target="_blank" rel="noopener">source</a>
+          </div>
+        </article>
+        <article class="job-card" data-id="nhs-clinical-ai-fellowship-2027" data-kind="fellowship" data-focus="Clinical AI|Data Science|Health" data-country="United Kingdom" data-search="nhs fellowship in clinical ai · cohort 6 nhs fellowship in clinical ai united kingdom united kingdom a funded, part-time, 12-month fellowship for clinicians to gain real-world experience deploying and evaluating ai in nhs clinical workflows. applications open october 5. clinical ai data science health" data-deadline="2026-11-16" data-deadline-label="Nov 16, 2026 · 23:45 GMT" data-verified="2026-09-21" data-featured="false" data-organization="NHS Fellowship in Clinical AI">
+          <div class="card-top">
+            <span class="type-badge">✦ Fellowship</span>
+            <button class="bookmark" type="button" data-save="nhs-clinical-ai-fellowship-2027" aria-label="Save to bookmarks" title="Save this job">☆</button>
+          </div>
+          <h3>NHS Fellowship in Clinical AI · Cohort 6</h3>
+          <div class="org">NHS Fellowship in Clinical AI</div>
+          <p class="description">A funded, part-time, 12-month fellowship for clinicians to gain real-world experience deploying and evaluating AI in NHS clinical workflows. Applications open October 5.</p>
+          <div class="tags"><span class="tag">Clinical AI</span><span class="tag">Data Science</span><span class="tag">Health</span></div>
+          <div class="meta">
+            <div class="meta-lines">
+              <div class="meta-line"><span class="meta-icon">⌖</span><span>United Kingdom</span></div>
+              <div class="meta-line"><span class="meta-icon">◷</span><span class="deadline later" data-deadline-copy>Nov 16, 2026 · 23:45 GMT · 56 days left</span></div>
+              <div class="meta-line"><span class="meta-icon">$</span><span>Salary cover for funded posts</span></div>
+            </div>
+            <a class="apply" href="https://www.nhsfellowship.ai/apply/" target="_blank" rel="noopener">View role <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="card-foot">
+            <span class="verified">✓ verified 2026-09-21</span>
+            <a class="source" href="https://www.nhsfellowship.ai/apply/" target="_blank" rel="noopener">source</a>
+          </div>
+        </article>
+        <article class="job-card" data-id="uci-ai-ml-assistant-professor-2027" data-kind="faculty" data-focus="AI|Machine Learning|Trustworthy AI" data-country="United States" data-search="assistant professor in ai / ml university of california, irvine irvine, ca, usa united states tenure-track role in fundamental ai, including efficient and high-performance methods, interpretability and control, safety, privacy, evaluation, and ai for scientific discovery. ai machine learning trustworthy ai" data-deadline="2026-12-01" data-deadline-label="Dec 1, 2026 · maximum consideration" data-verified="2026-09-21" data-featured="true" data-organization="University of California, Irvine">
+          <div class="card-top">
+            <span class="type-badge">◎ Faculty</span>
+            <button class="bookmark" type="button" data-save="uci-ai-ml-assistant-professor-2027" aria-label="Save to bookmarks" title="Save this job">☆</button>
+          </div>
+          <h3>Assistant Professor in AI / ML</h3>
+          <div class="org">University of California, Irvine</div>
+          <p class="description">Tenure-track role in fundamental AI, including efficient and high-performance methods, interpretability and control, safety, privacy, evaluation, and AI for scientific discovery.</p>
+          <div class="tags"><span class="tag">AI</span><span class="tag">Machine Learning</span><span class="tag">Trustworthy AI</span></div>
+          <div class="meta">
+            <div class="meta-lines">
+              <div class="meta-line"><span class="meta-icon">⌖</span><span>Irvine, CA, USA</span></div>
+              <div class="meta-line"><span class="meta-icon">◷</span><span class="deadline later" data-deadline-copy>Dec 1, 2026 · maximum consideration · 71 days left</span></div>
+              <div class="meta-line"><span class="meta-icon">$</span><span>$111,400–$241,400</span></div>
+            </div>
+            <a class="apply" href="https://engineering.uci.edu/node/15508" target="_blank" rel="noopener">View role <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="card-foot">
+            <span class="verified">✓ verified 2026-09-21</span>
+            <a class="source" href="https://engineering.uci.edu/node/15508" target="_blank" rel="noopener">source</a>
+          </div>
+        </article>
+        <article class="job-card" data-id="academia-sinica-statistical-science-faculty-2026" data-kind="faculty" data-focus="Statistics|Data Science|AI" data-country="Taiwan" data-search="tenure-track research fellows · open rank academia sinica · statistical science taipei, taiwan taiwan open-rank research-faculty search for statistics, data science, computer science, ai, and related fields. researchers may choose whether to teach. statistics data science ai" data-deadline="2026-12-01" data-deadline-label="Dec 1, 2026 · current round" data-verified="2026-09-21" data-featured="false" data-organization="Academia Sinica · Statistical Science">
+          <div class="card-top">
+            <span class="type-badge">◎ Faculty</span>
+            <button class="bookmark" type="button" data-save="academia-sinica-statistical-science-faculty-2026" aria-label="Save to bookmarks" title="Save this job">☆</button>
+          </div>
+          <h3>Tenure-Track Research Fellows · Open Rank</h3>
+          <div class="org">Academia Sinica · Statistical Science</div>
+          <p class="description">Open-rank research-faculty search for statistics, data science, computer science, AI, and related fields. Researchers may choose whether to teach.</p>
+          <div class="tags"><span class="tag">Statistics</span><span class="tag">Data Science</span><span class="tag">AI</span></div>
+          <div class="meta">
+            <div class="meta-lines">
+              <div class="meta-line"><span class="meta-icon">⌖</span><span>Taipei, Taiwan</span></div>
+              <div class="meta-line"><span class="meta-icon">◷</span><span class="deadline later" data-deadline-copy>Dec 1, 2026 · current round · 71 days left</span></div>
+              <div class="meta-line"><span class="meta-icon">$</span><span>Research funding + housing support</span></div>
+            </div>
+            <a class="apply" href="https://academicjobsonline.org/ajo/jobs/28984" target="_blank" rel="noopener">View role <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="card-foot">
+            <span class="verified">✓ verified 2026-09-21</span>
+            <a class="source" href="https://academicjobsonline.org/ajo/jobs/28984" target="_blank" rel="noopener">source</a>
+          </div>
+        </article>
+        <article class="job-card" data-id="cri-immuno-informatics-fellowship-2027" data-kind="fellowship" data-focus="Data Science|Computational Biology|Genomics" data-country="Worldwide" data-search="immuno-informatics postdoctoral fellowship cancer research institute host institution · worldwide worldwide postdoctoral support for researchers building dual expertise across cancer immunology and computational biology, data science, or genomics. data science computational biology genomics" data-deadline="2027-03-01" data-deadline-label="Mar 1, 2027" data-verified="2026-09-21" data-featured="false" data-organization="Cancer Research Institute">
+          <div class="card-top">
+            <span class="type-badge">✦ Fellowship</span>
+            <button class="bookmark" type="button" data-save="cri-immuno-informatics-fellowship-2027" aria-label="Save to bookmarks" title="Save this job">☆</button>
+          </div>
+          <h3>Immuno-Informatics Postdoctoral Fellowship</h3>
+          <div class="org">Cancer Research Institute</div>
+          <p class="description">Postdoctoral support for researchers building dual expertise across cancer immunology and computational biology, data science, or genomics.</p>
+          <div class="tags"><span class="tag">Data Science</span><span class="tag">Computational Biology</span><span class="tag">Genomics</span></div>
+          <div class="meta">
+            <div class="meta-lines">
+              <div class="meta-line"><span class="meta-icon">⌖</span><span>Host institution · worldwide</span></div>
+              <div class="meta-line"><span class="meta-icon">◷</span><span class="deadline later" data-deadline-copy>Mar 1, 2027 · 161 days left</span></div>
+            </div>
+            <a class="apply" href="https://www.cancerresearch.org/immuno-informatics-postdoctoral-fellowship" target="_blank" rel="noopener">View role <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="card-foot">
+            <span class="verified">✓ verified 2026-09-21</span>
+            <a class="source" href="https://www.cancerresearch.org/immuno-informatics-postdoctoral-fellowship" target="_blank" rel="noopener">source</a>
+          </div>
+        </article>
+        <article class="job-card" data-id="nus-statistics-data-science-faculty-2027" data-kind="faculty" data-focus="Statistics|Data Science|Machine Learning|AI" data-country="Singapore" data-search="assistant / associate / full professor national university of singapore · statistics &amp; data science singapore singapore open-rank tenure-track and tenured positions across statistics, data science, machine learning, ai, computer science, and related areas. anticipated july 2027 start. statistics data science machine learning ai" data-deadline="2027-03-31" data-deadline-label="Mar 31, 2027" data-verified="2026-09-21" data-featured="false" data-organization="National University of Singapore · Statistics &amp; Data Science">
+          <div class="card-top">
+            <span class="type-badge">◎ Faculty</span>
+            <button class="bookmark" type="button" data-save="nus-statistics-data-science-faculty-2027" aria-label="Save to bookmarks" title="Save this job">☆</button>
+          </div>
+          <h3>Assistant / Associate / Full Professor</h3>
+          <div class="org">National University of Singapore · Statistics &amp; Data Science</div>
+          <p class="description">Open-rank tenure-track and tenured positions across statistics, data science, machine learning, AI, computer science, and related areas. Anticipated July 2027 start.</p>
+          <div class="tags"><span class="tag">Statistics</span><span class="tag">Data Science</span><span class="tag">Machine Learning</span><span class="tag">AI</span></div>
+          <div class="meta">
+            <div class="meta-lines">
+              <div class="meta-line"><span class="meta-icon">⌖</span><span>Singapore</span></div>
+              <div class="meta-line"><span class="meta-icon">◷</span><span class="deadline later" data-deadline-copy>Mar 31, 2027 · 191 days left</span></div>
+              <div class="meta-line"><span class="meta-icon">$</span><span>Competitive salary + research funding</span></div>
+            </div>
+            <a class="apply" href="https://academicjobsonline.org/ajo/jobs/32423" target="_blank" rel="noopener">View role <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="card-foot">
+            <span class="verified">✓ verified 2026-09-21</span>
+            <a class="source" href="https://academicjobsonline.org/ajo/jobs/32423" target="_blank" rel="noopener">source</a>
+          </div>
+        </article>
+        <article class="job-card" data-id="harvard-statistics-ai-faculty-2027" data-kind="faculty" data-focus="Statistics|AI|Trustworthy AI" data-country="United States" data-search="tenure-track professor in statistics &amp; ai harvard university · statistics cambridge, ma, usa united states tenure-track search at the interface of statistics and ai, spanning foundations, methodology, and trustworthy ai-enabled discovery. expected july 2027 start. statistics ai trustworthy ai" data-deadline="" data-deadline-label="Review begins Nov 1, 2026 · rolling" data-verified="2026-09-21" data-featured="true" data-organization="Harvard University · Statistics">
+          <div class="card-top">
+            <span class="type-badge">◎ Faculty</span>
+            <button class="bookmark" type="button" data-save="harvard-statistics-ai-faculty-2027" aria-label="Save to bookmarks" title="Save this job">☆</button>
+          </div>
+          <h3>Tenure-Track Professor in Statistics &amp; AI</h3>
+          <div class="org">Harvard University · Statistics</div>
+          <p class="description">Tenure-track search at the interface of statistics and AI, spanning foundations, methodology, and trustworthy AI-enabled discovery. Expected July 2027 start.</p>
+          <div class="tags"><span class="tag">Statistics</span><span class="tag">AI</span><span class="tag">Trustworthy AI</span></div>
+          <div class="meta">
+            <div class="meta-lines">
+              <div class="meta-line"><span class="meta-icon">⌖</span><span>Cambridge, MA, USA</span></div>
+              <div class="meta-line"><span class="meta-icon">◷</span><span class="deadline open" data-deadline-copy>Review begins Nov 1, 2026 · rolling</span></div>
+            </div>
+            <a class="apply" href="https://academicpositions.harvard.edu/postings/16719" target="_blank" rel="noopener">View role <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="card-foot">
+            <span class="verified">✓ verified 2026-09-21</span>
+            <a class="source" href="https://academicjobsonline.org/ajo/jobs/32727" target="_blank" rel="noopener">source</a>
+          </div>
+        </article>
+        <article class="job-card" data-id="openai-research-scientist-2026" data-kind="industry" data-focus="Machine Learning|AI Research" data-country="United States" data-search="research scientist openai san francisco, ca, usa united states research across openai teams for candidates with a record of developing new machine-learning ideas and the ability to own a long-running research agenda. machine learning ai research" data-deadline="" data-deadline-label="Rolling" data-verified="2026-09-21" data-featured="true" data-organization="OpenAI">
+          <div class="card-top">
+            <span class="type-badge">◫ Industry</span>
+            <button class="bookmark" type="button" data-save="openai-research-scientist-2026" aria-label="Save to bookmarks" title="Save this job">☆</button>
+          </div>
+          <h3>Research Scientist</h3>
+          <div class="org">OpenAI</div>
+          <p class="description">Research across OpenAI teams for candidates with a record of developing new machine-learning ideas and the ability to own a long-running research agenda.</p>
+          <div class="tags"><span class="tag">Machine Learning</span><span class="tag">AI Research</span></div>
+          <div class="meta">
+            <div class="meta-lines">
+              <div class="meta-line"><span class="meta-icon">⌖</span><span>San Francisco, CA, USA</span></div>
+              <div class="meta-line"><span class="meta-icon">◷</span><span class="deadline open" data-deadline-copy>Rolling</span></div>
+              <div class="meta-line"><span class="meta-icon">$</span><span>$250K–$445K + equity</span></div>
+            </div>
+            <a class="apply" href="https://openai.com/careers/research-scientist-san-francisco/" target="_blank" rel="noopener">View role <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="card-foot">
+            <span class="verified">✓ verified 2026-09-21</span>
+            <a class="source" href="https://openai.com/careers/research-scientist-san-francisco/" target="_blank" rel="noopener">source</a>
+          </div>
+        </article>
+        <article class="job-card" data-id="anthropic-research-scientist-interpretability-2026" data-kind="industry" data-focus="Interpretability|AI Safety|Machine Learning" data-country="United States" data-search="research scientist, interpretability anthropic san francisco, ca, usa united states research role advancing the science of understanding frontier models. the live anthropic careers page lists this role under ai research &amp; engineering. interpretability ai safety machine learning" data-deadline="" data-deadline-label="Rolling" data-verified="2026-09-21" data-featured="false" data-organization="Anthropic">
+          <div class="card-top">
+            <span class="type-badge">◫ Industry</span>
+            <button class="bookmark" type="button" data-save="anthropic-research-scientist-interpretability-2026" aria-label="Save to bookmarks" title="Save this job">☆</button>
+          </div>
+          <h3>Research Scientist, Interpretability</h3>
+          <div class="org">Anthropic</div>
+          <p class="description">Research role advancing the science of understanding frontier models. The live Anthropic careers page lists this role under AI Research &amp; Engineering.</p>
+          <div class="tags"><span class="tag">Interpretability</span><span class="tag">AI Safety</span><span class="tag">Machine Learning</span></div>
+          <div class="meta">
+            <div class="meta-lines">
+              <div class="meta-line"><span class="meta-icon">⌖</span><span>San Francisco, CA, USA</span></div>
+              <div class="meta-line"><span class="meta-icon">◷</span><span class="deadline open" data-deadline-copy>Rolling</span></div>
+            </div>
+            <a class="apply" href="https://www.anthropic.com/careers/jobs" target="_blank" rel="noopener">View role <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="card-foot">
+            <span class="verified">✓ verified 2026-09-21</span>
+            <a class="source" href="https://www.anthropic.com/careers/jobs" target="_blank" rel="noopener">source</a>
+          </div>
+        </article>
+        <article class="job-card" data-id="anthropic-fellows-program-2026" data-kind="fellowship" data-focus="AI Safety|ML Systems|Reinforcement Learning" data-country="Multiple regions" data-search="anthropic fellows program anthropic united states / canada / united kingdom multiple regions fellowship pathways listed across ai safety and security, ml systems and reinforcement learning, and economics and policy. check the careers page for current tracks and location eligibility. ai safety ml systems reinforcement learning" data-deadline="" data-deadline-label="Rolling while listed" data-verified="2026-09-21" data-featured="false" data-organization="Anthropic">
+          <div class="card-top">
+            <span class="type-badge">✦ Fellowship</span>
+            <button class="bookmark" type="button" data-save="anthropic-fellows-program-2026" aria-label="Save to bookmarks" title="Save this job">☆</button>
+          </div>
+          <h3>Anthropic Fellows Program</h3>
+          <div class="org">Anthropic</div>
+          <p class="description">Fellowship pathways listed across AI safety and security, ML systems and reinforcement learning, and economics and policy. Check the careers page for current tracks and location eligibility.</p>
+          <div class="tags"><span class="tag">AI Safety</span><span class="tag">ML Systems</span><span class="tag">Reinforcement Learning</span></div>
+          <div class="meta">
+            <div class="meta-lines">
+              <div class="meta-line"><span class="meta-icon">⌖</span><span>United States / Canada / United Kingdom · remote-friendly</span></div>
+              <div class="meta-line"><span class="meta-icon">◷</span><span class="deadline open" data-deadline-copy>Rolling while listed</span></div>
+            </div>
+            <a class="apply" href="https://www.anthropic.com/careers/jobs" target="_blank" rel="noopener">View role <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="card-foot">
+            <span class="verified">✓ verified 2026-09-21</span>
+            <a class="source" href="https://www.anthropic.com/careers/jobs" target="_blank" rel="noopener">source</a>
+          </div>
+        </article>
+        <article class="job-card" data-id="openai-data-scientist-experimentation-2026" data-kind="industry" data-focus="Statistics|Causal Inference|Experimentation" data-country="United States" data-search="data scientist, core experimentation openai seattle, wa, usa united states staff-level data-science role shaping experimentation methods and infrastructure at the intersection of statistics, causal inference, product analytics, and ai. statistics causal inference experimentation" data-deadline="" data-deadline-label="Rolling" data-verified="2026-09-21" data-featured="false" data-organization="OpenAI">
+          <div class="card-top">
+            <span class="type-badge">◫ Industry</span>
+            <button class="bookmark" type="button" data-save="openai-data-scientist-experimentation-2026" aria-label="Save to bookmarks" title="Save this job">☆</button>
+          </div>
+          <h3>Data Scientist, Core Experimentation</h3>
+          <div class="org">OpenAI</div>
+          <p class="description">Staff-level data-science role shaping experimentation methods and infrastructure at the intersection of statistics, causal inference, product analytics, and AI.</p>
+          <div class="tags"><span class="tag">Statistics</span><span class="tag">Causal Inference</span><span class="tag">Experimentation</span></div>
+          <div class="meta">
+            <div class="meta-lines">
+              <div class="meta-line"><span class="meta-icon">⌖</span><span>Seattle, WA, USA</span></div>
+              <div class="meta-line"><span class="meta-icon">◷</span><span class="deadline open" data-deadline-copy>Rolling</span></div>
+            </div>
+            <a class="apply" href="https://openai.com/careers/data-scientist-core-experimentation-seattle/" target="_blank" rel="noopener">View role <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="card-foot">
+            <span class="verified">✓ verified 2026-09-21</span>
+            <a class="source" href="https://openai.com/careers/data-scientist-core-experimentation-seattle/" target="_blank" rel="noopener">source</a>
+          </div>
+        </article>
+        <article class="job-card" data-id="tamu-ece-ai-ml-open-rank-2027" data-kind="faculty" data-focus="AI|Machine Learning|Robotics" data-country="United States" data-search="open-rank tenured / tenure-track faculty texas a&amp;m university · ece college station, tx, usa united states six open-rank positions across ece, with emphasis areas that include ai and machine learning, robotics, quantum, chip design and manufacturing, and bioimaging. ai machine learning robotics" data-deadline="" data-deadline-label="Open · review ongoing" data-verified="2026-09-21" data-featured="false" data-organization="Texas A&amp;M University · ECE">
+          <div class="card-top">
+            <span class="type-badge">◎ Faculty</span>
+            <button class="bookmark" type="button" data-save="tamu-ece-ai-ml-open-rank-2027" aria-label="Save to bookmarks" title="Save this job">☆</button>
+          </div>
+          <h3>Open-Rank Tenured / Tenure-Track Faculty</h3>
+          <div class="org">Texas A&amp;M University · ECE</div>
+          <p class="description">Six open-rank positions across ECE, with emphasis areas that include AI and machine learning, robotics, quantum, chip design and manufacturing, and bioimaging.</p>
+          <div class="tags"><span class="tag">AI</span><span class="tag">Machine Learning</span><span class="tag">Robotics</span></div>
+          <div class="meta">
+            <div class="meta-lines">
+              <div class="meta-line"><span class="meta-icon">⌖</span><span>College Station, TX, USA</span></div>
+              <div class="meta-line"><span class="meta-icon">◷</span><span class="deadline open" data-deadline-copy>Open · review ongoing</span></div>
+            </div>
+            <a class="apply" href="https://faculty.tamu.edu/JobDetail?JobId=188821" target="_blank" rel="noopener">View role <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="card-foot">
+            <span class="verified">✓ verified 2026-09-21</span>
+            <a class="source" href="https://faculty.tamu.edu/JobDetail?JobId=188821" target="_blank" rel="noopener">source</a>
+          </div>
+        </article>
+        <article class="job-card" data-id="umass-lowell-core-ai-faculty-2027" data-kind="faculty" data-focus="AI|Foundation Models|Trustworthy AI" data-country="United States" data-search="open-rank tenure-track faculty in core ai university of massachusetts lowell lowell, ma, usa united states open-rank faculty role in core ai, including generative ai, foundation and multimodal models, agents, machine learning, and trustworthy ai. starts september 2027. ai foundation models trustworthy ai" data-deadline="" data-deadline-label="Open until filled" data-verified="2026-09-21" data-featured="false" data-organization="University of Massachusetts Lowell">
+          <div class="card-top">
+            <span class="type-badge">◎ Faculty</span>
+            <button class="bookmark" type="button" data-save="umass-lowell-core-ai-faculty-2027" aria-label="Save to bookmarks" title="Save this job">☆</button>
+          </div>
+          <h3>Open-Rank Tenure-Track Faculty in Core AI</h3>
+          <div class="org">University of Massachusetts Lowell</div>
+          <p class="description">Open-rank faculty role in core AI, including generative AI, foundation and multimodal models, agents, machine learning, and trustworthy AI. Starts September 2027.</p>
+          <div class="tags"><span class="tag">AI</span><span class="tag">Foundation Models</span><span class="tag">Trustworthy AI</span></div>
+          <div class="meta">
+            <div class="meta-lines">
+              <div class="meta-line"><span class="meta-icon">⌖</span><span>Lowell, MA, USA</span></div>
+              <div class="meta-line"><span class="meta-icon">◷</span><span class="deadline open" data-deadline-copy>Open until filled</span></div>
+            </div>
+            <a class="apply" href="https://careers.pageuppeople.com/822/lowell/en-us/job/530087/open-rank-tenuretrack-faculty-in-core-ai-miner-school-of-computer-information-sciences" target="_blank" rel="noopener">View role <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="card-foot">
+            <span class="verified">✓ verified 2026-09-21</span>
+            <a class="source" href="https://careers.pageuppeople.com/822/lowell/en-us/job/530087/open-rank-tenuretrack-faculty-in-core-ai-miner-school-of-computer-information-sciences" target="_blank" rel="noopener">source</a>
+          </div>
+        </article>
+        <!-- GENERATED:JOBS:END -->
+        <div class="empty" id="emptyState" hidden><strong>No roles match those filters.</strong><p>Try a broader field, another category, or clear the search.</p></div>
       </div>
 
       <div class="board-note">
@@ -268,149 +655,129 @@ footer{border-top:1px solid var(--line);padding:32px 0 48px;color:var(--dim);fon
 </footer>
 
 <script>
-const state={jobs:[],type:'all',focus:'all',country:'all',query:'',sort:'deadline',savedOnly:false};
-
+const state={type:'all',focus:'all',country:'all',query:'',sort:'deadline',savedOnly:false};
 const typeNames={faculty:'Faculty',postdoc:'Postdoc',fellowship:'Fellowship',industry:'Industry'};
-const typeIcons={faculty:'◎',postdoc:'△',fellowship:'✦',industry:'◫'};
 const $=selector=>document.querySelector(selector);
-const esc=value=>String(value??'').replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+const cards=()=>[...document.querySelectorAll('.job-card')];
 const dayMs=86400000;
 const today=()=>{const now=new Date();return new Date(now.getFullYear(),now.getMonth(),now.getDate())};
 const parseDate=value=>{if(!value)return null;const[y,m,d]=value.split('-').map(Number);return new Date(y,m-1,d)};
-const daysLeft=job=>job.deadline?Math.ceil((parseDate(job.deadline)-today())/dayMs):null;
-const deadlineState=job=>{const days=daysLeft(job);if(days===null)return'open';if(days<0)return'expired';if(days<=14)return'urgent';if(days<=30)return'soon';return'later'};
-const getSaved=()=>new Set(JSON.parse(localStorage.getItem('savedJobs')||'[]'));
-const saveSet=set=>localStorage.setItem('savedJobs',JSON.stringify([...set]));
+const daysLeft=card=>card.dataset.deadline?Math.ceil((parseDate(card.dataset.deadline)-today())/dayMs):null;
+const deadlineState=card=>{const days=daysLeft(card);if(days===null)return'open';if(days<0)return'expired';if(days<=14)return'urgent';if(days<=30)return'soon';return'later'};
 
-function setTheme(theme){document.documentElement.setAttribute('data-theme',theme);localStorage.setItem('theme',theme)}
-const savedTheme=localStorage.getItem('theme');
+function getSaved(){
+  try{return new Set(JSON.parse(localStorage.getItem('savedJobs')||'[]'))}
+  catch(error){return new Set()}
+}
+function saveSet(set){try{localStorage.setItem('savedJobs',JSON.stringify([...set]))}catch(error){}}
+function setTheme(theme){
+  document.documentElement.setAttribute('data-theme',theme);
+  try{localStorage.setItem('theme',theme)}catch(error){}
+}
+let savedTheme=null;
+try{savedTheme=localStorage.getItem('theme')}catch(error){}
 setTheme(savedTheme||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
 $('#themeButton').addEventListener('click',()=>setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark'));
 
-function deadlineCopy(job){
-  const days=daysLeft(job);
-  if(days===null)return job.deadlineLabel;
-  if(days<0)return `Closed ${job.deadlineLabel}`;
-  if(days===0)return `${job.deadlineLabel} · today`;
-  if(days===1)return `${job.deadlineLabel} · 1 day left`;
-  return `${job.deadlineLabel} · ${days} days left`;
-}
-
-function jobCard(job){
-  const saved=getSaved().has(job.id);
-  const status=deadlineState(job);
-  const compensation=job.compensation?`<div class="meta-line"><span class="meta-icon">$</span><span>${esc(job.compensation)}</span></div>`:'';
-  const remote=job.remote?' · remote-friendly':'';
-  return `<article class="job-card" data-kind="${esc(job.type)}">
-    <div class="card-top">
-      <span class="type-badge">${typeIcons[job.type]||'•'} ${esc(typeNames[job.type]||job.type)}</span>
-      <button class="bookmark ${saved?'saved':''}" type="button" data-save="${esc(job.id)}" aria-label="${saved?'Remove from':'Save to'} bookmarks" title="Save this job">${saved?'★':'☆'}</button>
-    </div>
-    <h3>${esc(job.title)}</h3>
-    <div class="org">${esc(job.organization)}</div>
-    <p class="description">${esc(job.description)}</p>
-    <div class="tags">${job.focus.map(tag=>`<span class="tag">${esc(tag)}</span>`).join('')}</div>
-    <div class="meta">
-      <div class="meta-lines">
-        <div class="meta-line"><span class="meta-icon">⌖</span><span>${esc(job.location)}${remote}</span></div>
-        <div class="meta-line"><span class="meta-icon">◷</span><span class="deadline ${status}">${esc(deadlineCopy(job))}</span></div>
-        ${compensation}
-      </div>
-      <a class="apply" href="${esc(job.applyUrl)}" target="_blank" rel="noopener">View role <span aria-hidden="true">↗</span></a>
-    </div>
-    <div class="card-foot">
-      <span class="verified">✓ verified ${esc(job.verified)}</span>
-      <a class="source" href="${esc(job.sourceUrl)}" target="_blank" rel="noopener">source</a>
-    </div>
-  </article>`;
-}
-
-function filteredJobs(){
-  const saved=getSaved();
-  const query=state.query.trim().toLowerCase();
-  const jobs=state.jobs.filter(job=>{
-    if(deadlineState(job)==='expired')return false;
-    if(state.type!=='all'&&job.type!==state.type)return false;
-    if(state.focus!=='all'&&!job.focus.includes(state.focus))return false;
-    if(state.country!=='all'&&job.country!==state.country)return false;
-
-    if(state.savedOnly&&!saved.has(job.id))return false;
-    if(query){
-      const haystack=[job.title,job.organization,job.location,job.description,...job.focus].join(' ').toLowerCase();
-      if(!haystack.includes(query))return false;
-    }
-    return true;
-  });
-  jobs.sort((a,b)=>{
-    if(state.sort==='newest')return b.verified.localeCompare(a.verified)||Number(b.featured)-Number(a.featured);
-    if(state.sort==='organization')return a.organization.localeCompare(b.organization);
-    const ad=a.deadline?parseDate(a.deadline).getTime():Infinity;
-    const bd=b.deadline?parseDate(b.deadline).getTime():Infinity;
-    return ad-bd||Number(b.featured)-Number(a.featured);
-  });
-  return jobs;
-}
-
-function render(){
-  const jobs=filteredJobs();
-  $('#resultCount').textContent=`${jobs.length} ${jobs.length===1?'opportunity':'opportunities'} shown`;
-  $('#jobGrid').innerHTML=jobs.length?jobs.map(jobCard).join(''):`<div class="empty"><strong>No roles match those filters.</strong><p>Try a broader field, another category, or clear the search.</p></div>`;
-  document.querySelectorAll('[data-save]').forEach(button=>button.addEventListener('click',()=>{
-    const saved=getSaved(),id=button.dataset.save;
-    saved.has(id)?saved.delete(id):saved.add(id);
-    saveSet(saved);updateSaved();render();
-  }));
-}
-
-function updateSaved(){
-  const count=getSaved().size;
-  $('#savedCount').textContent=count;
-  $('#savedToggle').classList.toggle('active',state.savedOnly);
+function updateDeadline(card){
+  const label=card.dataset.deadlineLabel;
+  const days=daysLeft(card);
+  const status=deadlineState(card);
+  const element=card.querySelector('[data-deadline-copy]');
+  element.className=`deadline ${status}`;
+  if(days===null)element.textContent=label;
+  else if(days<0)element.textContent=`Closed ${label}`;
+  else if(days===0)element.textContent=`${label} · today`;
+  else if(days===1)element.textContent=`${label} · 1 day left`;
+  else element.textContent=`${label} · ${days} days left`;
 }
 
 function populateFilters(){
-  const fields=[...new Set(state.jobs.flatMap(job=>job.focus))].sort();
-  $('#focusSelect').innerHTML='<option value="all">All fields</option>'+fields.map(field=>`<option value="${esc(field)}">${esc(field)}</option>`).join('');
-  const countries=[...new Set(state.jobs.map(job=>job.country))].sort();
-  $('#countrySelect').innerHTML='<option value="all">All locations</option>'+countries.map(country=>`<option value="${esc(country)}">${esc(country)}</option>`).join('');
+  const fields=[...new Set(cards().flatMap(card=>card.dataset.focus.split('|')))].sort();
+  const countries=[...new Set(cards().map(card=>card.dataset.country))].sort();
+  for(const field of fields)$('#focusSelect').add(new Option(field,field));
+  for(const country of countries)$('#countrySelect').add(new Option(country,country));
 }
 
 function updateStats(){
-  const active=state.jobs.filter(job=>deadlineState(job)!=='expired');
-  const soon=active.filter(job=>{const days=daysLeft(job);return days!==null&&days<=30}).length;
-  const faculty=active.filter(job=>job.type==='faculty').length;
-  const regionKeys=new Set(active.map(job=>job.country));
-
+  const active=cards().filter(card=>deadlineState(card)!=='expired');
+  const soon=active.filter(card=>{const days=daysLeft(card);return days!==null&&days<=30}).length;
   $('#totalStat').textContent=active.length;
   $('#soonStat').textContent=soon;
-  $('#facultyStat').textContent=faculty;
-  $('#regionsStat').textContent=regionKeys.size;
-}
-
-async function loadJobs(){
-  try{
-    const response=await fetch('./data/jobs.json',{cache:'no-store'});
-    if(!response.ok)throw new Error(`HTTP ${response.status}`);
-    const payload=await response.json();
-    state.jobs=payload.jobs||[];
-    populateFilters();updateStats();updateSaved();
-
-    const updated=parseDate(payload.meta.lastUpdated);
+  $('#facultyStat').textContent=active.filter(card=>card.dataset.kind==='faculty').length;
+  $('#regionsStat').textContent=new Set(active.map(card=>card.dataset.country)).size;
+  const latest=active.map(card=>card.dataset.verified).sort().at(-1);
+  if(latest){
+    const updated=parseDate(latest);
     $('#updatedLabel').textContent=`Last verified ${updated.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}`;
-    const requestedType=new URLSearchParams(location.search).get('type');
-    if(typeNames[requestedType]){
-      state.type=requestedType;
-      document.querySelectorAll('.pill').forEach(pill=>pill.classList.toggle('active',pill.dataset.filter===requestedType));
-    }
-    render();
-  }catch(error){
-    console.error(error);
-    $('#resultCount').textContent='Board unavailable';
-    $('#jobGrid').innerHTML='<div class="error"><strong>We could not load the board.</strong><p>Please refresh the page or try again shortly.</p></div>';
-    $('#updatedLabel').textContent='Unable to read job data';
   }
 }
 
+function matches(card,saved,query){
+  if(deadlineState(card)==='expired')return false;
+  if(state.type!=='all'&&card.dataset.kind!==state.type)return false;
+  if(state.focus!=='all'&&!card.dataset.focus.split('|').includes(state.focus))return false;
+  if(state.country!=='all'&&card.dataset.country!==state.country)return false;
+  if(state.savedOnly&&!saved.has(card.dataset.id))return false;
+  return !query||card.dataset.search.includes(query);
+}
+
+function sortedCards(list){
+  return list.sort((a,b)=>{
+    if(state.sort==='newest')return b.dataset.verified.localeCompare(a.dataset.verified)||Number(b.dataset.featured==='true')-Number(a.dataset.featured==='true');
+    if(state.sort==='organization')return a.dataset.organization.localeCompare(b.dataset.organization);
+    const ad=a.dataset.deadline?parseDate(a.dataset.deadline).getTime():Infinity;
+    const bd=b.dataset.deadline?parseDate(b.dataset.deadline).getTime():Infinity;
+    return ad-bd||Number(b.dataset.featured==='true')-Number(a.dataset.featured==='true');
+  });
+}
+
+function updateSaved(){
+  const saved=getSaved();
+  let visibleSaved=0;
+  for(const card of cards()){
+    const isSaved=saved.has(card.dataset.id);
+    if(isSaved)visibleSaved+=1;
+    const button=card.querySelector('[data-save]');
+    button.classList.toggle('saved',isSaved);
+    button.textContent=isSaved?'★':'☆';
+    button.setAttribute('aria-label',`${isSaved?'Remove from':'Save to'} bookmarks`);
+  }
+  $('#savedCount').textContent=visibleSaved;
+  $('#savedToggle').classList.toggle('active',state.savedOnly);
+}
+
+function render(){
+  const saved=getSaved();
+  const query=state.query.trim().toLowerCase();
+  const allCards=cards();
+  const shown=sortedCards(allCards.filter(card=>matches(card,saved,query)));
+  const shownIds=new Set(shown.map(card=>card.dataset.id));
+  for(const card of allCards){card.hidden=!shownIds.has(card.dataset.id)}
+  for(const card of shown)$('#jobGrid').append(card);
+  const empty=$('#emptyState');
+  empty.hidden=shown.length>0;
+  $('#jobGrid').append(empty);
+  $('#resultCount').textContent=`${shown.length} ${shown.length===1?'opportunity':'opportunities'} shown`;
+}
+
+for(const card of cards()){
+  updateDeadline(card);
+  card.querySelector('[data-save]').addEventListener('click',()=>{
+    const saved=getSaved(),id=card.dataset.id;
+    saved.has(id)?saved.delete(id):saved.add(id);
+    saveSet(saved);updateSaved();render();
+  });
+}
+populateFilters();
+updateStats();
+updateSaved();
+
+const requestedType=new URLSearchParams(location.search).get('type');
+if(typeNames[requestedType]){
+  state.type=requestedType;
+  document.querySelectorAll('.pill').forEach(pill=>pill.classList.toggle('active',pill.dataset.filter===requestedType));
+}
 document.querySelectorAll('.pill').forEach(pill=>pill.addEventListener('click',()=>{
   state.type=pill.dataset.filter;
   document.querySelectorAll('.pill').forEach(item=>item.classList.toggle('active',item===pill));
@@ -419,10 +786,9 @@ document.querySelectorAll('.pill').forEach(pill=>pill.addEventListener('click',(
 $('#searchInput').addEventListener('input',event=>{state.query=event.target.value;render()});
 $('#focusSelect').addEventListener('change',event=>{state.focus=event.target.value;render()});
 $('#countrySelect').addEventListener('change',event=>{state.country=event.target.value;render()});
-
 $('#sortSelect').addEventListener('change',event=>{state.sort=event.target.value;render()});
 $('#savedToggle').addEventListener('click',()=>{state.savedOnly=!state.savedOnly;updateSaved();render()});
-loadJobs();
+render();
 </script>
 </body>
 </html>
