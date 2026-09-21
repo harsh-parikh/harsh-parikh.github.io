@@ -11,6 +11,7 @@
       "organization": "University of Dhaka",
       "location": "Dhaka, Bangladesh",
       "country": "Bangladesh",
+
       "type": "faculty",
       "focus": ["Statistics"],
       "deadline": "2026-09-28",
@@ -29,6 +30,7 @@
       "organization": "Columbia University · SIPA",
       "location": "New York, NY, USA",
       "country": "United States",
+
       "type": "faculty",
       "focus": ["AI", "Data Science", "Public Policy"],
       "deadline": "2026-09-30",
@@ -47,6 +49,7 @@
       "organization": "Duke University · Statistical Science",
       "location": "Durham, NC, USA",
       "country": "United States",
+
       "type": "postdoc",
       "focus": ["Statistics", "Data Science", "Teaching"],
       "deadline": "2026-10-05",
@@ -65,6 +68,7 @@
       "organization": "Duke Kunshan University",
       "location": "Kunshan, China",
       "country": "China",
+
       "type": "faculty",
       "focus": ["Data Science", "AI", "Machine Learning", "Teaching"],
       "deadline": "2026-10-12",
@@ -83,6 +87,7 @@
       "organization": "Stanford University",
       "location": "Stanford, CA, USA",
       "country": "United States",
+
       "type": "faculty",
       "focus": ["Statistics", "Probability", "Data Science"],
       "deadline": "2026-11-01",
@@ -101,6 +106,7 @@
       "organization": "National University of Singapore",
       "location": "Singapore",
       "country": "Singapore",
+
       "type": "postdoc",
       "focus": ["Statistical ML", "AI for Science", "Bayesian Methods"],
       "deadline": "2026-11-15",
@@ -119,6 +125,7 @@
       "organization": "NHS Fellowship in Clinical AI",
       "location": "United Kingdom",
       "country": "United Kingdom",
+
       "type": "fellowship",
       "focus": ["Clinical AI", "Data Science", "Health"],
       "deadline": "2026-11-16",
@@ -137,6 +144,7 @@
       "organization": "Academia Sinica · Statistical Science",
       "location": "Taipei, Taiwan",
       "country": "Taiwan",
+
       "type": "faculty",
       "focus": ["Statistics", "Data Science", "AI"],
       "deadline": "2026-12-01",
@@ -155,6 +163,7 @@
       "organization": "University of California, Irvine",
       "location": "Irvine, CA, USA",
       "country": "United States",
+
       "type": "faculty",
       "focus": ["AI", "Machine Learning", "Trustworthy AI"],
       "deadline": "2026-12-01",
@@ -173,6 +182,7 @@
       "organization": "Cancer Research Institute",
       "location": "Host institution · worldwide",
       "country": "Worldwide",
+
       "type": "fellowship",
       "focus": ["Data Science", "Computational Biology", "Genomics"],
       "deadline": "2027-03-01",
@@ -191,6 +201,7 @@
       "organization": "National University of Singapore · Statistics & Data Science",
       "location": "Singapore",
       "country": "Singapore",
+
       "type": "faculty",
       "focus": ["Statistics", "Data Science", "Machine Learning", "AI"],
       "deadline": "2027-03-31",
@@ -209,6 +220,7 @@
       "organization": "Harvard University · Statistics",
       "location": "Cambridge, MA, USA",
       "country": "United States",
+
       "type": "faculty",
       "focus": ["Statistics", "AI", "Trustworthy AI"],
       "deadline": null,
@@ -227,6 +239,7 @@
       "organization": "University of Massachusetts Lowell",
       "location": "Lowell, MA, USA",
       "country": "United States",
+
       "type": "faculty",
       "focus": ["AI", "Foundation Models", "Trustworthy AI"],
       "deadline": null,
@@ -245,6 +258,7 @@
       "organization": "Texas A&M University · ECE",
       "location": "College Station, TX, USA",
       "country": "United States",
+
       "type": "faculty",
       "focus": ["AI", "Machine Learning", "Robotics"],
       "deadline": null,
@@ -263,6 +277,7 @@
       "organization": "OpenAI",
       "location": "San Francisco, CA, USA",
       "country": "United States",
+
       "type": "industry",
       "focus": ["Machine Learning", "AI Research"],
       "deadline": null,
@@ -281,6 +296,7 @@
       "organization": "OpenAI",
       "location": "Seattle, WA, USA",
       "country": "United States",
+
       "type": "industry",
       "focus": ["Statistics", "Causal Inference", "Experimentation"],
       "deadline": null,
@@ -299,6 +315,7 @@
       "organization": "Anthropic",
       "location": "San Francisco, CA, USA",
       "country": "United States",
+
       "type": "industry",
       "focus": ["Interpretability", "AI Safety", "Machine Learning"],
       "deadline": null,
@@ -317,6 +334,7 @@
       "organization": "Anthropic",
       "location": "United States / Canada / United Kingdom",
       "country": "Multiple regions",
+
       "type": "fellowship",
       "focus": ["AI Safety", "ML Systems", "Reinforcement Learning"],
       "deadline": null,

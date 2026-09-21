@@ -17,6 +17,7 @@ REQUIRED = {
     "organization",
     "location",
     "country",
+
     "type",
     "focus",
     "deadline",
