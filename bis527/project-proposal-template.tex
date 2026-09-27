@@ -1,0 +1,58 @@
+% BIS 527 project proposal. This file compiles without additional files.
+% Replace every bracketed prompt; delete the prompts before submission.
+% Keep the complete proposal, including references, to 1--2 pages.
+% Upload the compiled PDF using the current Canvas assignment instructions.
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=0.85in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}
+\usepackage{microtype,booktabs,tabularx,xcolor,enumitem,hyperref}
+\hypersetup{colorlinks=true,urlcolor=blue!50!black,pdftitle={BIS 527 Project Proposal}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\newcommand{\prompt}[1]{{\color{black!55}\itshape[#1]}}
+\newcommand{\proposalheading}[1]{\par\medskip{\large\bfseries #1}\par\smallskip}
+\newcommand{\projecttitle}{Your project title}
+\newcommand{\teamname}{Your team name}
+\newcommand{\teammembers}{Names and NetIDs of all team members}
+\begin{document}
+{\small BIS 527: Introduction to Health Data Science \hfill Fall 2026}\\[5pt]
+{\Large\bfseries Project proposal: \projecttitle}\\[4pt]
+\textbf{Team name:} \teamname\\
+\textbf{Team members:} \teammembers\\
+\textbf{Due:} Tuesday, September 29, 2026, 11:59 p.m. Eastern
+
+\textit{Write 1--2 pages in total. A clear, feasible question and a tentative plan are sufficient; completed results are not expected. Replace the prompts below with your proposal.}
+
+\proposalheading{1. Question and motivation}
+\prompt{State a feasible health or public-health question and why it matters. Specify the population and what you would like to describe, predict, compare, or estimate.}
+
+\proposalheading{2. Dataset and access}
+\prompt{Name the dataset and provider. Describe what one record represents, the population, period, approximate size if known, and variables needed. State whether you have access, how you will obtain it, and any access conditions. If access is uncertain, give an alternative.}
+
+\textbf{Source or citation:} \prompt{Dataset title, provider, version/year, URL. Use \texttt{\string\url\{https://...\}} for a long link.}
+
+\proposalheading{3. Tentative analysis plan}
+\prompt{Outline data preparation, a simple baseline, possible methods, and how you will check or evaluate results. Explain how this addresses your question and what the analysis could establish. The plan may change as you learn more.}
+
+\proposalheading{4. Work plan and timeline}
+\prompt{Give tentative dates, responsibilities, and outputs. Use current course milestones on Canvas; adapt the rows below.}
+
+\smallskip
+\begin{tabularx}{\textwidth}{@{}p{0.16\textwidth}Xp{0.21\textwidth}@{}}
+\toprule
+Target date & Milestone and expected output & Team responsibility \\
+\midrule
+\prompt{Date} & Confirm access; inspect data and refine the question & \prompt{Name(s)} \\
+\prompt{Date} & Prepare data and complete a baseline analysis & \prompt{Name(s)} \\
+\prompt{Date} & Evaluate the analysis and prepare the mid-point check-in & \prompt{Name(s)} \\
+\prompt{Date} & Revise findings; prepare the poster and final report & \prompt{Name(s)} \\
+\bottomrule
+\end{tabularx}
+
+\proposalheading{5. Main uncertainty and next step}
+\prompt{Identify the main uncertainty, such as access, missing variables, or an assumption. State how you will investigate it and your first step after submission.}
+
+\smallskip
+{\small\textbf{Sources and assistance.} \prompt{Cite sources used to develop the proposal. If AI or other assistance was used, state the tool/person, what it did, what you checked, and what remains unchecked; otherwise write ``None.''}}
+\end{document}
