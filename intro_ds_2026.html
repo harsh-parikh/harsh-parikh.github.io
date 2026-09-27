@@ -170,6 +170,7 @@ h4.sub-label { font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 
 .date-list .when { color: var(--text-muted); text-align: right; }
 .date-list .when strong { color: var(--accent); font-weight: 600; }
 .date-list li.is-past .when strong, .date-list li.is-past .what { color: var(--text-dim); }
+.planned-tag { display: inline-block; margin-left: 4px; font-size: 0.75rem; font-weight: 600; font-style: normal; letter-spacing: 0.05em; text-transform: uppercase; color: var(--accent); border: 1px solid currentColor; border-radius: 999px; padding: 0 7px; vertical-align: 1px; white-space: nowrap; }
 .past-tag { display: inline-block; margin-left: 8px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-dim); border: 1px solid var(--border); border-radius: 999px; padding: 0 7px; }
 
 /* Textbook card */
@@ -508,7 +509,7 @@ html.light .chat-msg.user { background: rgba(29,78,216,0.08); border-color: rgba
       <h3 class="card-label">Next class</h3>
       <div id="next-class">
         <p class="next-when"><strong>Tue, Sep 29</strong> &middot; 3:00&ndash;4:20pm &middot; Lecture 8</p>
-        <p class="next-topic tba">Topic posted after class</p>
+        <p class="next-topic">Analysis of the Longest Common Subsequence Algorithm <span class="planned-tag">Planned</span></p>
         <p class="next-link"><a href="#lec-8">See it in the lecture calendar</a></p>
       </div>
       <p class="fine">Winslow Auditorium, LEPH 109, 60 College St. Bring your name card; every class has a short paper quiz.</p>
@@ -627,7 +628,7 @@ html.light .chat-msg.user { background: rgba(29,78,216,0.08); border-color: rgba
   <div class="card flat" id="calendar" style="padding:0;overflow:hidden;margin-bottom:24px">
     <div class="cal-intro">
       <h3 class="card-label" style="margin-bottom:6px">Lecture Calendar</h3>
-      <p>26 lectures, Thu Sep 3 to Thu Dec 10, following the <a href="https://registrar.yale.edu/academic-calendars" target="_blank" rel="noopener">Yale academic calendar</a>. Each row lists the class topic, its reading, its scribe notes, and what is due. Topics are filled in after each class; the <a href="#plan">planned topic sequence</a> is below.</p>
+      <p>26 lectures, Thu Sep 3 to Thu Dec 10, following the <a href="https://registrar.yale.edu/academic-calendars" target="_blank" rel="noopener">Yale academic calendar</a>. Each row lists the class topic, its reading, its scribe notes, and what is due. Topics are confirmed after each class, and a topic marked <span class="planned-tag">Planned</span> has not been taught yet. The <a href="#plan">planned topic sequence</a> for the term is below.</p>
       <p>Reading links open the free PDF at the first page of the section. Deadlines are set on <a href="https://yale.instructure.com/courses/122186/assignments" target="_blank" rel="noopener">Canvas</a>; where this page and Canvas disagree, Canvas is right.</p>
     </div>
     <table class="cal" role="table">
@@ -681,15 +682,15 @@ html.light .chat-msg.user { background: rgba(29,78,216,0.08); border-color: rgba
         </tr>
         <tr role="row" id="lec-7" data-start="2026-09-24T15:00-04:00">
           <th scope="row" role="rowheader"><span class="when-date"><time datetime="2026-09-24T15:00-04:00">Thu, Sep 24</time></span><span class="when-lec">Lecture 7</span></th>
-          <td role="cell" class="topic">Dynamic Programming: Longest Common Subsequences of DNA</td>
+          <td role="cell" class="topic">Dynamic Programming: Designing a Longest Common Subsequence Algorithm, With and Without Memoization</td>
           <td role="cell" class="reading"><span class="cell-label" aria-hidden="true">Reading</span><ul class="cell-list"><li><a href="https://mcube.lab.nycu.edu.tw/~cfung/docs/books/cormen2001algorithms.pdf#page=361" target="_blank" rel="noopener">CLRS &sect;15.3</a>: elements of dynamic programming</li><li><a href="https://mcube.lab.nycu.edu.tw/~cfung/docs/books/cormen2001algorithms.pdf#page=372" target="_blank" rel="noopener">CLRS &sect;15.4</a>: longest common subsequence</li></ul></td>
           <td role="cell" class="scribe"><span class="cell-label" aria-hidden="true">Scribe notes</span><span class="status">Posted after grading</span></td>
           <td role="cell" class="due"><span class="cell-label" aria-hidden="true">Due and announcements</span><ul class="cell-list"><li data-due="2026-09-26T23:59-04:00" data-coming="HW 1 due" data-when="Sat Sep 26, 11:59pm" data-href="https://yale.instructure.com/courses/122186/assignments/603775"><strong>HW&nbsp;1 due</strong> <a href="https://yale.instructure.com/courses/122186/assignments/603775" target="_blank" rel="noopener">Sat Sep 26, 11:59pm</a></li></ul></td>
         </tr>
         <tr role="row" id="lec-8" data-start="2026-09-29T15:00-04:00">
           <th scope="row" role="rowheader"><span class="when-date"><time datetime="2026-09-29T15:00-04:00">Tue, Sep 29</time></span><span class="when-lec">Lecture 8</span></th>
-          <td role="cell" class="topic tba">Topic posted after class</td>
-          <td role="cell" class="reading"></td>
+          <td role="cell" class="topic">Analysis of the Longest Common Subsequence Algorithm <span class="planned-tag">Planned</span></td>
+          <td role="cell" class="reading"><span class="cell-label" aria-hidden="true">Reading</span><ul class="cell-list"><li><a href="https://mcube.lab.nycu.edu.tw/~cfung/docs/books/cormen2001algorithms.pdf#page=375" target="_blank" rel="noopener">CLRS &sect;15.4, Step 3 on</a>: running time and space of the table</li><li><a href="https://mcube.lab.nycu.edu.tw/~cfung/docs/books/cormen2001algorithms.pdf#page=366" target="_blank" rel="noopener">CLRS &sect;15.3</a>: overlapping subproblems and memoization</li><li><a href="https://jeffe.cs.illinois.edu/teaching/algorithms/book/03-dynprog.pdf#page=2" target="_blank" rel="noopener">Erickson &sect;3.1</a>: why plain recursion is slow, and memoization</li></ul></td>
           <td role="cell" class="scribe"><span class="cell-label" aria-hidden="true">Scribe notes</span><ul class="cell-list"><li data-due="2026-09-30T23:59-04:00">Due <a href="https://yale.instructure.com/courses/122186/assignments/603801" target="_blank" rel="noopener">Wed Sep 30, 11:59pm</a></li></ul></td>
           <td role="cell" class="due"><span class="cell-label" aria-hidden="true">Due and announcements</span><ul class="cell-list"><li data-due="2026-09-29T23:59-04:00" data-coming="Project proposal due" data-when="Tue Sep 29, 11:59pm" data-href="https://yale.instructure.com/courses/122186/announcements/862110"><strong>Project proposal due Tue Sep 29, 11:59pm</strong>: 1&ndash;2 pages, <a href="bis527/project-proposal-template.tex">template .tex</a> &middot; <a href="bis527/project-proposal-template.pdf">.pdf</a> &middot; <a href="https://yale.instructure.com/courses/122186/announcements/862110" target="_blank" rel="noopener">details on Canvas</a></li></ul></td>
         </tr>
@@ -1156,7 +1157,7 @@ function renderComingUp() {
       var topicCell = row.querySelector('td.topic');
       var topic = document.createElement('p');
       topic.className = 'next-topic' + (topicCell.classList.contains('tba') ? ' tba' : '');
-      topic.textContent = topicCell.textContent;
+      topic.innerHTML = topicCell.innerHTML;
       box.appendChild(topic);
       var reading = row.querySelector('td.reading .cell-list');
       if (reading) {
@@ -1431,7 +1432,7 @@ document.addEventListener('DOMContentLoaded', function () {
       weak: ['lecture','lectures','topic','topics','covered','cover'],
       phrases: ['weekly schedule','lecture topics','what do we cover each week','class schedule','full schedule','covered so far','cover so far','what did we cover','what have we covered','what we covered','what was covered'],
       section: '#schedule', title: 'Lecture schedule',
-      answer: '<p>26 lectures, Tue/Thu, from <strong>Thu Sep 3</strong> to <strong>Thu Dec 10</strong>. No class Oct 22 (October recess) or Nov 24 and Nov 26 (November recess). Covered so far: Lec 1 What is Data Science?; Lec 2 algorithmic thinking, recursion, and bubble sort; Lec 3 merge sort; Lec 4 computational complexity (O, &Omega;, &Theta;); Lec 5 graphs and breadth-first search; Lec 6 analysis of breadth-first search; Lec 7 dynamic programming through longest common subsequences. Later topics are posted after each class. Each lecture&rsquo;s reading and scribe notes are in the <a href="#calendar">lecture calendar</a>; ask me about a lecture by number, for example &ldquo;Lecture 6&rdquo;.</p><p>Planned sequence: course intro; algorithms, sorting &amp; complexity; trees &amp; graphs; dynamic programming; statistical learning; linear methods; nonparametric methods; neural networks; clustering; potential outcomes &amp; DAGs; matching &amp; weighting; project presentations &amp; data equity. See the <a href="#plan">planned topic sequence</a>.</p>'
+      answer: '<p>26 lectures, Tue/Thu, from <strong>Thu Sep 3</strong> to <strong>Thu Dec 10</strong>. No class Oct 22 (October recess) or Nov 24 and Nov 26 (November recess). Covered so far: Lec 1 What is Data Science?; Lec 2 algorithmic thinking, recursion, and bubble sort; Lec 3 merge sort; Lec 4 computational complexity (O, &Omega;, &Theta;); Lec 5 graphs and breadth-first search; Lec 6 analysis of breadth-first search; Lec 7 designing a dynamic programming algorithm for the longest common subsequence, with and without memoization. Planned for Lec 8 (Tue Sep 29): analysis of that algorithm. Later topics are posted after each class. Each lecture&rsquo;s reading and scribe notes are in the <a href="#calendar">lecture calendar</a>; ask me about a lecture by number, for example &ldquo;Lecture 6&rdquo;.</p><p>Planned sequence: course intro; algorithms, sorting &amp; complexity; trees &amp; graphs; dynamic programming; statistical learning; linear methods; nonparametric methods; neural networks; clustering; potential outcomes &amp; DAGs; matching &amp; weighting; project presentations &amp; data equity. See the <a href="#plan">planned topic sequence</a>.</p>'
     },
     {
       id: 'grade-weights',
