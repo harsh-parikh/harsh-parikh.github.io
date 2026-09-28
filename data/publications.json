@@ -1,8 +1,8 @@
 {
   "scholar_id": "uCrw1ZMAAAAJ",
   "author": "Harsh Parikh",
-  "fetched_at": "2026-08-24T06:34:43.697250+00:00",
-  "count": 46,
+  "fetched_at": "2026-09-28T12:18:35.917110+00:00",
+  "count": 48,
   "publications": [
     {
       "title": "Demystifying prediction powered inference",
@@ -15,7 +15,7 @@
       ],
       "venue": "arXiv preprint arXiv:2601.20819",
       "year": "2026",
-      "citations": 14,
+      "citations": 17,
       "url": "https://arxiv.org/abs/2601.20819",
       "scholar_id": "uCrw1ZMAAAAJ:ldfaerwXgEUC",
       "note": "co-senior/corresponding author"
@@ -54,7 +54,7 @@
       ],
       "venue": "JAMA Health Forum",
       "year": "2026",
-      "citations": 5,
+      "citations": 7,
       "url": "https://jamanetwork.com/journals/jama-health-forum/fullarticle/2843724",
       "scholar_id": "uCrw1ZMAAAAJ:70eg2SAEIzsC"
     },
@@ -81,16 +81,23 @@
       ]
     },
     {
-      "title": "Why are there many equally good models? An Anatomy of the Rashomon Effect",
-      "authors_raw": "Harsh Parikh",
+      "title": "The case for an integrated biobanking initiative in South Asia",
+      "authors_raw": "M Salvatore, Y Wang, P Syal, B Wahl, H Parikh, V Deo, NK Bhatraju, ...",
       "authors": [
-        "Harsh Parikh"
+        "M Salvatore",
+        "Y Wang",
+        "P Syal",
+        "B Wahl",
+        "H Parikh",
+        "V Deo",
+        "NK Bhatraju",
+        "..."
       ],
-      "venue": "arXiv preprint arXiv:2601.06730",
+      "venue": "The Lancet Regional Health-Southeast Asia 49",
       "year": "2026",
-      "citations": 2,
-      "url": "https://arxiv.org/abs/2601.06730",
-      "scholar_id": "uCrw1ZMAAAAJ:2P1L_qKh6hAC"
+      "citations": 3,
+      "url": "",
+      "scholar_id": "uCrw1ZMAAAAJ:fPk4N6BV_jEC"
     },
     {
       "title": "Precision mental health: predicting heterogeneous treatment effects for depression through data integration",
@@ -110,6 +117,20 @@
       "scholar_id": "uCrw1ZMAAAAJ:O3NaXMp0MMsC"
     },
     {
+      "title": "Data (in) equities in data science: Dissecting systemic and systematic biases in pulse oximetry",
+      "authors_raw": "L Rountree, H Parikh, B Mukherjee",
+      "authors": [
+        "L Rountree",
+        "H Parikh",
+        "B Mukherjee"
+      ],
+      "venue": "arXiv preprint arXiv:2604.18291",
+      "year": "2026",
+      "citations": 1,
+      "url": "",
+      "scholar_id": "uCrw1ZMAAAAJ:zA6iFVUQeVQC"
+    },
+    {
       "title": "Lasting Income Costs of Mental and Physical Illness",
       "authors_raw": "EK Johnson, H Parikh, CK Ettman, G Ge, L Sopina, AY Chang",
       "authors": [
@@ -125,6 +146,54 @@
       "citations": 1,
       "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:ZHo1McVdvXMC"
+    },
+    {
+      "title": "Why are there many equally good models? An Anatomy of the Rashomon Effect",
+      "authors_raw": "Harsh Parikh",
+      "authors": [
+        "Harsh Parikh"
+      ],
+      "venue": "arXiv preprint arXiv:2601.06730",
+      "year": "2026",
+      "citations": 1,
+      "url": "https://arxiv.org/abs/2601.06730",
+      "scholar_id": "uCrw1ZMAAAAJ:2P1L_qKh6hAC"
+    },
+    {
+      "title": "CICADAS: A simulation-based framework for randomized trial emulation in critical-care seizure treatment",
+      "authors_raw": "M McCauley, TM Westover, P Wynn, S Sartipi, N Turley, Z Akras, P Colin, ...",
+      "authors": [
+        "M McCauley",
+        "TM Westover",
+        "P Wynn",
+        "S Sartipi",
+        "N Turley",
+        "Z Akras",
+        "P Colin",
+        "..."
+      ],
+      "venue": "Intelligence-Based Medicine 16, 100481",
+      "year": "2026",
+      "citations": 0,
+      "url": "",
+      "scholar_id": "uCrw1ZMAAAAJ:f2IySw72cVMC"
+    },
+    {
+      "title": "The epidemiology of artificial intelligence",
+      "authors_raw": "H Parikh, T McCormick, E Johnson, L Hickey, M Ranney, B Mukherjee",
+      "authors": [
+        "H Parikh",
+        "T McCormick",
+        "E Johnson",
+        "L Hickey",
+        "M Ranney",
+        "B Mukherjee"
+      ],
+      "venue": "arXiv preprint arXiv:2604.14086",
+      "year": "2026",
+      "citations": 0,
+      "url": "",
+      "scholar_id": "uCrw1ZMAAAAJ:rO6llkc54NcC"
     },
     {
       "title": "Frailty and low utilization of curative-intent surgical resection in non-metastatic pancreatic cancer",
@@ -162,25 +231,6 @@
       "scholar_id": "uCrw1ZMAAAAJ:dfsIfKJdRG4C"
     },
     {
-      "title": "The case for an integrated biobanking initiative in South Asia",
-      "authors_raw": "M Salvatore, Y Wang, P Syal, B Wahl, H Parikh, V Deo, NK Bhatraju, ...",
-      "authors": [
-        "M Salvatore",
-        "Y Wang",
-        "P Syal",
-        "B Wahl",
-        "H Parikh",
-        "V Deo",
-        "NK Bhatraju",
-        "..."
-      ],
-      "venue": "The Lancet Regional Health-Southeast Asia 49",
-      "year": "2026",
-      "citations": 0,
-      "url": "",
-      "scholar_id": "uCrw1ZMAAAAJ:fPk4N6BV_jEC"
-    },
-    {
       "title": "The Experienced Burden of Disease In Denmark: A Comparison of the Economic and Social Effects of 15 Chronic Diseases",
       "authors_raw": "E Johnson, C Ettman, H Parikh, L Sopina, G Ge, A Chang",
       "authors": [
@@ -211,37 +261,6 @@
       "citations": 0,
       "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:u_35RYKgDlwC"
-    },
-    {
-      "title": "Data (in) equities in data science: Dissecting systemic and systematic biases in pulse oximetry",
-      "authors_raw": "L Rountree, H Parikh, B Mukherjee",
-      "authors": [
-        "L Rountree",
-        "H Parikh",
-        "B Mukherjee"
-      ],
-      "venue": "arXiv preprint arXiv:2604.18291",
-      "year": "2026",
-      "citations": 0,
-      "url": "",
-      "scholar_id": "uCrw1ZMAAAAJ:zA6iFVUQeVQC"
-    },
-    {
-      "title": "The Epidemiology of Artificial Intelligence",
-      "authors_raw": "H Parikh, T McCormick, E Johnson, L Hickey, M Ranney, B Mukherjee",
-      "authors": [
-        "H Parikh",
-        "T McCormick",
-        "E Johnson",
-        "L Hickey",
-        "M Ranney",
-        "B Mukherjee"
-      ],
-      "venue": "arXiv preprint arXiv:2604.14086",
-      "year": "2026",
-      "citations": 0,
-      "url": "",
-      "scholar_id": "uCrw1ZMAAAAJ:rO6llkc54NcC"
     },
     {
       "title": "When Does Agroforestry Income Reduce Deforestation? Evidence from a Natural Experiment in Madagascar",
@@ -306,21 +325,6 @@
       "scholar_id": "uCrw1ZMAAAAJ:mB3voiENLucC"
     },
     {
-      "title": "Data fusion for partial identification of causal effects",
-      "authors_raw": "Quinn Lanners and Cynthia Rudin and Alexander Volfovsky and Harsh Parikh",
-      "authors": [
-        "Quinn Lanners",
-        "Cynthia Rudin",
-        "Alexander Volfovsky",
-        "Harsh Parikh"
-      ],
-      "venue": "Advances in Neural Information Processing Systems (NeurIPS)",
-      "year": "2025",
-      "citations": 6,
-      "url": "https://arxiv.org/abs/2505.24296",
-      "scholar_id": "uCrw1ZMAAAAJ:BqipwSGYUEgC"
-    },
-    {
       "title": "Towards enhancing data equity in public health data science",
       "authors_raw": "Yiran Wang and Alicia E Boyd and Lillian Rountree and Yi Ren and Kate Nyhan and Ruchit Nagar and Jackson Higginbottom and Megan L Ranney and Harsh Parikh and Bhramar Mukherjee",
       "authors": [
@@ -337,9 +341,40 @@
       ],
       "venue": "arXiv preprint arXiv:2508.20301",
       "year": "2025",
-      "citations": 6,
+      "citations": 7,
       "url": "https://arxiv.org/abs/2508.20301",
       "scholar_id": "uCrw1ZMAAAAJ:35N4QoGY0k4C"
+    },
+    {
+      "title": "Graph Machine Learning based Doubly Robust Estimator for Network Causal Effects",
+      "authors_raw": "Seyedeh Baharan Khatami and Harsh Parikh and Haowei Chen and Sudeepa Roy and Babak Salimi",
+      "authors": [
+        "Seyedeh Baharan Khatami",
+        "Harsh Parikh",
+        "Haowei Chen",
+        "Sudeepa Roy",
+        "Babak Salimi"
+      ],
+      "venue": "International Conference on Artificial Intelligence and Statistics (AISTATS)",
+      "year": "2025",
+      "citations": 7,
+      "url": "",
+      "scholar_id": "uCrw1ZMAAAAJ:R3hNpaxXUhUC"
+    },
+    {
+      "title": "Data fusion for partial identification of causal effects",
+      "authors_raw": "Quinn Lanners and Cynthia Rudin and Alexander Volfovsky and Harsh Parikh",
+      "authors": [
+        "Quinn Lanners",
+        "Cynthia Rudin",
+        "Alexander Volfovsky",
+        "Harsh Parikh"
+      ],
+      "venue": "Advances in Neural Information Processing Systems (NeurIPS)",
+      "year": "2025",
+      "citations": 6,
+      "url": "https://arxiv.org/abs/2505.24296",
+      "scholar_id": "uCrw1ZMAAAAJ:BqipwSGYUEgC"
     },
     {
       "title": "Sudeepa Roy, Cynthia Rudin, and Alexander Volfovsky",
@@ -354,22 +389,6 @@
       "citations": 5,
       "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:cFHS6HbyZ2cC"
-    },
-    {
-      "title": "Graph Machine Learning based Doubly Robust Estimator for Network Causal Effects",
-      "authors_raw": "Seyedeh Baharan Khatami and Harsh Parikh and Haowei Chen and Sudeepa Roy and Babak Salimi",
-      "authors": [
-        "Seyedeh Baharan Khatami",
-        "Harsh Parikh",
-        "Haowei Chen",
-        "Sudeepa Roy",
-        "Babak Salimi"
-      ],
-      "venue": "International Conference on Artificial Intelligence and Statistics (AISTATS)",
-      "year": "2025",
-      "citations": 5,
-      "url": "",
-      "scholar_id": "uCrw1ZMAAAAJ:R3hNpaxXUhUC"
     },
     {
       "title": "A cautionary tale on integrating studies with disparate outcome measures for causal inference",
@@ -420,6 +439,20 @@
       "scholar_id": "uCrw1ZMAAAAJ:hMod-77fHWUC"
     },
     {
+      "title": "Forest Conservation via Agroforestry: Causal Evidence from Vanilla Cultivation in Madagascar",
+      "authors_raw": "C DeSisto, H Parikh, R Rasolofoson",
+      "authors": [
+        "C DeSisto",
+        "H Parikh",
+        "R Rasolofoson"
+      ],
+      "venue": "AGU25",
+      "year": "2025",
+      "citations": 0,
+      "url": "",
+      "scholar_id": "uCrw1ZMAAAAJ:pyW8ca7W8N0C"
+    },
+    {
       "title": "Representativeness and Generalizability of NCI-Funded Multi-Modality Randomized Clinical Trials (RCTs): A Case Study of Locally-Advanced Non-Small Cell Lung Cancer (LA-NSCLC …",
       "authors_raw": "CFPM de Sousa and Harsh Parikh and JD Bradley and Elizabeth Stuart and C Hu",
       "authors": [
@@ -446,7 +479,7 @@
       ],
       "venue": "International Conference on Artificial Intelligence and Statistics (AISTATS)",
       "year": "2024",
-      "citations": 15,
+      "citations": 16,
       "url": "https://proceedings.mlr.press/v238/katta24a.html",
       "scholar_id": "uCrw1ZMAAAAJ:hFOr9nPyWt4C"
     },
@@ -477,7 +510,7 @@
       ],
       "venue": "International Conference on Artificial Intelligence and Statistics (AISTATS)",
       "year": "2024",
-      "citations": 5,
+      "citations": 6,
       "url": "https://proceedings.mlr.press/v238/parikh24a.html",
       "scholar_id": "uCrw1ZMAAAAJ:e5wmG9Sq2KIC",
       "note": "co-first author",
@@ -501,7 +534,7 @@
       ],
       "venue": "Annals of Clinical and Translational Neurology",
       "year": "2024",
-      "citations": 4,
+      "citations": 5,
       "url": "https://onlinelibrary.wiley.com/doi/abs/10.1002/acn3.52059",
       "scholar_id": "uCrw1ZMAAAAJ:hC7cP41nSMkC"
     },
@@ -524,7 +557,7 @@
       ],
       "venue": "The Lancet Digital Health",
       "year": "2023",
-      "citations": 38,
+      "citations": 39,
       "url": "https://www.thelancet.com/journals/landig/article/PIIS2589-7500(23)00088-2/fulltext",
       "scholar_id": "uCrw1ZMAAAAJ:9ZlFYXVOiuMC",
       "note": "co-first author",
@@ -585,7 +618,7 @@
       ],
       "venue": "International Conference on Machine Learning (ICML)",
       "year": "2022",
-      "citations": 86,
+      "citations": 88,
       "url": "https://proceedings.mlr.press/v162/parikh22a.html",
       "scholar_id": "uCrw1ZMAAAAJ:5nxA0vEk-isC"
     },
@@ -651,7 +684,7 @@
       ],
       "venue": "Proceedings of the 2020 ACM SIGMOD international conference on management of …",
       "year": "2020",
-      "citations": 70,
+      "citations": 71,
       "url": "https://dl.acm.org/doi/abs/10.1145/3318464.3389759",
       "scholar_id": "uCrw1ZMAAAAJ:LkGwnXOMwfcC"
     },
