@@ -12,7 +12,7 @@ Strategy:
   3. Merge with the previous publications.json so manual annotations
      (`note`, `co_first`, curated `venue`/`url`) survive across runs.
   4. Apply data/overrides.json (curated metadata, additions, exclusions).
-  5. Refresh the CV's embedded copy of the publication data.
+  5. Render the CV's publications as static HTML.
 
 Designed to run locally and in GitHub Actions on a schedule.
 """
@@ -233,15 +233,37 @@ def merge(scholar_pubs: list[dict], previous: dict, overrides: dict) -> list[dic
 
 
 def sync_cv(data: dict) -> None:
-    """Keep the static CV usable without a client-side network request."""
+    """Render publications at update time, so the CV also works without JavaScript."""
     with open(CV_FILE, encoding="utf-8") as f:
         html = f.read()
-    safe_json = json.dumps(data, ensure_ascii=False).replace("<", "\\u003c")
-    pattern = r"var DATA = [^\n]*;"
-    replacement = "var DATA = " + safe_json + ";"
+    escape = html_lib.escape
+    pubs = sorted(data["publications"], key=lambda p: (-int(p.get("year") or 0), -p.get("citations", 0)))
+    rows = ['  <!-- PUBLICATIONS:START -->', '  <div id="scholar-pub-list">']
+    for i, pub in enumerate(pubs):
+        authors = []
+        co_first = {normalize_author(name) for name in pub.get("co_first", [])}
+        for name in pub.get("authors", []):
+            author = escape(name)
+            if is_me(name):
+                author = f'<span class="pub-me">{author}</span>'
+            if normalize_author(name) in co_first:
+                author += '<sup>*</sup>'
+            authors.append(author)
+        title = escape(pub["title"])
+        if pub.get("url"):
+            title = f'<a href="{escape(pub["url"], quote=True)}">{title}</a>'
+        venue = f'. <span class="pub-venue">{escape(pub["venue"])}</span>' if pub.get("venue") else ''
+        year = f', {escape(str(pub["year"]))}' if pub.get("year") else ''
+        note = f' <span class="pub-note">{escape(pub["note"])}</span>' if pub.get("note") else ''
+        rows.append(f'    <div class="pub-entry" data-num="{len(pubs) - i}.">{", ".join(authors)}. {title}{venue}{year}{note}</div>')
+    rows.append('  </div>')
+    rows.append('  <p class="pub-meta">* Equal contribution. Publication status is noted where a paper is accepted or provisionally accepted.</p>')
+    rows.append('  <!-- PUBLICATIONS:END -->')
+    pattern = r"  <!-- PUBLICATIONS:START -->[\s\S]*?  <!-- PUBLICATIONS:END -->"
+    replacement = "\n".join(rows)
     updated, count = re.subn(pattern, lambda _: replacement, html, count=1)
     if count != 1:
-        raise ValueError("Could not locate embedded publication data in cv.html")
+        raise ValueError("Could not locate publication markers in cv.html")
     with open(CV_FILE, "w", encoding="utf-8") as f:
         f.write(updated)
 

@@ -1,0 +1,124 @@
+p,h1,h2,h3{margin:0}
+
+/* LAYOUT */
+.cv-container{max-width:var(--max-w);margin:0 auto;padding:100px 40px 80px}
+@media(max-width:768px){.cv-container{padding:80px 24px 60px}}
+
+/* HEADER */
+.cv-header{margin-bottom:56px;padding-bottom:32px;border-bottom:1px solid var(--border)}
+.cv-header h1{font-family:var(--serif);font-size:clamp(32px,5vw,44px);font-weight:400;color:var(--text-bright);letter-spacing:-0.5px;margin-bottom:8px}
+.cv-header .subtitle{font-size:15px;color:var(--text);margin-bottom:16px;line-height:1.6}
+.cv-header .links-row{display:flex;flex-wrap:wrap;gap:16px}
+.cv-header .links-row a{font-family:var(--mono);font-size:12px;color:var(--text-dim);padding:6px 14px;border:1px solid var(--border);border-radius:5px;transition:all 0.2s}
+.cv-header .links-row a:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 30%,transparent);background:var(--accent-glow)}
+
+/* SECTIONS */
+.cv-section{margin-bottom:52px}
+.cv-section-title{font-family:var(--mono);font-size:11px;font-weight:300;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:24px;padding-bottom:10px;border-bottom:1px solid var(--border);opacity:0.85}
+
+/* ENTRY (positions, education, etc.) */
+.cv-entry{display:grid;grid-template-columns:140px 1fr;gap:16px;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid color-mix(in srgb,var(--text) 3%,transparent)}
+.cv-entry:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+@media(max-width:600px){.cv-entry{grid-template-columns:1fr;gap:4px}}
+.cv-date{font-family:var(--mono);font-size:12px;color:var(--text-dim);padding-top:2px;white-space:nowrap}
+.cv-details h3{font-size:15px;font-weight:500;color:var(--text-bright);margin-bottom:2px;line-height:1.4}
+.cv-details .cv-org{font-size:13px;color:var(--text);margin-bottom:2px}
+.cv-details .cv-note{font-size:13px;color:var(--text-dim);font-style:italic;line-height:1.6}
+.cv-details .cv-desc{font-size:13px;color:var(--text-dim);line-height:1.6;margin-top:4px}
+
+/* PUBLICATIONS */
+.pub-entry{margin-bottom:18px;padding-left:20px;position:relative;font-size:14px;line-height:1.7;color:var(--text)}
+.pub-entry::before{content:attr(data-num);position:absolute;left:0;top:0;font-family:var(--mono);font-size:11px;color:var(--text-dim)}
+.pub-entry .pub-me{color:var(--accent);font-weight:500}
+.pub-entry .pub-venue{font-style:italic}
+.pub-entry .pub-note{font-family:var(--mono);font-size:10px;color:var(--accent);background:var(--accent-dim);padding:2px 7px;border-radius:3px;margin-left:4px;white-space:nowrap}
+
+/* AWARDS */
+.award-entry{display:grid;grid-template-columns:60px 1fr;gap:12px;margin-bottom:10px;font-size:14px}
+@media(max-width:600px){.award-entry{grid-template-columns:1fr;gap:2px}}
+.award-entry .award-year{font-family:var(--mono);font-size:12px;color:var(--text-dim)}
+.award-entry .award-text{color:var(--text)}
+
+/* TALKS — compact list */
+.talk-group{margin-bottom:24px}
+.talk-group h3{font-size:14px;font-weight:500;color:var(--text-bright);margin-bottom:6px;line-height:1.5}
+.talk-group .talk-venues{font-size:13px;color:var(--text-dim);line-height:1.7}
+
+/* SERVICE */
+.service-block{margin-bottom:16px}
+.service-block h3{font-size:13px;font-weight:500;color:var(--text-bright);margin-bottom:4px}
+.service-block p{font-size:13px;color:var(--text-dim);line-height:1.7}
+
+/* SKILLS ROW */
+.skills-grid{display:grid;grid-template-columns:100px 1fr;gap:12px;margin-bottom:12px;font-size:14px}
+@media(max-width:600px){.skills-grid{grid-template-columns:1fr;gap:2px}}
+.skills-grid .skills-label{font-family:var(--mono);font-size:12px;color:var(--text-dim)}
+.skills-grid .skills-list{color:var(--text)}
+
+/* MEDIA */
+.media-entry{margin-bottom:12px;font-size:14px;line-height:1.7}
+.media-entry .media-source{color:var(--text-dim);font-style:italic}
+
+/* PDF BUTTON */
+.pdf-btn{background:var(--accent-dim)!important;border-color:color-mix(in srgb,var(--accent) 30%,transparent)!important;color:var(--accent)!important}
+.pdf-btn:hover{background:color-mix(in srgb,var(--accent) 20%,transparent)!important;color:var(--text-bright)!important}
+
+/* PRINT */
+@media print{
+  nav,.theme-toggle,.pdf-btn,footer,body::before{display:none!important}
+  body{background:#fff!important;color:#222!important;font-size:11px;line-height:1.5}
+  .cv-container{padding:0!important;max-width:100%}
+  .cv-header{margin-bottom:24px;padding-bottom:16px}
+  .cv-header h1{font-size:22px;color:#000!important}
+  .cv-header .subtitle{font-size:12px;color:#444!important}
+  .cv-header .links-row a{border:none!important;padding:0!important;font-size:10px;color:#444!important}
+  .cv-header .links-row a::after{content:none}
+  .cv-header .links-row{gap:8px}
+  .cv-section{margin-bottom:20px}
+  .cv-section-title{font-size:10px;color:#888!important;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #ddd!important}
+  .cv-entry{margin-bottom:10px;padding-bottom:10px;gap:8px}
+  .cv-date{font-size:10px;color:#666!important}
+  .cv-details h3{font-size:12px;color:#000!important}
+  .cv-details .cv-org,.cv-details .cv-desc,.cv-details .cv-note{font-size:11px;color:#444!important}
+  .pub-entry{font-size:11px;margin-bottom:8px;line-height:1.5;color:#222!important}
+  .pub-entry .pub-me{color:#000!important;font-weight:600}
+  .pub-entry .pub-venue{color:#222!important}
+  .pub-entry .pub-note{font-size:9px;color:#666!important;background:#eee!important;border:none}
+  .award-entry{font-size:11px;margin-bottom:4px}
+  .award-entry .award-year{font-size:10px;color:#666!important}
+  .talk-group h3{font-size:12px;color:#000!important}
+  .talk-group .talk-venues{font-size:10px;color:#555!important}
+  .service-block h3{font-size:11px;color:#000!important}
+  .service-block p{font-size:11px;color:#444!important}
+  .skills-grid{font-size:11px}
+  .skills-grid .skills-label{color:#666!important}
+  .media-entry{font-size:11px}
+  a{color:#222!important;text-decoration:none!important}
+  @page{margin:0.6in 0.7in;size:letter}
+  h1,h2,h3{page-break-after:avoid}
+  .cv-entry,.pub-entry,.award-entry{page-break-inside:avoid}
+}
+
+/* CV-specific layout; colors, fonts and navigation are shared with the home page. */
+nav.site-nav{height:auto;padding:0;backdrop-filter:none}
+.site-nav .logo span{color:inherit}
+.site-nav .links a{text-transform:none;letter-spacing:0}
+.site-nav .links a::after{display:none}
+.cv-container{max-width:1000px;padding-top:60px}
+.cv-header h1{font-size:56px;letter-spacing:-2px}
+.cv-header .subtitle{font-size:18px}
+.cv-header .links-row a,.cv-header .pdf-btn{font:400 14px/1.5 var(--sans);padding:8px 14px;min-height:40px}
+.pdf-btn{border:1px solid var(--border);border-radius:5px}
+.cv-summary{font-size:16px;line-height:1.8;max-width:760px}
+.cv-section-title{font:600 13px/1.5 var(--sans);letter-spacing:.13em;opacity:1;scroll-margin-top:100px}
+.cv-date{font-size:13px}
+.cv-details h3{font-size:17px}
+.cv-details .cv-org,.cv-details .cv-note,.cv-details .cv-desc{font-size:15px}
+.pub-entry{padding-left:32px;font-size:15px;margin-bottom:24px}
+.pub-entry::before{font-size:12px;padding-top:2px}
+.pub-note{white-space:normal!important}
+.pub-meta{font-size:13px;color:var(--text-dim);margin-top:24px}
+.site-footer{text-align:left}
+.site-footer p{font:400 14px/1.6 var(--sans)}
+@media(max-width:600px){.cv-container{padding:36px 20px 48px}.cv-header h1{font-size:44px}.pub-entry{padding-left:27px;overflow-wrap:anywhere}.cv-header .links-row{gap:8px}}
+@media print{.cv-header h1{font-size:26px}.cv-summary{font-size:11px}.pub-entry{font-size:11px;margin-bottom:10px;padding-left:28px}.pub-meta{font-size:10px}.cv-section-title{font-size:11px}.cv-header .subtitle{font-size:12px}.cv-details h3{font-size:12px}.cv-details .cv-org,.cv-details .cv-note,.cv-details .cv-desc{font-size:11px}}

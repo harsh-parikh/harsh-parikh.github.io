@@ -1,174 +1,32 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Curriculum vitae of Harsh Parikh, Assistant Professor of Biostatistics at Yale: publications, appointments, teaching, and service.">
 <title>CV — Harsh Parikh</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
-<style>
-:root {
-  --serif:'Newsreader',Georgia,serif;
-  --sans:'DM Sans',-apple-system,sans-serif;
-  --mono:'JetBrains Mono','Fira Code',monospace;
-  --max-w:820px;
-  --transition:0.35s cubic-bezier(0.4,0,0.2,1);
-}
-[data-theme="dark"]{
-  --bg:#0c0e12;--bg-elevated:#11141a;--bg-card:#151820;--bg-hover:#1a1e28;
-  --border:rgba(255,255,255,0.06);--text:#b8bcc6;--text-dim:#5e6474;--text-bright:#e2e6f0;
-  --accent:#c59a6c;--accent-dim:rgba(197,154,108,0.15);--accent-glow:rgba(197,154,108,0.08);
-  --shadow:rgba(0,0,0,0.3);--noise-opacity:0.025;--print-hide:block;
-}
-[data-theme="light"]{
-  --bg:#f5f3ef;--bg-elevated:#edeae4;--bg-card:#ffffff;--bg-hover:#f0ede7;
-  --border:rgba(0,0,0,0.08);--text:#4a4540;--text-dim:#8a847c;--text-bright:#1a1714;
-  --accent:#9a6d3c;--accent-dim:rgba(154,109,60,0.12);--accent-glow:rgba(154,109,60,0.06);
-  --shadow:rgba(0,0,0,0.08);--noise-opacity:0.015;--print-hide:block;
-}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth;font-size:16px;-webkit-font-smoothing:antialiased}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:400;line-height:1.7;overflow-x:hidden;transition:background var(--transition),color var(--transition)}
-::selection{background:var(--accent-dim);color:var(--text-bright)}
-a{color:var(--accent);text-decoration:none;transition:color 0.2s}
-a:hover{color:var(--text-bright)}
-body::before{content:'';position:fixed;inset:0;opacity:var(--noise-opacity);background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none;z-index:9999}
 
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 40px;height:56px;display:flex;align-items:center;justify-content:space-between;background:color-mix(in srgb,var(--bg) 80%,transparent);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:background var(--transition),border-color var(--transition)}
-nav .logo{font-family:var(--serif);font-size:17px;font-weight:500;color:var(--text-bright);letter-spacing:-0.3px}
-nav .logo span{color:var(--accent)}
-.nav-right{display:flex;align-items:center;gap:24px}
-nav .links{display:flex;gap:24px}
-nav .links a{font-size:12.5px;font-weight:400;color:var(--text-dim);text-transform:uppercase;letter-spacing:1.2px;transition:color 0.2s}
-nav .links a:hover{color:var(--text-bright)}
-.theme-toggle{width:40px;height:22px;border-radius:11px;border:1px solid var(--border);background:var(--bg-card);cursor:pointer;position:relative;flex-shrink:0;transition:background var(--transition),border-color var(--transition)}
-.theme-toggle .knob{width:16px;height:16px;border-radius:50%;background:var(--accent);position:absolute;top:2px;left:2px;transition:transform var(--transition)}
-[data-theme="light"] .theme-toggle .knob{transform:translateX(18px)}
-
-/* LAYOUT */
-.cv-container{max-width:var(--max-w);margin:0 auto;padding:100px 40px 80px}
-@media(max-width:768px){.cv-container{padding:80px 24px 60px}}
-
-/* HEADER */
-.cv-header{margin-bottom:56px;padding-bottom:32px;border-bottom:1px solid var(--border)}
-.cv-header h1{font-family:var(--serif);font-size:clamp(32px,5vw,44px);font-weight:400;color:var(--text-bright);letter-spacing:-0.5px;margin-bottom:8px}
-.cv-header .subtitle{font-size:15px;color:var(--text);margin-bottom:16px;line-height:1.6}
-.cv-header .links-row{display:flex;flex-wrap:wrap;gap:16px}
-.cv-header .links-row a{font-family:var(--mono);font-size:12px;color:var(--text-dim);padding:6px 14px;border:1px solid var(--border);border-radius:5px;transition:all 0.2s}
-.cv-header .links-row a:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 30%,transparent);background:var(--accent-glow)}
-
-/* SECTIONS */
-.cv-section{margin-bottom:52px}
-.cv-section-title{font-family:var(--mono);font-size:11px;font-weight:300;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:24px;padding-bottom:10px;border-bottom:1px solid var(--border);opacity:0.85}
-
-/* ENTRY (positions, education, etc.) */
-.cv-entry{display:grid;grid-template-columns:140px 1fr;gap:16px;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid color-mix(in srgb,var(--text) 3%,transparent)}
-.cv-entry:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
-@media(max-width:600px){.cv-entry{grid-template-columns:1fr;gap:4px}}
-.cv-date{font-family:var(--mono);font-size:12px;color:var(--text-dim);padding-top:2px;white-space:nowrap}
-.cv-details h3{font-size:15px;font-weight:500;color:var(--text-bright);margin-bottom:2px;line-height:1.4}
-.cv-details .cv-org{font-size:13px;color:var(--text);margin-bottom:2px}
-.cv-details .cv-note{font-size:13px;color:var(--text-dim);font-style:italic;line-height:1.6}
-.cv-details .cv-desc{font-size:13px;color:var(--text-dim);line-height:1.6;margin-top:4px}
-
-/* PUBLICATIONS */
-.pub-entry{margin-bottom:18px;padding-left:20px;position:relative;font-size:14px;line-height:1.7;color:var(--text)}
-.pub-entry::before{content:attr(data-num);position:absolute;left:0;top:0;font-family:var(--mono);font-size:11px;color:var(--text-dim)}
-.pub-entry .pub-me{color:var(--accent);font-weight:500}
-.pub-entry .pub-venue{font-style:italic}
-.pub-entry .pub-note{font-family:var(--mono);font-size:10px;color:var(--accent);background:var(--accent-dim);padding:2px 7px;border-radius:3px;margin-left:4px;white-space:nowrap}
-
-/* AWARDS */
-.award-entry{display:grid;grid-template-columns:60px 1fr;gap:12px;margin-bottom:10px;font-size:14px}
-@media(max-width:600px){.award-entry{grid-template-columns:1fr;gap:2px}}
-.award-entry .award-year{font-family:var(--mono);font-size:12px;color:var(--text-dim)}
-.award-entry .award-text{color:var(--text)}
-
-/* TALKS — compact list */
-.talk-group{margin-bottom:24px}
-.talk-group h3{font-size:14px;font-weight:500;color:var(--text-bright);margin-bottom:6px;line-height:1.5}
-.talk-group .talk-venues{font-size:13px;color:var(--text-dim);line-height:1.7}
-
-/* SERVICE */
-.service-block{margin-bottom:16px}
-.service-block h3{font-size:13px;font-weight:500;color:var(--text-bright);margin-bottom:4px}
-.service-block p{font-size:13px;color:var(--text-dim);line-height:1.7}
-
-/* SKILLS ROW */
-.skills-grid{display:grid;grid-template-columns:100px 1fr;gap:12px;margin-bottom:12px;font-size:14px}
-@media(max-width:600px){.skills-grid{grid-template-columns:1fr;gap:2px}}
-.skills-grid .skills-label{font-family:var(--mono);font-size:12px;color:var(--text-dim)}
-.skills-grid .skills-list{color:var(--text)}
-
-/* MEDIA */
-.media-entry{margin-bottom:12px;font-size:14px;line-height:1.7}
-.media-entry .media-source{color:var(--text-dim);font-style:italic}
-
-/* FOOTER */
-footer{border-top:1px solid var(--border);padding:32px 40px;text-align:center}
-footer p{font-family:var(--mono);font-size:11px;color:var(--text-dim)}
-
-/* PDF BUTTON */
-.pdf-btn{background:var(--accent-dim)!important;border-color:color-mix(in srgb,var(--accent) 30%,transparent)!important;color:var(--accent)!important}
-.pdf-btn:hover{background:color-mix(in srgb,var(--accent) 20%,transparent)!important;color:var(--text-bright)!important}
-
-/* PRINT */
-@media print{
-  nav,.theme-toggle,.pdf-btn,footer,body::before{display:none!important}
-  body{background:#fff!important;color:#222!important;font-size:11px;line-height:1.5}
-  .cv-container{padding:0!important;max-width:100%}
-  .cv-header{margin-bottom:24px;padding-bottom:16px}
-  .cv-header h1{font-size:22px;color:#000!important}
-  .cv-header .subtitle{font-size:12px;color:#444!important}
-  .cv-header .links-row a{border:none!important;padding:0!important;font-size:10px;color:#444!important}
-  .cv-header .links-row a::after{content:none}
-  .cv-header .links-row{gap:8px}
-  .cv-section{margin-bottom:20px}
-  .cv-section-title{font-size:10px;color:#888!important;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #ddd!important}
-  .cv-entry{margin-bottom:10px;padding-bottom:10px;gap:8px}
-  .cv-date{font-size:10px;color:#666!important}
-  .cv-details h3{font-size:12px;color:#000!important}
-  .cv-details .cv-org,.cv-details .cv-desc,.cv-details .cv-note{font-size:11px;color:#444!important}
-  .pub-entry{font-size:11px;margin-bottom:8px;line-height:1.5;color:#222!important}
-  .pub-entry .pub-me{color:#000!important;font-weight:600}
-  .pub-entry .pub-venue{color:#222!important}
-  .pub-entry .pub-note{font-size:9px;color:#666!important;background:#eee!important;border:none}
-  .award-entry{font-size:11px;margin-bottom:4px}
-  .award-entry .award-year{font-size:10px;color:#666!important}
-  .talk-group h3{font-size:12px;color:#000!important}
-  .talk-group .talk-venues{font-size:10px;color:#555!important}
-  .service-block h3{font-size:11px;color:#000!important}
-  .service-block p{font-size:11px;color:#444!important}
-  .skills-grid{font-size:11px}
-  .skills-grid .skills-label{color:#666!important}
-  .media-entry{font-size:11px}
-  a{color:#222!important;text-decoration:none!important}
-  @page{margin:0.6in 0.7in;size:letter}
-  h1,h2,h3{page-break-after:avoid}
-  .cv-entry,.pub-entry,.award-entry{page-break-inside:avoid}
-}
-</style>
+<link rel="stylesheet" href="./assets/theme.css">
+<link rel="stylesheet" href="./assets/cv.css">
+<link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://harsh-parikh.github.io/cv.html">
+<script src="./assets/theme.js"></script>
+<script src="./assets/navigation.js" defer></script>
 </head>
 <body>
 
-<nav>
-  <a href="./index.html" class="logo">Harsh <span>Parikh</span></a>
-  <div class="nav-right">
-    <div class="links">
-      <a href="./index.html">Home</a>
-      <a href="./index.html#research">Research</a>
-      <a href="./index.html#publications">Papers</a>
-      <a href="./index.html#contact">Contact</a>
-    </div>
-    <div class="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode">
-      <div class="knob"></div>
-    </div>
-  </div>
-</nav>
+<a class="skip-link" href="#main">Skip to content</a>
+<nav class="site-nav" aria-label="Main navigation"><div class="nav-inner">
+  <a href="./index.html" class="logo">Harsh Parikh<span aria-hidden="true">.</span></a>
+  <button class="menu-button" type="button" aria-controls="nav-links" aria-expanded="false" hidden>Menu</button>
+  <div class="links" id="nav-links"><a href="./index.html">Home</a><a href="./index.html#research">Research</a><a href="#publications">Papers</a><a href="./index.html#people">People</a><a href="./index.html#contact">Contact</a></div>
+  <button class="theme-button" type="button" aria-label="Switch theme" hidden>
+        <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.4A8.8 8.8 0 0 1 9.6 3.5a8.8 8.8 0 1 0 10.9 10.9Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg>
+      </button>
+</div></nav>
 
-<div class="cv-container">
+<main class="cv-container" id="main" tabindex="-1">
 
 <!-- ═══════════ HEADER ═══════════ -->
 <div class="cv-header">
@@ -176,22 +34,22 @@ footer p{font-family:var(--mono);font-size:11px;color:var(--text-dim)}
   <div class="subtitle">Assistant Professor · Department of Biostatistics · Yale University</div>
   <div class="links-row">
     <a href="mailto:harsh.parikh@yale.edu">harsh.parikh@yale.edu</a>
-    <a href="https://scholar.google.com/citations?user=uCrw1ZMAAAAJ" target="_blank">Google Scholar</a>
-    <a href="https://github.com/harsh-parikh" target="_blank">GitHub</a>
-    <a href="https://www.linkedin.com/in/harsh-parikh/" target="_blank">LinkedIn</a>
-    <a href="javascript:void(0)" onclick="window.print()" class="pdf-btn">↓ Download PDF</a>
+    <a href="https://scholar.google.com/citations?user=uCrw1ZMAAAAJ">Google Scholar</a>
+    <a href="https://github.com/harsh-parikh">GitHub</a>
+    <a href="https://www.linkedin.com/in/harsh-parikh/">LinkedIn</a>
+    <button type="button" onclick="window.print()" class="pdf-btn">Print / save as PDF</button>
   </div>
 </div>
 
 <!-- ═══════════ SUMMARY ═══════════ -->
 <div class="cv-section">
-  <div class="cv-section-title">Summary</div>
-  <p style="font-size:14px;line-height:1.8;max-width:720px">I develop <strong style="color:var(--text-bright)">causal and data science methods</strong> for high-stakes decision-making. My research focuses on <strong style="color:var(--text-bright)">estimation under severe distribution shift and drift</strong>, often leveraging data fusion and combining machine learning and AI approaches. I build <strong style="color:var(--text-bright)">policy- and decision-aware frameworks</strong> that protect against suboptimal decisions for at-risk groups. Applications span clinical trials, mental health, neurology, oncology, health economics, public-health equity, supply chain, operations, and social media.</p>
+  <h2 class="cv-section-title">Summary</h2>
+  <p class="cv-summary">I develop causal inference and data science methods for decisions in health and public policy. My research studies how to estimate effects when populations and settings differ, often by combining multiple data sources with statistical and machine learning methods. Applications include clinical trials, mental health, neurology, oncology, health economics, and public health equity.</p>
 </div>
 
 <!-- ═══════════ CURRENT AFFILIATIONS ═══════════ -->
 <div class="cv-section">
-  <div class="cv-section-title">Current Affiliations</div>
+  <h2 class="cv-section-title">Current Affiliations</h2>
   <div class="cv-entry">
     <div class="cv-date">2025–Present</div>
     <div class="cv-details"><h3>Tenure-Track Assistant Professor</h3><div class="cv-org">Department of Biostatistics, Yale School of Public Health</div></div>
@@ -224,7 +82,7 @@ footer p{font-family:var(--mono);font-size:11px;color:var(--text-dim)}
 
 <!-- ═══════════ ACADEMIC TRAINING ═══════════ -->
 <div class="cv-section">
-  <div class="cv-section-title">Academic Training</div>
+  <h2 class="cv-section-title">Academic Training</h2>
   <div class="cv-entry">
     <div class="cv-date">2023–2025</div>
     <div class="cv-details">
@@ -263,16 +121,66 @@ footer p{font-family:var(--mono);font-size:11px;color:var(--text-dim)}
 
 <!-- ═══════════ PUBLICATIONS (auto-updated from Google Scholar) ═══════════ -->
 <div class="cv-section">
-  <div class="cv-section-title">Publications</div>
+  <h2 class="cv-section-title" id="publications">Publications</h2>
+  <!-- PUBLICATIONS:START -->
   <div id="scholar-pub-list">
-    <p style="font-size:13px;color:var(--text-dim);font-style:italic">Loading publications from Google Scholar…</p>
+    <div class="pub-entry" data-num="49.">Yilin Song, Dan M Kluger, <span class="pub-me">Harsh Parikh</span>, Tian Gu. <a href="https://arxiv.org/abs/2601.20819">Demystifying prediction powered inference</a>. <span class="pub-venue">Harvard Data Science Review (provisionally accepted)</span>, 2026 <span class="pub-note">co-senior/corresponding author</span></div>
+    <div class="pub-entry" data-num="48."><span class="pub-me">Harsh Parikh</span>, Marco Morucci, Vittorio Orlandi, Sudeepa Roy, Cynthia Rudin, Alexander Volfovsky. <a href="https://muse.jhu.edu/pub/56/article/973068/summary">A Double Machine Learning Approach for Combining Experimental and Observational Studies</a>. <span class="pub-venue">Observational Studies</span>, 2026</div>
+    <div class="pub-entry" data-num="47.">Yiran Wang, Alicia E Boyd, Lillian Rountree, Yi Ren, Kate Nyhan, Ruchit Nagar, Jackson Higginbottom, Megan L Ranney, <span class="pub-me">Harsh Parikh</span>, Bhramar Mukherjee. <a href="https://jamanetwork.com/journals/jama-health-forum/fullarticle/2843724">Ten core concepts for ensuring data equity in public health</a>. <span class="pub-venue">JAMA Health Forum</span>, 2026</div>
+    <div class="pub-entry" data-num="46.">David Arbour<sup>*</sup>, <span class="pub-me">Harsh Parikh</span><sup>*</sup>, Bijan Niknam, Elizabeth Stuart, Kara Rudolph, Avi Feller. <a href="https://proceedings.mlr.press/v300/arbour26a.html">Regularizing extrapolation in causal inference</a>. <span class="pub-venue">International Conference on Artificial Intelligence and Statistics (AISTATS)</span>, 2026 <span class="pub-note">co-first author</span></div>
+    <div class="pub-entry" data-num="45.">Maxwell Salvatore, Yiran Wang, Preeti Syal, Brian Wahl, <span class="pub-me">Harsh Parikh</span>, Vishal Deo, Naveen Kumar Bhatraju, Kaushalya Jayaweera, Nisha Rana, Redoy Ranjan, Fyezah Jehan, Abdullah Yusuf, Karthik Adapa, Mona Duggal, Anurag Agrawal, Bhramar Mukherjee. <a href="https://doi.org/10.1016/j.lansea.2026.100777">The case for an integrated biobanking initiative in South Asia</a>. <span class="pub-venue">The Lancet Regional Health-Southeast Asia 49</span>, 2026</div>
+    <div class="pub-entry" data-num="44.">Carly L Brantner, Trang Quynh Nguyen, <span class="pub-me">Harsh Parikh</span>, Congwen Zhao, Hwanhee Hong, Elizabeth A Stuart. <a href="https://academic.oup.com/jrsssc/article-abstract/75/3/677/8378251">Precision mental health: predicting heterogeneous treatment effects for depression through data integration</a>. <span class="pub-venue">Journal of the Royal Statistical Society Series C: Applied Statistics</span>, 2026</div>
+    <div class="pub-entry" data-num="43.">Lillian Rountree, <span class="pub-me">Harsh Parikh</span>, Bhramar Mukherjee. <a href="https://arxiv.org/abs/2604.18291">Data (in) equities in data science: Dissecting systemic and systematic biases in pulse oximetry</a>. <span class="pub-venue">The Canadian Journal of Statistics (accepted)</span>, 2026</div>
+    <div class="pub-entry" data-num="42.">Emily K Johnson, <span class="pub-me">Harsh Parikh</span>, Catherine K Ettman, Ge Ge, Liza Sopina, Angela Y Chang. <a href="https://jamanetwork.com/journals/jama-health-forum/fullarticle/2846888">Lasting Income Costs of Mental and Physical Illness</a>. <span class="pub-venue">JAMA Health Forum</span>, 2026</div>
+    <div class="pub-entry" data-num="41."><span class="pub-me">Harsh Parikh</span>. <a href="https://arxiv.org/abs/2601.06730">Why are there many equally good models? An Anatomy of the Rashomon Effect</a>. <span class="pub-venue">arXiv preprint arXiv:2601.06730</span>, 2026</div>
+    <div class="pub-entry" data-num="40.">M McCauley, TM Westover, P Wynn, S Sartipi, N Turley, Z Akras, P Colin, Webb, Struck, Kim, Cheng, Sun, Houle, Rudin, Volfovsky, <span class="pub-me">Harsh Parikh</span>, Fernandes, Zafar, Westover. CICADAS: A simulation-based framework for randomized trial emulation in critical-care seizure treatment. <span class="pub-venue">Intelligence-Based Medicine 16, 100481</span>, 2026</div>
+    <div class="pub-entry" data-num="39."><span class="pub-me">Harsh Parikh</span>, Tyler McCormick, Emily K. Johnson, Leo Hickey, Megan L. Ranney, Bhramar Mukherjee. <a href="https://www.nature.com/articles/s44360-026-00188-w">The epidemiology of artificial intelligence</a>. <span class="pub-venue">Nature Health</span>, 2026</div>
+    <div class="pub-entry" data-num="38.">L Raymond-King, S McGrath, B Mukherjee, Y Wang, <span class="pub-me">H Parikh</span>, J Rothen, .... <a href="https://doi.org/10.1093/jncics/pkag078">Frailty and low utilization of curative-intent surgical resection in non-metastatic pancreatic cancer</a>. <span class="pub-venue">JNCI Cancer Spectrum, pkag078</span>, 2026</div>
+    <div class="pub-entry" data-num="37."><span class="pub-me">Harsh Parikh</span>, Gabriel Levin-Konigsberg, Nilesh Tripuraneni, Dhruv Madeka, Michael I. Jordan, Dean Foster, Dominique Perrault-Joncas, Alexander Volfovsky. <a href="https://arxiv.org/abs/2607.23254">Towards Optimal Estimators for Randomized Control Trials</a>. <span class="pub-venue">arXiv preprint arXiv:2607.23254</span>, 2026</div>
+    <div class="pub-entry" data-num="36.">E Johnson, C Ettman, <span class="pub-me">H Parikh</span>, L Sopina, G Ge, A Chang. The Experienced Burden of Disease In Denmark: A Comparison of the Economic and Social Effects of 15 Chronic Diseases. <span class="pub-venue">2026 Annual Research Meeting</span>, 2026</div>
+    <div class="pub-entry" data-num="35."><span class="pub-me">Harsh Parikh</span>, Gabriel Levin-Konigsberg, Dominique Perrault-Joncas, Alexander Volfovsky. <a href="https://arxiv.org/abs/2605.21458">Mind the Sim-to-Real Gap &amp; Think Like a Scientist</a>. <span class="pub-venue">arXiv preprint arXiv:2605.21458</span>, 2026</div>
+    <div class="pub-entry" data-num="34.">Camille DeSisto, Ranaivo Rasolofoson, Michelle Foley, <span class="pub-me">Harsh Parikh</span>. <a href="https://arxiv.org/abs/2603.13706">When Does Agroforestry Income Reduce Deforestation? Evidence from a Natural Experiment in Madagascar</a>. <span class="pub-venue">arXiv preprint arXiv:2603.13706</span>, 2026</div>
+    <div class="pub-entry" data-num="33."><span class="pub-me">Harsh Parikh</span>, Gabriel Levin-Konigsberg, Dominique Perrault-Joncas, Alexander Volfovsky. <a href="https://arxiv.org/abs/2603.07018">TEA-Time: Transporting Effects Across Time</a>. <span class="pub-venue">arXiv preprint arXiv:2603.07018</span>, 2026</div>
+    <div class="pub-entry" data-num="32.">Qi Zhang, <span class="pub-me">Harsh Parikh</span>, Ashley Naimi, Razieh Nabi, Christopher Kim, Timothy Lash. <a href="https://arxiv.org/abs/2603.03587">Controllable Generative Sandbox for Causal Inference</a>. <span class="pub-venue">Advances in Neural Information Processing Systems (NeurIPS), accepted</span>, 2026</div>
+    <div class="pub-entry" data-num="31.">Bolun Liu, Sean McGrath, Yiren Hou, Elizabeth Stuart, <span class="pub-me">Harsh Parikh</span>. Characterizing Underrepresentation in Generalizing Causal Survival Estimates. <span class="pub-venue">Advances in Neural Information Processing Systems (NeurIPS), accepted</span>, 2026</div>
+    <div class="pub-entry" data-num="30.">Grace V. Ringlein, Trang Q. Nguyen, Elizabeth A. Stuart, <span class="pub-me">Harsh Parikh</span>. <a href="https://arxiv.org/abs/2609.38175">Proximal causal inference through cross-proxy balancing</a>. <span class="pub-venue">arXiv preprint arXiv:2609.38175</span>, 2026</div>
+    <div class="pub-entry" data-num="29."><span class="pub-me">Harsh Parikh</span>, Rachael K Ross, Elizabeth Stuart, Kara E Rudolph. <a href="https://www.tandfonline.com/doi/abs/10.1080/01621459.2025.2495319">Who Are We Missing?: A Principled Approach to Characterizing the Underrepresented Population</a>. <span class="pub-venue">Journal of the American Statistical Association</span>, 2025</div>
+    <div class="pub-entry" data-num="28.">Yiran Wang, Alicia E Boyd, Lillian Rountree, Yi Ren, Kate Nyhan, Ruchit Nagar, Jackson Higginbottom, Megan L Ranney, <span class="pub-me">Harsh Parikh</span>, Bhramar Mukherjee. <a href="https://arxiv.org/abs/2508.20301">Towards enhancing data equity in public health data science</a>. <span class="pub-venue">arXiv preprint arXiv:2508.20301</span>, 2025</div>
+    <div class="pub-entry" data-num="27.">Seyedeh Baharan Khatami, <span class="pub-me">Harsh Parikh</span>, Haowei Chen, Sudeepa Roy, Babak Salimi. <a href="https://proceedings.mlr.press/v258/khatami25a.html">Graph Machine Learning based Doubly Robust Estimator for Network Causal Effects</a>. <span class="pub-venue">International Conference on Artificial Intelligence and Statistics (AISTATS)</span>, 2025</div>
+    <div class="pub-entry" data-num="26.">Quinn Lanners, Cynthia Rudin, Alexander Volfovsky, <span class="pub-me">Harsh Parikh</span>. <a href="https://arxiv.org/abs/2505.24296">Data fusion for partial identification of causal effects</a>. <span class="pub-venue">Advances in Neural Information Processing Systems (NeurIPS)</span>, 2025</div>
+    <div class="pub-entry" data-num="25."><span class="pub-me">Harsh Parikh</span>, Trang Quynh Nguyen, Elizabeth A Stuart, Kara E Rudolph, Caleb H Miles. <a href="https://arxiv.org/abs/2505.11014">A cautionary tale on integrating studies with disparate outcome measures for causal inference</a>. <span class="pub-venue">Advances in Neural Information Processing Systems (NeurIPS)</span>, 2025</div>
+    <div class="pub-entry" data-num="24.">Grace V Ringlein, Trang Quynh Nguyen, Peter P Zandi, Elizabeth A Stuart, <span class="pub-me">Harsh Parikh</span>. <a href="https://arxiv.org/abs/2512.24413">Demystifying Proximal Causal Inference</a>. <span class="pub-venue">arXiv preprint arXiv:2512.24413</span>, 2025</div>
+    <div class="pub-entry" data-num="23.">Emily K Johnson, <span class="pub-me">Harsh Parikh</span>, Kim Rose Olsen, Angela Y Chang, Liza Sopina. <a href="https://www.nature.com/articles/s41467-025-66524-y">Breast cancer and income loss in Denmark: heterogeneous outcomes and longitudinal effects</a>. <span class="pub-venue">Nature Communications</span>, 2025</div>
+    <div class="pub-entry" data-num="22.">C DeSisto, <span class="pub-me">H Parikh</span>, R Rasolofoson. Forest Conservation via Agroforestry: Causal Evidence from Vanilla Cultivation in Madagascar. <span class="pub-venue">AGU25</span>, 2025</div>
+    <div class="pub-entry" data-num="21.">CFPM de Sousa, <span class="pub-me">Harsh Parikh</span>, JD Bradley, Elizabeth Stuart, C Hu. <a href="https://www.redjournal.org/article/S0360-3016(25)04244-0/abstract">Representativeness and Generalizability of NCI-Funded Multi-Modality Randomized Clinical Trials (RCTs): A Case Study of Locally-Advanced Non-Small Cell Lung Cancer (LA-NSCLC …</a>. <span class="pub-venue">International Journal of Radiation Oncology, Biology, Physics</span>, 2025</div>
+    <div class="pub-entry" data-num="20.">Srikar Katta, <span class="pub-me">Harsh Parikh</span>, Cynthia Rudin, Alexander Volfovsky. <a href="https://proceedings.mlr.press/v238/katta24a.html">Interpretable causal inference for analyzing wearable, sensor, and distributional data</a>. <span class="pub-venue">International Conference on Artificial Intelligence and Statistics (AISTATS)</span>, 2024</div>
+    <div class="pub-entry" data-num="19.">Melody Y Huang, <span class="pub-me">Harsh Parikh</span>. <a href="https://assets.pubpub.org/jcjvqwck/Huang%20&amp;%20Parikh%20(2024)_Just%20Accepted-01723833367992.pdf">Toward generalizing inferences from trials to target populations</a>. <span class="pub-venue">Harvard Data Science Review</span>, 2024</div>
+    <div class="pub-entry" data-num="18."><span class="pub-me">Harsh Parikh</span><sup>*</sup>, Quinn M Lanners<sup>*</sup>, Zade Akras, Sahar Zafar, M Brandon Westover, Cynthia Rudin, Alexander Volfovsky. <a href="https://proceedings.mlr.press/v238/parikh24a.html">Safe and interpretable estimation of optimal treatment regimes</a>. <span class="pub-venue">International Conference on Artificial Intelligence and Statistics (AISTATS)</span>, 2024 <span class="pub-note">co-first author</span></div>
+    <div class="pub-entry" data-num="17."><span class="pub-me">Harsh Parikh</span>, Haoqi Sun, Rajesh Amerineni, Eric S Rosenthal, Alexander Volfovsky, Cynthia Rudin, M Brandon Westover, Sahar F Zafar. <a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/acn3.52059">How many patients do you need? Investigating trial designs for anti‐seizure treatment in acute brain injury patients</a>. <span class="pub-venue">Annals of Clinical and Translational Neurology</span>, 2024</div>
+    <div class="pub-entry" data-num="16."><span class="pub-me">Harsh Parikh</span><sup>*</sup>, Kentaro Hoffman<sup>*</sup>, Haoqi Sun<sup>*</sup>, Sahar F Zafar, Wendong Ge, Jin Jing, Lin Liu, Jimeng Sun, Aaron Struck, Alexander Volfovsky, Cynthia Rudin, M Brandon Westover. <a href="https://www.thelancet.com/journals/landig/article/PIIS2589-7500(23)00088-2/fulltext">Effects of epileptiform activity on discharge outcome in critically ill patients in the USA: a retrospective cross-sectional study</a>. <span class="pub-venue">The Lancet Digital Health</span>, 2023 <span class="pub-note">co-first author</span></div>
+    <div class="pub-entry" data-num="15.">Quinn Lanners, <span class="pub-me">Harsh Parikh</span>, Alexander Volfovsky, Cynthia Rudin, David Page. <a href="https://proceedings.mlr.press/v216/lanners23a.html">Variable importance matching for causal inference</a>. <span class="pub-venue">Conference on Uncertainty in Artificial Intelligence (UAI)</span>, 2023</div>
+    <div class="pub-entry" data-num="14."><span class="pub-me">Harsh J Parikh</span>. Causal inference for high-stakes decisions. <span class="pub-venue">Duke University</span>, 2023</div>
+    <div class="pub-entry" data-num="13."><span class="pub-me">Harsh Parikh</span>. <a href="https://openreview.net/forum?id=AFLNyWMg4D2">Synthetic Control as Balancing Scores</a>. <span class="pub-venue">International Conference on Learning Representations (ICLR), Tiny Papers</span>, 2023</div>
+    <div class="pub-entry" data-num="12."><span class="pub-me">Harsh Parikh</span>, Carlos Varjao, Louise Xu, Eric Tchetgen Tchetgen. <a href="https://proceedings.mlr.press/v162/parikh22a.html">Validating causal inference methods</a>. <span class="pub-venue">International Conference on Machine Learning (ICML)</span>, 2022</div>
+    <div class="pub-entry" data-num="11."><span class="pub-me">Harsh Parikh</span>, Alexander Volfovsky, Cynthia Rudin. <a href="http://www.jmlr.org/papers/v23/21-0053.html">MALTS: Matching After Learning to Stretch</a>. <span class="pub-venue">Journal of Machine Learning Research</span>, 2022</div>
+    <div class="pub-entry" data-num="10.">Haoning Jiang, Thomas Howell, Neha R Gupta, Vittorio Orlandi, Marco Morucci, <span class="pub-me">Harsh Parikh</span>, Sudeepa Roy, Cynthia Rudin, Alexander Volfovsky. <a href="https://proceedings.mlr.press/v176/jiang22b.html">AME: Interpretable Almost Exact Matching for Causal Inference</a>. <span class="pub-venue">Advances in Neural Information Processing Systems (NeurIPS), Demonstrations Track</span>, 2022</div>
+    <div class="pub-entry" data-num="9.">Amir Gilad, <span class="pub-me">Harsh Parikh</span>, Sudeepa Roy, Babak Salimi. <a href="https://arxiv.org/abs/2105.10591">Heterogeneous Treatment Effects in Social Networks</a>. <span class="pub-venue">arXiv preprint arXiv:2105.10591</span>, 2021</div>
+    <div class="pub-entry" data-num="8.">Babak Salimi, <span class="pub-me">Harsh Parikh</span>, Moe Kayali, Lise Getoor, Sudeepa Roy, Dan Suciu. <a href="https://dl.acm.org/doi/abs/10.1145/3318464.3389759">Causal relational learning</a>. <span class="pub-venue">Proceedings of the 2020 ACM SIGMOD international conference on management of …</span>, 2020</div>
+    <div class="pub-entry" data-num="7.">Sarul Malik, <span class="pub-me">Harsh Parikh</span>, Neil Shah, Sneh Anand, Shalini Gupta. <a href="https://ietresearch.onlinelibrary.wiley.com/doi/abs/10.1049/htl.2018.5081">Non‐invasive platform to estimate fasting blood glucose levels from salivary electrochemical parameters</a>. <span class="pub-venue">Healthcare Technology Letters</span>, 2019</div>
+    <div class="pub-entry" data-num="6."><span class="pub-me">Harsh Parikh</span>, Cynthia Rudin, Alexander Volfovsky. <a href="https://muse.jhu.edu/pub/56/article/793361/summary">An Application of Matching After Learning To Stretch (MALTS)</a>. <span class="pub-venue">Observational Studies</span>, 2019</div>
+    <div class="pub-entry" data-num="5."><span class="pub-me">H Parikh</span>, K McQuiston, S Zhi. The impact of market conditions on active equity management. <span class="pub-venue">The Journal of Portfolio Management 44 (3), 89-101</span>, 2018</div>
+    <div class="pub-entry" data-num="4.">Shayoni Dutta, Spandan Madan, <span class="pub-me">Harsh Parikh</span>, Durai Sundar. <a href="https://link.springer.com/article/10.1186/s12864-016-3323-9">An ensemble micro neural network approach for elucidating interactions between zinc finger proteins and their target DNA</a>. <span class="pub-venue">BMC Genomics</span>, 2016</div>
+    <div class="pub-entry" data-num="3.">Sarul Malik, Shalini Gupta, <span class="pub-me">Harsh Parikh</span>, Sneh Anand. <a href="https://ieeexplore.ieee.org/abstract/document/7514650/">Gargling affect on salivary electrochemical parameters to predict blood glucose</a>. <span class="pub-venue">IEEE International Conference on Computational Techniques in Information and Communication Technologies (ICCTICT)</span>, 2016</div>
+    <div class="pub-entry" data-num="2."><span class="pub-me">Harsh Parikh</span>, Apoorvi Singh, Annangarachari Krishnamachari, Kushal Shah. <a href="https://www.sciencedirect.com/science/article/pii/S0303264715000027">Computational prediction of origin of replication in bacterial genomes using correlated entropy measure (CEM)</a>. <span class="pub-venue">Biosystems</span>, 2015</div>
+    <div class="pub-entry" data-num="1.">Alok Shankar Mysore, Vikas S Yaligar, Imanol Arrieta Ibarra, Camelia Simoiu, Sharad Goel, Ramesh Arvind, Chiraag Sumanth, Arvind Srikantan, Bhargav HS, Mayank Pahadia, Tushar Dobha, Atif Ahmed, Mani Shankar, Himani Agarwal, Rajat Agarwal, Sai Anirudh-Kondaveeti, Shashank Arun-Gokhale, Aayush Attri, Arpita Chandra, Yogitha Chilukur, Sharath Dharmaji, Deepak Garg, Naman Gupta, Paras Gupta, Glincy Mary Jacob, Siddharth Jain, Shashank Joshi, Tarun Khajuria, Sameeksha Khillan, Sandeep Konam, Praveen Kumar-Kolla, Sahil Loomba, Rachit Madan, Akshansh Maharaja, Vidit Mathur, Bharat Munshi, Mohammed Nawazish, Venkata Neehar-Kurukunda, Venkat Nirmal-Gavarraju, Sonali Parashar, <span class="pub-me">Harsh Parikh</span>, Avinash Paritala, Amit Patil, Rahul Phatak, Mandar Pradhan, Abhilasha Ravichander, Krishna Sangeeth, Sreecharan Sankaranarayanan, Vibhor Sehgal, Ashrith Sheshan, Suprajha Shibiraj, Aditya Singh, Anjali Singh, Prashant Sinha, Pushkin Soni, Bipin Thomas, Kasyap Varma-Dattada, Sukanya Venkataraman, Pulkit Verma, Ishan Yelurwar. <a href="https://dl.acm.org/doi/abs/10.1145/2815585.2815725">Investigating the&quot; wisdom of crowds&quot; at scale</a>. <span class="pub-venue">Adjunct Proceedings of the 28th Annual ACM Symposium on User Interface …</span>, 2015</div>
   </div>
-  <div id="scholar-meta" style="margin-top:16px;font-family:var(--mono);font-size:10px;color:var(--text-dim);opacity:0.6"></div>
+  <p class="pub-meta">* Equal contribution. Publication status is noted where a paper is accepted or provisionally accepted.</p>
+  <!-- PUBLICATIONS:END -->
 </div>
 
 <!-- ═══════════ HONORS & AWARDS ═══════════ -->
 <div class="cv-section">
-  <div class="cv-section-title">Honors &amp; Awards</div>
+  <h2 class="cv-section-title">Honors &amp; Awards</h2>
   <div class="award-entry"><span class="award-year">2026</span><span class="award-text">AI at Yale Seed Grant ($100,000), Office of the Provost — "A Statistical Framework for Detecting and Regularizing Hallucinations in AI Models"</span></div>
   <div class="award-entry"><span class="award-year">2024</span><span class="award-text">Future Leader in Data Science and AI, Michigan Institute for Data & AI in Society</span></div>
   <div class="award-entry"><span class="award-year">2024</span><span class="award-text">Selected for Building Future Faculty Program, North Carolina State University</span></div>
@@ -294,7 +202,7 @@ footer p{font-family:var(--mono);font-size:11px;color:var(--text-dim)}
 
 <!-- ═══════════ PROFESSIONAL EXPERIENCE ═══════════ -->
 <div class="cv-section">
-  <div class="cv-section-title">Additional Professional Experience</div>
+  <h2 class="cv-section-title">Additional Professional Experience</h2>
   <div class="cv-entry">
     <div class="cv-date">May–Aug 2022</div>
     <div class="cv-details"><h3>Research Intern</h3><div class="cv-org">Meta (Facebook) · Core Data Science · New York</div><div class="cv-desc">Inferring Network Interference in Randomized Controlled Trials</div></div>
@@ -323,7 +231,7 @@ footer p{font-family:var(--mono);font-size:11px;color:var(--text-dim)}
 
 <!-- ═══════════ INVITED TALKS ═══════════ -->
 <div class="cv-section">
-  <div class="cv-section-title">Invited &amp; Conference Talks</div>
+  <h2 class="cv-section-title">Invited &amp; Conference Talks</h2>
 
   <div class="talk-group">
     <h3>Transporting Effects Beyond Common Support</h3>
@@ -418,7 +326,7 @@ footer p{font-family:var(--mono);font-size:11px;color:var(--text-dim)}
 
 <!-- ═══════════ TEACHING ═══════════ -->
 <div class="cv-section">
-  <div class="cv-section-title">Teaching</div>
+  <h2 class="cv-section-title">Teaching</h2>
   <div class="cv-entry">
     <div class="cv-date">Fall 2026</div>
     <div class="cv-details"><h3>Instructor — BIS 527: Introduction to Health Data Science</h3><div class="cv-org">Yale University</div></div>
@@ -459,7 +367,7 @@ footer p{font-family:var(--mono);font-size:11px;color:var(--text-dim)}
 
 <!-- ═══════════ POPULAR MEDIA ═══════════ -->
 <div class="cv-section">
-  <div class="cv-section-title">Popular Media</div>
+  <h2 class="cv-section-title">Popular Media</h2>
   <div class="media-entry"><span class="pub-me">Harsh Parikh</span>, Ankita Gupta, Subham. Covid-19: Mitigating the risk from reverse migration. <span class="media-source">Ideas for India</span>, 2020</div>
   <div class="media-entry"><span class="pub-me">Harsh Parikh</span>, Kumar Subham. Efficacy of India's Covid-19 response. <span class="media-source">Center for Soft Power</span>, 2020</div>
   <div class="media-entry">Ammar Malik, <span class="pub-me">Harsh Parikh</span>. Rents are driven by the quality of public services, not proximity to transit. <span class="media-source">Urban Wire: International Development</span>, 2017</div>
@@ -469,7 +377,7 @@ footer p{font-family:var(--mono);font-size:11px;color:var(--text-dim)}
 
 <!-- ═══════════ SERVICE ═══════════ -->
 <div class="cv-section">
-  <div class="cv-section-title">Service</div>
+  <h2 class="cv-section-title">Service</h2>
   <div class="service-block">
     <h3>Conference &amp; Workshop Organization</h3>
     <p>Co-organizer, FDS Workshop: AI for Social Science Research Methods, Yale University (May 2026)</p>
@@ -486,7 +394,7 @@ footer p{font-family:var(--mono);font-size:11px;color:var(--text-dim)}
 
 <!-- ═══════════ SKILLS ═══════════ -->
 <div class="cv-section">
-  <div class="cv-section-title">Skills &amp; Coursework</div>
+  <h2 class="cv-section-title">Skills &amp; Coursework</h2>
   <div class="skills-grid">
     <span class="skills-label">Coursework</span>
     <span class="skills-list">Causal Inference, Machine Learning, Bayesian Statistics, Reinforcement Learning, Algorithms, Probability & Stochastic Processes, Linear Algebra, Real Analysis, Econometrics, Micro/Macroeconomics</span>
@@ -499,7 +407,7 @@ footer p{font-family:var(--mono);font-size:11px;color:var(--text-dim)}
 
 <!-- ═══════════ REFERENCES ═══════════ -->
 <div class="cv-section">
-  <div class="cv-section-title">References</div>
+  <h2 class="cv-section-title">References</h2>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px">
     <div><strong style="color:var(--text-bright);font-size:14px">Cynthia Rudin</strong><br><span style="font-size:13px;color:var(--text-dim)">Computer Science, Duke University<br><a href="mailto:cynthia.rudin@duke.edu">cynthia.rudin@duke.edu</a></span></div>
     <div><strong style="color:var(--text-bright);font-size:14px">Elizabeth Stuart</strong><br><span style="font-size:13px;color:var(--text-dim)">Biostatistics, Johns Hopkins<br><a href="mailto:estuart@jhu.edu">estuart@jhu.edu</a></span></div>
@@ -510,37 +418,10 @@ footer p{font-family:var(--mono);font-size:11px;color:var(--text-dim)}
   </div>
 </div>
 
-</div><!-- /cv-container -->
+</main>
 
-<footer><p>© 2026 Harsh Parikh · Yale University</p></footer>
+<footer class="site-footer"><div class="footer-inner"><p>© 2026 Harsh Parikh · Yale University</p><div class="footer-links"><a href="./index.html">Home</a><a href="./jobs.html">Job board</a></div></div></footer>
 
-<script>
-function toggleTheme(){var h=document.documentElement,c=h.getAttribute('data-theme'),n=c==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('theme',n)}
-(function(){var s=localStorage.getItem('theme');if(s){document.documentElement.setAttribute('data-theme',s)}else{var d=window.matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.setAttribute('data-theme',d?'dark':'light')}})();
 
-(function(){
-var DATA = {"scholar_id": "uCrw1ZMAAAAJ", "author": "Harsh Parikh", "fetched_at": "2026-09-28T12:18:35.917110+00:00", "count": 49, "publications": [{"title": "Demystifying prediction powered inference", "authors_raw": "Yilin Song and Dan M Kluger and Harsh Parikh and Tian Gu", "authors": ["Yilin Song", "Dan M Kluger", "Harsh Parikh", "Tian Gu"], "venue": "Harvard Data Science Review (provisionally accepted)", "year": "2026", "citations": 17, "url": "https://arxiv.org/abs/2601.20819", "scholar_id": "uCrw1ZMAAAAJ:ldfaerwXgEUC", "note": "co-senior/corresponding author"}, {"title": "A Double Machine Learning Approach for Combining Experimental and Observational Studies", "authors_raw": "Harsh Parikh and Marco Morucci and Vittorio Orlandi and Sudeepa Roy and Cynthia Rudin and Alexander Volfovsky", "authors": ["Harsh Parikh", "Marco Morucci", "Vittorio Orlandi", "Sudeepa Roy", "Cynthia Rudin", "Alexander Volfovsky"], "venue": "Observational Studies", "year": "2026", "citations": 12, "url": "https://muse.jhu.edu/pub/56/article/973068/summary", "scholar_id": "uCrw1ZMAAAAJ:J_g5lzvAfSwC"}, {"title": "Ten core concepts for ensuring data equity in public health", "authors_raw": "Yiran Wang and Alicia E Boyd and Lillian Rountree and Yi Ren and Kate Nyhan and Ruchit Nagar and Jackson Higginbottom and Megan L Ranney and Harsh Parikh and Bhramar Mukherjee", "authors": ["Yiran Wang", "Alicia E Boyd", "Lillian Rountree", "Yi Ren", "Kate Nyhan", "Ruchit Nagar", "Jackson Higginbottom", "Megan L Ranney", "Harsh Parikh", "Bhramar Mukherjee"], "venue": "JAMA Health Forum", "year": "2026", "citations": 7, "url": "https://jamanetwork.com/journals/jama-health-forum/fullarticle/2843724", "scholar_id": "uCrw1ZMAAAAJ:70eg2SAEIzsC"}, {"title": "Regularizing extrapolation in causal inference", "authors_raw": "David Arbour and Harsh Parikh and Bijan Niknam and Elizabeth Stuart and Kara Rudolph and Avi Feller", "authors": ["David Arbour", "Harsh Parikh", "Bijan Niknam", "Elizabeth Stuart", "Kara Rudolph", "Avi Feller"], "venue": "International Conference on Artificial Intelligence and Statistics (AISTATS)", "year": "2026", "citations": 5, "url": "https://proceedings.mlr.press/v300/arbour26a.html", "scholar_id": "uCrw1ZMAAAAJ:ns9cj8rnVeAC", "note": "co-first author", "co_first": ["david arbour", "harsh parikh"]}, {"title": "The case for an integrated biobanking initiative in South Asia", "authors_raw": "Maxwell Salvatore and Yiran Wang and Preeti Syal and Brian Wahl and Harsh Parikh and Vishal Deo and Naveen Kumar Bhatraju and Kaushalya Jayaweera and Nisha Rana and Redoy Ranjan and Fyezah Jehan and Abdullah Yusuf and Karthik Adapa and Mona Duggal and Anurag Agrawal and Bhramar Mukherjee", "authors": ["Maxwell Salvatore", "Yiran Wang", "Preeti Syal", "Brian Wahl", "Harsh Parikh", "Vishal Deo", "Naveen Kumar Bhatraju", "Kaushalya Jayaweera", "Nisha Rana", "Redoy Ranjan", "Fyezah Jehan", "Abdullah Yusuf", "Karthik Adapa", "Mona Duggal", "Anurag Agrawal", "Bhramar Mukherjee"], "venue": "The Lancet Regional Health-Southeast Asia 49", "year": "2026", "citations": 3, "url": "https://doi.org/10.1016/j.lansea.2026.100777", "scholar_id": "uCrw1ZMAAAAJ:fPk4N6BV_jEC"}, {"title": "Precision mental health: predicting heterogeneous treatment effects for depression through data integration", "authors_raw": "Carly L Brantner and Trang Quynh Nguyen and Harsh Parikh and Congwen Zhao and Hwanhee Hong and Elizabeth A Stuart", "authors": ["Carly L Brantner", "Trang Quynh Nguyen", "Harsh Parikh", "Congwen Zhao", "Hwanhee Hong", "Elizabeth A Stuart"], "venue": "Journal of the Royal Statistical Society Series C: Applied Statistics", "year": "2026", "citations": 1, "url": "https://academic.oup.com/jrsssc/article-abstract/75/3/677/8378251", "scholar_id": "uCrw1ZMAAAAJ:O3NaXMp0MMsC"}, {"title": "Data (in) equities in data science: Dissecting systemic and systematic biases in pulse oximetry", "authors_raw": "Lillian Rountree and Harsh Parikh and Bhramar Mukherjee", "authors": ["Lillian Rountree", "Harsh Parikh", "Bhramar Mukherjee"], "venue": "The Canadian Journal of Statistics (accepted)", "year": "2026", "citations": 1, "url": "https://arxiv.org/abs/2604.18291", "scholar_id": "uCrw1ZMAAAAJ:zA6iFVUQeVQC"}, {"title": "Lasting Income Costs of Mental and Physical Illness", "authors_raw": "Emily K Johnson and Harsh Parikh and Catherine K Ettman and Ge Ge and Liza Sopina and Angela Y Chang", "authors": ["Emily K Johnson", "Harsh Parikh", "Catherine K Ettman", "Ge Ge", "Liza Sopina", "Angela Y Chang"], "venue": "JAMA Health Forum", "year": "2026", "citations": 1, "url": "https://jamanetwork.com/journals/jama-health-forum/fullarticle/2846888", "scholar_id": "uCrw1ZMAAAAJ:ZHo1McVdvXMC"}, {"title": "Why are there many equally good models? An Anatomy of the Rashomon Effect", "authors_raw": "Harsh Parikh", "authors": ["Harsh Parikh"], "venue": "arXiv preprint arXiv:2601.06730", "year": "2026", "citations": 1, "url": "https://arxiv.org/abs/2601.06730", "scholar_id": "uCrw1ZMAAAAJ:2P1L_qKh6hAC"}, {"title": "CICADAS: A simulation-based framework for randomized trial emulation in critical-care seizure treatment", "authors_raw": "M McCauley and TM Westover and P Wynn and S Sartipi and N Turley and Z Akras and P Colin and Webb and Struck and Kim and Cheng and Sun and Houle and Rudin and Volfovsky and Harsh Parikh and Fernandes and Zafar and Westover", "authors": ["M McCauley", "TM Westover", "P Wynn", "S Sartipi", "N Turley", "Z Akras", "P Colin", "Webb", "Struck", "Kim", "Cheng", "Sun", "Houle", "Rudin", "Volfovsky", "Harsh Parikh", "Fernandes", "Zafar", "Westover"], "venue": "Intelligence-Based Medicine 16, 100481", "year": "2026", "citations": 0, "url": "", "scholar_id": "uCrw1ZMAAAAJ:f2IySw72cVMC"}, {"title": "The epidemiology of artificial intelligence", "authors_raw": "Harsh Parikh and Tyler McCormick and Emily K. Johnson and Leo Hickey and Megan L. Ranney and Bhramar Mukherjee", "authors": ["Harsh Parikh", "Tyler McCormick", "Emily K. Johnson", "Leo Hickey", "Megan L. Ranney", "Bhramar Mukherjee"], "venue": "Nature Health", "year": "2026", "citations": 0, "url": "https://www.nature.com/articles/s44360-026-00188-w", "scholar_id": "uCrw1ZMAAAAJ:rO6llkc54NcC"}, {"title": "Frailty and low utilization of curative-intent surgical resection in non-metastatic pancreatic cancer", "authors_raw": "L Raymond-King, S McGrath, B Mukherjee, Y Wang, H Parikh, J Rothen, ...", "authors": ["L Raymond-King", "S McGrath", "B Mukherjee", "Y Wang", "H Parikh", "J Rothen", "..."], "venue": "JNCI Cancer Spectrum, pkag078", "year": "2026", "citations": 0, "url": "https://doi.org/10.1093/jncics/pkag078", "scholar_id": "uCrw1ZMAAAAJ:yD5IFk8b50cC"}, {"title": "Towards Optimal Estimators for Randomized Control Trials", "authors_raw": "Harsh Parikh and Gabriel Levin-Konigsberg and Nilesh Tripuraneni and Dhruv Madeka and Michael I. Jordan and Dean Foster and Dominique Perrault-Joncas and Alexander Volfovsky", "authors": ["Harsh Parikh", "Gabriel Levin-Konigsberg", "Nilesh Tripuraneni", "Dhruv Madeka", "Michael I. Jordan", "Dean Foster", "Dominique Perrault-Joncas", "Alexander Volfovsky"], "venue": "arXiv preprint arXiv:2607.23254", "year": "2026", "citations": 0, "url": "https://arxiv.org/abs/2607.23254", "scholar_id": "uCrw1ZMAAAAJ:dfsIfKJdRG4C"}, {"title": "The Experienced Burden of Disease In Denmark: A Comparison of the Economic and Social Effects of 15 Chronic Diseases", "authors_raw": "E Johnson, C Ettman, H Parikh, L Sopina, G Ge, A Chang", "authors": ["E Johnson", "C Ettman", "H Parikh", "L Sopina", "G Ge", "A Chang"], "venue": "2026 Annual Research Meeting", "year": "2026", "citations": 0, "url": "", "scholar_id": "uCrw1ZMAAAAJ:3s1wT3WcHBgC"}, {"title": "Mind the Sim-to-Real Gap & Think Like a Scientist", "authors_raw": "Harsh Parikh and Gabriel Levin-Konigsberg and Dominique Perrault-Joncas and Alexander Volfovsky", "authors": ["Harsh Parikh", "Gabriel Levin-Konigsberg", "Dominique Perrault-Joncas", "Alexander Volfovsky"], "venue": "arXiv preprint arXiv:2605.21458", "year": "2026", "citations": 0, "url": "https://arxiv.org/abs/2605.21458", "scholar_id": "uCrw1ZMAAAAJ:u_35RYKgDlwC"}, {"title": "When Does Agroforestry Income Reduce Deforestation? Evidence from a Natural Experiment in Madagascar", "authors_raw": "Camille DeSisto and Ranaivo Rasolofoson and Michelle Foley and Harsh Parikh", "authors": ["Camille DeSisto", "Ranaivo Rasolofoson", "Michelle Foley", "Harsh Parikh"], "venue": "arXiv preprint arXiv:2603.13706", "year": "2026", "citations": 0, "url": "https://arxiv.org/abs/2603.13706", "scholar_id": "uCrw1ZMAAAAJ:SeFeTyx0c_EC"}, {"title": "TEA-Time: Transporting Effects Across Time", "authors_raw": "Harsh Parikh and Gabriel Levin-Konigsberg and Dominique Perrault-Joncas and Alexander Volfovsky", "authors": ["Harsh Parikh", "Gabriel Levin-Konigsberg", "Dominique Perrault-Joncas", "Alexander Volfovsky"], "venue": "arXiv preprint arXiv:2603.07018", "year": "2026", "citations": 0, "url": "https://arxiv.org/abs/2603.07018", "scholar_id": "uCrw1ZMAAAAJ:HoB7MX3m0LUC"}, {"title": "Controllable Generative Sandbox for Causal Inference", "authors_raw": "Qi Zhang and Harsh Parikh and Ashley Naimi and Razieh Nabi and Christopher Kim and Timothy Lash", "authors": ["Qi Zhang", "Harsh Parikh", "Ashley Naimi", "Razieh Nabi", "Christopher Kim", "Timothy Lash"], "venue": "Advances in Neural Information Processing Systems (NeurIPS), accepted", "year": "2026", "citations": 0, "url": "https://arxiv.org/abs/2603.03587", "scholar_id": "uCrw1ZMAAAAJ:g5m5HwL7SMYC"}, {"citations": 0, "scholar_id": "", "title": "Characterizing Underrepresentation in Generalizing Causal Survival Estimates", "authors": ["Bolun Liu", "Sean McGrath", "Yiren Hou", "Elizabeth Stuart", "Harsh Parikh"], "venue": "Advances in Neural Information Processing Systems (NeurIPS), accepted", "year": "2026", "url": "", "authors_raw": "Bolun Liu and Sean McGrath and Yiren Hou and Elizabeth Stuart and Harsh Parikh"}, {"citations": 0, "scholar_id": "", "title": "Proximal causal inference through cross-proxy balancing", "authors": ["Grace V. Ringlein", "Trang Q. Nguyen", "Elizabeth A. Stuart", "Harsh Parikh"], "venue": "arXiv preprint arXiv:2609.38175", "year": "2026", "url": "https://arxiv.org/abs/2609.38175", "authors_raw": "Grace V. Ringlein and Trang Q. Nguyen and Elizabeth A. Stuart and Harsh Parikh"}, {"title": "Who Are We Missing?: A Principled Approach to Characterizing the Underrepresented Population", "authors_raw": "Harsh Parikh and Rachael K Ross and Elizabeth Stuart and Kara E Rudolph", "authors": ["Harsh Parikh", "Rachael K Ross", "Elizabeth Stuart", "Kara E Rudolph"], "venue": "Journal of the American Statistical Association", "year": "2025", "citations": 18, "url": "https://www.tandfonline.com/doi/abs/10.1080/01621459.2025.2495319", "scholar_id": "uCrw1ZMAAAAJ:mB3voiENLucC"}, {"title": "Towards enhancing data equity in public health data science", "authors_raw": "Yiran Wang and Alicia E Boyd and Lillian Rountree and Yi Ren and Kate Nyhan and Ruchit Nagar and Jackson Higginbottom and Megan L Ranney and Harsh Parikh and Bhramar Mukherjee", "authors": ["Yiran Wang", "Alicia E Boyd", "Lillian Rountree", "Yi Ren", "Kate Nyhan", "Ruchit Nagar", "Jackson Higginbottom", "Megan L Ranney", "Harsh Parikh", "Bhramar Mukherjee"], "venue": "arXiv preprint arXiv:2508.20301", "year": "2025", "citations": 7, "url": "https://arxiv.org/abs/2508.20301", "scholar_id": "uCrw1ZMAAAAJ:35N4QoGY0k4C"}, {"title": "Graph Machine Learning based Doubly Robust Estimator for Network Causal Effects", "authors_raw": "Seyedeh Baharan Khatami and Harsh Parikh and Haowei Chen and Sudeepa Roy and Babak Salimi", "authors": ["Seyedeh Baharan Khatami", "Harsh Parikh", "Haowei Chen", "Sudeepa Roy", "Babak Salimi"], "venue": "International Conference on Artificial Intelligence and Statistics (AISTATS)", "year": "2025", "citations": 7, "url": "https://proceedings.mlr.press/v258/khatami25a.html", "scholar_id": "uCrw1ZMAAAAJ:R3hNpaxXUhUC"}, {"title": "Data fusion for partial identification of causal effects", "authors_raw": "Quinn Lanners and Cynthia Rudin and Alexander Volfovsky and Harsh Parikh", "authors": ["Quinn Lanners", "Cynthia Rudin", "Alexander Volfovsky", "Harsh Parikh"], "venue": "Advances in Neural Information Processing Systems (NeurIPS)", "year": "2025", "citations": 6, "url": "https://arxiv.org/abs/2505.24296", "scholar_id": "uCrw1ZMAAAAJ:BqipwSGYUEgC"}, {"title": "A cautionary tale on integrating studies with disparate outcome measures for causal inference", "authors_raw": "Harsh Parikh and Trang Quynh Nguyen and Elizabeth A Stuart and Kara E Rudolph and Caleb H Miles", "authors": ["Harsh Parikh", "Trang Quynh Nguyen", "Elizabeth A Stuart", "Kara E Rudolph", "Caleb H Miles"], "venue": "Advances in Neural Information Processing Systems (NeurIPS)", "year": "2025", "citations": 3, "url": "https://arxiv.org/abs/2505.11014", "scholar_id": "uCrw1ZMAAAAJ:YFjsv_pBGBYC"}, {"title": "Demystifying Proximal Causal Inference", "authors_raw": "Grace V Ringlein and Trang Quynh Nguyen and Peter P Zandi and Elizabeth A Stuart and Harsh Parikh", "authors": ["Grace V Ringlein", "Trang Quynh Nguyen", "Peter P Zandi", "Elizabeth A Stuart", "Harsh Parikh"], "venue": "arXiv preprint arXiv:2512.24413", "year": "2025", "citations": 3, "url": "https://arxiv.org/abs/2512.24413", "scholar_id": "uCrw1ZMAAAAJ:vV6vV6tmYwMC"}, {"title": "Breast cancer and income loss in Denmark: heterogeneous outcomes and longitudinal effects", "authors_raw": "Emily K Johnson and Harsh Parikh and Kim Rose Olsen and Angela Y Chang and Liza Sopina", "authors": ["Emily K Johnson", "Harsh Parikh", "Kim Rose Olsen", "Angela Y Chang", "Liza Sopina"], "venue": "Nature Communications", "year": "2025", "citations": 2, "url": "https://www.nature.com/articles/s41467-025-66524-y", "scholar_id": "uCrw1ZMAAAAJ:hMod-77fHWUC"}, {"title": "Forest Conservation via Agroforestry: Causal Evidence from Vanilla Cultivation in Madagascar", "authors_raw": "C DeSisto, H Parikh, R Rasolofoson", "authors": ["C DeSisto", "H Parikh", "R Rasolofoson"], "venue": "AGU25", "year": "2025", "citations": 0, "url": "", "scholar_id": "uCrw1ZMAAAAJ:pyW8ca7W8N0C"}, {"title": "Representativeness and Generalizability of NCI-Funded Multi-Modality Randomized Clinical Trials (RCTs): A Case Study of Locally-Advanced Non-Small Cell Lung Cancer (LA-NSCLC …", "authors_raw": "CFPM de Sousa and Harsh Parikh and JD Bradley and Elizabeth Stuart and C Hu", "authors": ["CFPM de Sousa", "Harsh Parikh", "JD Bradley", "Elizabeth Stuart", "C Hu"], "venue": "International Journal of Radiation Oncology, Biology, Physics", "year": "2025", "citations": 0, "url": "https://www.redjournal.org/article/S0360-3016(25)04244-0/abstract", "scholar_id": "uCrw1ZMAAAAJ:RGFaLdJalmkC"}, {"title": "Interpretable causal inference for analyzing wearable, sensor, and distributional data", "authors_raw": "Srikar Katta and Harsh Parikh and Cynthia Rudin and Alexander Volfovsky", "authors": ["Srikar Katta", "Harsh Parikh", "Cynthia Rudin", "Alexander Volfovsky"], "venue": "International Conference on Artificial Intelligence and Statistics (AISTATS)", "year": "2024", "citations": 16, "url": "https://proceedings.mlr.press/v238/katta24a.html", "scholar_id": "uCrw1ZMAAAAJ:hFOr9nPyWt4C"}, {"title": "Toward generalizing inferences from trials to target populations", "authors_raw": "Melody Y Huang and Harsh Parikh", "authors": ["Melody Y Huang", "Harsh Parikh"], "venue": "Harvard Data Science Review", "year": "2024", "citations": 10, "url": "https://assets.pubpub.org/jcjvqwck/Huang%20&%20Parikh%20(2024)_Just%20Accepted-01723833367992.pdf", "scholar_id": "uCrw1ZMAAAAJ:HDshCWvjkbEC"}, {"title": "Safe and interpretable estimation of optimal treatment regimes", "authors_raw": "Harsh Parikh and Quinn M Lanners and Zade Akras and Sahar Zafar and M Brandon Westover and Cynthia Rudin and Alexander Volfovsky", "authors": ["Harsh Parikh", "Quinn M Lanners", "Zade Akras", "Sahar Zafar", "M Brandon Westover", "Cynthia Rudin", "Alexander Volfovsky"], "venue": "International Conference on Artificial Intelligence and Statistics (AISTATS)", "year": "2024", "citations": 6, "url": "https://proceedings.mlr.press/v238/parikh24a.html", "scholar_id": "uCrw1ZMAAAAJ:e5wmG9Sq2KIC", "note": "co-first author", "co_first": ["harsh parikh", "quinn m lanners"]}, {"title": "How many patients do you need? Investigating trial designs for anti‐seizure treatment in acute brain injury patients", "authors_raw": "Harsh Parikh and Haoqi Sun and Rajesh Amerineni and Eric S Rosenthal and Alexander Volfovsky and Cynthia Rudin and M Brandon Westover and Sahar F Zafar", "authors": ["Harsh Parikh", "Haoqi Sun", "Rajesh Amerineni", "Eric S Rosenthal", "Alexander Volfovsky", "Cynthia Rudin", "M Brandon Westover", "Sahar F Zafar"], "venue": "Annals of Clinical and Translational Neurology", "year": "2024", "citations": 5, "url": "https://onlinelibrary.wiley.com/doi/abs/10.1002/acn3.52059", "scholar_id": "uCrw1ZMAAAAJ:hC7cP41nSMkC"}, {"title": "Effects of epileptiform activity on discharge outcome in critically ill patients in the USA: a retrospective cross-sectional study", "authors_raw": "Harsh Parikh and Kentaro Hoffman and Haoqi Sun and Sahar F Zafar and Wendong Ge and Jin Jing and Lin Liu and Jimeng Sun and Aaron Struck and Alexander Volfovsky and Cynthia Rudin and M Brandon Westover", "authors": ["Harsh Parikh", "Kentaro Hoffman", "Haoqi Sun", "Sahar F Zafar", "Wendong Ge", "Jin Jing", "Lin Liu", "Jimeng Sun", "Aaron Struck", "Alexander Volfovsky", "Cynthia Rudin", "M Brandon Westover"], "venue": "The Lancet Digital Health", "year": "2023", "citations": 39, "url": "https://www.thelancet.com/journals/landig/article/PIIS2589-7500(23)00088-2/fulltext", "scholar_id": "uCrw1ZMAAAAJ:9ZlFYXVOiuMC", "note": "co-first author", "co_first": ["harsh parikh", "kentaro hoffman", "haoqi sun"]}, {"title": "Variable importance matching for causal inference", "authors_raw": "Quinn Lanners and Harsh Parikh and Alexander Volfovsky and Cynthia Rudin and David Page", "authors": ["Quinn Lanners", "Harsh Parikh", "Alexander Volfovsky", "Cynthia Rudin", "David Page"], "venue": "Conference on Uncertainty in Artificial Intelligence (UAI)", "year": "2023", "citations": 12, "url": "https://proceedings.mlr.press/v216/lanners23a.html", "scholar_id": "uCrw1ZMAAAAJ:ZeXyd9-uunAC"}, {"title": "Causal inference for high-stakes decisions", "authors_raw": "Harsh J Parikh", "authors": ["Harsh J Parikh"], "venue": "Duke University", "year": "2023", "citations": 1, "url": "", "scholar_id": "uCrw1ZMAAAAJ:mVmsd5A6BfQC"}, {"title": "Synthetic Control as Balancing Scores", "authors_raw": "Harsh Parikh", "authors": ["Harsh Parikh"], "venue": "International Conference on Learning Representations (ICLR), Tiny Papers", "year": "2023", "citations": 0, "url": "https://openreview.net/forum?id=AFLNyWMg4D2", "scholar_id": "uCrw1ZMAAAAJ:dhFuZR0502QC"}, {"title": "Validating causal inference methods", "authors_raw": "Harsh Parikh and Carlos Varjao and Louise Xu and Eric Tchetgen Tchetgen", "authors": ["Harsh Parikh", "Carlos Varjao", "Louise Xu", "Eric Tchetgen Tchetgen"], "venue": "International Conference on Machine Learning (ICML)", "year": "2022", "citations": 88, "url": "https://proceedings.mlr.press/v162/parikh22a.html", "scholar_id": "uCrw1ZMAAAAJ:5nxA0vEk-isC"}, {"title": "MALTS: Matching After Learning to Stretch", "authors_raw": "Harsh Parikh and Alexander Volfovsky and Cynthia Rudin", "authors": ["Harsh Parikh", "Alexander Volfovsky", "Cynthia Rudin"], "venue": "Journal of Machine Learning Research", "year": "2022", "citations": 51, "url": "http://www.jmlr.org/papers/v23/21-0053.html", "scholar_id": "uCrw1ZMAAAAJ:Wp0gIr-vW9MC"}, {"title": "AME: Interpretable Almost Exact Matching for Causal Inference", "authors_raw": "Haoning Jiang and Thomas Howell and Neha R Gupta and Vittorio Orlandi and Marco Morucci and Harsh Parikh and Sudeepa Roy and Cynthia Rudin and Alexander Volfovsky", "authors": ["Haoning Jiang", "Thomas Howell", "Neha R Gupta", "Vittorio Orlandi", "Marco Morucci", "Harsh Parikh", "Sudeepa Roy", "Cynthia Rudin", "Alexander Volfovsky"], "venue": "Advances in Neural Information Processing Systems (NeurIPS), Demonstrations Track", "year": "2022", "citations": 0, "url": "https://proceedings.mlr.press/v176/jiang22b.html", "scholar_id": "uCrw1ZMAAAAJ:_Qo2XoVZTnwC"}, {"title": "Heterogeneous Treatment Effects in Social Networks", "authors_raw": "Amir Gilad and Harsh Parikh and Sudeepa Roy and Babak Salimi", "authors": ["Amir Gilad", "Harsh Parikh", "Sudeepa Roy", "Babak Salimi"], "venue": "arXiv preprint arXiv:2105.10591", "year": "2021", "citations": 3, "url": "https://arxiv.org/abs/2105.10591", "scholar_id": "uCrw1ZMAAAAJ:roLk4NBRz8UC"}, {"title": "Causal relational learning", "authors_raw": "Babak Salimi and Harsh Parikh and Moe Kayali and Lise Getoor and Sudeepa Roy and Dan Suciu", "authors": ["Babak Salimi", "Harsh Parikh", "Moe Kayali", "Lise Getoor", "Sudeepa Roy", "Dan Suciu"], "venue": "Proceedings of the 2020 ACM SIGMOD international conference on management of …", "year": "2020", "citations": 71, "url": "https://dl.acm.org/doi/abs/10.1145/3318464.3389759", "scholar_id": "uCrw1ZMAAAAJ:LkGwnXOMwfcC"}, {"title": "Non‐invasive platform to estimate fasting blood glucose levels from salivary electrochemical parameters", "authors_raw": "Sarul Malik and Harsh Parikh and Neil Shah and Sneh Anand and Shalini Gupta", "authors": ["Sarul Malik", "Harsh Parikh", "Neil Shah", "Sneh Anand", "Shalini Gupta"], "venue": "Healthcare Technology Letters", "year": "2019", "citations": 18, "url": "https://ietresearch.onlinelibrary.wiley.com/doi/abs/10.1049/htl.2018.5081", "scholar_id": "uCrw1ZMAAAAJ:UeHWp8X0CEIC"}, {"title": "An Application of Matching After Learning To Stretch (MALTS)", "authors_raw": "Harsh Parikh and Cynthia Rudin and Alexander Volfovsky", "authors": ["Harsh Parikh", "Cynthia Rudin", "Alexander Volfovsky"], "venue": "Observational Studies", "year": "2019", "citations": 10, "url": "https://muse.jhu.edu/pub/56/article/793361/summary", "scholar_id": "uCrw1ZMAAAAJ:_FxGoFyzp5QC"}, {"title": "The impact of market conditions on active equity management", "authors_raw": "H Parikh, K McQuiston, S Zhi", "authors": ["H Parikh", "K McQuiston", "S Zhi"], "venue": "The Journal of Portfolio Management 44 (3), 89-101", "year": "2018", "citations": 7, "url": "", "scholar_id": "uCrw1ZMAAAAJ:a0OBvERweLwC"}, {"title": "An ensemble micro neural network approach for elucidating interactions between zinc finger proteins and their target DNA", "authors_raw": "Shayoni Dutta and Spandan Madan and Harsh Parikh and Durai Sundar", "authors": ["Shayoni Dutta", "Spandan Madan", "Harsh Parikh", "Durai Sundar"], "venue": "BMC Genomics", "year": "2016", "citations": 11, "url": "https://link.springer.com/article/10.1186/s12864-016-3323-9", "scholar_id": "uCrw1ZMAAAAJ:2osOgNQ5qMEC"}, {"title": "Gargling affect on salivary electrochemical parameters to predict blood glucose", "authors_raw": "Sarul Malik and Shalini Gupta and Harsh Parikh and Sneh Anand", "authors": ["Sarul Malik", "Shalini Gupta", "Harsh Parikh", "Sneh Anand"], "venue": "IEEE International Conference on Computational Techniques in Information and Communication Technologies (ICCTICT)", "year": "2016", "citations": 1, "url": "https://ieeexplore.ieee.org/abstract/document/7514650/", "scholar_id": "uCrw1ZMAAAAJ:9yKSN-GCB0IC"}, {"title": "Computational prediction of origin of replication in bacterial genomes using correlated entropy measure (CEM)", "authors_raw": "Harsh Parikh and Apoorvi Singh and Annangarachari Krishnamachari and Kushal Shah", "authors": ["Harsh Parikh", "Apoorvi Singh", "Annangarachari Krishnamachari", "Kushal Shah"], "venue": "Biosystems", "year": "2015", "citations": 8, "url": "https://www.sciencedirect.com/science/article/pii/S0303264715000027", "scholar_id": "uCrw1ZMAAAAJ:u5HHmVD_uO8C"}, {"title": "Investigating the\" wisdom of crowds\" at scale", "authors_raw": "Alok Shankar Mysore and Vikas S Yaligar and Imanol Arrieta Ibarra and Camelia Simoiu and Sharad Goel and Ramesh Arvind and Chiraag Sumanth and Arvind Srikantan and Bhargav HS and Mayank Pahadia and Tushar Dobha and Atif Ahmed and Mani Shankar and Himani Agarwal and Rajat Agarwal and Sai Anirudh-Kondaveeti and Shashank Arun-Gokhale and Aayush Attri and Arpita Chandra and Yogitha Chilukur and Sharath Dharmaji and Deepak Garg and Naman Gupta and Paras Gupta and Glincy Mary Jacob and Siddharth Jain and Shashank Joshi and Tarun Khajuria and Sameeksha Khillan and Sandeep Konam and Praveen Kumar-Kolla and Sahil Loomba and Rachit Madan and Akshansh Maharaja and Vidit Mathur and Bharat Munshi and Mohammed Nawazish and Venkata Neehar-Kurukunda and Venkat Nirmal-Gavarraju and Sonali Parashar and Harsh Parikh and Avinash Paritala and Amit Patil and Rahul Phatak and Mandar Pradhan and Abhilasha Ravichander and Krishna Sangeeth and Sreecharan Sankaranarayanan and Vibhor Sehgal and Ashrith Sheshan and Suprajha Shibiraj and Aditya Singh and Anjali Singh and Prashant Sinha and Pushkin Soni and Bipin Thomas and Kasyap Varma-Dattada and Sukanya Venkataraman and Pulkit Verma and Ishan Yelurwar", "authors": ["Alok Shankar Mysore", "Vikas S Yaligar", "Imanol Arrieta Ibarra", "Camelia Simoiu", "Sharad Goel", "Ramesh Arvind", "Chiraag Sumanth", "Arvind Srikantan", "Bhargav HS", "Mayank Pahadia", "Tushar Dobha", "Atif Ahmed", "Mani Shankar", "Himani Agarwal", "Rajat Agarwal", "Sai Anirudh-Kondaveeti", "Shashank Arun-Gokhale", "Aayush Attri", "Arpita Chandra", "Yogitha Chilukur", "Sharath Dharmaji", "Deepak Garg", "Naman Gupta", "Paras Gupta", "Glincy Mary Jacob", "Siddharth Jain", "Shashank Joshi", "Tarun Khajuria", "Sameeksha Khillan", "Sandeep Konam", "Praveen Kumar-Kolla", "Sahil Loomba", "Rachit Madan", "Akshansh Maharaja", "Vidit Mathur", "Bharat Munshi", "Mohammed Nawazish", "Venkata Neehar-Kurukunda", "Venkat Nirmal-Gavarraju", "Sonali Parashar", "Harsh Parikh", "Avinash Paritala", "Amit Patil", "Rahul Phatak", "Mandar Pradhan", "Abhilasha Ravichander", "Krishna Sangeeth", "Sreecharan Sankaranarayanan", "Vibhor Sehgal", "Ashrith Sheshan", "Suprajha Shibiraj", "Aditya Singh", "Anjali Singh", "Prashant Sinha", "Pushkin Soni", "Bipin Thomas", "Kasyap Varma-Dattada", "Sukanya Venkataraman", "Pulkit Verma", "Ishan Yelurwar"], "venue": "Adjunct Proceedings of the 28th Annual ACM Symposium on User Interface …", "year": "2015", "citations": 6, "url": "https://dl.acm.org/doi/abs/10.1145/2815585.2815725", "scholar_id": "uCrw1ZMAAAAJ:u-x6o8ySG0sC"}]};
-
-function isMe(n){n=n.toLowerCase().replace(/\./g,'').trim();return n==='harsh parikh'||n==='harsh j parikh'||n==='h parikh'||(n.charAt(0)==='h'&&n.slice(-6)==='parikh')}
-function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML}
-function isCF(name,list){if(!list)return false;var n=name.toLowerCase().replace(/\./g,'').trim();for(var i=0;i<list.length;i++){if(list[i]===n)return true}return false}
-function fmtA(arr,cf){return arr.map(function(a){var star=isCF(a,cf)?'<sup style="color:var(--accent)">*<\/sup>':'';var name=isMe(a)?'<span class="pub-me">'+esc(a)+'<\/span>':esc(a);return name+star}).join(', ')}
-var pubs=DATA.publications;
-pubs.sort(function(a,b){return (parseInt(b.year)||0)-(parseInt(a.year)||0)||b.citations-a.citations});
-var total=pubs.length,html='';
-for(var i=0;i<total;i++){
-  var p=pubs[i],num=total-i;
-  var venue=p.venue?'<span class="pub-venue">'+esc(p.venue)+'<\/span>':'';
-  var year=p.year?', '+esc(p.year):'';
-  var cite=p.citations>0?' <span class="pub-note">'+p.citations+' cited<\/span>':'';
-  var note=p.note?' <span class="pub-note">'+esc(p.note)+'<\/span>':'';
-  var ttl=p.url?'<a href="'+esc(p.url)+'" target="_blank" style="color:var(--text-bright)">'+esc(p.title)+'<\/a>':esc(p.title);
-  html+='<div class="pub-entry" data-num="'+num+'.">'+fmtA(p.authors,p.co_first)+'. '+ttl+(venue?'. '+venue:'')+year+cite+note+'<\/div>';
-}
-document.getElementById('scholar-pub-list').innerHTML=html;
-var meta=document.getElementById('scholar-meta');
-if(meta){var tc=pubs.reduce(function(s,p){return s+p.citations},0);meta.textContent='Updated publication list | '+total+' publications | '+tc+' Scholar citations'}
-})();
-</script>
 </body>
 </html>
