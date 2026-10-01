@@ -62,8 +62,10 @@
     },
     {
       "match": "the epidemiology of artificial intelligence",
-      "url": "https://arxiv.org/abs/2604.14086",
-      "authors": ["Harsh Parikh", "Tyler McCormick", "Emily Johnson", "Leo Hickey", "Megan Ranney", "Bhramar Mukherjee"]
+      "venue": "Nature Health",
+      "year": "2026",
+      "url": "https://www.nature.com/articles/s44360-026-00188-w",
+      "authors": ["Harsh Parikh", "Tyler McCormick", "Emily K. Johnson", "Leo Hickey", "Megan L. Ranney", "Bhramar Mukherjee"]
     },
     {
       "match": "towards optimal estimators for randomized control trials",
