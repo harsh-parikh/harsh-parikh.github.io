@@ -52,7 +52,7 @@ nav .links a:hover::after,nav .links a.active::after{width:100%}
 [data-theme="light"] .theme-toggle .knob{transform:translateX(18px)}
 .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
 .hamburger span{width:22px;height:1.5px;background:var(--text-dim);transition:background var(--transition)}
-@media(max-width:768px){
+@media(max-width:960px){
   .hamburger{display:flex}
   nav .links{display:none;position:absolute;top:56px;left:0;right:0;flex-direction:column;background:color-mix(in srgb,var(--bg) 96%,transparent);backdrop-filter:blur(20px);padding:24px 40px;gap:20px;border-bottom:1px solid var(--border)}
   nav .links.open{display:flex}
@@ -84,6 +84,15 @@ section{max-width:var(--max-w);margin:0 auto;padding:100px 40px 60px}
 @media(max-width:768px){.hero-links{justify-content:center}}
 .hero-links a{font-family:var(--mono);font-size:12px;color:var(--text-dim);padding:8px 18px;border:1px solid var(--border);border-radius:6px;transition:all 0.2s}
 .hero-links a:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 30%,transparent);background:var(--accent-glow)}
+
+.news-list{list-style:none;border-top:1px solid var(--border)}
+.news-item{display:grid;grid-template-columns:115px minmax(0,1fr);gap:24px;padding:19px 0;border-bottom:1px solid var(--border)}
+.news-date{font-family:var(--mono);font-size:11px;color:var(--text);white-space:nowrap;padding-top:3px}
+.news-type{display:block;font-family:var(--mono);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+.news-text{font-size:14px;line-height:1.6;color:var(--text-bright)}
+.news-text a{color:inherit;text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--accent) 45%,transparent);text-underline-offset:3px}
+.news-text a:hover{color:var(--accent)}
+@media(max-width:600px){.news-item{grid-template-columns:1fr;gap:5px;padding:16px 0}.news-date{padding:0}}
 
 #about .about-content{display:grid;grid-template-columns:1fr 1fr;gap:48px}
 @media(max-width:768px){#about .about-content{grid-template-columns:1fr;gap:32px}}
@@ -142,6 +151,7 @@ section{max-width:var(--max-w);margin:0 auto;padding:100px 40px 60px}
 .pub-content .pub-authors{font-size:13px;color:var(--text-dim);line-height:1.5}
 .pub-content .pub-authors strong{color:var(--accent);font-weight:500}
 .pub-item.hidden{display:none}
+.pub-item[id]{scroll-margin-top:80px}
 
 .teaching-list{display:flex;flex-direction:column;gap:20px}
 .teaching-item{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:28px;display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center;transition:border-color 0.2s,background var(--transition)}
@@ -177,6 +187,7 @@ footer p{font-family:var(--mono);font-size:11px;color:var(--text-dim)}
       <span></span><span></span><span></span>
     </div>
     <div class="links">
+      <a href="#news">News</a>
       <a href="#about">About</a>
       <a href="#research">Research</a>
       <a href="#publications">Papers</a>
@@ -216,6 +227,43 @@ footer p{font-family:var(--mono);font-size:11px;color:var(--text-dim)}
       </div>
     </div>
   </div>
+</section>
+
+<div class="divider"><hr></div>
+
+<section id="news" aria-labelledby="news-title">
+  <div class="section-label">Updates</div>
+  <h2 class="section-title" id="news-title">Recent News</h2>
+  <ol class="news-list fade-in">
+    <li class="news-item">
+      <time class="news-date" datetime="2026-10-19">19 Oct 2026</time>
+      <div><span class="news-type">Upcoming talk</span><p class="news-text">Lightning talk at the University of Michigan's <a href="https://ai.engin.umich.edu/events/causal-ai-for-decision-making-workshop/" target="_blank" rel="noopener noreferrer">Causal AI for Decision Making Workshop</a>.</p></div>
+    </li>
+    <li class="news-item">
+      <time class="news-date" datetime="2026-09-29">29 Sep 2026</time>
+      <div><span class="news-type">New preprint</span><p class="news-text"><a href="https://arxiv.org/abs/2609.38175" target="_blank" rel="noopener noreferrer">Proximal causal inference through cross-proxy balancing</a> is available on arXiv.</p></div>
+    </li>
+    <li class="news-item">
+      <time class="news-date" datetime="2026-09-28">28 Sep 2026</time>
+      <div><span class="news-type">Journal acceptance</span><p class="news-text"><a href="https://arxiv.org/abs/2601.20819" target="_blank" rel="noopener noreferrer">Demystifying Prediction Powered Inference</a> received provisional acceptance at the Harvard Data Science Review.</p></div>
+    </li>
+    <li class="news-item">
+      <time class="news-date" datetime="2026-09-24">24 Sep 2026</time>
+      <div><span class="news-type">NeurIPS 2026</span><p class="news-text"><a href="https://arxiv.org/abs/2603.03587" target="_blank" rel="noopener noreferrer">Controllable Generative Sandbox for Causal Inference</a> was accepted as a poster.</p></div>
+    </li>
+    <li class="news-item">
+      <time class="news-date" datetime="2026-09-24">24 Sep 2026</time>
+      <div><span class="news-type">NeurIPS 2026</span><p class="news-text"><a href="#paper-underrepresentation">Characterizing Underrepresentation in Generalizing Causal Survival Estimates</a> was accepted as a poster.</p></div>
+    </li>
+    <li class="news-item">
+      <time class="news-date" datetime="2026-09-15">15 Sep 2026</time>
+      <div><span class="news-type">Published</span><p class="news-text"><a href="https://www.nature.com/articles/s44360-026-00188-w" target="_blank" rel="noopener noreferrer">The epidemiology of artificial intelligence</a> was published in <em>Nature Health</em>.</p></div>
+    </li>
+    <li class="news-item">
+      <time class="news-date" datetime="2026-08-17">17 Aug 2026</time>
+      <div><span class="news-type">Journal acceptance</span><p class="news-text"><a href="https://arxiv.org/abs/2604.18291" target="_blank" rel="noopener noreferrer">Data (in)equities in data science</a> was accepted by the Canadian Journal of Statistics.</p></div>
+    </li>
+  </ol>
 </section>
 
 <div class="divider"><hr></div>
@@ -282,7 +330,7 @@ footer p{font-family:var(--mono);font-size:11px;color:var(--text-dim)}
       <div class="pub-item" data-type="journal"><div class="pub-venue-badge">Can. J. Stat. · accepted</div><div class="pub-content"><div class="pub-title"><a href="https://arxiv.org/abs/2604.18291" target="_blank" rel="noopener noreferrer">Data (in)equities in Data Science: Dissecting Systemic and Systematic Biases in Pulse Oximetry</a></div><div class="pub-authors">L Rountree, <strong>H Parikh</strong>, B Mukherjee</div></div></div>
       <div class="pub-item" data-type="conference"><div class="pub-venue-badge">AISTATS</div><div class="pub-content"><div class="pub-title"><a href="https://proceedings.mlr.press/v300/arbour26a.html" target="_blank" rel="noopener noreferrer">Regularizing Extrapolation in Causal Inference</a></div><div class="pub-authors">D Arbour, <strong>H Parikh</strong>, B Niknam, EA Stuart, KE Rudolph, A Feller</div></div></div>
       <div class="pub-item" data-type="conference"><div class="pub-venue-badge">NeurIPS · accepted</div><div class="pub-content"><div class="pub-title"><a href="https://arxiv.org/abs/2603.03587" target="_blank" rel="noopener noreferrer">Controllable Generative Sandbox for Causal Inference</a></div><div class="pub-authors">Q Zhang, <strong>H Parikh</strong>, A Naimi, R Nabi, C Kim, T Lash</div></div></div>
-      <div class="pub-item" data-type="conference"><div class="pub-venue-badge">NeurIPS · accepted</div><div class="pub-content"><div class="pub-title">Characterizing Underrepresentation in Generalizing Causal Survival Estimates</div><div class="pub-authors">B Liu, S McGrath, Y Hou, E Stuart, <strong>H Parikh</strong></div></div></div>
+      <div class="pub-item" id="paper-underrepresentation" data-type="conference"><div class="pub-venue-badge">NeurIPS · accepted</div><div class="pub-content"><div class="pub-title">Characterizing Underrepresentation in Generalizing Causal Survival Estimates</div><div class="pub-authors">B Liu, S McGrath, Y Hou, E Stuart, <strong>H Parikh</strong></div></div></div>
       <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title"><a href="https://arxiv.org/abs/2609.38175" target="_blank" rel="noopener noreferrer">Proximal Causal Inference through Cross-Proxy Balancing</a></div><div class="pub-authors">GV Ringlein, TQ Nguyen, EA Stuart, <strong>H Parikh</strong></div></div></div>
       <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title"><a href="https://arxiv.org/abs/2607.23254" target="_blank" rel="noopener noreferrer">Towards Optimal Estimators for Randomized Control Trials</a></div><div class="pub-authors"><strong>H Parikh</strong>, G Levin-Konigsberg, N Tripuraneni, D Madeka, MI Jordan, D Foster, D Perrault-Joncas, A Volfovsky</div></div></div>
       <div class="pub-item" data-type="preprint"><div class="pub-venue-badge">arXiv</div><div class="pub-content"><div class="pub-title"><a href="https://arxiv.org/abs/2605.21458" target="_blank" rel="noopener noreferrer">Mind the Sim-to-Real Gap &amp; Think Like a Scientist</a></div><div class="pub-authors"><strong>H Parikh</strong>, G Levin-Konigsberg, D Perrault-Joncas, A Volfovsky</div></div></div>
