@@ -56,7 +56,9 @@
       "authors": ["Maxwell Salvatore", "Yiran Wang", "Preeti Syal", "Brian Wahl", "Harsh Parikh", "Vishal Deo", "Naveen Kumar Bhatraju", "Kaushalya Jayaweera", "Nisha Rana", "Redoy Ranjan", "Fyezah Jehan", "Abdullah Yusuf", "Karthik Adapa", "Mona Duggal", "Anurag Agrawal", "Bhramar Mukherjee"]
     },
     {
-      "match": "data (in) equities in data science",
+      "match": "dissecting systemic and systematic biases in pulse oximetry",
+      "venue": "The Canadian Journal of Statistics (accepted)",
+      "year": "2026",
       "url": "https://arxiv.org/abs/2604.18291",
       "authors": ["Lillian Rountree", "Harsh Parikh", "Bhramar Mukherjee"]
     },
@@ -76,6 +78,12 @@
       "match": "mind the sim-to-real gap",
       "url": "https://arxiv.org/abs/2605.21458",
       "authors": ["Harsh Parikh", "Gabriel Levin-Konigsberg", "Dominique Perrault-Joncas", "Alexander Volfovsky"]
+    },
+    {
+      "match": "demystifying prediction powered inference",
+      "venue": "Harvard Data Science Review (provisionally accepted)",
+      "year": "2026",
+      "url": "https://arxiv.org/abs/2601.20819"
     },
     {
       "match": "synthetic control as balancing scores",
