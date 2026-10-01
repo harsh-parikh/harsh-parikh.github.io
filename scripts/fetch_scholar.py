@@ -11,7 +11,8 @@ Strategy:
      surface tiny — only stdlib + urllib).
   3. Merge with the previous publications.json so manual annotations
      (`note`, `co_first`, curated `venue`/`url`) survive across runs.
-  4. Apply data/overrides.json (venue/year overrides + exclusions).
+  4. Apply data/overrides.json (curated metadata, additions, exclusions).
+  5. Refresh the CV's embedded copy of the publication data.
 
 Designed to run locally and in GitHub Actions on a schedule.
 """
@@ -34,6 +35,7 @@ AUTHOR_ALIASES = {"h parikh", "harsh parikh", "harsh j parikh", "hp"}
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 OUTPUT_FILE = os.path.join(REPO_ROOT, "data", "publications.json")
 OVERRIDES_FILE = os.path.join(REPO_ROOT, "data", "overrides.json")
+CV_FILE = os.path.join(REPO_ROOT, "cv.html")
 
 PROFILE_URL = (
     "https://scholar.google.com/citations"
@@ -170,6 +172,10 @@ def matches(title: str, fragment: str) -> bool:
     return fragment.lower() in title.lower()
 
 
+def title_key(title: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "", title.lower())
+
+
 def merge(scholar_pubs: list[dict], previous: dict, overrides: dict) -> list[dict]:
     excludes = [s.lower() for s in overrides.get("exclude", [])]
     rules = overrides.get("overrides", [])
@@ -200,16 +206,44 @@ def merge(scholar_pubs: list[dict], previous: dict, overrides: dict) -> list[dic
 
         # Apply title-substring overrides last so they win.
         for rule in rules:
-            if matches(pub["title"], rule.get("match", "")):
-                if rule.get("venue"):
-                    pub["venue"] = rule["venue"]
+            if rule.get("match") and matches(pub["title"], rule["match"]):
+                for field in ("venue", "url", "note"):
+                    if rule.get(field):
+                        pub[field] = rule[field]
                 if rule.get("year"):
                     pub["year"] = str(rule["year"])
-                if rule.get("note"):
-                    pub["note"] = rule["note"]
+                if rule.get("authors"):
+                    pub["authors"] = rule["authors"]
+                    pub["authors_raw"] = " and ".join(rule["authors"])
 
         merged.append(pub)
+
+    by_title = {title_key(pub["title"]): pub for pub in merged}
+    for addition in overrides.get("additions", []):
+        key = title_key(addition["title"])
+        if key in by_title:
+            # Keep Scholar's citation count and identifier when it catches up.
+            by_title[key].update(addition)
+            continue
+        pub = {"citations": 0, "scholar_id": "", **addition}
+        pub.setdefault("authors_raw", " and ".join(pub.get("authors", [])))
+        merged.append(pub)
+        by_title[key] = pub
     return merged
+
+
+def sync_cv(data: dict) -> None:
+    """Keep the static CV usable without a client-side network request."""
+    with open(CV_FILE, encoding="utf-8") as f:
+        html = f.read()
+    safe_json = json.dumps(data, ensure_ascii=False).replace("<", "\\u003c")
+    pattern = r"var DATA = [^\n]*;"
+    replacement = "var DATA = " + safe_json + ";"
+    updated, count = re.subn(pattern, lambda _: replacement, html, count=1)
+    if count != 1:
+        raise ValueError("Could not locate embedded publication data in cv.html")
+    with open(CV_FILE, "w", encoding="utf-8") as f:
+        f.write(updated)
 
 
 # ---------------------------------------------------------------------------
@@ -253,7 +287,9 @@ def main() -> int:
     os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(output, f, indent=2, ensure_ascii=False)
+    sync_cv(output)
     print(f"Wrote {OUTPUT_FILE}")
+    print(f"Updated {CV_FILE}")
     return 0
 
 

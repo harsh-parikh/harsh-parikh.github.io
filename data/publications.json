@@ -2,7 +2,7 @@
   "scholar_id": "uCrw1ZMAAAAJ",
   "author": "Harsh Parikh",
   "fetched_at": "2026-09-28T12:18:35.917110+00:00",
-  "count": 48,
+  "count": 49,
   "publications": [
     {
       "title": "Demystifying prediction powered inference",
@@ -72,7 +72,7 @@
       "venue": "International Conference on Artificial Intelligence and Statistics (AISTATS)",
       "year": "2026",
       "citations": 5,
-      "url": "https://arxiv.org/abs/2509.17180",
+      "url": "https://proceedings.mlr.press/v300/arbour26a.html",
       "scholar_id": "uCrw1ZMAAAAJ:ns9cj8rnVeAC",
       "note": "co-first author",
       "co_first": [
@@ -82,21 +82,29 @@
     },
     {
       "title": "The case for an integrated biobanking initiative in South Asia",
-      "authors_raw": "M Salvatore, Y Wang, P Syal, B Wahl, H Parikh, V Deo, NK Bhatraju, ...",
+      "authors_raw": "Maxwell Salvatore and Yiran Wang and Preeti Syal and Brian Wahl and Harsh Parikh and Vishal Deo and Naveen Kumar Bhatraju and Kaushalya Jayaweera and Nisha Rana and Redoy Ranjan and Fyezah Jehan and Abdullah Yusuf and Karthik Adapa and Mona Duggal and Anurag Agrawal and Bhramar Mukherjee",
       "authors": [
-        "M Salvatore",
-        "Y Wang",
-        "P Syal",
-        "B Wahl",
-        "H Parikh",
-        "V Deo",
-        "NK Bhatraju",
-        "..."
+        "Maxwell Salvatore",
+        "Yiran Wang",
+        "Preeti Syal",
+        "Brian Wahl",
+        "Harsh Parikh",
+        "Vishal Deo",
+        "Naveen Kumar Bhatraju",
+        "Kaushalya Jayaweera",
+        "Nisha Rana",
+        "Redoy Ranjan",
+        "Fyezah Jehan",
+        "Abdullah Yusuf",
+        "Karthik Adapa",
+        "Mona Duggal",
+        "Anurag Agrawal",
+        "Bhramar Mukherjee"
       ],
       "venue": "The Lancet Regional Health-Southeast Asia 49",
       "year": "2026",
       "citations": 3,
-      "url": "",
+      "url": "https://doi.org/10.1016/j.lansea.2026.100777",
       "scholar_id": "uCrw1ZMAAAAJ:fPk4N6BV_jEC"
     },
     {
@@ -113,38 +121,38 @@
       "venue": "Journal of the Royal Statistical Society Series C: Applied Statistics",
       "year": "2026",
       "citations": 1,
-      "url": "https://academic.oup.com/jrsssc/advance-article-abstract/doi/10.1093/jrsssc/qlaf068/8378251",
+      "url": "https://academic.oup.com/jrsssc/article-abstract/75/3/677/8378251",
       "scholar_id": "uCrw1ZMAAAAJ:O3NaXMp0MMsC"
     },
     {
       "title": "Data (in) equities in data science: Dissecting systemic and systematic biases in pulse oximetry",
-      "authors_raw": "L Rountree, H Parikh, B Mukherjee",
+      "authors_raw": "Lillian Rountree and Harsh Parikh and Bhramar Mukherjee",
       "authors": [
-        "L Rountree",
-        "H Parikh",
-        "B Mukherjee"
+        "Lillian Rountree",
+        "Harsh Parikh",
+        "Bhramar Mukherjee"
       ],
       "venue": "arXiv preprint arXiv:2604.18291",
       "year": "2026",
       "citations": 1,
-      "url": "",
+      "url": "https://arxiv.org/abs/2604.18291",
       "scholar_id": "uCrw1ZMAAAAJ:zA6iFVUQeVQC"
     },
     {
       "title": "Lasting Income Costs of Mental and Physical Illness",
-      "authors_raw": "EK Johnson, H Parikh, CK Ettman, G Ge, L Sopina, AY Chang",
+      "authors_raw": "Emily K Johnson and Harsh Parikh and Catherine K Ettman and Ge Ge and Liza Sopina and Angela Y Chang",
       "authors": [
-        "EK Johnson",
-        "H Parikh",
-        "CK Ettman",
-        "G Ge",
-        "L Sopina",
-        "AY Chang"
+        "Emily K Johnson",
+        "Harsh Parikh",
+        "Catherine K Ettman",
+        "Ge Ge",
+        "Liza Sopina",
+        "Angela Y Chang"
       ],
       "venue": "JAMA Health Forum",
       "year": "2026",
       "citations": 1,
-      "url": "",
+      "url": "https://jamanetwork.com/journals/jama-health-forum/fullarticle/2846888",
       "scholar_id": "uCrw1ZMAAAAJ:ZHo1McVdvXMC"
     },
     {
@@ -161,7 +169,7 @@
     },
     {
       "title": "CICADAS: A simulation-based framework for randomized trial emulation in critical-care seizure treatment",
-      "authors_raw": "M McCauley, TM Westover, P Wynn, S Sartipi, N Turley, Z Akras, P Colin, ...",
+      "authors_raw": "M McCauley and TM Westover and P Wynn and S Sartipi and N Turley and Z Akras and P Colin and Webb and Struck and Kim and Cheng and Sun and Houle and Rudin and Volfovsky and Harsh Parikh and Fernandes and Zafar and Westover",
       "authors": [
         "M McCauley",
         "TM Westover",
@@ -170,7 +178,18 @@
         "N Turley",
         "Z Akras",
         "P Colin",
-        "..."
+        "Webb",
+        "Struck",
+        "Kim",
+        "Cheng",
+        "Sun",
+        "Houle",
+        "Rudin",
+        "Volfovsky",
+        "Harsh Parikh",
+        "Fernandes",
+        "Zafar",
+        "Westover"
       ],
       "venue": "Intelligence-Based Medicine 16, 100481",
       "year": "2026",
@@ -180,19 +199,19 @@
     },
     {
       "title": "The epidemiology of artificial intelligence",
-      "authors_raw": "H Parikh, T McCormick, E Johnson, L Hickey, M Ranney, B Mukherjee",
+      "authors_raw": "Harsh Parikh and Tyler McCormick and Emily Johnson and Leo Hickey and Megan Ranney and Bhramar Mukherjee",
       "authors": [
-        "H Parikh",
-        "T McCormick",
-        "E Johnson",
-        "L Hickey",
-        "M Ranney",
-        "B Mukherjee"
+        "Harsh Parikh",
+        "Tyler McCormick",
+        "Emily Johnson",
+        "Leo Hickey",
+        "Megan Ranney",
+        "Bhramar Mukherjee"
       ],
       "venue": "arXiv preprint arXiv:2604.14086",
       "year": "2026",
       "citations": 0,
-      "url": "",
+      "url": "https://arxiv.org/abs/2604.14086",
       "scholar_id": "uCrw1ZMAAAAJ:rO6llkc54NcC"
     },
     {
@@ -210,24 +229,26 @@
       "venue": "JNCI Cancer Spectrum, pkag078",
       "year": "2026",
       "citations": 0,
-      "url": "",
+      "url": "https://doi.org/10.1093/jncics/pkag078",
       "scholar_id": "uCrw1ZMAAAAJ:yD5IFk8b50cC"
     },
     {
       "title": "Towards Optimal Estimators for Randomized Control Trials",
-      "authors_raw": "H Parikh, G Levin-Konigsberg, N Tripuraneni, D Madeka, MI Jordan, ...",
+      "authors_raw": "Harsh Parikh and Gabriel Levin-Konigsberg and Nilesh Tripuraneni and Dhruv Madeka and Michael I. Jordan and Dean Foster and Dominique Perrault-Joncas and Alexander Volfovsky",
       "authors": [
-        "H Parikh",
-        "G Levin-Konigsberg",
-        "N Tripuraneni",
-        "D Madeka",
-        "MI Jordan",
-        "..."
+        "Harsh Parikh",
+        "Gabriel Levin-Konigsberg",
+        "Nilesh Tripuraneni",
+        "Dhruv Madeka",
+        "Michael I. Jordan",
+        "Dean Foster",
+        "Dominique Perrault-Joncas",
+        "Alexander Volfovsky"
       ],
       "venue": "arXiv preprint arXiv:2607.23254",
       "year": "2026",
       "citations": 0,
-      "url": "",
+      "url": "https://arxiv.org/abs/2607.23254",
       "scholar_id": "uCrw1ZMAAAAJ:dfsIfKJdRG4C"
     },
     {
@@ -249,17 +270,17 @@
     },
     {
       "title": "Mind the Sim-to-Real Gap & Think Like a Scientist",
-      "authors_raw": "H Parikh, G Levin-Konigsberg, D Perrault-Joncas, A Volfovsky",
+      "authors_raw": "Harsh Parikh and Gabriel Levin-Konigsberg and Dominique Perrault-Joncas and Alexander Volfovsky",
       "authors": [
-        "H Parikh",
-        "G Levin-Konigsberg",
-        "D Perrault-Joncas",
-        "A Volfovsky"
+        "Harsh Parikh",
+        "Gabriel Levin-Konigsberg",
+        "Dominique Perrault-Joncas",
+        "Alexander Volfovsky"
       ],
       "venue": "arXiv preprint arXiv:2605.21458",
       "year": "2026",
       "citations": 0,
-      "url": "",
+      "url": "https://arxiv.org/abs/2605.21458",
       "scholar_id": "uCrw1ZMAAAAJ:u_35RYKgDlwC"
     },
     {
@@ -303,11 +324,42 @@
         "Christopher Kim",
         "Timothy Lash"
       ],
-      "venue": "arXiv preprint arXiv:2603.03587",
+      "venue": "Advances in Neural Information Processing Systems (NeurIPS), accepted",
       "year": "2026",
       "citations": 0,
       "url": "https://arxiv.org/abs/2603.03587",
       "scholar_id": "uCrw1ZMAAAAJ:g5m5HwL7SMYC"
+    },
+    {
+      "citations": 0,
+      "scholar_id": "",
+      "title": "Characterizing Underrepresentation in Generalizing Causal Survival Estimates",
+      "authors": [
+        "Bolun Liu",
+        "Sean McGrath",
+        "Yiren Hou",
+        "Elizabeth Stuart",
+        "Harsh Parikh"
+      ],
+      "venue": "Advances in Neural Information Processing Systems (NeurIPS), accepted",
+      "year": "2026",
+      "url": "",
+      "authors_raw": "Bolun Liu and Sean McGrath and Yiren Hou and Elizabeth Stuart and Harsh Parikh"
+    },
+    {
+      "citations": 0,
+      "scholar_id": "",
+      "title": "Proximal causal inference through cross-proxy balancing",
+      "authors": [
+        "Grace V. Ringlein",
+        "Trang Q. Nguyen",
+        "Elizabeth A. Stuart",
+        "Harsh Parikh"
+      ],
+      "venue": "arXiv preprint arXiv:2609.38175",
+      "year": "2026",
+      "url": "https://arxiv.org/abs/2609.38175",
+      "authors_raw": "Grace V. Ringlein and Trang Q. Nguyen and Elizabeth A. Stuart and Harsh Parikh"
     },
     {
       "title": "Who Are We Missing?: A Principled Approach to Characterizing the Underrepresented Population",
@@ -358,7 +410,7 @@
       "venue": "International Conference on Artificial Intelligence and Statistics (AISTATS)",
       "year": "2025",
       "citations": 7,
-      "url": "",
+      "url": "https://proceedings.mlr.press/v258/khatami25a.html",
       "scholar_id": "uCrw1ZMAAAAJ:R3hNpaxXUhUC"
     },
     {
@@ -375,20 +427,6 @@
       "citations": 6,
       "url": "https://arxiv.org/abs/2505.24296",
       "scholar_id": "uCrw1ZMAAAAJ:BqipwSGYUEgC"
-    },
-    {
-      "title": "Sudeepa Roy, Cynthia Rudin, and Alexander Volfovsky",
-      "authors_raw": "H Parikh, M Morucci, V Orlandi",
-      "authors": [
-        "H Parikh",
-        "M Morucci",
-        "V Orlandi"
-      ],
-      "venue": "A double machine learning approach for combining experimental and …",
-      "year": "2025",
-      "citations": 5,
-      "url": "",
-      "scholar_id": "uCrw1ZMAAAAJ:cFHS6HbyZ2cC"
     },
     {
       "title": "A cautionary tale on integrating studies with disparate outcome measures for causal inference",

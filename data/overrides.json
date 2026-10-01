@@ -1,10 +1,11 @@
 {
-  "_comment": "Manual venue/note overrides for publications where Google Scholar has stale metadata. Keys are lowercased title substrings.",
+  "_comment": "Curated metadata for Scholar entries plus papers not yet indexed by Scholar. Match keys are lowercased title substrings.",
   "overrides": [
     {
       "match": "graph machine learning based doubly robust estimator",
       "venue": "International Conference on Artificial Intelligence and Statistics (AISTATS)",
-      "year": "2025"
+      "year": "2025",
+      "url": "https://proceedings.mlr.press/v258/khatami25a.html"
     },
     {
       "match": "cautionary tale on integrating studies with disparate outcome",
@@ -19,7 +20,60 @@
     {
       "match": "regularizing extrapolation in causal inference",
       "venue": "International Conference on Artificial Intelligence and Statistics (AISTATS)",
-      "year": "2026"
+      "year": "2026",
+      "url": "https://proceedings.mlr.press/v300/arbour26a.html"
+    },
+    {
+      "match": "controllable generative sandbox for causal inference",
+      "venue": "Advances in Neural Information Processing Systems (NeurIPS), accepted",
+      "year": "2026",
+      "url": "https://arxiv.org/abs/2603.03587"
+    },
+    {
+      "match": "precision mental health: predicting heterogeneous treatment effects",
+      "venue": "Journal of the Royal Statistical Society Series C: Applied Statistics",
+      "year": "2026",
+      "url": "https://academic.oup.com/jrsssc/article-abstract/75/3/677/8378251"
+    },
+    {
+      "match": "lasting income costs of mental and physical illness",
+      "venue": "JAMA Health Forum",
+      "year": "2026",
+      "url": "https://jamanetwork.com/journals/jama-health-forum/fullarticle/2846888",
+      "authors": ["Emily K Johnson", "Harsh Parikh", "Catherine K Ettman", "Ge Ge", "Liza Sopina", "Angela Y Chang"]
+    },
+    {
+      "match": "frailty and low utilization of curative-intent surgical resection",
+      "url": "https://doi.org/10.1093/jncics/pkag078"
+    },
+    {
+      "match": "cicadas: a simulation-based framework",
+      "authors": ["M McCauley", "TM Westover", "P Wynn", "S Sartipi", "N Turley", "Z Akras", "P Colin", "Webb", "Struck", "Kim", "Cheng", "Sun", "Houle", "Rudin", "Volfovsky", "Harsh Parikh", "Fernandes", "Zafar", "Westover"]
+    },
+    {
+      "match": "the case for an integrated biobanking initiative",
+      "url": "https://doi.org/10.1016/j.lansea.2026.100777",
+      "authors": ["Maxwell Salvatore", "Yiran Wang", "Preeti Syal", "Brian Wahl", "Harsh Parikh", "Vishal Deo", "Naveen Kumar Bhatraju", "Kaushalya Jayaweera", "Nisha Rana", "Redoy Ranjan", "Fyezah Jehan", "Abdullah Yusuf", "Karthik Adapa", "Mona Duggal", "Anurag Agrawal", "Bhramar Mukherjee"]
+    },
+    {
+      "match": "data (in) equities in data science",
+      "url": "https://arxiv.org/abs/2604.18291",
+      "authors": ["Lillian Rountree", "Harsh Parikh", "Bhramar Mukherjee"]
+    },
+    {
+      "match": "the epidemiology of artificial intelligence",
+      "url": "https://arxiv.org/abs/2604.14086",
+      "authors": ["Harsh Parikh", "Tyler McCormick", "Emily Johnson", "Leo Hickey", "Megan Ranney", "Bhramar Mukherjee"]
+    },
+    {
+      "match": "towards optimal estimators for randomized control trials",
+      "url": "https://arxiv.org/abs/2607.23254",
+      "authors": ["Harsh Parikh", "Gabriel Levin-Konigsberg", "Nilesh Tripuraneni", "Dhruv Madeka", "Michael I. Jordan", "Dean Foster", "Dominique Perrault-Joncas", "Alexander Volfovsky"]
+    },
+    {
+      "match": "mind the sim-to-real gap",
+      "url": "https://arxiv.org/abs/2605.21458",
+      "authors": ["Harsh Parikh", "Gabriel Levin-Konigsberg", "Dominique Perrault-Joncas", "Alexander Volfovsky"]
     },
     {
       "match": "synthetic control as balancing scores",
@@ -30,14 +84,26 @@
       "match": "ame: interpretable almost exact matching",
       "venue": "Advances in Neural Information Processing Systems (NeurIPS), Demonstrations Track",
       "year": "2022"
+    }
+  ],
+  "additions": [
+    {
+      "title": "Characterizing Underrepresentation in Generalizing Causal Survival Estimates",
+      "authors": ["Bolun Liu", "Sean McGrath", "Yiren Hou", "Elizabeth Stuart", "Harsh Parikh"],
+      "venue": "Advances in Neural Information Processing Systems (NeurIPS), accepted",
+      "year": "2026",
+      "url": ""
     },
     {
-      "match": "lasting income costs of mental and physical illness",
-      "venue": "JAMA Health Forum",
-      "year": "2026"
+      "title": "Proximal causal inference through cross-proxy balancing",
+      "authors": ["Grace V. Ringlein", "Trang Q. Nguyen", "Elizabeth A. Stuart", "Harsh Parikh"],
+      "venue": "arXiv preprint arXiv:2609.38175",
+      "year": "2026",
+      "url": "https://arxiv.org/abs/2609.38175"
     }
   ],
   "exclude": [
-    "almost-exact matching for interpretable and trustworthy"
+    "almost-exact matching for interpretable and trustworthy",
+    "sudeepa roy, cynthia rudin, and alexander volfovsky"
   ]
 }
