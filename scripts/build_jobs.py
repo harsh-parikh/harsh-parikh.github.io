@@ -216,8 +216,8 @@ def render_card(job: dict[str, object], today: date) -> str:
     compensation = ""
     if job["compensation"]:
         compensation = (
-            '\n              <div class="meta-line"><span class="meta-icon">$</span>'
-            f'<span>{text(job["compensation"])}</span></div>'
+            '\n            <span class="fact"><span aria-hidden="true">$</span>'
+            f'<span>{text(job["compensation"])}</span></span>'
         )
     remote = " · remote-friendly" if job["remote_value"] else ""
     search = " ".join(
@@ -237,27 +237,37 @@ def render_card(job: dict[str, object], today: date) -> str:
     posted = job["posted_date"]
     posted_copy = ""
     if isinstance(posted, date):
-        posted_copy = f"posted {posted.strftime('%b')} {posted.day} · "
+        posted_copy = f"Posted {posted.strftime('%b')} {posted.day} · "
+    verified = job["verified_date"]
+    verified_copy = f"Verified {verified.strftime('%b')} {verified.day}, {verified.year}"
+    source = ""
+    if str(job["source_url"]).rstrip("/") != str(job["apply_url"]).rstrip("/"):
+        source = (
+            f'\n            <a class="source" href="{attr(job["source_url"])}" '
+            'target="_blank" rel="noopener">Listing source ↗</a>'
+        )
 
     return f'''        <article class="job-card" data-id="{attr(job['id'])}" data-kind="{attr(kind)}" data-focus="{attr('|'.join(focus_items))}" data-country="{attr(job['country'])}" data-search="{attr(search)}" data-posted="{attr(job['posted'])}" data-deadline="{attr(deadline_iso)}" data-deadline-label="{attr(job['deadline_label'])}" data-verified="{attr(job['verified'])}" data-featured="{featured}" data-organization="{attr(job['organization'])}">
-          <div class="card-top">
-            <span class="type-badge">{TYPE_ICONS[kind]} {TYPE_NAMES[kind]}</span>
-            <button class="bookmark" type="button" data-save="{attr(job['id'])}" aria-label="Save to bookmarks" title="Save this job">☆</button>
-          </div>
-          <h3>{text(job['title'])}</h3>
-          <div class="org">{text(job['organization'])}</div>
-          <p class="description">{text(job['description'])}</p>
-          <div class="tags">{tags}</div>
-          <div class="meta">
-            <div class="meta-lines">
-              <div class="meta-line"><span class="meta-icon">⌖</span><span>{text(job['location'])}{remote}</span></div>
-              <div class="meta-line"><span class="meta-icon">◷</span><span class="deadline {status}" data-deadline-copy>{text(deadline_copy(job, today))}</span></div>{compensation}
+          <div class="card-content">
+            <div class="card-top">
+              <span class="type-badge">{TYPE_ICONS[kind]} {TYPE_NAMES[kind]}</span>
+              <span class="deadline {status}" data-deadline-copy>{text(deadline_copy(job, today))}</span>
             </div>
-            <a class="apply" href="{attr(job['apply_url'])}" target="_blank" rel="noopener">View role <span aria-hidden="true">↗</span></a>
+            <h3>{text(job['title'])}</h3>
+            <div class="org">{text(job['organization'])}</div>
+            <div class="card-facts">
+              <span class="fact"><span aria-hidden="true">⌖</span><span>{text(job['location'])}{remote}</span></span>{compensation}
+            </div>
+            <details class="job-details">
+              <summary>Role details <span aria-hidden="true">⌄</span></summary>
+              <p class="description">{text(job['description'])}</p>
+              <div class="tags">{tags}</div>
+            </details>
           </div>
-          <div class="card-foot">
-            <span class="verified">{text(posted_copy)}checked {text(job['verified'])}</span>
-            <a class="source" href="{attr(job['source_url'])}" target="_blank" rel="noopener">source</a>
+          <div class="card-actions">
+            <button class="bookmark" type="button" data-save="{attr(job['id'])}" aria-label="Save {attr(job['title'])}" aria-pressed="false">☆ Save</button>
+            <a class="apply" href="{attr(job['apply_url'])}" target="_blank" rel="noopener">View posting ↗</a>{source}
+            <span class="verified">{text(posted_copy)}{text(verified_copy)}</span>
           </div>
         </article>'''
 
@@ -276,8 +286,9 @@ def build_document(document: str, jobs: list[dict[str, object]]) -> tuple[str, i
     active = [job for job in jobs if deadline_status(job, today) != "expired"]
     active.sort(
         key=lambda job: (
-            job["deadline_date"] is None,
-            job["deadline_date"] or date.max,
+            job["posted_date"] is None,
+            -(job["posted_date"] or date.min).toordinal(),
+            -job["verified_date"].toordinal(),
             not bool(job["featured_value"]),
             str(job["organization"]).casefold(),
         )
@@ -291,7 +302,7 @@ def build_document(document: str, jobs: list[dict[str, object]]) -> tuple[str, i
     faculty = sum(job["type"] == "faculty" for job in active)
     regions = len({str(job["country"]) for job in active})
     last_verified = max(job["verified_date"] for job in (active or jobs))
-    updated = f"Last checked {last_verified.strftime('%B')} {last_verified.day}, {last_verified.year}"
+    updated = f"Latest verification: {last_verified.strftime('%B')} {last_verified.day}, {last_verified.year}"
 
     replacements = {
         "TOTAL": str(len(active)),
