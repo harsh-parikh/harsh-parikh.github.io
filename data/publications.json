@@ -5,6 +5,24 @@
   "count": 49,
   "publications": [
     {
+      "title": "The epidemiology of artificial intelligence",
+      "authors_raw": "Harsh Parikh and Tyler McCormick and Emily K. Johnson and Leo Hickey and Megan L. Ranney and Bhramar Mukherjee",
+      "authors": [
+        "Harsh Parikh",
+        "Tyler McCormick",
+        "Emily K. Johnson",
+        "Leo Hickey",
+        "Megan L. Ranney",
+        "Bhramar Mukherjee"
+      ],
+      "venue": "Nature Health",
+      "year": "2026",
+      "citations": 0,
+      "url": "https://www.nature.com/articles/s44360-026-00188-w",
+      "scholar_id": "uCrw1ZMAAAAJ:rO6llkc54NcC",
+      "pin": 1
+    },
+    {
       "title": "Demystifying prediction powered inference",
       "authors_raw": "Yilin Song and Dan M Kluger and Harsh Parikh and Tian Gu",
       "authors": [
@@ -196,23 +214,6 @@
       "citations": 0,
       "url": "",
       "scholar_id": "uCrw1ZMAAAAJ:f2IySw72cVMC"
-    },
-    {
-      "title": "The epidemiology of artificial intelligence",
-      "authors_raw": "Harsh Parikh and Tyler McCormick and Emily K. Johnson and Leo Hickey and Megan L. Ranney and Bhramar Mukherjee",
-      "authors": [
-        "Harsh Parikh",
-        "Tyler McCormick",
-        "Emily K. Johnson",
-        "Leo Hickey",
-        "Megan L. Ranney",
-        "Bhramar Mukherjee"
-      ],
-      "venue": "Nature Health",
-      "year": "2026",
-      "citations": 0,
-      "url": "https://www.nature.com/articles/s44360-026-00188-w",
-      "scholar_id": "uCrw1ZMAAAAJ:rO6llkc54NcC"
     },
     {
       "title": "Frailty and low utilization of curative-intent surgical resection in non-metastatic pancreatic cancer",

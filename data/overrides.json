@@ -64,6 +64,7 @@
     },
     {
       "match": "the epidemiology of artificial intelligence",
+      "pin": 1,
       "venue": "Nature Health",
       "year": "2026",
       "url": "https://www.nature.com/articles/s44360-026-00188-w",

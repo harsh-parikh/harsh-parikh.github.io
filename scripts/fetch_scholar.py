@@ -212,6 +212,8 @@ def merge(scholar_pubs: list[dict], previous: dict, overrides: dict) -> list[dic
                         pub[field] = rule[field]
                 if rule.get("year"):
                     pub["year"] = str(rule["year"])
+                if rule.get("pin"):
+                    pub["pin"] = int(rule["pin"])
                 if rule.get("authors"):
                     pub["authors"] = rule["authors"]
                     pub["authors_raw"] = " and ".join(rule["authors"])
@@ -232,12 +234,22 @@ def merge(scholar_pubs: list[dict], previous: dict, overrides: dict) -> list[dic
     return merged
 
 
+def sort_key(pub: dict) -> tuple:
+    """Pinned papers first (higher pin = higher up), then year desc, then citations desc."""
+    year = str(pub.get("year") or "")
+    return (
+        -int(pub.get("pin") or 0),
+        -(int(year) if year.isdigit() else 0),
+        -pub.get("citations", 0),
+    )
+
+
 def sync_cv(data: dict) -> None:
     """Render publications at update time, so the CV also works without JavaScript."""
     with open(CV_FILE, encoding="utf-8") as f:
         html = f.read()
     escape = html_lib.escape
-    pubs = sorted(data["publications"], key=lambda p: (-int(p.get("year") or 0), -p.get("citations", 0)))
+    pubs = sorted(data["publications"], key=sort_key)
     rows = ['  <!-- PUBLICATIONS:START -->', '  <div id="scholar-pub-list">']
     for i, pub in enumerate(pubs):
         authors = []
@@ -290,13 +302,8 @@ def main() -> int:
     pubs = merge(scholar_pubs, previous, overrides)
     print(f"After merge + overrides: {len(pubs)} publications.")
 
-    # Sort: year desc, then citations desc.
-    pubs.sort(
-        key=lambda p: (
-            -(int(p["year"]) if p["year"].isdigit() else 0),
-            -p.get("citations", 0),
-        )
-    )
+    # Sort: pinned first, then year desc, then citations desc.
+    pubs.sort(key=sort_key)
 
     output = {
         "scholar_id": SCHOLAR_ID,
