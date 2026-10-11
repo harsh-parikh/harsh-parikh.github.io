@@ -1,0 +1,7 @@
+{
+  "name": "bis527-axe-audit",
+  "private": true,
+  "type": "module",
+  "description": "Accessibility audit of the course page with axe-core through headless Chrome (DevTools protocol). npm install, then: python3 -m http.server 8765 --bind 127.0.0.1 (from the repo root) and node audit.mjs http://127.0.0.1:8765/intro_ds_2026.html",
+  "dependencies": { "axe-core": "^4.10.0" }
+}
