@@ -89,6 +89,10 @@ section{width:min(calc(100% - 64px),var(--max-w));margin:auto;padding:80px 0;bor
 .person-name{min-width:0;font-size:16px;line-height:1.35;color:var(--text-bright);overflow-wrap:anywhere}
 .person-name a{color:inherit;text-decoration:none}
 .person-name a:hover{color:var(--accent);text-decoration:underline}
+.people-group-title{font:600 12px/1.4 var(--sans);text-transform:uppercase;letter-spacing:.12em;color:var(--accent);margin:40px 0 4px}
+.people-group-title:first-of-type{margin-top:8px}
+.person-meta{min-width:0}
+.person-role{font-size:13px;line-height:1.4;color:var(--text-dim);margin-top:3px;overflow-wrap:anywhere}
 .teaching-list{display:grid;grid-template-columns:1fr 1fr;gap:32px}
 .teaching-item{padding:26px;border:1px solid var(--border);background:var(--bg-card)}
 .teaching-sem{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:14px}
