@@ -2,7 +2,7 @@
   "scholar_id": "uCrw1ZMAAAAJ",
   "author": "Harsh Parikh",
   "fetched_at": "2026-10-12T13:50:11.141686+00:00",
-  "count": 48,
+  "count": 49,
   "publications": [
     {
       "title": "The epidemiology of artificial intelligence",
@@ -361,6 +361,27 @@
       "year": "2026",
       "url": "",
       "authors_raw": "Bolun Liu and Sean McGrath and Yiren Hou and Elizabeth Stuart and Harsh Parikh"
+    },
+    {
+      "citations": 0,
+      "scholar_id": "",
+      "title": "Vanilla farming shapes wildlife hunting pressures in northeast Madagascar",
+      "authors": [
+        "Camille DeSisto",
+        "Lev Kolinski",
+        "Jean Yves Rabezara",
+        "Harsh Parikh",
+        "Prisca Rahary",
+        "Michelle Pender",
+        "James Moody",
+        "Randall Kramer",
+        "Voahangy Soarimalala",
+        "Charles L. Nunn"
+      ],
+      "venue": "Biological Conservation (accepted)",
+      "year": "2026",
+      "url": "",
+      "authors_raw": "Camille DeSisto and Lev Kolinski and Jean Yves Rabezara and Harsh Parikh and Prisca Rahary and Michelle Pender and James Moody and Randall Kramer and Voahangy Soarimalala and Charles L. Nunn"
     },
     {
       "title": "Who Are We Missing?: A Principled Approach to Characterizing the Underrepresented Population",
