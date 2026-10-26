@@ -1,8 +1,8 @@
 {
   "scholar_id": "uCrw1ZMAAAAJ",
   "author": "Harsh Parikh",
-  "fetched_at": "2026-10-12T13:50:11.141686+00:00",
-  "count": 49,
+  "fetched_at": "2026-10-26T11:49:50.620888+00:00",
+  "count": 50,
   "publications": [
     {
       "title": "The epidemiology of artificial intelligence",
@@ -72,7 +72,7 @@
       ],
       "venue": "JAMA Health Forum",
       "year": "2026",
-      "citations": 7,
+      "citations": 8,
       "url": "https://jamanetwork.com/journals/jama-health-forum/fullarticle/2843724",
       "scholar_id": "uCrw1ZMAAAAJ:70eg2SAEIzsC"
     },
@@ -126,6 +126,23 @@
       "scholar_id": "uCrw1ZMAAAAJ:fPk4N6BV_jEC"
     },
     {
+      "title": "Lasting Income Costs of Mental and Physical Illness",
+      "authors_raw": "Emily K Johnson and Harsh Parikh and Catherine K Ettman and Ge Ge and Liza Sopina and Angela Y Chang",
+      "authors": [
+        "Emily K Johnson",
+        "Harsh Parikh",
+        "Catherine K Ettman",
+        "Ge Ge",
+        "Liza Sopina",
+        "Angela Y Chang"
+      ],
+      "venue": "JAMA Health Forum",
+      "year": "2026",
+      "citations": 2,
+      "url": "https://jamanetwork.com/journals/jama-health-forum/fullarticle/2846888",
+      "scholar_id": "uCrw1ZMAAAAJ:ZHo1McVdvXMC"
+    },
+    {
       "title": "Precision mental health: predicting heterogeneous treatment effects for depression through data integration",
       "authors_raw": "Carly L Brantner and Trang Quynh Nguyen and Harsh Parikh and Congwen Zhao and Hwanhee Hong and Elizabeth A Stuart",
       "authors": [
@@ -155,23 +172,6 @@
       "citations": 1,
       "url": "https://arxiv.org/abs/2604.18291",
       "scholar_id": "uCrw1ZMAAAAJ:zA6iFVUQeVQC"
-    },
-    {
-      "title": "Lasting Income Costs of Mental and Physical Illness",
-      "authors_raw": "Emily K Johnson and Harsh Parikh and Catherine K Ettman and Ge Ge and Liza Sopina and Angela Y Chang",
-      "authors": [
-        "Emily K Johnson",
-        "Harsh Parikh",
-        "Catherine K Ettman",
-        "Ge Ge",
-        "Liza Sopina",
-        "Angela Y Chang"
-      ],
-      "venue": "JAMA Health Forum",
-      "year": "2026",
-      "citations": 1,
-      "url": "https://jamanetwork.com/journals/jama-health-forum/fullarticle/2846888",
-      "scholar_id": "uCrw1ZMAAAAJ:ZHo1McVdvXMC"
     },
     {
       "title": "Why are there many equally good models? An Anatomy of the Rashomon Effect",
@@ -347,20 +347,22 @@
       "scholar_id": "uCrw1ZMAAAAJ:g5m5HwL7SMYC"
     },
     {
-      "citations": 0,
-      "scholar_id": "",
-      "title": "Characterizing Underrepresentation in Generalizing Causal Survival Estimates",
+      "title": "Gendered patterns of reporting childhood abuse and quality of parental relationships across 21 nations: Descriptive findings from the Global Flourishing Study (GFS)",
+      "authors_raw": "Y Hou, H Parikh, E Zang, J Higginbottom, S Saxena, TJ VanderWeele, ...",
       "authors": [
-        "Bolun Liu",
-        "Sean McGrath",
-        "Yiren Hou",
-        "Elizabeth Stuart",
-        "Harsh Parikh"
+        "Y Hou",
+        "H Parikh",
+        "E Zang",
+        "J Higginbottom",
+        "S Saxena",
+        "TJ VanderWeele",
+        "..."
       ],
-      "venue": "Advances in Neural Information Processing Systems (NeurIPS), accepted",
+      "venue": "medRxiv, 2026.10. 12.26365301",
       "year": "2026",
+      "citations": 0,
       "url": "",
-      "authors_raw": "Bolun Liu and Sean McGrath and Yiren Hou and Elizabeth Stuart and Harsh Parikh"
+      "scholar_id": "uCrw1ZMAAAAJ:EUQCXRtRnyEC"
     },
     {
       "citations": 0,
@@ -382,6 +384,22 @@
       "year": "2026",
       "url": "",
       "authors_raw": "Camille DeSisto and Lev Kolinski and Jean Yves Rabezara and Harsh Parikh and Prisca Rahary and Michelle Pender and James Moody and Randall Kramer and Voahangy Soarimalala and Charles L. Nunn"
+    },
+    {
+      "citations": 0,
+      "scholar_id": "",
+      "title": "Characterizing Underrepresentation in Generalizing Causal Survival Estimates",
+      "authors": [
+        "Bolun Liu",
+        "Sean McGrath",
+        "Yiren Hou",
+        "Elizabeth Stuart",
+        "Harsh Parikh"
+      ],
+      "venue": "Advances in Neural Information Processing Systems (NeurIPS), accepted",
+      "year": "2026",
+      "url": "",
+      "authors_raw": "Bolun Liu and Sean McGrath and Yiren Hou and Elizabeth Stuart and Harsh Parikh"
     },
     {
       "title": "Who Are We Missing?: A Principled Approach to Characterizing the Underrepresented Population",
@@ -617,7 +635,7 @@
       ],
       "venue": "The Lancet Digital Health",
       "year": "2023",
-      "citations": 40,
+      "citations": 41,
       "url": "https://www.thelancet.com/journals/landig/article/PIIS2589-7500(23)00088-2/fulltext",
       "scholar_id": "uCrw1ZMAAAAJ:9ZlFYXVOiuMC",
       "note": "co-first author",
@@ -678,7 +696,7 @@
       ],
       "venue": "International Conference on Machine Learning (ICML)",
       "year": "2022",
-      "citations": 90,
+      "citations": 92,
       "url": "https://proceedings.mlr.press/v162/parikh22a.html",
       "scholar_id": "uCrw1ZMAAAAJ:5nxA0vEk-isC"
     },
