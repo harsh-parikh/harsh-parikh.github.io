@@ -1,0 +1,946 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Who Wins Each Senate Contest?</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Layout: a dark stage. A slim top bar with the scene chips and a progress line; one scene at a time with the narration on the left (one line lights per step) and the animated stage on the right; a footer with Back, the step dots and Next. Stacks at phone width. Dark-first, light mirrored. */
+:root{
+  --bg:#0d131e; --surface:#141c2b; --surface-2:#1a2435; --ink:#eef1f6; --ink-2:#c9cfda; --muted:#8c94a4; --line:#2a3548; --grid:#1e293a;
+  --accent:#58c4dd; --focus:#ffd35a; --hilite:#ffd35a; --on-color:#0d131e; --dim:.6; --litmix:18%;
+  --dem:#58c4dd; --rep:#fc6255; --neutral:#5d677a; --train:#c59bf2; --valid:#83c167; --cv:#aab2c0;
+  --font-display:"STIX Two Text","Times New Roman",Georgia,serif;
+  --font-ui:"Source Sans 3","Helvetica Neue",Arial,sans-serif;
+  color-scheme:dark }
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]){
+  --bg:#f7f6f3; --surface:#ffffff; --surface-2:#f0eee9; --ink:#1d1f24; --ink-2:#464a53; --muted:#646872; --line:#d8d5ce; --grid:#e9e6df;
+  --accent:#00356b; --focus:#c98f00; --hilite:#755200; --on-color:#ffffff; --dim:.85; --litmix:12%;
+  --dem:#0072b2; --rep:#d55e00; --neutral:#b7b3ab; --train:#8e5bb5; --valid:#107363; --cv:#5a5e66; color-scheme:light } }
+:root[data-theme="light"]{
+  --bg:#f7f6f3; --surface:#ffffff; --surface-2:#f0eee9; --ink:#1d1f24; --ink-2:#464a53; --muted:#646872; --line:#d8d5ce; --grid:#e9e6df;
+  --accent:#00356b; --focus:#c98f00; --hilite:#755200; --on-color:#ffffff; --dim:.85; --litmix:12%;
+  --dem:#0072b2; --rep:#d55e00; --neutral:#b7b3ab; --train:#8e5bb5; --valid:#107363; --cv:#5a5e66; color-scheme:light }
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-ui);font-size:18px;line-height:1.42;display:flex;flex-direction:column;min-height:100%}
+@media (min-width:961px){html,body{overflow:hidden} main{overflow:hidden;min-height:0} #scene{transform-origin:top center} .stage svg{max-height:calc(100vh - 360px);margin-left:auto;margin-right:auto}}
+@media (min-width:961px) and (max-height:880px){.scene{grid-template-columns:minmax(260px,46ch) minmax(0,1fr)} .story ol>li{font-size:17px;line-height:1.5} .story ol{gap:.75em} .story h2{font-size:26px} .story ul.sub{list-style:none;margin:.35em 0 .1em;padding:0;display:flex;flex-direction:column;gap:.2em}
+.story ul.sub li{position:relative;padding-left:1.05em;font-size:.9em;line-height:1.45;color:var(--ink-2)}
+.story ul.sub li::before{content:"";position:absolute;left:.1em;top:.72em;width:.5em;height:2px;border-radius:1px;background:var(--muted)}
+.story .note{font-size:14px;margin-top:10px} .formula{font-size:14px;padding:4px 8px} .stat .v{font-size:28px} body{font-size:17px}}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.top{padding-block:10px 0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));border-bottom:1px solid var(--line)}
+.top-inner{max-width:1400px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 24px;padding-bottom:8px}
+.brand{display:flex;flex-direction:column;line-height:1.15}
+.brand h1{margin:0;font-family:var(--font-display);font-weight:600;font-size:21px}
+.brand span{font-size:13px;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip{border:1px solid transparent;background:transparent;color:var(--ink-2);border-radius:999px;padding:3px 8px;font-size:12.5px;line-height:1.2;display:inline-flex;gap:6px;align-items:center}
+.chip b{font-weight:700;color:var(--muted)}
+.chip.on{background:var(--accent);color:var(--on-color);border-color:var(--accent)}
+.chip.on b{color:var(--on-color)}
+.chip:hover:not(.on){border-color:var(--line)}
+.progress{height:3px;background:var(--grid)}
+.progress div{height:100%;background:var(--accent);transition:width .5s ease}
+main{flex:1;max-width:1400px;width:100%;margin:0 auto;padding-block:14px 8px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.scene{display:grid;grid-template-columns:minmax(260px,36ch) minmax(0,1fr);gap:22px 36px;align-items:start}
+@media (max-width:960px){.scene{grid-template-columns:1fr}}
+.story{min-width:0}
+.story .kicker{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 6px;font-weight:600}
+.story h2{font-family:var(--font-display);font-weight:600;font-size:clamp(26px,2.5vw,34px);margin:0 0 14px;line-height:1.15;text-wrap:balance}
+.story ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.75em}
+.story ol>li{position:relative;padding-left:1.1em;opacity:var(--dim);transform:translateX(-6px);transition:opacity .55s ease,transform .55s ease;font-size:19px;line-height:1.5}
+.story ol>li::before{content:"";position:absolute;left:0;top:.68em;width:7px;height:7px;border-radius:50%;background:var(--muted)}
+.story ol>li.on{opacity:1;transform:none}
+.story ol>li.on::before{background:var(--accent)}
+.story ol>li.q{font-style:italic;color:var(--hilite)}
+.story ol>li.q::before{background:var(--hilite)}
+.story ul.sub{list-style:none;margin:.35em 0 .1em;padding:0;display:flex;flex-direction:column;gap:.2em}
+.story ul.sub li{position:relative;padding-left:1.05em;font-size:.9em;line-height:1.45;color:var(--ink-2)}
+.story ul.sub li::before{content:"";position:absolute;left:.1em;top:.72em;width:.5em;height:2px;border-radius:1px;background:var(--muted)}
+.story ul.sub.stepped>li{transition:opacity .4s}
+.story ol>li.on ul.sub.stepped>li:not(.on){opacity:var(--dim)}
+.story ul.sub.stepped>li.on{opacity:1}
+.story ul.sub>li.now{color:var(--ink)}
+.story ul.sub>li.now::before{background:var(--hilite)}
+.story .note{color:var(--ink-2);font-size:16px;margin-top:16px;border-top:1px solid var(--line);padding-top:10px;opacity:0;transition:opacity .6s}
+.story .note.on{opacity:1}
+.formula{font-family:var(--font-display);font-size:17px;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px 10px;margin:5px 0 0}
+.stage{min-width:0;display:grid;gap:10px}
+.panel{background:var(--surface);border:0;border-radius:12px;padding:12px 14px;min-width:0}
+.panel h3{font-family:var(--font-ui);font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.hid{opacity:0;transform:translateY(8px);transition:opacity .6s ease,transform .6s ease;pointer-events:none}
+.hid.in{opacity:1;transform:none;pointer-events:auto}
+.controls{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;font-size:16px}
+.controls label{display:inline-flex;align-items:center;gap:8px}
+.controls input[type=range]{width:160px;accent-color:var(--accent)}
+.btn{background:var(--accent);color:var(--on-color);border:0;border-radius:7px;padding:7px 15px;font-weight:600;font-size:15px}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.btn:disabled{opacity:.4;cursor:default}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.seg button{background:transparent;border:0;padding:5px 11px;font-size:15px;color:var(--ink-2)}
+.seg button.on{background:var(--accent);color:var(--on-color)}
+.stats{display:flex;flex-wrap:wrap;gap:8px 26px;font-size:16px}
+.stat{display:flex;flex-direction:column}
+.stat .v{font-family:var(--font-display);font-size:34px;line-height:1.05;font-variant-numeric:tabular-nums}
+.stat .l{font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.sw{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:5px}
+svg{display:block;max-width:100%;height:auto}
+svg text{font-family:var(--font-ui);fill:var(--ink-2)}
+.tip{position:absolute;pointer-events:none;background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:8px 10px;font-size:14px;line-height:1.35;box-shadow:0 6px 20px rgba(0,0,0,.35);max-width:270px;z-index:5}
+.rel{position:relative}
+table.data{border-collapse:collapse;font-size:14px;width:100%;font-variant-numeric:tabular-nums}
+table.data th,table.data td{padding:4px 8px;text-align:right;border-bottom:1px solid var(--grid);white-space:nowrap}
+table.data th{color:var(--muted);font-weight:600;cursor:pointer}
+table.data th:first-child,table.data td:first-child,table.data th:nth-child(2),table.data td:nth-child(2){text-align:left}
+table.data th.on{color:var(--accent);text-decoration:underline}
+table.data td.y{font-weight:700}
+table.data.fit th{white-space:normal;vertical-align:bottom;line-height:1.15;padding:4px 5px;font-size:13px}
+table.data.fit td{padding:4px 5px}
+table.data tr.row-in{animation:rowin .5s both}
+@keyframes rowin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.scroll{overflow-x:auto}
+.nav{border-top:1px solid var(--line);padding-block:10px 14px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.nav-inner{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
+.where{color:var(--muted);font-size:14px;text-align:center}
+.beats{display:flex;gap:6px;justify-content:center;margin-bottom:4px}
+.beats i{width:9px;height:9px;border-radius:50%;background:var(--grid);border:1px solid var(--line);display:inline-block;transition:background .3s}
+.beats i.done{background:var(--muted)}
+.beats i.now{background:var(--accent);border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 30%,transparent)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:var(--ink-2)}
+.cm{border-collapse:collapse;font-size:16px;font-variant-numeric:tabular-nums}
+.cm th,.cm td{border:1px solid var(--line);padding:6px 12px;text-align:center}
+.cm th{color:var(--muted);font-weight:600;font-size:12px}
+.pathlist{list-style:none;padding:0;margin:6px 0 0;font-size:15px}
+.pathlist li{padding:3px 0;border-bottom:1px dashed var(--grid)}
+.small{font-size:14px;color:var(--muted)}
+.nc{text-transform:none}
+.card{font-size:17px;line-height:1.5}
+.card .fact{display:flex;justify-content:space-between;gap:12px;padding:3px 0;border-bottom:1px dashed var(--grid);transition:background .4s,color .4s}
+.card .fact.lit{background:color-mix(in srgb,var(--hilite) 18%,transparent)}
+.card .fact span:last-child{font-variant-numeric:tabular-nums;font-weight:600}
+.card .group{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:10px 0 2px}
+.card.folded .fact:not(.keep),.card.folded .group{display:none}
+.card.folded h3::after{content:" \00b7 now one row of the table below";text-transform:none;letter-spacing:0;font-weight:400}
+.bigq{font-family:var(--font-display);font-size:clamp(22px,2.6vw,34px);text-align:center;color:var(--hilite);margin:6px 0 2px;opacity:0;transition:opacity .8s}
+.bigq.in{opacity:1}
+.pulse{animation:pulse 1.2s ease-in-out 2}
+@keyframes pulse{0%,100%{filter:none}50%{filter:drop-shadow(0 0 8px var(--hilite))}}
+.code pre{margin:0;font-family:"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;font-size:13.5px;line-height:1.5}
+.code pre.helpers{font-size:12px;line-height:1.4}
+.code .ln{display:block;white-space:pre;padding:0 8px;border-radius:4px;transition:background .3s}
+.code .ln.lit{background:color-mix(in srgb,var(--hilite) var(--litmix),transparent)}
+.code .ln.lit .py-cm{color:var(--ink-2)}
+.code .py-kw{color:var(--accent);font-weight:600}.code .py-cm{color:var(--muted)}.code .py-st{color:var(--valid)}
+.story code{font-family:"SF Mono",Menlo,Consolas,monospace;font-size:.86em}
+.panel,.story{position:relative}
+.zsel{outline:2px dashed var(--hilite);outline-offset:4px;border-radius:12px}
+.zbar{position:absolute;top:6px;right:6px;z-index:8;display:flex;align-items:center;gap:2px;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:3px 4px;font-size:13px;box-shadow:0 4px 14px rgba(0,0,0,.3)}
+.zbar button{background:transparent;border:0;color:var(--ink);font-size:15px;font-weight:700;padding:1px 8px;border-radius:5px}
+.zbar button:hover{background:var(--grid)}
+.zbar span{min-width:3.2em;text-align:center;color:var(--ink-2);font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important} }
+</style>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand"><h1>Who wins each Senate contest in 2026?</h1><span>BIS 527 &middot; Lecture 17 &middot; Decision trees</span></div>
+    <nav class="chips" id="chips" aria-label="Scenes"></nav>
+    <button class="chip" id="theme" title="Switch between the dark stage and a light page">Light page</button>
+  </div>
+  <div class="progress"><div id="prog" style="width:0"></div></div>
+</header>
+<main>
+  <div id="scene" class="scene" aria-live="polite"></div>
+</main>
+<footer class="nav"><div class="nav-inner">
+  <button class="btn ghost" id="prev">&larr; Back</button>
+  <div><div class="beats" id="beats"></div><div class="where" id="where"></div></div>
+  <button class="btn" id="next">Next &rarr;</button>
+</div></footer>
+
+<script id="data">
+// year, state, incumbent, the eleven features in the order of FEAT_KEYS, dem_won (-1 = unknown, 2026)
+const RAW = [[1982,"AZ","Dennis DeConcini",-36.4,11.0,1,1,0,1,59.2,10.9,48.2,11.6,74.6,1],[1982,"CA","S. I. Hayakawa",-18.9,-3.4,0,0,0,1,69.8,10.6,19.4,10.3,65.9,0],[1982,"CT","Lowell Weicker",-11.1,-16.7,0,1,0,1,82.7,6.9,2.2,12.0,87.7,0],[1982,"DE","William Roth",-2.5,-12.3,0,1,0,1,71.3,8.3,5.5,10.3,81.2,0],[1982,"FL","Lawton Chiles",-18.1,26.0,1,1,0,1,54.6,8.9,42.4,17.3,76.3,1],[1982,"HI","Spark Matsunaga",2.2,13.9,1,1,0,1,79.8,6.2,22.0,8.3,33.0,1],[1982,"IN","Richard Lugar",-19.6,-19.0,0,1,0,1,62.9,12.1,4.3,10.9,90.3,0],[1982,"MA","Ted Kennedy",-0.2,41.0,1,1,0,1,74.5,8.0,0.5,12.8,92.0,1],[1982,"MD","Paul Sarbanes",3.2,18.6,1,1,0,1,82.0,8.1,6.1,9.6,73.5,1],[1982,"ME","George J. Mitchell",-3.8,20.4,1,1,0,1,57.0,8.6,11.6,12.7,98.5,1],[1982,"MI","Donald Riegle",-7.1,5.7,1,1,0,1,63.4,15.9,2.6,10.2,84.2,1],[1982,"MN","David Durenberger",4.4,45.9,0,1,0,1,67.5,8.5,6.7,11.9,96.0,0],[1982,"MO","John Danforth",-7.1,-14.5,0,1,0,1,57.4,9.7,4.4,13.3,87.7,0],[1982,"MS","John C. Stennis",-1.4,100.0,1,1,0,1,42.6,11.5,12.1,11.6,63.7,1],[1982,"MT","John Melcher",-27.3,28.3,1,1,0,1,54.0,8.8,11.9,11.0,93.4,1],[1982,"ND","Quentin Burdick",-42.0,25.9,1,1,0,1,57.4,5.8,5.2,12.5,95.5,1],[1982,"NE","Edward Zorinsky",-43.2,5.8,1,1,0,1,59.1,5.8,4.9,13.2,93.9,1],[1982,"NJ","Nicholas F. Brady",-14.8,22.9,0,0,0,1,76.7,8.9,1.7,11.9,78.7,1],[1982,"NM","Harrison Schmitt",-19.8,-14.2,0,1,0,1,57.0,9.6,26.5,9.1,52.6,1],[1982,"NV","Howard Cannon",-39.9,33.4,1,1,0,1,71.2,10.6,63.0,8.4,82.9,0],[1982,"NY","Daniel Patrick Moynihan",1.7,9.4,1,1,0,1,60.8,9.0,-4.3,12.4,74.6,1],[1982,"OH","Howard Metzenbaum",-11.5,3.1,1,1,0,1,63.9,13.3,0.5,11.1,88.2,1],[1982,"PA","John Heinz",-7.7,-5.7,0,1,0,1,56.2,11.4,-0.2,13.2,89.1,0],[1982,"RI","John Chafee",12.3,-15.7,0,1,0,1,59.7,10.2,-1.0,13.6,93.2,0],[1982,"TN","Jim Sasser",-0.3,5.5,1,1,0,1,46.4,12.3,15.3,11.4,83.2,1],[1982,"TX","Lloyd Bentsen",-14.3,14.7,1,1,0,1,63.6,7.4,28.1,9.5,65.0,1],[1982,"UT","Orrin Hatch",-55.9,-12.9,0,1,0,1,63.7,8.6,37.6,7.5,92.5,0],[1982,"VA","Harry F. Byrd Jr.",-13.6,100.0,1,0,0,1,73.3,7.5,14.6,9.6,78.0,0],[1982,"VT","Robert Stafford",-7.2,-4.9,0,1,0,1,62.4,7.2,13.5,11.5,98.6,0],[1982,"WA","Henry M. Jackson",-14.2,49.5,1,1,0,1,69.1,12.0,22.9,10.6,90.1,1],[1982,"WI","William Proxmire",-5.2,45.6,1,1,0,1,57.3,10.9,5.9,12.2,93.5,1],[1982,"WV","Robert Byrd",4.7,100.0,1,1,0,1,46.5,15.3,10.4,12.4,95.7,1],[1982,"WY","Malcolm Wallop",-38.3,-9.2,0,1,0,1,65.8,6.8,44.5,7.8,92.1,0],[1984,"AK","Ted Stevens",-34.6,-51.7,0,1,0,0,89.4,9.7,47.8,2.9,76.6,0],[1984,"AL","Howell Heflin",-1.4,100.0,1,1,0,0,47.8,11.0,9.9,11.8,73.4,1],[1984,"AR","David Pryor",-0.6,64.9,1,1,0,0,43.3,8.4,12.0,14.2,82.2,1],[1984,"CO","William L. Armstrong",-27.9,-18.6,0,1,0,0,71.3,5.7,25.6,8.7,82.4,0],[1984,"DE","Joe Biden",-2.5,17.1,1,1,0,0,71.3,6.1,4.8,10.8,80.8,1],[1984,"GA","Sam Nunn",15.3,66.3,1,1,0,0,55.2,6.1,16.7,9.8,71.0,1],[1984,"IA","Roger Jepsen",-14.1,-3.2,0,1,0,0,54.9,6.9,0.2,14.1,96.7,1],[1984,"ID","Jim McClure",-45.0,-36.9,0,1,0,0,58.3,7.3,25.5,10.6,93.6,0],[1984,"IL","Charles H. Percy",-8.7,-8.0,0,1,0,0,65.6,8.9,1.4,11.6,77.2,1],[1984,"KS","Nancy Kassebaum",-27.0,-11.9,0,1,0,0,68.0,4.9,6.6,13.2,90.0,0],[1984,"KY","Walter Dee Huddleston",-1.4,24.6,1,1,0,0,48.8,8.8,9.6,11.6,91.8,0],[1984,"LA","J. Bennett Johnston",-5.6,100.0,1,1,0,0,52.3,10.5,16.0,9.5,67.2,1],[1984,"MA","Paul Tsongas",-0.2,10.2,1,0,0,0,74.5,4.4,0.3,13.2,91.1,1],[1984,"ME","William Cohen",-3.8,-25.0,0,1,0,0,57.0,5.9,9.5,13.0,98.4,0],[1984,"MI","Carl Levin",-7.1,4.3,1,1,0,0,63.4,11.0,-0.3,10.8,83.8,1],[1984,"MN","Rudy Boschwitz",4.4,-16.7,0,1,0,0,67.5,6.1,6.5,12.2,95.5,0],[1984,"MS","Thad Cochran",-1.4,-17.5,0,1,0,0,42.6,10.7,9.3,11.7,63.5,0],[1984,"MT","Max Baucus",-27.3,11.4,1,1,0,0,54.0,7.5,12.0,11.4,93.2,1],[1984,"NC","Jesse Helms",-2.2,-9.0,0,1,0,0,56.8,6.5,12.8,10.9,75.4,0],[1984,"NE","J. James Exon",-43.2,35.3,1,1,0,0,59.1,4.4,3.6,13.4,93.7,1],[1984,"NH","Gordon J. Humphrey",-34.1,-2.2,0,1,0,0,71.6,4.3,19.6,11.6,98.1,0],[1984,"NJ","Bill Bradley",-14.8,12.4,1,1,0,0,76.7,6.1,1.8,12.3,77.7,1],[1984,"NM","Pete Domenici",-19.8,-6.8,0,1,0,0,57.0,7.7,26.1,9.3,52.5,0],[1984,"OK","David Boren",-26.7,33.2,1,1,0,0,58.4,6.8,22.1,11.9,84.2,1],[1984,"OR","Mark Hatfield",-11.1,-23.4,0,1,0,0,59.1,9.1,18.3,12.5,92.8,0],[1984,"RI","Claiborne Pell",12.3,50.2,1,1,0,0,59.7,4.7,-2.0,14.1,92.5,1],[1984,"SC","Strom Thurmond",-1.3,-11.4,0,1,0,0,56.1,6.9,16.5,9.9,68.5,0],[1984,"SD","Larry Pressler",-31.3,-33.7,0,1,0,0,53.6,4.4,2.1,13.7,92.4,0],[1984,"TN","Howard Baker",-0.3,-15.9,0,0,0,0,46.4,8.4,12.4,11.8,83.1,1],[1984,"TX","John Tower",-14.3,-0.5,0,0,0,0,63.6,5.9,31.1,9.3,64.2,0],[1984,"VA","John Warner",-13.6,-0.4,0,1,0,0,73.3,5.1,13.5,9.9,77.5,0],[1984,"WV","Jennings Randolph",4.7,1.0,1,0,0,0,46.5,14.0,7.7,12.8,95.7,1],[1984,"WY","Alan Simpson",-38.3,24.3,0,1,0,0,65.8,6.4,44.1,7.9,92.0,0],[1986,"AK","Frank Murkowski",-38.1,-7.8,0,1,0,1,92.9,11.2,41.6,3.1,76.3,0],[1986,"AL","Jeremiah Denton",-22.5,-3.2,0,1,0,1,49.0,9.5,8.0,12.2,73.5,1],[1986,"AR","Dale Bumpers",-22.5,18.2,1,1,0,1,46.6,8.5,7.8,14.3,82.2,1],[1986,"AZ","Barry Goldwater",-34.2,-1.1,0,0,0,1,63.8,7.4,39.3,12.3,73.7,0],[1986,"CA","Alan Cranston",-16.4,20.7,1,1,0,1,72.1,6.7,22.8,10.5,62.0,1],[1986,"CO","Gary Hart",-28.7,1.7,1,0,0,1,75.3,8.0,24.1,8.9,82.0,1],[1986,"CT","Chris Dodd",-22.0,13.5,1,1,0,1,83.0,3.7,3.8,12.9,86.1,1],[1986,"FL","Paula Hawkins",-30.7,-3.3,0,1,0,1,57.0,5.9,33.3,17.8,75.1,1],[1986,"GA","Mack Mattingly",-20.4,-1.7,0,1,0,1,56.2,5.9,17.7,9.8,70.7,1],[1986,"HI","Daniel Inouye",-11.4,61.8,1,1,0,1,77.4,4.4,17.3,9.5,32.6,1],[1986,"IA","Chuck Grassley",-7.4,-8.0,0,1,0,1,55.9,6.5,-1.8,14.5,96.5,0],[1986,"ID","Steve Symms",-46.6,-1.0,0,1,0,1,55.5,8.6,19.5,10.9,93.2,0],[1986,"IL","Alan J. Dixon",-12.9,13.7,1,1,0,1,66.4,8.0,1.0,11.9,76.5,1],[1986,"IN","Dan Quayle",-24.1,-7.6,0,1,0,1,60.6,6.6,1.7,11.8,90.1,0],[1986,"KS","Bob Dole",-34.1,-27.5,0,1,0,1,60.9,5.3,6.4,13.4,89.6,0],[1986,"KY","Wendell Ford",-20.7,30.3,1,1,0,1,46.4,9.2,6.5,11.8,91.8,1],[1986,"LA","Russell B. Long",-22.8,94.3,1,0,0,1,56.6,12.6,13.4,9.8,66.9,1],[1986,"MD","Charles Mathias",-5.5,-32.3,0,0,0,1,80.5,4.6,6.6,10.4,71.7,1],[1986,"MO","Thomas Eagleton",-20.0,4.3,1,0,0,1,58.6,6.4,4.0,13.6,87.4,0],[1986,"NC","Jim Broyhill",-24.1,-0.6,0,1,0,1,57.3,5.4,12.7,11.2,75.4,1],[1986,"ND","Mark Andrews",-31.5,-41.6,0,1,0,1,56.6,5.4,6.0,12.8,95.0,1],[1986,"NH","Warren Rudman",-37.9,-4.3,0,1,0,1,70.5,2.3,20.3,11.5,97.9,0],[1986,"NV","Paul Laxalt",-34.6,-22.0,0,0,0,1,62.2,6.1,53.4,9.7,81.2,1],[1986,"NY","Al D'Amato",-5.9,-1.5,0,1,0,1,63.1,5.9,-1.2,12.7,72.3,0],[1986,"OH","John Glenn",-18.9,41.8,1,1,0,1,67.2,8.2,-0.3,12.0,87.8,1],[1986,"OK","Don Nickles",-38.2,-10.2,0,1,0,1,56.6,8.7,17.9,12.2,83.4,0],[1986,"OR","Bob Packwood",-12.2,-8.4,0,1,0,1,58.5,7.5,14.7,13.0,92.2,0],[1986,"PA","Arlen Specter",-7.4,-2.5,0,1,0,1,61.1,6.7,-1.1,14.4,88.5,0],[1986,"SC","Fritz Hollings",-28.2,40.7,1,1,0,1,53.5,6.0,13.8,10.3,68.6,1],[1986,"SD","James Abdnor",-26.6,-19.3,0,1,0,1,48.5,4.5,2.5,13.9,92.2,1],[1986,"UT","Jake Garn",-50.2,-48.6,0,1,0,1,67.4,6.4,32.9,7.9,92.0,0],[1986,"VT","Patrick Leahy",-17.3,1.3,1,1,0,1,69.5,4.2,10.5,11.8,98.4,1],[1986,"WA","Slade Gorton",-13.7,-8.3,0,1,0,1,64.1,8.1,21.5,11.4,88.7,1],[1986,"WI","Bob Kasten",-9.2,-1.9,0,1,0,1,62.1,6.6,3.7,12.9,92.5,0],[1988,"AZ","Dennis DeConcini",-34.2,17.1,1,1,0,0,68.0,6.5,41.7,12.5,73.0,1],[1988,"CA","Pete Wilson",-16.4,-7.0,0,1,0,0,76.6,5.3,24.3,10.6,60.1,0],[1988,"CT","Lowell Weicker",-22.0,-4.5,0,1,0,0,83.5,3.0,5.2,13.1,85.2,1],[1988,"DE","William Roth",-19.9,-11.0,0,1,0,0,74.3,3.1,7.6,11.7,80.1,0],[1988,"FL","Lawton Chiles",-30.7,23.5,1,0,0,0,62.2,5.2,35.5,18.0,74.4,0],[1988,"HI","Spark Matsunaga",-11.4,65.0,1,1,0,0,89.0,3.0,16.3,10.3,32.3,1],[1988,"IN","Richard Lugar",-24.1,-8.3,0,1,0,0,57.2,5.2,0.9,12.2,89.9,0],[1988,"MA","Ted Kennedy",-2.8,22.8,1,1,0,0,82.0,3.4,3.4,13.4,89.3,1],[1988,"MD","Paul Sarbanes",-5.5,26.9,1,1,0,0,88.9,4.2,9.5,10.6,70.9,1],[1988,"ME","George J. Mitchell",-22.1,21.7,1,1,0,0,60.0,3.9,7.3,13.3,98.2,1],[1988,"MI","Donald Riegle",-19.1,17.1,1,1,0,0,70.4,7.3,0.2,11.5,83.0,1],[1988,"MN","David Durenberger",0.2,-6.1,0,1,0,0,71.4,4.3,6.2,12.5,94.5,0],[1988,"MO","John Danforth",-20.0,-1.7,0,1,0,0,60.3,5.8,4.0,13.8,87.2,0],[1988,"MS","John C. Stennis",-24.6,28.4,1,0,0,0,47.1,8.6,5.3,12.1,63.4,0],[1988,"MT","John Melcher",-22.6,13.3,1,1,0,0,52.0,6.5,4.6,12.5,92.5,0],[1988,"ND","Quentin Burdick",-31.5,29.7,1,1,0,0,57.4,4.7,1.7,13.4,94.7,1],[1988,"NE","David Karnes",-42.0,40.0,0,1,0,0,59.1,3.4,0.6,13.9,93.1,1],[1988,"NJ","Frank Lautenberg",-21.0,3.2,1,1,0,0,87.0,3.8,4.5,12.9,75.7,1],[1988,"NM","Jeff Bingaman",-20.7,7.5,1,1,0,0,52.8,7.2,21.6,10.0,51.5,1],[1988,"NV","Chic Hecht",-34.6,-2.4,0,1,0,0,68.3,5.0,50.9,10.2,80.3,1],[1988,"NY","Daniel Patrick Moynihan",-5.9,31.2,1,1,0,0,67.1,4.4,0.3,12.9,71.1,1],[1988,"OH","Howard Metzenbaum",-18.9,15.9,1,1,0,0,65.5,6.0,-0.1,12.5,87.5,1],[1988,"PA","John Heinz",-7.4,-20.4,0,1,0,0,64.6,5.1,-0.7,14.9,88.2,0],[1988,"RI","John Chafee",-3.7,-2.4,0,1,0,0,71.9,3.1,4.1,14.6,91.0,0],[1988,"TN","Jim Sasser",-16.4,23.9,1,1,0,0,53.8,5.8,8.1,12.3,82.9,1],[1988,"TX","Lloyd Bentsen",-27.6,18.3,1,1,0,0,62.8,7.2,26.0,9.7,62.2,1],[1988,"UT","Orrin Hatch",-50.2,-17.0,0,1,0,0,67.4,4.8,27.2,8.2,91.7,0],[1988,"VA","Paul Trible",-25.4,-2.4,0,0,0,0,76.2,4.0,14.2,10.4,76.7,1],[1988,"VT","Robert Stafford",-17.3,-3.1,0,0,0,0,64.6,3.1,9.8,11.8,98.3,0],[1988,"WA","Daniel J. Evans",-13.7,47.9,0,0,0,0,69.4,6.2,20.0,11.8,88.0,0],[1988,"WI","William Proxmire",-9.2,30.2,1,0,0,0,67.0,4.2,3.3,13.2,92.1,1],[1988,"WV","Robert Byrd",-10.5,38.0,1,1,0,0,43.7,9.6,-2.6,14.0,95.8,1],[1988,"WY","Malcolm Wallop",-42.8,-13.3,0,1,0,0,70.1,6.4,15.4,9.1,91.5,0],[1990,"AK","Ted Stevens",-24.3,-42.8,0,1,0,1,84.5,7.2,35.9,3.9,74.2,0],[1990,"AL","Howell Heflin",-19.5,26.6,1,1,0,1,50.0,6.9,4.2,12.8,73.3,1],[1990,"AR","David Pryor",-14.4,14.7,1,1,0,1,50.3,7.0,3.3,14.8,82.2,1],[1990,"CO","William L. Armstrong",-7.9,-30.0,0,0,0,1,63.0,5.1,15.0,9.8,81.0,0],[1990,"DE","Joe Biden",-12.5,20.2,1,1,0,1,75.3,5.3,10.6,12.0,79.5,1],[1990,"GA","Sam Nunn",-20.4,59.9,1,1,0,1,64.7,5.5,18.7,10.0,70.3,1],[1990,"IA","Tom Harkin",10.3,11.9,1,1,0,1,61.7,4.5,-5.0,15.3,96.1,1],[1990,"ID","James A. McClure",-26.6,-47.0,0,0,0,1,57.9,5.7,6.6,12.0,92.4,0],[1990,"IL","Paul Simon",-2.1,1.9,1,1,0,1,73.5,6.4,0.1,12.4,75.1,1],[1990,"KS","Nancy Kassebaum",-13.5,-56.3,0,1,0,1,63.1,4.5,5.2,13.7,88.7,0],[1990,"KY","Mitch McConnell",-11.7,-0.4,0,1,0,1,54.7,6.2,1.0,12.5,91.7,0],[1990,"LA","J. Bennett Johnston",-10.4,100.0,1,1,0,1,53.7,6.6,2.8,10.9,66.0,1],[1990,"MA","John Kerry",8.0,10.1,1,1,0,1,84.7,6.9,4.8,13.5,88.4,1],[1990,"ME","William Cohen",-11.5,-47.9,0,1,0,1,66.3,5.8,8.7,13.2,98.1,0],[1990,"MI","Carl Levin",-8.0,4.7,1,1,0,1,72.3,7.7,-0.1,11.8,82.5,1],[1990,"MN","Rudy Boschwitz",7.1,-16.9,0,1,0,1,70.9,4.9,7.1,12.5,94.0,1],[1990,"MS","Thad Cochran",-21.0,-21.9,0,1,0,1,46.8,7.7,2.7,12.3,63.2,0],[1990,"MT","Max Baucus",-6.0,16.6,1,1,0,1,55.6,6.3,1.6,13.1,92.0,1],[1990,"NC","Jesse Helms",-16.3,-3.9,0,1,0,1,62.0,4.5,12.7,12.0,75.1,0],[1990,"NE","J. James Exon",-21.1,3.9,1,1,0,1,61.8,2.3,0.5,14.1,92.7,1],[1990,"NH","Gordon J. Humphrey",-26.5,-17.8,0,0,0,1,88.1,5.6,21.5,11.2,97.4,0],[1990,"NJ","Bill Bradley",-13.8,29.6,1,1,0,1,91.9,5.3,4.9,13.1,74.5,1],[1990,"NM","Pete Domenici",-5.0,-43.8,0,1,0,1,53.1,6.7,17.1,10.5,50.9,0],[1990,"OK","David Boren",-16.8,52.7,1,1,0,1,55.6,5.5,5.9,13.3,81.5,1],[1990,"OR","Mark Hatfield",4.8,-33.1,0,1,0,1,67.0,5.7,7.8,13.7,91.1,0],[1990,"RI","Claiborne Pell",11.8,45.3,1,1,0,1,70.7,6.5,5.3,14.8,90.1,1],[1990,"SC","Strom Thurmond",-24.1,-35.5,0,1,0,1,55.9,5.0,11.9,11.2,68.6,0],[1990,"SD","Larry Pressler",-6.4,-49.0,0,1,0,1,56.6,3.6,1.2,14.6,91.4,0],[1990,"TN","Al Gore",-16.4,28.5,1,1,0,1,53.1,5.5,6.4,12.6,82.7,1],[1990,"TX","Phil Gramm",-12.7,-17.1,0,1,0,1,60.8,6.4,21.0,10.0,61.2,0],[1990,"VA","John Warner",-20.7,-40.1,0,1,0,1,80.1,4.8,15.3,10.6,76.2,0],[1990,"WV","Jay Rockefeller",4.8,4.1,1,1,0,1,50.9,9.1,-7.0,14.7,95.9,1],[1990,"WY","Alan Simpson",-22.8,-56.6,0,1,0,1,69.3,5.1,0.9,10.0,91.2,0],[1992,"AK","Frank Murkowski",-24.3,-10.1,0,1,0,0,87.8,8.7,33.3,4.2,73.1,0],[1992,"AL","Richard Shelby",-19.5,0.6,1,1,0,0,52.6,7.5,4.2,12.8,72.8,1],[1992,"AR","Dale Bumpers",-14.4,24.6,1,1,0,0,50.6,6.9,3.9,14.6,81.6,1],[1992,"AZ","John McCain",-21.5,-21.0,0,1,0,0,66.4,7.4,35.8,12.8,70.6,0],[1992,"CA","Alan Cranston",-3.6,1.5,1,0,0,0,72.7,9.8,24.3,10.5,56.1,1],[1992,"CO","Tim Wirth",-7.9,1.6,1,0,0,0,68.1,6.2,14.1,9.8,79.8,1],[1992,"CT","Chris Dodd",-5.2,30.0,1,1,0,0,91.1,7.3,5.5,13.4,83.1,1],[1992,"FL","Bob Graham",-22.5,9.5,1,1,0,0,58.9,8.4,30.0,18.1,72.2,1],[1992,"GA","Wyche Fowler",-20.4,1.8,1,1,0,0,58.8,6.2,19.5,9.9,68.9,1],[1992,"HI","Daniel Inouye",9.6,47.1,1,1,0,0,80.5,4.4,14.4,11.4,30.2,1],[1992,"IA","Chuck Grassley",10.3,-32.6,0,1,0,0,61.7,4.4,-4.0,15.2,95.5,0],[1992,"ID","Steve Symms",-26.6,-3.1,0,0,0,0,56.4,6.6,7.7,11.8,91.7,0],[1992,"IL","Alan J. Dixon",-2.1,31.7,1,0,0,0,68.9,7.4,0.8,12.4,73.8,1],[1992,"IN","Dan Coats",-20.3,-22.3,0,1,0,0,58.5,6.2,2.2,12.4,89.0,0],[1992,"KS","Bob Dole",-13.5,-40.1,0,1,0,0,63.3,4.7,4.8,13.7,87.7,0],[1992,"KY","Wendell Ford",-11.7,48.8,1,1,0,0,51.4,6.8,1.4,12.5,91.3,1],[1992,"LA","John Breaux",-10.4,5.6,1,1,0,0,54.7,7.9,-0.9,11.0,65.4,1],[1992,"MD","Barbara Mikulski",-2.9,21.4,1,1,0,0,79.8,6.5,13.4,10.8,68.6,1],[1992,"MO","Kit Bond",-4.0,-5.3,0,1,0,0,60.3,6.0,4.7,13.8,86.5,0],[1992,"NC","Terry Sanford",-16.3,1.8,1,1,0,0,58.0,6.2,13.7,12.0,74.2,0],[1992,"ND","Kent Conrad",-13.2,0.7,1,0,0,0,56.0,4.5,-3.1,14.1,93.9,1],[1992,"NH","Warren Rudman",-26.5,-32.1,0,0,0,0,77.9,7.4,19.8,11.3,97.0,0],[1992,"NV","Harry Reid",-21.6,5.8,1,1,0,0,71.2,6.9,51.4,10.6,76.8,1],[1992,"NY","Al D'Amato",6.8,-16.0,0,1,0,0,68.7,8.9,3.0,12.9,68.5,0],[1992,"OH","John Glenn",-10.9,24.9,1,1,0,0,64.4,7.5,1.0,12.9,86.7,1],[1992,"OK","Don Nickles",-16.8,-10.4,0,1,0,0,55.0,5.7,2.6,13.3,80.1,0],[1992,"OR","Bob Packwood",4.8,-27.2,0,1,0,0,65.2,7.2,8.7,13.6,89.8,0],[1992,"PA","Arlen Specter",-2.3,-13.7,0,1,0,0,65.6,7.4,0.5,15.3,87.2,0],[1992,"SC","Fritz Hollings",-24.1,27.8,1,1,0,0,59.3,6.7,11.4,11.3,68.2,1],[1992,"SD","Tom Daschle",-6.4,3.2,1,1,0,0,53.2,3.4,1.8,14.5,90.8,1],[1992,"UT","Jake Garn",-34.8,-46.3,0,0,0,0,60.5,4.8,17.1,8.6,90.3,0],[1992,"VT","Patrick Leahy",-3.6,29.3,1,1,0,0,63.0,5.9,10.1,11.9,97.8,1],[1992,"WA","Brock Adams",1.6,2.0,1,0,0,0,73.4,7.4,17.4,11.7,85.7,1],[1992,"WI","Bob Kasten",3.6,-3.5,0,1,0,0,67.3,5.3,4.5,13.2,90.8,1],[1994,"AZ","Dennis DeConcini",-2.6,16.0,1,0,1,1,62.7,6.3,38.6,12.9,69.2,0],[1994,"CA","Dianne Feinstein",17.0,-9.1,1,1,1,1,70.1,8.4,22.4,10.5,54.1,1],[1994,"CT","Joe Lieberman",8.3,0.7,1,1,1,1,81.3,5.5,5.1,13.5,81.9,1],[1994,"DE","William Roth",10.4,-24.1,0,1,1,1,74.2,4.4,16.0,12.3,77.0,0],[1994,"FL","Connie Mack III",-2.4,-0.8,0,1,1,1,58.7,6.2,29.0,17.9,70.7,0],[1994,"HI","Daniel Akaka",13.4,57.5,1,1,1,1,87.7,5.3,12.6,11.8,28.6,1],[1994,"IN","Richard Lugar",-7.7,-36.3,0,1,1,1,60.6,4.6,4.7,12.4,88.3,0],[1994,"MA","Ted Kennedy",24.2,31.4,1,1,1,1,76.2,6.1,5.5,13.5,86.3,1],[1994,"MD","Paul Sarbanes",16.6,23.6,1,1,1,1,82.1,5.1,14.5,10.9,67.2,1],[1994,"ME","George J. Mitchell",12.1,62.6,1,0,1,1,56.4,6.6,8.6,13.6,97.5,0],[1994,"MI","Donald Riegle",9.2,22.2,1,0,1,1,67.2,5.7,4.9,12.0,81.2,0],[1994,"MN","David Durenberger",15.4,-15.7,0,0,1,1,69.3,3.9,9.7,12.3,91.9,0],[1994,"MO","John Danforth",13.0,-36.1,0,0,1,1,59.0,4.9,6.5,13.8,85.9,0],[1994,"MS","Trent Lott",-9.9,-7.8,0,1,1,1,45.6,6.2,3.4,12.2,62.3,0],[1994,"MT","Conrad Burns",3.4,-3.7,0,1,1,1,54.4,5.5,2.0,13.2,91.2,0],[1994,"ND","Kent Conrad",-15.7,20.7,1,1,1,1,57.8,3.6,-5.5,14.3,93.5,1],[1994,"NE","Bob Kerrey",-22.6,15.3,1,1,1,1,63.8,2.6,2.2,13.9,90.8,1],[1994,"NJ","Frank Lautenberg",2.8,8.5,1,1,1,1,83.3,6.7,6.3,13.2,71.6,1],[1994,"NM","Jeff Bingaman",10.3,26.6,1,1,1,1,55.0,6.6,15.2,10.9,48.7,1],[1994,"NV","Richard Bryan",3.6,4.2,1,1,1,1,73.7,6.2,60.4,10.7,74.3,1],[1994,"NY","Daniel Patrick Moynihan",24.2,36.7,1,1,1,1,65.2,6.6,3.4,12.9,67.1,1],[1994,"OH","Howard Metzenbaum",2.3,14.0,1,0,1,1,64.3,5.3,2.5,13.0,86.1,0],[1994,"PA","Harris Wofford",11.1,-34.4,1,1,1,1,63.7,6.2,1.4,15.3,86.5,0],[1994,"RI","John Chafee",23.7,-9.2,0,1,1,1,68.9,6.5,6.4,14.7,87.5,0],[1994,"TN","Jim Sasser",5.2,30.7,1,1,1,1,51.6,4.7,10.0,12.5,81.4,0],[1994,"TX","Kay Bailey Hutchison",-4.5,19.3,0,1,1,1,59.1,6.3,15.4,10.0,58.0,0],[1994,"UT","Orrin Hatch",-27.5,-35.8,0,1,1,1,73.6,3.8,17.8,8.6,89.2,0],[1994,"VA","Chuck Robb",-5.1,42.6,1,1,1,1,74.9,4.6,16.1,10.8,74.1,1],[1994,"VT","Jim Jeffords",20.5,-39.1,0,1,1,1,63.9,4.4,10.2,12.1,97.5,0],[1994,"WA","Slade Gorton",15.2,-2.2,0,1,1,1,73.3,6.1,20.5,11.6,84.3,0],[1994,"WI","Herb Kohl",5.6,4.5,1,1,1,1,65.3,4.1,6.7,13.2,90.0,1],[1994,"WV","Robert Byrd",15.5,29.5,1,1,1,1,46.1,8.3,-7.6,14.9,95.4,1],[1994,"WY","Malcolm Wallop",-7.6,-0.7,0,0,1,1,60.5,4.7,-8.7,10.6,90.4,0],[1996,"AK","Ted Stevens",-13.1,-34.6,0,1,1,0,94.3,7.3,10.6,4.9,70.8,0],[1996,"AL","Howell Heflin",-7.6,21.1,1,0,1,0,51.1,5.0,6.9,12.9,71.7,0],[1996,"AR","David Pryor",20.0,100.0,1,0,1,0,50.8,5.2,8.1,14.3,80.3,0],[1996,"CO","Hank Brown",5.6,-14.4,0,0,1,0,80.0,4.1,18.8,9.7,77.5,0],[1996,"DE","Joe Biden",10.4,27.3,1,1,1,0,68.7,5.3,17.5,12.5,75.7,1],[1996,"GA","Sam Nunn",0.7,100.0,1,0,1,0,67.0,4.6,23.3,9.8,66.2,1],[1996,"IA","Tom Harkin",7.5,9.1,1,1,1,0,69.8,3.5,0.8,15.1,94.2,1],[1996,"ID","Larry Craig",-19.3,-22.6,0,1,1,0,64.2,5.3,16.0,11.6,90.2,0],[1996,"IL","Paul Simon",17.2,30.1,1,0,1,0,74.8,5.2,4.7,12.2,71.3,1],[1996,"KS","Nancy Kassebaum",-7.1,-47.2,0,0,1,0,59.6,4.3,6.5,13.5,85.7,0],[1996,"KY","Mitch McConnell",3.7,-4.4,0,1,1,0,58.6,5.3,4.7,12.5,90.4,0],[1996,"LA","Bennett Johnston",5.3,100.0,1,0,1,0,54.9,6.3,-1.4,11.3,64.2,1],[1996,"MA","John Kerry",24.2,14.2,1,1,1,0,75.8,4.4,5.2,13.5,85.3,1],[1996,"ME","William Cohen",12.1,-22.7,0,0,1,0,66.6,5.1,7.7,13.8,97.3,0],[1996,"MI","Carl Levin",9.2,16.5,1,1,1,0,71.6,4.9,6.0,12.1,80.5,1],[1996,"MN","Paul Wellstone",15.4,2.7,1,1,1,0,74.6,3.8,11.2,12.3,90.8,1],[1996,"MS","Thad Cochran",-9.9,-100.0,0,1,1,0,52.2,5.8,4.7,12.2,61.9,0],[1996,"MT","Max Baucus",3.4,39.7,1,1,1,0,54.6,5.4,3.5,13.3,90.7,1],[1996,"NC","Jesse Helms",-0.9,-5.1,0,1,1,0,62.9,4.2,17.6,12.0,72.5,0],[1996,"NE","Jim Exon",-22.6,18.0,1,0,1,0,64.7,2.6,3.9,13.8,89.8,0],[1996,"NH","Bob Smith",1.6,-35.0,0,1,1,0,77.0,3.8,17.8,11.6,96.3,0],[1996,"NJ","Bill Bradley",2.8,3.1,1,0,1,0,86.3,5.9,6.8,13.2,70.1,1],[1996,"NM","Pete Domenici",10.3,-45.9,0,1,1,0,51.1,7.5,16.0,11.2,47.7,0],[1996,"OK","Jim Inhofe",-11.2,66.4,0,1,1,0,51.7,3.9,0.9,13.3,77.5,0],[1996,"OR","Mark Hatfield",13.3,-7.5,0,0,1,0,71.5,5.6,17.3,13.2,87.1,0],[1996,"RI","Claiborne Pell",23.7,23.7,1,0,1,0,69.5,5.0,6.0,14.7,86.1,1],[1996,"SC","Strom Thurmond",-4.7,-32.8,0,1,1,0,57.1,5.8,13.7,11.7,67.3,0],[1996,"SD","Larry Pressler",-4.5,-7.5,0,1,1,0,58.1,3.2,3.9,14.4,89.6,1],[1996,"TN","Fred Thompson",5.2,38.9,0,1,1,0,57.0,5.2,12.2,12.4,80.8,0],[1996,"TX","Phil Gramm",-4.5,-23.4,0,1,1,0,63.0,5.5,16.5,10.0,56.4,0],[1996,"VA","John Warner",-5.1,-100.0,0,1,1,0,71.2,4.1,16.3,10.9,73.0,0],[1996,"WV","Jay Rockefeller",15.5,36.6,1,1,1,0,48.9,7.4,-5.6,15.1,95.2,1],[1996,"WY","Alan Simpson",-7.6,-27.9,0,0,1,0,62.0,5.1,-5.2,10.9,90.0,0],[1998,"AK","Frank Murkowski",-20.9,-16.0,0,1,1,1,90.0,6.4,12.1,5.2,69.6,0],[1998,"AL","Richard Shelby",-7.5,32.4,0,1,1,1,59.9,4.5,7.8,13.0,71.1,0],[1998,"AR","Dale Bumpers",18.7,20.4,1,0,1,1,49.1,5.1,10.2,14.2,79.6,1],[1998,"AZ","John McCain",2.4,-27.7,0,1,1,1,61.4,4.2,37.1,12.9,66.2,0],[1998,"CA","Barbara Boxer",14.4,5.4,1,1,1,1,74.4,6.0,17.8,10.6,50.2,1],[1998,"CO","Ben Nighthorse Campbell",-1.5,9.6,0,1,1,1,81.1,3.7,23.2,9.7,76.4,0],[1998,"CT","Chris Dodd",20.7,21.3,1,1,1,1,82.5,3.0,3.9,13.7,79.6,1],[1998,"FL","Bob Graham",6.3,30.8,1,1,1,1,60.9,4.4,26.0,17.7,67.8,1],[1998,"GA","Paul Coverdell",-1.3,1.6,0,1,1,1,68.8,4.2,24.1,9.7,64.8,0],[1998,"HI","Daniel Inouye",28.6,36.0,1,1,1,1,76.8,5.9,10.7,12.7,25.5,1],[1998,"IA","Chuck Grassley",11.5,-43.8,0,1,1,1,63.4,2.9,4.2,15.0,93.6,0],[1998,"ID","Dirk Kempthorne",-21.6,-13.0,0,0,1,1,62.6,5.2,23.0,11.5,89.4,0],[1998,"IL","Carol Moseley Braun",19.2,10.6,1,1,1,1,77.4,4.5,6.5,12.2,70.0,0],[1998,"IN","Dan Coats",-6.3,-17.0,0,0,1,1,72.9,3.0,8.3,12.4,87.0,1],[1998,"KS","Sam Brownback",-20.1,-33.8,0,1,1,1,68.4,3.8,7.5,13.4,84.7,0],[1998,"KY","Wendell Ford",1.1,27.4,1,0,1,1,62.7,4.6,7.0,12.5,90.0,0],[1998,"LA","John Breaux",13.1,100.0,1,1,1,1,62.4,5.6,1.2,11.4,63.6,1],[1998,"MD","Barbara Mikulski",17.3,42.0,1,1,1,1,87.5,4.1,12.8,11.2,64.3,1],[1998,"MO","Kit Bond",7.1,-7.2,0,1,1,1,68.5,3.9,8.0,13.6,84.7,0],[1998,"NC","Lauch Faircloth",-5.1,-4.2,0,1,1,1,67.2,3.4,19.4,12.0,71.6,1],[1998,"ND","Byron Dorgan",-7.8,20.6,1,1,1,1,59.4,3.1,-3.0,14.5,92.5,1],[1998,"NH","Judd Gregg",11.2,-3.0,0,1,1,1,76.9,2.8,13.9,11.7,95.9,0],[1998,"NV","Harry Reid",1.2,11.9,1,1,1,1,72.9,4.1,73.3,10.9,69.2,1],[1998,"NY","Al D'Amato",35.5,-1.3,0,1,1,1,67.1,5.4,4.6,12.9,64.5,1],[1998,"OH","John Glenn",7.2,9.3,1,0,1,1,67.8,4.5,4.2,13.2,85.0,0],[1998,"OK","Don Nickles",-8.8,-21.0,0,1,1,1,58.8,4.2,4.7,13.2,76.1,0],[1998,"OR","Ron Wyden",9.4,-5.7,1,1,1,1,69.8,5.8,20.5,13.1,85.8,1],[1998,"PA","Arlen Specter",10.3,-2.9,0,1,1,1,70.3,4.7,3.0,15.5,85.2,0],[1998,"SC","Fritz Hollings",-6.2,3.2,1,1,1,1,64.2,3.9,14.3,11.8,66.8,1],[1998,"SD","Tom Daschle",-3.9,33.3,1,1,1,1,55.7,2.9,6.0,14.4,89.0,1],[1998,"UT","Bob Bennett",-24.0,-16.5,0,1,1,1,80.2,3.6,24.4,8.5,87.1,0],[1998,"VT","Patrick Leahy",26.4,11.1,1,1,1,1,65.7,3.3,10.2,12.5,96.8,1],[1998,"WA","Patty Murray",14.4,8.0,1,1,1,1,83.6,4.9,23.5,11.4,81.4,1],[1998,"WI","Russ Feingold",11.8,6.7,1,1,1,1,74.2,3.5,9.4,13.1,88.5,1],[2000,"AZ","Jon Kyl",2.4,-15.2,0,1,1,0,67.0,3.9,38.3,13.0,64.8,0],[2000,"CA","Dianne Feinstein",14.4,2.1,1,1,1,0,79.1,4.9,14.9,10.6,48.2,1],[2000,"CT","Joe Lieberman",20.7,36.7,1,1,1,0,91.7,2.1,3.5,13.8,78.4,1],[2000,"DE","William Roth",17.2,-13.6,0,1,1,0,84.5,3.5,17.6,12.9,73.2,1],[2000,"FL","Connie Mack III",6.3,-41.0,0,0,1,0,64.9,3.7,24.5,17.6,66.3,1],[2000,"HI","Daniel Akaka",28.6,49.6,1,1,1,0,80.7,4.1,9.9,13.1,23.9,1],[2000,"IN","Richard Lugar",-6.3,-37.7,0,1,1,0,74.0,2.9,9.3,12.4,86.3,0],[2000,"MA","Ted Kennedy",37.3,17.2,1,1,1,0,79.8,2.7,5.2,13.5,83.2,1],[2000,"MD","Paul Sarbanes",17.3,18.2,1,1,1,0,94.6,3.7,11.2,11.3,62.9,1],[2000,"ME","Olympia Snowe",25.3,-24.7,0,1,1,0,70.4,3.2,4.3,14.3,96.8,0],[2000,"MI","Spencer Abraham",14.6,-9.6,0,1,1,0,83.5,3.9,6.8,12.2,79.2,1],[2000,"MN","Rod Grams",18.8,-5.3,0,1,1,0,85.2,3.2,12.4,12.1,88.8,1],[2000,"MO","John Ashcroft",7.1,-25.2,0,1,1,0,75.0,3.6,9.1,13.5,84.2,1],[2000,"MS","Trent Lott",-5.5,-37.6,0,1,1,0,58.9,5.2,9.6,12.1,61.0,0],[2000,"MT","Conrad Burns",-3.4,-24.7,0,1,1,0,56.2,4.8,11.7,13.4,89.9,0],[2000,"ND","Kent Conrad",-7.8,16.0,1,1,1,0,59.2,2.9,-0.7,14.7,92.1,1],[2000,"NE","Bob Kerrey",-21.1,9.8,1,0,1,0,70.0,2.9,8.0,13.6,87.9,1],[2000,"NJ","Frank Lautenberg",19.9,3.4,1,0,1,0,90.1,3.7,8.2,13.2,67.2,1],[2000,"NM","Jeff Bingaman",8.0,8.0,1,1,1,0,59.0,5.0,19.1,11.6,45.5,1],[2000,"NV","Richard Bryan",1.2,10.8,1,0,1,0,75.1,4.3,70.3,10.9,66.7,0],[2000,"NY","Daniel Patrick Moynihan",35.5,14.2,1,0,1,0,72.5,4.5,5.1,12.9,63.1,1],[2000,"OH","Mike DeWine",7.2,-15.3,0,1,1,0,71.6,4.1,4.5,13.2,84.4,0],[2000,"PA","Rick Santorum",10.3,-2.6,0,1,1,0,68.4,4.3,3.2,15.6,84.5,0],[2000,"RI","Lincoln Chafee",38.0,-29.0,0,1,1,0,77.4,3.9,4.5,14.5,83.5,0],[2000,"TN","Bill Frist",2.6,-14.5,0,1,1,0,66.2,3.9,15.8,12.4,79.6,0],[2000,"TX","Kay Bailey Hutchison",-5.3,-22.7,0,1,1,0,70.1,4.2,22.3,9.9,53.3,0],[2000,"UT","Orrin Hatch",-24.0,-41.7,0,1,1,0,83.5,3.5,28.5,8.5,86.0,0],[2000,"VA","Chuck Robb",-2.1,3.1,1,1,1,0,82.8,2.2,14.6,11.1,70.9,0],[2000,"VT","Jim Jeffords",26.4,-10.7,0,1,1,0,75.4,2.8,8.5,12.7,96.5,0],[2000,"WA","Slade Gorton",14.4,-11.5,0,1,1,0,82.4,5.2,22.3,11.3,80.0,1],[2000,"WI","Herb Kohl",11.8,17.8,1,1,1,0,82.8,3.5,9.7,13.1,87.7,1],[2000,"WV","Robert Byrd",16.7,38.0,1,1,1,0,53.1,5.5,-0.0,15.3,94.8,1],[2000,"WY","Craig L. Thomas",-15.0,-19.9,0,1,1,0,67.5,3.8,7.0,11.6,89.3,0],[2002,"AK","Ted Stevens",-35.9,-76.2,0,1,0,1,98.3,7.3,13.6,5.9,67.4,0],[2002,"AL","Jeff Sessions",-15.2,-7.1,0,1,0,1,60.2,5.9,9.5,13.1,70.0,0],[2002,"AR","Tim Hutchinson",-5.6,-5.4,0,1,0,1,57.1,5.2,12.9,13.9,78.2,1],[2002,"CO","Wayne Allard",-9.0,-5.8,0,1,0,1,84.6,5.6,30.3,9.6,74.0,0],[2002,"DE","Joe Biden",13.5,22.3,1,1,0,1,85.0,4.0,17.3,13.0,71.8,1],[2002,"GA","Max Cleland",-12.0,1.4,1,1,0,1,73.0,4.9,25.9,9.6,62.0,0],[2002,"IA","Tom Harkin",0.3,5.2,1,1,0,1,70.2,4.0,5.0,14.9,92.3,1],[2002,"ID","Larry Craig",-41.7,-17.7,0,1,0,1,65.5,5.5,27.4,11.3,87.8,0],[2002,"IL","Dick Durbin",12.4,15.9,1,1,0,1,79.1,6.6,8.3,12.0,67.6,1],[2002,"KS","Pat Roberts",-21.8,-28.6,0,1,0,1,71.0,5.1,8.1,13.2,82.7,0],[2002,"KY","Mitch McConnell",-15.5,-12.8,0,1,0,1,65.9,5.7,9.3,12.5,89.1,0],[2002,"LA","Mary Landrieu",-7.9,0.3,1,1,0,1,57.1,5.9,5.5,11.6,62.4,0],[2002,"MA","John Kerry",29.6,7.7,1,1,0,1,89.5,5.4,5.7,13.4,82.0,1],[2002,"ME","Susan Collins",5.5,-5.7,0,1,0,1,62.7,4.5,4.3,14.4,96.4,0],[2002,"MI","Carl Levin",5.3,18.8,1,1,0,1,77.2,6.0,6.7,12.3,78.6,1],[2002,"MN","Paul Wellstone (died Oct. 25)",2.6,9.9,1,0,0,1,90.3,4.3,12.5,12.0,87.7,0],[2002,"MS","Thad Cochran",-17.2,-44.3,0,1,0,1,51.7,6.3,9.7,12.1,60.5,0],[2002,"MT","Max Baucus",-27.3,5.2,1,1,0,1,55.0,4.4,12.0,13.5,89.4,1],[2002,"NC","Jesse Helms",-12.9,-6.8,0,0,0,1,65.4,6.3,21.2,12.0,69.7,0],[2002,"NE","Chuck Hagel",-30.4,-14.8,0,1,0,1,74.7,3.6,8.0,13.5,86.8,0],[2002,"NH","Bob Smith",-1.3,-3.2,0,0,0,1,88.0,4.6,11.9,11.9,94.9,0],[2002,"NJ","Robert Torricelli",16.4,10.6,1,0,0,1,88.7,5.8,8.9,13.1,65.7,1],[2002,"NM","Pete Domenici",0.1,-37.0,0,1,0,1,56.8,5.5,18.5,11.9,44.3,0],[2002,"OK","Jim Inhofe",-22.2,-17.2,0,1,0,1,61.0,4.5,9.1,13.2,73.6,0],[2002,"OR","Gordon H. Smith",0.5,-4.1,0,1,0,1,70.7,7.3,19.5,12.8,83.2,0],[2002,"RI","Jack Reed",31.3,28.9,1,1,0,1,78.3,5.4,4.9,14.3,82.2,1],[2002,"SC","Strom Thurmond",-16.3,-9.6,0,0,0,1,64.7,6.1,14.8,12.2,65.9,0],[2002,"SD","Tim Johnson",-23.2,2.6,1,1,0,1,68.0,3.1,8.0,14.3,87.7,1],[2002,"TN","Fred Thompson",-3.9,-25.0,0,0,0,1,61.3,4.9,15.9,12.4,78.9,0],[2002,"TX","Phil Gramm",-21.9,-11.0,0,0,0,1,70.0,6.4,22.7,9.9,51.7,0],[2002,"VA","John Warner",-8.3,-5.1,0,1,0,1,86.1,4.1,14.6,11.2,69.8,0],[2002,"WV","Jay Rockefeller",-6.5,53.3,1,1,0,1,50.8,6.1,0.4,15.4,94.5,1],[2002,"WY","Mike Enzi",-42.0,-12.3,0,1,0,1,68.0,4.0,8.1,11.8,88.7,0],[2004,"AK","Lisa Murkowski",-35.9,-58.1,0,1,0,0,85.9,7.3,13.1,6.2,66.6,0],[2004,"AL","Richard Shelby",-15.2,-26.6,0,1,0,0,61.8,5.4,8.2,13.1,69.5,0],[2004,"AR","Blanche Lincoln",-5.6,13.2,1,1,0,0,53.0,5.5,11.3,13.9,77.4,1],[2004,"AZ","John McCain",-6.6,-43.4,0,1,0,0,68.2,4.7,33.9,12.9,62.1,0],[2004,"CA","Barbara Boxer",12.4,10.5,1,1,0,0,81.7,6.0,13.6,10.6,45.0,1],[2004,"CO","Ben Nighthorse Campbell",-9.0,-28.2,0,0,0,0,82.8,5.5,25.7,9.7,73.0,1],[2004,"CT","Chris Dodd",18.5,33.6,1,1,0,0,91.1,4.9,4.8,13.6,76.0,1],[2004,"FL","Bob Graham",-0.0,24.9,1,0,0,0,64.6,4.5,22.6,17.0,63.3,0],[2004,"GA","Zell Miller",-12.0,-7.4,1,0,0,0,70.3,5.0,23.1,9.6,60.7,0],[2004,"HI","Daniel Inouye",19.7,63.3,1,1,0,0,85.9,3.2,9.8,13.4,23.2,1],[2004,"IA","Chuck Grassley",0.3,-38.3,0,1,0,0,68.6,4.6,4.2,14.8,91.6,0],[2004,"ID","Mike Crapo",-41.7,-42.0,0,1,0,0,70.2,4.8,24.6,11.4,87.0,0],[2004,"IL","Peter Fitzgerald",12.4,-3.0,0,0,0,0,74.8,6.1,7.0,12.0,66.6,1],[2004,"IN","Evan Bayh",-16.0,29.4,1,1,0,0,70.3,5.4,8.6,12.3,84.7,1],[2004,"KS","Sam Brownback",-21.8,-34.8,0,1,0,0,73.3,5.4,7.1,13.0,81.7,0],[2004,"KY","Jim Bunning",-15.5,-0.6,0,1,0,0,61.2,5.3,8.5,12.5,88.5,0],[2004,"LA","John Breaux",-7.9,33.4,1,0,0,0,55.5,5.5,5.2,11.6,61.8,0],[2004,"MD","Barbara Mikulski",16.9,41.0,1,1,0,0,86.7,4.3,11.3,11.3,60.0,1],[2004,"MO","Kit Bond",-3.4,-9.2,0,1,0,0,72.5,6.0,8.5,13.4,83.0,0],[2004,"NC","John Edwards",-12.9,4.2,1,0,0,0,61.8,5.3,19.2,12.1,68.8,0],[2004,"ND","Byron Dorgan",-29.5,28.5,1,1,0,0,67.0,3.4,-0.1,14.7,90.9,1],[2004,"NH","Judd Gregg",-1.3,-41.2,0,1,0,0,92.1,3.6,11.4,11.9,94.2,0],[2004,"NV","Harry Reid",-3.7,0.1,1,1,0,0,74.9,4.3,55.4,11.2,61.9,1],[2004,"NY","Chuck Schumer",27.2,10.7,1,1,0,0,70.9,5.5,4.8,12.9,61.3,1],[2004,"OH","George Voinovich",-3.7,-12.9,0,1,0,0,72.1,6.3,3.9,13.3,83.2,0],[2004,"OK","Don Nickles",-22.2,-35.9,0,0,0,0,59.5,4.5,8.2,13.1,72.5,0],[2004,"OR","Ron Wyden",0.5,28.7,1,1,0,0,69.0,7.2,17.5,12.8,82.2,1],[2004,"PA","Arlen Specter",4.3,-27.6,0,1,0,0,71.2,5.3,3.1,15.3,82.9,0],[2004,"SC","Fritz Hollings",-16.3,7.1,1,0,0,0,63.8,6.9,13.8,12.3,65.5,0],[2004,"SD","Tom Daschle",-23.2,26.1,1,1,0,0,65.5,3.6,7.0,14.2,86.9,0],[2004,"UT","Bob Bennett",-43.5,-32.0,0,1,0,0,81.7,4.8,25.6,8.5,84.0,0],[2004,"VT","Patrick Leahy",10.9,52.6,1,1,0,0,71.7,3.5,7.1,12.8,95.7,1],[2004,"WA","Patty Murray",5.9,16.8,1,1,0,0,78.8,6.0,17.8,11.3,77.3,1],[2004,"WI","Russ Feingold",0.2,2.2,1,1,0,0,76.7,4.8,8.8,13.0,86.1,1],[2006,"AZ","Jon Kyl",-10.6,-100.0,0,1,0,1,71.1,4.2,32.3,13.0,60.9,0],[2006,"CA","Dianne Feinstein",10.1,20.8,1,1,0,1,81.3,4.8,12.4,10.7,43.5,1],[2006,"CT","Joe Lieberman",10.5,29.8,1,1,0,1,89.3,4.4,4.7,13.6,74.8,1],[2006,"DE","Tom Carper",7.7,11.9,1,1,0,1,80.5,3.5,16.4,13.3,68.8,1],[2006,"FL","Bill Nelson",-5.0,5.0,1,1,0,1,67.6,3.3,23.1,16.7,61.7,1],[2006,"HI","Daniel Akaka",8.8,49.6,1,1,0,1,93.7,2.4,11.4,13.5,23.4,1],[2006,"IN","Richard Lugar",-20.8,-35.3,0,1,0,1,66.7,5.0,7.9,12.4,83.7,0],[2006,"MA","Ted Kennedy",25.5,69.9,1,1,0,1,88.0,4.7,3.5,13.3,79.8,1],[2006,"MD","Paul Sarbanes",13.1,26.5,1,0,0,1,95.1,3.9,10.8,11.4,58.3,1],[2006,"ME","Olympia Snowe",9.2,-37.9,0,1,0,1,69.0,4.8,5.3,14.5,95.4,0],[2006,"MI","Debbie Stabenow",3.5,1.7,1,1,0,1,72.2,7.0,4.4,12.5,77.7,1],[2006,"MN","Mark Dayton",3.5,6.0,1,0,0,1,85.2,4.1,10.0,12.1,85.6,1],[2006,"MO","Jim Talent",-7.2,2.1,0,1,0,1,67.6,5.0,8.0,13.4,82.4,1],[2006,"MS","Trent Lott",-19.0,-35.2,0,1,0,1,51.7,6.3,7.2,12.3,59.7,0],[2006,"MT","Conrad Burns",-21.0,-3.4,0,1,0,1,58.6,3.3,10.4,13.8,88.6,1],[2006,"ND","Kent Conrad",-27.8,22.7,1,1,0,1,66.3,3.2,0.9,14.5,90.3,1],[2006,"NE","Ben Nelson",-33.7,2.2,1,1,0,1,75.3,3.0,7.0,13.2,84.7,1],[2006,"NJ","Bob Menendez",6.7,3.1,1,1,0,1,99.6,4.6,7.1,12.9,62.9,1],[2006,"NM","Jeff Bingaman",-0.8,23.5,1,1,0,1,61.2,4.1,15.8,12.3,42.8,1],[2006,"NV","John Ensign",-2.6,-16.2,0,1,0,1,75.8,4.2,51.0,11.2,59.5,0],[2006,"NY","Hillary Clinton",19.7,12.5,1,1,0,1,74.2,4.4,3.4,13.0,60.6,1],[2006,"OH","Mike DeWine",-2.1,-25.1,0,1,0,1,69.5,5.5,3.2,13.3,82.7,1],[2006,"PA","Rick Santorum",2.5,-7.1,0,1,0,1,72.8,4.7,3.0,15.2,81.9,1],[2006,"RI","Lincoln Chafee",21.2,-16.0,0,1,0,1,77.8,5.2,4.0,13.9,79.6,1],[2006,"TN","Bill Frist",-14.4,-33.8,0,0,0,1,61.9,5.1,13.2,12.6,77.4,0],[2006,"TX","Kay Bailey Hutchison",-23.0,-33.6,0,1,0,1,65.1,4.8,20.1,9.9,48.8,0],[2006,"UT","Orrin Hatch",-46.7,-35.1,0,1,0,1,86.2,2.6,23.9,8.7,83.1,0],[2006,"VA","George Allen",-8.3,-4.6,0,1,0,1,81.6,3.1,14.0,11.4,67.6,1],[2006,"VT","Jim Jeffords",20.6,-44.1,1,0,0,1,79.7,3.8,6.0,13.1,95.3,1],[2006,"WA","Maria Cantwell",7.3,0.1,1,1,0,1,79.6,5.0,16.1,11.4,76.1,1],[2006,"WI","Herb Kohl",0.4,24.9,1,1,0,1,70.2,4.7,8.1,13.1,85.3,1],[2006,"WV","Robert Byrd",-13.0,58.8,1,1,0,1,57.3,4.9,1.1,15.4,94.0,1],[2006,"WY","Craig L. Thomas",-40.6,-54.0,0,1,0,1,70.3,3.0,8.5,12.1,87.6,0],[2008,"AK","Ted Stevens",-26.5,-76.3,0,1,0,0,93.8,6.6,12.5,7.0,65.3,1],[2008,"AL","Jeff Sessions",-25.8,-19.1,0,1,0,0,62.9,6.5,8.0,13.3,68.1,0],[2008,"AR","Mark Pryor",-9.9,7.8,1,1,0,0,60.8,5.6,10.4,14.0,75.7,1],[2008,"CO","Wayne Allard",-4.7,-5.1,0,0,0,0,91.0,5.2,19.6,10.3,71.3,1],[2008,"DE","Joe Biden",7.7,17.6,1,1,0,0,81.3,5.5,16.2,13.7,67.3,1],[2008,"GA","Saxby Chambliss",-16.7,-6.9,0,1,0,0,72.4,7.1,21.4,10.0,57.6,0],[2008,"IA","Tom Harkin",-0.7,10.6,1,1,0,0,72.8,4.3,4.0,14.7,89.9,1],[2008,"ID","Larry Craig",-38.6,-33.4,0,0,0,0,73.2,5.9,24.2,11.7,85.2,0],[2008,"IL","Dick Durbin",10.4,22.7,1,1,0,0,78.2,6.9,4.6,12.2,64.9,1],[2008,"KS","Pat Roberts",-25.7,-100.0,0,1,0,0,72.2,4.8,5.9,13.0,79.8,0],[2008,"KY","Mitch McConnell",-20.0,-29.4,0,1,0,0,58.8,7.1,8.0,12.9,87.3,0],[2008,"LA","Mary Landrieu",-14.7,-2.9,1,1,0,0,61.5,5.0,-0.5,12.0,61.8,1],[2008,"MA","John Kerry",25.5,100.0,1,1,0,0,87.1,5.7,2.8,13.4,78.6,1],[2008,"ME","Susan Collins",9.2,-16.9,0,1,0,0,71.3,5.7,5.1,14.9,95.0,0],[2008,"MI","Carl Levin",3.5,23.1,1,1,0,0,73.5,8.7,2.5,12.9,77.2,1],[2008,"MN","Norm Coleman",3.5,-1.7,0,1,0,0,86.5,5.8,9.3,12.3,84.5,1],[2008,"MS","Thad Cochran",-19.0,-100.0,0,1,0,0,55.5,7.0,5.9,12.4,58.8,0],[2008,"MT","Max Baucus",-21.0,32.8,1,1,0,0,65.0,5.1,10.6,14.1,88.3,1],[2008,"NC","Elizabeth Dole",-12.5,-8.7,0,1,0,0,64.8,5.8,19.3,12.4,66.8,1],[2008,"NE","Chuck Hagel",-33.7,-69.9,0,0,0,0,73.2,3.4,6.6,13.3,83.7,0],[2008,"NH","John E. Sununu",1.4,-4.5,0,1,0,0,100.6,3.9,9.3,12.7,93.0,1],[2008,"NJ","Frank Lautenberg",6.7,10.1,1,1,0,0,90.1,5.8,5.6,13.1,61.5,1],[2008,"NM","Pete Domenici",-0.8,-30.1,0,0,0,0,66.0,4.7,15.1,12.6,42.0,1],[2008,"OK","Jim Inhofe",-31.1,-22.4,0,1,0,0,64.4,3.7,8.1,13.2,70.3,0],[2008,"OR","Gordon H. Smith",4.2,-17.3,0,1,0,0,74.8,7.0,14.4,13.2,80.0,1],[2008,"RI","Jack Reed",21.2,56.9,1,1,0,0,80.7,8.4,2.0,14.0,78.5,1],[2008,"SC","Lindsey Graham",-17.3,-10.4,0,1,0,0,65.8,7.6,15.0,12.9,64.8,0],[2008,"SD","Tim Johnson",-21.8,0.2,1,1,0,0,69.1,3.3,7.3,14.2,85.6,1],[2008,"TN","Lamar Alexander",-14.4,-10.1,0,1,0,0,61.4,7.1,13.2,12.8,76.6,0],[2008,"TX","John Cornyn",-23.0,-12.1,0,1,0,0,68.6,5.2,20.6,10.0,47.3,0],[2008,"VA","John Warner",-8.3,-100.0,0,0,0,0,88.1,4.4,13.5,11.6,66.4,1],[2008,"WV","Jay Rockefeller",-13.0,26.2,1,1,0,0,62.7,4.5,1.7,15.7,93.6,1],[2008,"WY","Mike Enzi",-40.6,-45.9,0,1,0,0,72.6,3.1,11.0,12.1,86.9,0],[2010,"AK","Lisa Murkowski",-22.1,-3.2,0,1,1,1,88.8,7.8,12.7,7.6,64.5,0],[2010,"AL","Richard Shelby",-21.8,-35.2,0,1,1,1,57.7,10.1,7.9,13.6,67.4,0],[2010,"AR","Blanche Lincoln",-20.3,11.8,1,1,1,1,52.7,7.8,9.5,14.3,74.9,0],[2010,"AZ","John McCain",-8.6,-57.6,0,1,1,1,66.0,10.2,26.6,13.6,58.3,0],[2010,"CA","Barbara Boxer",24.6,20.8,1,1,1,1,81.0,12.3,10.1,11.3,40.8,1],[2010,"CO","Michael Bennet",9.1,4.9,1,1,1,1,80.7,9.3,17.7,10.8,70.5,1],[2010,"CT","Chris Dodd",22.6,34.8,1,0,1,1,93.5,9.5,4.8,14.1,72.0,1],[2010,"FL","George LeMieux",2.8,-1.1,0,0,1,1,65.8,11.2,18.5,17.2,58.6,0],[2010,"GA","Johnny Isakson",-5.3,-18.3,0,1,1,1,62.5,10.4,19.5,10.5,56.4,0],[2010,"HI","Daniel Inouye",46.0,56.5,1,1,1,1,80.3,6.7,11.9,14.1,22.9,1],[2010,"IA","Chuck Grassley",9.7,-43.1,0,1,1,1,73.2,6.0,4.1,14.8,89.1,0],[2010,"ID","Mike Crapo",-26.0,-100.0,0,1,1,1,67.5,9.0,22.4,12.2,84.3,0],[2010,"IL","Roland Burris",25.5,44.2,1,0,1,1,76.2,9.9,3.8,12.4,64.1,0],[2010,"IN","Evan Bayh",1.0,24.7,1,0,1,1,63.9,9.7,7.0,12.9,82.0,0],[2010,"KS","Sam Brownback",-15.2,-43.1,0,0,1,1,64.5,6.8,6.0,13.1,78.7,0],[2010,"KY","Jim Bunning",-16.5,-1.3,0,0,1,1,61.5,10.0,7.6,13.2,86.7,0],[2010,"LA","David Vitter",-18.9,-3.6,0,1,1,1,65.5,7.7,1.0,12.2,60.7,0],[2010,"MD","Barbara Mikulski",25.9,31.5,1,1,1,1,92.6,7.7,9.0,12.1,55.3,1],[2010,"MO","Kit Bond",-0.1,-13.4,0,0,1,1,70.3,9.3,7.2,13.9,81.3,0],[2010,"NC","Richard Burr",0.3,-4.6,0,1,1,1,60.4,10.5,19.1,12.8,65.8,0],[2010,"ND","Byron Dorgan",-8.8,36.6,1,0,1,1,72.2,3.6,3.6,14.5,89.1,0],[2010,"NH","Judd Gregg",9.7,-32.5,0,0,1,1,92.5,5.8,7.3,13.3,92.6,0],[2010,"NV","Harry Reid",12.8,27.0,1,1,1,1,74.2,13.4,38.6,11.7,54.9,1],[2010,"NY","Chuck Schumer",31.5,49.2,1,1,1,1,72.4,8.6,2.2,13.4,58.9,1],[2010,"OH","George Voinovich",4.7,-27.7,0,0,1,1,66.2,9.7,1.9,13.9,81.5,0],[2010,"OK","Tom Coburn",-31.3,-12.3,0,1,1,1,66.2,6.2,8.6,13.4,69.2,0],[2010,"OR","Ron Wyden",16.8,33.3,1,1,1,1,70.8,10.5,13.0,13.7,79.0,1],[2010,"PA","Arlen Specter",10.5,-11.2,1,0,1,1,69.5,8.0,3.5,15.4,79.9,0],[2010,"SC","Jim DeMint",-9.1,-9.8,0,1,1,1,59.3,10.8,15.6,13.4,64.3,0],[2010,"SD","John Thune",-8.6,-1.2,0,1,1,1,66.1,4.8,7.6,14.3,85.0,0],[2010,"UT","Bob Bennett",-29.1,-41.5,0,0,1,1,84.4,8.2,24.2,8.9,80.8,0],[2010,"VT","Patrick Leahy",37.8,48.4,1,1,1,1,75.5,6.0,3.3,14.3,94.5,1],[2010,"WA","Patty Murray",17.5,12.5,1,1,1,1,87.1,9.9,14.8,12.1,73.2,1],[2010,"WI","Russ Feingold",14.1,11.3,1,1,1,1,73.9,8.1,6.4,13.6,83.7,0],[2012,"AZ","Jon Kyl",-8.6,-10.2,0,0,1,0,67.1,8.2,22.8,14.2,57.4,0],[2012,"CA","Dianne Feinstein",24.6,25.9,1,1,1,0,73.6,10.1,9.2,11.7,39.8,1],[2012,"CT","Joe Lieberman",22.6,80.6,1,0,1,0,90.3,8.4,4.5,14.4,70.8,1],[2012,"DE","Tom Carper",25.3,42.0,1,1,1,0,75.4,7.0,14.1,14.7,64.9,1],[2012,"FL","Bill Nelson",2.8,22.6,1,1,1,0,62.2,8.4,16.5,17.6,57.4,1],[2012,"HI","Daniel Akaka",46.0,25.0,1,0,1,0,81.5,5.4,12.5,14.7,22.6,1],[2012,"IN","Richard Lugar",1.0,-100.0,0,0,1,0,61.3,8.1,6.4,13.2,81.3,1],[2012,"MA","Scott Brown",26.4,38.8,0,1,1,0,87.4,6.7,3.4,13.9,76.2,1],[2012,"MD","Ben Cardin",25.9,10.2,1,1,1,0,95.0,6.8,8.7,12.5,54.2,1],[2012,"ME","Olympia Snowe",17.7,-56.4,0,0,1,0,68.6,7.2,3.3,16.3,94.3,1],[2012,"MI","Debbie Stabenow",16.7,15.9,1,1,1,0,67.5,9.0,-1.1,14.1,76.4,1],[2012,"MN","Amy Klobuchar",10.5,21.0,1,1,1,0,79.8,5.6,7.3,13.1,82.7,1],[2012,"MO","Claire McCaskill",-0.1,2.3,1,1,1,0,63.2,7.0,6.6,14.2,80.8,1],[2012,"MS","Roger Wicker",-13.3,-29.2,0,1,1,0,56.7,8.7,4.4,13.0,57.8,0],[2012,"MT","Jon Tester",-2.3,0.9,1,1,1,0,55.6,5.7,10.0,15.1,87.5,1],[2012,"ND","Kent Conrad",-8.8,40.0,1,0,1,0,77.8,3.0,7.3,14.4,88.5,1],[2012,"NE","Ben Nelson",-15.2,27.8,1,0,1,0,76.8,3.9,7.0,13.5,81.7,0],[2012,"NJ","Bob Menendez",15.7,9.2,1,1,1,0,86.0,9.5,4.0,13.7,58.9,1],[2012,"NM","Jeff Bingaman",15.3,41.3,1,0,1,0,57.9,6.9,13.6,13.5,40.1,1],[2012,"NV","Dean Heller",12.8,-14.9,0,1,1,0,64.9,11.2,29.3,12.5,53.6,0],[2012,"NY","Kirsten Gillibrand",31.5,36.7,1,1,1,0,69.9,8.6,2.2,13.7,58.0,1],[2012,"OH","Sherrod Brown",4.7,12.4,1,1,1,0,61.6,7.2,1.4,14.2,80.9,1],[2012,"PA","Bob Casey Jr.",10.5,17.4,1,1,1,0,68.9,7.6,3.6,15.5,79.1,1],[2012,"RI","Sheldon Whitehouse",28.4,7.0,1,1,1,0,67.7,10.0,-0.3,14.6,76.2,1],[2012,"TN","Bob Corker",-15.3,-2.8,0,1,1,0,58.3,7.8,11.3,13.7,75.4,0],[2012,"TX","Kay Bailey Hutchison",-11.9,-26.2,0,0,1,0,67.7,6.5,20.3,10.5,44.9,0],[2012,"UT","Orrin Hatch",-29.1,-33.5,0,1,1,0,76.6,4.7,23.3,9.2,80.3,0],[2012,"VA","Jim Webb",6.4,0.4,1,0,1,0,86.4,5.7,12.6,12.5,64.5,1],[2012,"VT","Bernie Sanders",37.8,33.8,1,1,1,0,71.6,4.8,2.4,15.0,94.1,1],[2012,"WA","Maria Cantwell",17.5,17.5,1,1,1,0,78.5,8.0,14.1,12.6,72.0,1],[2012,"WI","Herb Kohl",14.1,39.1,1,0,1,0,71.8,6.8,5.5,13.9,83.0,1],[2012,"WV","Joe Manchin",-13.3,54.1,1,1,1,0,57.7,7.3,3.1,16.2,93.0,1],[2012,"WY","John Barrasso",-33.1,-40.2,0,1,1,0,75.2,5.3,14.7,12.7,85.7,0],[2014,"AK","Mark Begich",-14.6,1.3,1,1,1,1,89.4,6.7,13.8,9.0,62.4,0],[2014,"AL","Jeff Sessions",-22.4,-26.9,0,1,1,1,59.3,6.6,7.3,14.9,66.5,0],[2014,"AR","Mark Pryor",-24.3,100.0,1,1,1,1,53.0,5.7,8.6,15.3,73.7,0],[2014,"CO","Mark Udall",5.5,10.8,1,1,1,1,87.8,4.4,16.4,12.2,69.3,0],[2014,"DE","Chris Coons",18.9,29.4,1,1,1,1,71.1,5.4,13.0,16.0,64.1,1],[2014,"GA","Saxby Chambliss",-7.9,-3.0,0,0,1,1,63.2,7.0,15.7,12.0,54.8,0],[2014,"IA","Tom Harkin",5.9,25.4,1,0,1,1,76.9,4.2,5.2,15.5,87.4,0],[2014,"ID","Jim Risch",-32.8,-25.7,0,1,1,1,67.0,4.0,18.2,13.8,83.2,0],[2014,"IL","Dick Durbin",17.2,40.8,1,1,1,1,74.3,6.6,2.7,13.6,62.7,1],[2014,"KS","Pat Roberts",-22.2,-24.5,0,1,1,1,66.4,4.4,6.3,14.0,77.2,0],[2014,"KY","Mitch McConnell",-23.1,-5.9,0,1,1,1,58.2,5.9,7.0,14.4,85.6,0],[2014,"LA","Mary Landrieu",-17.5,6.5,1,1,1,1,57.5,6.7,2.3,13.3,59.6,0],[2014,"MA","Ed Markey",23.6,36.1,1,1,1,1,83.9,5.6,4.6,14.8,74.8,1],[2014,"ME","Susan Collins",15.7,-22.8,0,1,1,1,70.3,5.3,1.7,17.7,94.0,0],[2014,"MI","Carl Levin",9.6,29.9,1,0,1,1,70.5,6.8,-1.3,15.0,76.0,1],[2014,"MN","Al Franken",7.9,0.0,1,1,1,1,83.8,4.0,7.1,13.9,81.8,1],[2014,"MS","Thad Cochran",-11.6,-22.9,0,1,1,1,48.9,7.4,4.2,13.9,57.5,0],[2014,"MT","John Walsh",-14.1,45.8,1,0,1,1,58.4,4.6,10.3,16.1,87.0,0],[2014,"NC","Kay Hagan",-2.1,8.7,1,1,1,1,58.5,6.0,16.9,14.2,64.5,0],[2014,"NE","Mike Johanns",-22.3,-17.9,0,0,1,1,74.5,3.1,7.3,14.1,80.9,0],[2014,"NH","Jeanne Shaheen",5.7,6.5,1,1,1,1,93.9,4.1,3.7,15.3,91.5,1],[2014,"NJ","Cory Booker",17.9,14.4,1,1,1,1,84.0,6.5,3.0,14.5,57.8,1],[2014,"NM","Tom Udall",10.6,22.7,1,1,1,1,55.0,6.5,11.5,14.6,39.1,1],[2014,"OK","Jim Inhofe",-33.5,-18.3,0,1,1,1,60.2,4.1,10.0,14.2,67.3,0],[2014,"OR","Jeff Merkley",12.5,3.5,1,1,1,1,70.4,6.4,10.6,15.4,77.5,1],[2014,"RI","Jack Reed",28.0,46.8,1,1,1,1,76.3,7.3,-1.5,15.4,75.0,1],[2014,"SC","Lindsey Graham",-10.6,-15.3,0,1,1,1,58.4,6.6,14.8,15.3,64.0,0],[2014,"SD","Tim Johnson",-18.4,25.0,1,0,1,1,72.1,3.3,10.3,14.8,83.3,0],[2014,"TN","Lamar Alexander",-20.7,-34.6,0,1,1,1,57.4,6.5,11.1,14.6,74.9,0],[2014,"TX","John Cornyn",-16.0,-12.3,0,1,1,1,69.8,5.0,20.2,11.2,44.0,0],[2014,"VA","Mark Warner",3.9,31.7,1,1,1,1,89.3,4.9,12.1,13.4,63.8,1],[2014,"WV","Jay Rockefeller",-27.3,27.5,1,0,1,1,55.7,6.4,2.3,17.3,92.7,0],[2014,"WY","Mike Enzi",-42.3,-51.4,0,1,1,1,82.3,4.4,15.7,13.5,84.6,0],[2016,"AK","Lisa Murkowski",-14.6,-52.3,0,1,1,0,99.1,6.7,10.7,10.0,61.6,0],[2016,"AL","Richard Shelby",-22.4,-30.5,0,1,1,0,58.7,5.8,6.2,15.7,66.0,0],[2016,"AR","John Boozman",-24.3,-22.1,0,1,1,0,56.5,3.9,7.1,16.0,73.1,0],[2016,"AZ","John McCain",-9.2,-25.9,0,1,1,0,69.0,5.4,17.0,16.2,55.7,0],[2016,"CA","Barbara Boxer",23.7,10.6,1,0,1,0,84.0,5.5,8.6,13.2,38.2,1],[2016,"CO","Michael Bennet",5.5,1.7,1,1,1,0,87.9,3.0,17.8,13.0,68.8,1],[2016,"CT","Richard Blumenthal",17.5,12.1,1,1,1,0,96.2,4.7,2.3,16.0,68.4,1],[2016,"FL","Marco Rubio",0.9,-41.5,0,1,1,0,64.4,4.9,13.3,19.4,55.3,0],[2016,"GA","Johnny Isakson",-7.9,-19.8,0,1,1,0,67.0,5.4,14.1,12.8,53.9,0],[2016,"HI","Brian Schatz",43.4,55.2,1,1,1,0,85.2,2.8,10.1,16.8,22.3,1],[2016,"IA","Chuck Grassley",5.9,-31.8,0,1,1,0,80.3,3.6,5.3,16.0,86.5,0],[2016,"ID","Mike Crapo",-32.8,-48.1,0,1,1,0,68.1,3.7,15.7,14.6,82.7,0],[2016,"IL","Mark Kirk",17.2,-1.7,0,1,1,0,79.7,5.7,2.0,14.3,62.0,1],[2016,"IN","Dan Coats",-10.4,-15.4,0,0,1,0,68.6,4.2,5.3,14.6,80.0,0],[2016,"KS","Jerry Moran",-22.2,-45.3,0,1,1,0,72.4,4.2,6.0,14.6,76.4,0],[2016,"KY","Rand Paul",-23.1,-11.5,0,1,1,0,55.9,5.1,5.9,15.2,85.2,0],[2016,"LA","David Vitter",-17.5,-20.0,0,0,1,0,60.6,6.1,2.0,14.0,59.2,0],[2016,"MD","Barbara Mikulski",26.6,27.0,1,0,1,0,97.1,4.2,7.1,14.2,52.1,1],[2016,"MO","Roy Blunt",-9.6,-14.3,0,1,1,0,78.1,4.7,4.9,15.7,80.0,0],[2016,"NC","Richard Burr",-2.1,-12.0,0,1,1,0,67.0,5.1,15.3,15.1,63.9,0],[2016,"ND","John Hoeven",-20.2,-54.9,0,1,1,0,75.8,3.0,16.9,14.2,85.7,0],[2016,"NH","Kelly Ayotte",5.7,-24.0,0,1,1,0,99.9,2.9,3.0,16.4,90.9,1],[2016,"NV","Harry Reid",6.8,6.1,1,0,1,0,68.6,5.6,17.9,14.6,50.9,1],[2016,"NY","Chuck Schumer",32.1,34.6,1,1,1,0,76.5,5.0,2.7,15.2,56.5,1],[2016,"OH","Rob Portman",3.0,-18.1,0,1,1,0,70.3,5.1,1.4,15.9,79.7,0],[2016,"OK","James Lankford",-33.5,-46.0,0,1,1,0,62.1,4.7,10.2,14.7,66.4,0],[2016,"OR","Ron Wyden",12.5,18.6,1,1,1,0,80.3,4.7,11.2,16.3,76.7,1],[2016,"PA","Pat Toomey",5.5,-2.0,0,1,1,0,79.7,5.3,2.7,17.0,77.4,0],[2016,"SC","Tim Scott",-10.6,-38.0,0,1,1,0,61.2,4.7,14.7,16.2,63.9,0],[2016,"SD","John Thune",-18.4,-100.0,0,1,1,0,72.7,3.1,10.2,15.5,82.8,0],[2016,"UT","Mike Lee",-49.3,-30.5,0,1,1,0,87.5,3.2,21.4,10.3,79.3,0],[2016,"VT","Patrick Leahy",36.5,35.1,1,1,1,0,78.5,3.1,0.7,17.4,93.3,1],[2016,"WA","Patty Murray",15.3,4.7,1,1,1,0,88.8,5.1,14.5,14.3,69.8,1],[2016,"WI","Ron Johnson",6.9,-4.9,0,1,1,0,73.2,3.8,3.9,15.5,81.8,0],[2018,"AZ","Jeff Flake",-3.8,-3.2,0,0,0,1,77.7,4.8,14.3,17.1,54.8,1],[2018,"CA","Dianne Feinstein",32.3,25.0,1,1,0,1,89.9,4.2,8.5,13.9,37.3,1],[2018,"CT","Chris Murphy",14.3,12.0,1,1,0,1,94.5,3.8,1.4,16.8,67.2,1],[2018,"DE","Tom Carper",12.0,39.3,1,1,0,1,81.8,3.5,9.9,18.2,62.4,1],[2018,"FL","Bill Nelson",-1.2,13.3,1,1,0,1,68.6,3.5,14.2,20.1,54.3,0],[2018,"HI","Mazie Hirono",34.9,25.2,1,1,0,1,94.6,2.6,8.4,17.8,21.9,1],[2018,"IN","Joe Donnelly",-20.2,6.1,1,1,0,1,75.6,3.5,4.4,15.3,79.2,0],[2018,"MA","Elizabeth Warren",29.3,7.6,1,1,0,1,96.1,3.3,6.7,16.1,72.2,1],[2018,"MD","Ben Cardin",28.0,36.0,1,1,0,1,104.8,3.7,6.6,15.0,51.0,1],[2018,"ME","Angus King",3.2,36.5,1,1,0,1,67.5,3.3,0.7,20.0,93.3,1],[2018,"MI","Debbie Stabenow",-0.2,21.5,1,1,0,1,73.3,4.0,-0.2,16.7,75.1,1],[2018,"MN","Amy Klobuchar",1.7,36.2,1,1,0,1,91.2,3.0,7.0,15.4,79.8,1],[2018,"MO","Claire McCaskill",-19.6,16.7,1,1,0,1,72.9,3.1,3.8,16.5,79.5,0],[2018,"MS","Roger Wicker",-18.2,-17.0,0,1,0,1,55.7,4.9,2.1,15.4,56.7,0],[2018,"MT","Jon Tester",-22.2,4.0,1,1,0,1,74.9,3.6,9.2,18.1,86.1,1],[2018,"ND","Heidi Heitkamp",-39.6,0.9,1,1,0,1,77.2,2.3,15.9,15.0,84.5,0],[2018,"NE","Deb Fischer",-27.1,-15.5,0,1,0,1,76.6,2.9,7.5,15.3,79.0,0],[2018,"NJ","Bob Menendez",14.6,19.8,1,1,0,1,92.7,3.8,2.4,15.8,55.6,1],[2018,"NM","Martin Heinrich",9.3,6.0,1,1,0,1,60.1,4.9,5.2,16.9,37.4,1],[2018,"NV","Dean Heller",2.6,-1.3,0,1,0,1,73.7,4.3,14.3,15.4,49.4,1],[2018,"NY","Kirsten Gillibrand",26.8,46.5,1,1,0,1,79.7,3.9,2.4,16.1,55.8,1],[2018,"OH","Sherrod Brown",-8.5,6.3,1,1,0,1,77.4,4.4,1.4,16.6,79.0,1],[2018,"PA","Bob Casey Jr.",-0.8,9.3,1,1,0,1,80.0,4.2,1.8,17.8,76.5,1],[2018,"RI","Sheldon Whitehouse",16.6,29.9,1,1,0,1,84.7,3.9,-0.1,16.8,72.6,1],[2018,"TN","Bob Corker",-27.2,-36.2,0,0,0,1,71.1,3.5,8.7,16.0,74.0,0],[2018,"TX","Ted Cruz",-9.4,-16.3,0,1,0,1,76.7,3.8,18.7,12.2,42.0,0],[2018,"UT","Orrin Hatch",-24.8,-37.1,0,0,0,1,90.7,2.9,19.5,10.8,78.5,0],[2018,"VA","Tim Kaine",5.7,5.9,1,1,0,1,91.3,2.8,9.3,15.0,62.0,1],[2018,"VT","Bernie Sanders",30.4,48.1,1,1,0,1,82.0,2.4,0.3,18.7,92.8,1],[2018,"WA","Maria Cantwell",17.6,20.9,1,1,0,1,94.5,4.3,15.0,15.0,68.6,1],[2018,"WI","Tammy Baldwin",-0.8,5.7,1,1,0,1,81.6,3.0,3.3,16.4,81.2,1],[2018,"WV","Joe Manchin",-44.3,24.8,1,1,0,1,59.4,5.0,-0.8,19.4,92.2,1],[2018,"WY","John Barrasso",-51.4,-55.5,0,1,0,1,75.5,4.0,8.4,15.8,84.1,0],[2020,"AK","Dan Sullivan",-16.8,-2.3,0,1,0,0,97.3,7.8,5.0,12.5,59.9,0],[2020,"AL","Doug Jones",-28.7,-100.0,1,1,0,0,69.8,5.9,3.2,17.4,65.3,0],[2020,"AR","Tom Cotton",-28.6,-17.8,0,1,0,0,67.7,5.9,4.3,17.3,72.0,0],[2020,"CO","Cory Gardner",5.4,-2.1,0,1,0,0,90.0,6.3,15.8,14.7,67.7,1],[2020,"DE","Chris Coons",12.0,13.9,1,1,0,0,92.1,7.6,9.5,19.4,61.4,1],[2020,"GA","David Perdue",-5.3,-7.8,0,1,0,0,70.3,6.5,10.5,14.3,52.0,0],[2020,"IA","Joni Ernst",-10.1,-8.7,0,1,0,0,82.0,4.6,4.2,17.5,84.9,0],[2020,"ID","Jim Risch",-36.6,-30.7,0,1,0,0,82.0,5.0,15.1,16.3,81.6,0],[2020,"IL","Dick Durbin",18.0,11.3,1,1,0,0,92.4,9.1,-1.0,16.1,60.8,1],[2020,"KS","Pat Roberts",-22.2,-100.0,0,0,0,0,90.8,5.4,2.8,16.3,75.3,0],[2020,"KY","Mitch McConnell",-31.3,-16.0,0,1,0,0,69.1,5.0,3.6,16.8,84.1,0],[2020,"LA","Bill Cassidy",-20.3,-9.9,0,1,0,0,64.2,8.7,3.7,15.9,58.4,0],[2020,"MA","Ed Markey",29.3,23.9,1,1,0,0,108.9,9.6,5.8,16.9,71.0,1],[2020,"ME","Susan Collins",3.2,-37.0,0,1,0,0,82.6,4.0,1.2,21.2,92.9,0],[2020,"MI","Gary Peters",-0.2,13.8,1,1,0,0,79.6,8.9,0.8,17.7,74.7,1],[2020,"MN","Tina Smith",1.7,10.7,1,1,0,0,101.1,6.2,6.8,16.3,78.9,1],[2020,"MS","Cindy Hyde-Smith",-18.2,-22.5,0,1,0,0,55.6,7.1,0.7,16.3,56.4,0],[2020,"MT","Steve Daines",-22.2,-18.1,0,1,0,0,74.8,5.2,8.8,19.2,85.9,0],[2020,"NC","Thom Tillis",-3.8,-1.6,0,1,0,0,76.0,6.8,11.1,16.7,62.6,0],[2020,"NE","Ben Sasse",-27.1,-34.3,0,1,0,0,90.7,3.4,6.6,16.1,78.2,0],[2020,"NH","Jeanne Shaheen",0.4,3.3,1,1,0,0,107.9,6.1,3.4,18.6,89.7,1],[2020,"NJ","Cory Booker",14.6,13.8,1,1,0,0,108.9,7.4,1.5,16.6,54.6,1],[2020,"NM","Tom Udall",9.3,11.1,1,0,0,0,66.0,8.7,3.1,18.0,36.7,1],[2020,"OK","Jim Inhofe",-38.6,-40.9,0,1,0,0,73.8,5.9,6.5,16.1,64.8,0],[2020,"OR","Jeff Merkley",12.3,20.4,1,1,0,0,92.4,7.5,10.7,18.1,75.0,1],[2020,"RI","Jack Reed",16.6,41.4,1,1,0,0,87.1,10.0,0.4,17.7,71.4,1],[2020,"SC","Lindsey Graham",-14.9,-16.6,0,1,0,0,77.0,5.8,12.4,18.2,63.6,0],[2020,"SD","Mike Rounds",-31.9,-26.1,0,1,0,0,79.8,3.6,9.9,17.1,81.3,0],[2020,"TN","Lamar Alexander",-27.2,-32.0,0,0,0,0,70.3,7.1,8.3,16.8,73.5,0],[2020,"TX","John Cornyn",-9.4,-28.4,0,1,0,0,83.8,7.7,16.9,12.9,41.2,0],[2020,"VA","Mark Warner",5.7,0.8,1,1,0,0,101.0,6.7,8.0,15.9,61.2,1],[2020,"WV","Shelley Moore Capito",-44.3,-28.6,0,1,0,0,66.7,7.6,-2.8,20.5,92.0,0],[2020,"WY","Mike Enzi",-51.4,-61.1,0,0,0,0,80.9,5.9,3.6,17.2,83.7,0],[2022,"AK","Lisa Murkowski",-10.5,-58.5,0,1,1,1,95.5,4.0,1.7,13.4,59.5,0],[2022,"AL","Richard Shelby",-25.8,-28.1,0,0,1,1,67.0,2.5,5.2,17.4,64.4,0],[2022,"AR","John Boozman",-28.4,-24.6,0,1,1,1,59.7,3.2,2.9,17.3,70.8,0],[2022,"AZ","Mark Kelly",0.3,-13.7,1,1,1,1,83.3,3.8,12.4,18.6,54.4,1],[2022,"CA","Alex Padilla",29.8,100.0,1,1,1,1,96.0,4.0,4.0,15.3,35.4,1],[2022,"CO","Michael Bennet",13.9,6.0,1,1,1,1,99.9,2.8,13.5,15.2,67.0,1],[2022,"CT","Richard Blumenthal",20.4,29.2,1,1,1,1,95.2,3.7,0.5,18.0,64.6,1],[2022,"FL","Marco Rubio",-3.4,-8.0,0,1,1,1,70.3,2.8,14.6,21.2,52.7,0],[2022,"GA","Raphael Warnock",0.2,-14.4,1,1,1,1,72.3,3.2,10.1,14.6,50.7,1],[2022,"HI","Brian Schatz",30.1,53.6,1,1,1,1,96.7,3.3,4.9,19.9,21.6,1],[2022,"IA","Chuck Grassley",-8.4,-25.5,0,1,1,1,85.2,3.1,4.3,17.8,83.9,0],[2022,"ID","Mike Crapo",-31.8,-40.9,0,1,1,1,90.5,3.0,20.2,16.6,81.0,0],[2022,"IL","Tammy Duckworth",17.3,15.9,1,1,1,1,93.2,4.5,-1.3,16.5,59.5,1],[2022,"IN","Todd Young",-16.4,-10.3,0,1,1,1,82.6,3.1,4.6,16.4,76.9,0],[2022,"KS","Jerry Moran",-15.0,-31.7,0,1,1,1,89.4,2.9,2.4,16.6,74.2,0],[2022,"KY","Rand Paul",-26.4,-14.5,0,1,1,1,65.4,4.1,3.1,17.0,83.0,0],[2022,"LA","John Kennedy",-18.9,-27.5,0,1,1,1,67.3,3.5,1.1,16.3,57.0,0],[2022,"MD","Chris Van Hollen",34.1,26.1,1,1,1,1,114.5,2.8,5.8,16.2,48.3,1],[2022,"MO","Roy Blunt",-15.7,-2.9,0,0,1,1,74.8,2.7,2.7,17.5,78.3,0],[2022,"NC","Richard Burr",-1.4,-5.9,0,0,1,1,74.0,3.8,9.4,16.8,61.4,0],[2022,"ND","John Hoeven",-34.4,-64.4,0,1,1,1,81.0,2.1,13.5,16.1,83.5,0],[2022,"NH","Maggie Hassan",7.5,0.1,1,1,1,1,104.5,2.6,5.1,19.4,89.0,1],[2022,"NV","Catherine Cortez Masto",2.4,2.6,1,1,1,1,75.7,5.2,16.0,16.6,47.2,1],[2022,"NY","Chuck Schumer",23.4,44.4,1,1,1,1,85.8,3.9,1.8,17.4,54.4,1],[2022,"OH","Rob Portman",-8.2,-21.9,0,0,1,1,73.8,4.1,1.9,17.9,77.4,0],[2022,"OK","James Lankford",-33.9,-46.8,0,1,1,1,70.7,3.1,5.4,16.1,63.6,0],[2022,"OR","Ron Wyden",16.6,25.9,1,1,1,1,96.3,4.1,9.9,18.6,74.0,1],[2022,"PA","Pat Toomey",1.2,-1.5,0,0,1,1,85.4,4.1,2.1,19.0,74.9,1],[2022,"SC","Tim Scott",-11.9,-24.2,0,1,1,1,73.6,3.2,11.2,18.5,62.9,0],[2022,"SD","John Thune",-26.9,-43.7,0,1,1,1,86.9,2.0,8.8,17.6,81.2,0],[2022,"UT","Mike Lee",-21.4,-43.2,0,1,1,1,103.1,2.5,18.6,11.6,76.7,0],[2022,"VT","Patrick Leahy",36.6,29.9,1,0,1,1,89.5,2.4,3.2,20.8,91.9,1],[2022,"WA","Patty Murray",19.9,18.0,1,1,1,1,103.1,4.2,13.4,16.3,65.8,1],[2022,"WI","Ron Johnson",0.6,-3.5,0,1,1,1,82.3,2.8,3.1,18.0,80.1,0],[2024,"AZ","Kyrsten Sinema",0.3,2.4,1,0,1,0,86.9,3.9,12.6,19.3,53.1,1],[2024,"CA","Laphonza Butler",29.8,100.0,1,0,1,0,94.5,5.4,2.5,16.1,34.1,1],[2024,"CT","Chris Murphy",20.4,20.4,1,1,1,0,97.0,3.4,1.3,19.0,63.0,1],[2024,"DE","Tom Carper",19.3,22.6,1,0,1,0,90.8,3.9,12.2,21.2,58.7,1],[2024,"FL","Rick Scott",-3.4,-0.1,0,1,1,0,75.9,3.5,17.2,21.6,51.4,0],[2024,"HI","Mazie Hirono",30.1,42.3,1,1,1,0,102.3,2.8,2.3,21.0,21.5,1],[2024,"IN","Mike Braun",-16.4,-6.2,0,0,1,0,80.8,4.2,4.7,17.1,75.8,0],[2024,"MA","Elizabeth Warren",34.2,25.0,1,1,1,0,111.9,4.1,5.2,18.3,68.5,1],[2024,"MD","Ben Cardin",34.1,36.3,1,0,1,0,107.2,3.3,4.9,17.1,47.0,1],[2024,"ME","Angus King",9.3,29.5,1,1,1,0,79.6,3.1,5.4,22.9,91.7,1],[2024,"MI","Debbie Stabenow",2.8,6.6,1,0,1,0,80.9,5.1,1.7,19.1,73.5,1],[2024,"MN","Amy Klobuchar",7.3,25.0,1,1,1,0,95.0,3.3,6.2,17.8,76.7,1],[2024,"MO","Josh Hawley",-15.7,-6.0,0,1,1,0,82.3,3.7,2.7,18.3,77.7,0],[2024,"MS","Roger Wicker",-16.8,-19.4,0,1,1,0,57.9,3.4,-1.6,17.6,55.6,0],[2024,"MT","Jon Tester",-16.8,3.7,1,1,1,0,83.3,3.0,11.6,20.5,85.1,0],[2024,"ND","Kevin Cramer",-34.4,-10.9,0,1,1,0,80.9,2.5,9.1,17.0,82.3,0],[2024,"NE","Deb Fischer",-19.6,-19.8,0,1,1,0,93.8,2.8,6.5,17.1,75.8,0],[2024,"NJ","George Helmy",16.1,11.5,1,0,1,0,96.3,4.7,5.9,17.6,51.6,1],[2024,"NM","Martin Heinrich",11.0,27.8,1,1,1,0,64.1,4.2,1.4,19.8,36.6,1],[2024,"NV","Jacky Rosen",2.4,5.2,1,1,1,0,85.5,5.5,15.8,17.3,45.2,1],[2024,"NY","Kirsten Gillibrand",23.4,34.0,1,1,1,0,85.8,4.2,0.6,18.5,53.7,1],[2024,"OH","Sherrod Brown",-8.2,6.8,1,1,1,0,77.5,4.5,2.1,18.7,76.5,0],[2024,"PA","Bob Casey Jr.",1.2,13.1,1,1,1,0,83.9,3.9,1.9,19.9,73.8,0],[2024,"RI","Sheldon Whitehouse",21.2,23.2,1,1,1,0,86.0,4.4,4.5,19.2,68.9,1],[2024,"TN","Marsha Blackburn",-23.7,-10.9,0,1,1,0,76.4,3.5,10.0,17.4,71.8,0],[2024,"TX","Ted Cruz",-5.7,-2.6,0,1,1,0,83.1,4.2,16.0,13.7,39.4,0],[2024,"UT","Mitt Romney",-21.4,-33.9,0,0,1,0,106.4,3.4,18.8,12.1,75.2,0],[2024,"VA","Tim Kaine",10.3,16.3,1,1,1,0,101.4,3.0,5.8,17.2,59.0,1],[2024,"VT","Bernie Sanders",36.6,42.2,1,1,1,0,89.5,2.4,3.5,22.1,91.3,1],[2024,"WA","Maria Cantwell",19.9,16.9,1,1,1,0,98.2,4.4,12.8,17.1,63.9,1],[2024,"WI","Tammy Baldwin",0.6,10.8,1,1,1,0,83.8,3.0,3.4,19.1,79.3,1],[2024,"WV","Joe Manchin",-39.6,3.4,1,0,1,0,63.5,4.0,-4.5,21.5,90.9,0],[2024,"WY","John Barrasso",-45.0,-38.0,0,1,1,0,81.2,3.3,0.4,19.2,82.9,0],[2026,"AK","Dan Sullivan",-13.7,-13.4,0,1,0,1,102.5,4.3,0.2,14.8,58.5,-1],[2026,"AL","Tommy Tuberville",-30.9,-20.4,0,0,0,1,68.4,3.5,6.2,18.5,63.7,-1],[2026,"AR","Tom Cotton",-31.3,-100.0,0,1,0,1,68.1,3.9,3.6,18.2,69.8,-1],[2026,"CO","John Hickenlooper",11.3,9.5,1,1,0,1,102.5,4.1,9.2,16.4,65.2,-1],[2026,"DE","Chris Coons",15.0,22.1,1,1,0,1,99.8,4.6,11.7,21.8,58.0,-1],[2026,"GA","Jon Ossoff",-2.2,-1.8,1,1,0,1,82.1,3.3,9.8,15.7,48.8,-1],[2026,"IA","Joni Ernst",-13.4,-6.8,0,0,0,1,81.9,3.2,3.8,18.9,82.1,-1],[2026,"ID","Jim Risch",-37.5,-30.6,0,1,0,1,87.8,3.6,21.1,17.7,79.6,-1],[2026,"IL","Dick Durbin",11.1,17.1,1,0,0,1,93.3,4.6,-1.2,17.9,58.0,-1],[2026,"KS","Roger Marshall",-16.4,-12.0,0,1,0,1,85.5,3.8,2.1,17.8,72.9,-1],[2026,"KY","Mitch McConnell",-31.0,-20.3,0,0,0,1,73.8,4.7,3.6,18.0,81.3,-1],[2026,"LA","Bill Cassidy",-22.4,-26.8,0,0,0,1,60.7,4.0,-1.5,17.7,56.1,-1],[2026,"MA","Ed Markey",25.9,33.4,1,1,0,1,118.5,4.3,5.0,18.7,67.6,-1],[2026,"ME","Susan Collins",7.1,-9.2,0,1,0,1,95.2,3.3,5.7,23.5,91.3,-1],[2026,"MI","Gary Peters",-1.4,1.7,1,0,0,1,76.8,5.0,2.1,19.6,73.0,-1],[2026,"MN","Tina Smith",4.3,5.7,1,0,0,1,95.2,4.5,5.6,18.2,76.0,-1],[2026,"MS","Cindy Hyde-Smith",-23.1,-10.2,0,1,0,1,57.8,3.3,-1.6,18.0,55.4,-1],[2026,"MT","Steve Daines",-20.6,-10.0,0,0,0,1,86.8,3.1,10.3,21.1,84.9,-1],[2026,"NC","Thom Tillis",-3.3,-1.8,0,0,0,1,80.2,3.4,10.1,17.9,59.9,-1],[2026,"NE","Pete Ricketts",-20.8,-44.0,0,1,0,1,100.6,2.9,6.0,17.4,75.0,-1],[2026,"NH","Jeanne Shaheen",2.8,16.0,1,0,0,1,112.1,2.6,5.3,21.5,88.1,-1],[2026,"NJ","Cory Booker",6.0,16.6,1,1,0,1,111.4,4.2,7.1,18.0,50.8,-1],[2026,"NM","Ben Ray Luj\u00e1n",6.1,6.3,1,1,0,1,67.6,4.7,1.9,20.2,36.1,-1],[2026,"OK","Alan Armstrong",-34.9,-31.5,0,0,0,1,75.4,4.2,4.7,16.9,61.9,-1],[2026,"OR","Jeff Merkley",14.9,18.3,1,1,0,1,92.7,5.0,6.3,19.9,71.8,-1],[2026,"RI","Jack Reed",14.2,33.2,1,1,0,1,96.9,3.6,5.2,19.6,68.0,-1],[2026,"SC","Darline Graham",-18.1,-10.4,0,1,0,1,82.3,4.0,11.9,19.7,62.5,-1],[2026,"SD","Mike Rounds",-29.9,-31.5,0,1,0,1,82.5,2.0,8.2,18.8,80.2,-1],[2026,"TN","Bill Hagerty",-30.1,-27.8,0,1,0,1,75.2,3.4,9.6,17.7,71.4,-1],[2026,"TX","John Cornyn",-13.9,-9.9,0,0,0,1,85.1,4.4,13.9,13.9,38.6,-1],[2026,"VA","Mark Warner",5.9,12.1,1,1,0,1,100.0,3.6,5.3,17.6,58.4,-1],[2026,"WV","Shelley Moore Capito",-42.7,-44.5,0,1,0,1,61.8,4.0,-4.0,21.9,90.5,-1],[2026,"WY","Cynthia Lummis",-47.0,-46.3,0,0,0,1,81.0,3.0,0.2,19.7,82.6,-1],[2026,"FL","Ashley Moody",-13.2,-16.6,0,1,0,1,77.9,4.4,15.6,21.8,50.6,-1],[2026,"OH","Jon Husted",-11.3,-6.1,0,1,0,1,85.2,3.4,2.2,19.1,76.0,-1]];
+</script>
+
+<script id="core">
+// Pure functions: the data, the tree grown one best split at a time by entropy,
+// its predictions, accuracy, the ROC curve and its area. No DOM. verify-trees-app.py
+// runs this block in node and compares it with scikit-learn.
+const FEAT_KEYS=['pres_margin_prev','seat_margin_prev','inc_party_D','inc_running','pres_party_D','midterm','income_prev','unemp_sep','pop_growth10','pct65_prev','pct_white_prev'];
+const FEAT_NAME=['Presidential margin at the last election','Margin at the last race for this seat','A Democrat holds the seat','The incumbent is on the ballot','The president is a Democrat','Midterm year',
+  'Median household income, the year before','Unemployment rate in September','Population growth over ten years','Share aged 65 and over','Share white, not Hispanic'];
+const FEAT_SHORT=['pres. margin','seat margin','D holds seat','incumbent runs','D president','midterm','income','unemployment','pop. growth','age 65+','white non-Hisp.'];
+const FEAT_BINARY=[false,false,true,true,true,true,false,false,false,false,false];
+// How a value of each feature is written: margins as D +7.3 or R +7.3, money in thousands, the rest in percent.
+const FEAT_KIND=['margin','margin','yes','yes','yes','yes','money','pct','pct','pct','pct'];
+function fmtFeat(f,v){const k=FEAT_KIND[f];if(k==='yes')return v?'yes':'no';if(k==='margin')return (v>=0?'D +':'R +')+Math.abs(v).toFixed(1);
+  if(k==='money')return '$'+Math.round(v)+'k';return v.toFixed(1)+'%';}
+// Entropy of a side with k positives among n, in bits, times n. The split score of the tree.
+function entOf(k,n){if(!n||k===0||k===n)return 0;const p=k/n;return -n*(p*Math.log2(p)+(1-p)*Math.log2(1-p));}
+function parseRows(raw){return raw.map(r=>({year:r[0],state:r[1],inc:r[2],x:r.slice(3,r.length-1),y:r[r.length-1]}));}
+function rssOf(n1,n){return n?n1-n1*n1/n:0;}
+// The best split of the points idx over the features feats, both sides at least minLeaf.
+// Ties go to the smaller feature index, then the smaller threshold. Pure leaves return null.
+function bestSplit(rows,idx,feats,minLeaf){
+  const n=idx.length;let n1=0;for(const i of idx)n1+=rows[i].y;
+  if(n1===0||n1===n)return null;
+  const parent=entOf(n1,n);let best=null;
+  for(const f of feats){
+    const order=idx.slice().sort((a,b)=>rows[a].x[f]-rows[b].x[f]);
+    let l1=0;
+    for(let c=1;c<n;c++){
+      l1+=rows[order[c-1]].y;
+      if(c<minLeaf||n-c<minLeaf)continue;
+      const a=rows[order[c-1]].x[f],b=rows[order[c]].x[f];
+      if(a===b)continue;
+      const gain=parent-entOf(l1,c)-entOf(n1-l1,n-c);
+      if(gain>1e-12&&(!best||gain>best.gain+1e-12))best={f,s:(a+b)/2,gain,c,order,tie:false};
+      else if(best&&Math.abs(gain-best.gain)<=1e-12)best.tie=true;
+    }
+  }
+  if(!best)return null;
+  return {f:best.f,s:best.s,gain:best.gain,tie:best.tie,left:best.order.slice(0,best.c),right:best.order.slice(best.c)};
+}
+// Best-first growth: split the leaf whose best split lowers the entropy most, up to maxLeaves.
+// Node k records the step at which it was split, so the tree with L leaves is the
+// state after the first L-1 steps.
+function growTree(rows,idx,feats,minLeaf,maxLeaves){
+  const nodes=[],steps=[];let firstTie=null;
+  function mk(ix,depth,parent){const n=ix.length;let n1=0;for(const i of ix)n1+=rows[i].y;
+    const nd={id:nodes.length,idx:ix,n,n1,p:n1/n,depth,parent,split:null,left:null,right:null,step:undefined,best:undefined};nodes.push(nd);return nd;}
+  const root=mk(idx,0,null);root.best=bestSplit(rows,idx,feats,minLeaf);
+  const frontier=[root];
+  while(steps.length<maxLeaves-1){
+    let pick=null;for(const nd of frontier)if(nd.best&&(!pick||nd.best.gain>pick.best.gain+1e-12))pick=nd;
+    if(!pick)break;
+    const b=pick.best;
+    if(firstTie===null&&(b.tie||frontier.some(nd=>nd!==pick&&nd.best&&Math.abs(nd.best.gain-b.gain)<=1e-9)))firstTie=steps.length;
+    pick.split={f:b.f,s:b.s,gain:b.gain};pick.step=steps.length;steps.push(pick.id);
+    const L=mk(b.left,pick.depth+1,pick.id),R=mk(b.right,pick.depth+1,pick.id);
+    pick.left=L.id;pick.right=R.id;L.best=bestSplit(rows,L.idx,feats,minLeaf);R.best=bestSplit(rows,R.idx,feats,minLeaf);
+    frontier.splice(frontier.indexOf(pick),1);frontier.push(L,R);
+  }
+  return {nodes,steps,maxLeaves:steps.length+1,feats,minLeaf,firstTie};
+}
+function isInternal(nd,L){return nd.step!==undefined&&nd.step<L-1;}
+function pathFor(tree,x,L){const path=[];let nd=tree.nodes[0];
+  while(isInternal(nd,L)){const goLeft=x[nd.split.f]<=nd.split.s;path.push({node:nd,goLeft});nd=tree.nodes[goLeft?nd.left:nd.right];}
+  return {path,leaf:nd};}
+function leafFor(tree,x,L){return pathFor(tree,x,L).leaf;}
+function leavesAt(tree,L){const out=[];(function rec(id){const nd=tree.nodes[id];if(isInternal(nd,L)){rec(nd.left);rec(nd.right);}else out.push(nd);})(0);return out;}
+function scoresFor(tree,rows,L){return rows.map(r=>leafFor(tree,r.x,L).p);}
+// The objective: the average over contests of -log2 of the probability given to the outcome that
+// occurred, in bits per contest. The cost of one contest is capped at -log2(0.01), 6.6 bits, so that a
+// held-out contest in a pure leaf of the other outcome has a finite cost.
+function meanEntropy(sc,rows){let s=0;for(let i=0;i<rows.length;i++){const q=rows[i].y?sc[i]:1-sc[i];s-=Math.log2(Math.max(q,0.01));}return s/rows.length;}
+function accuracy(sc,rows,t){if(t===undefined)t=0.5;let k=0;for(let i=0;i<rows.length;i++)if(((sc[i]>=t)?1:0)===rows[i].y)k++;return k/rows.length;}
+function confusion(sc,rows,t){let tp=0,fp=0,fn=0,tn=0;for(let i=0;i<rows.length;i++){const f=sc[i]>=t;if(rows[i].y){f?tp++:fn++;}else{f?fp++:tn++;}}return {tp,fp,fn,tn};}
+// Definition 4: the points (FPR, TPR) at the cutoffs u_0 = infinity > u_1 > ... > u_r.
+function rocPoints(sc,rows){const n1=rows.reduce((a,r)=>a+r.y,0),n0=rows.length-n1;
+  const levels=[...new Set(sc)].sort((a,b)=>b-a);const pts=[{fpr:0,tpr:0,t:Infinity,d:0,r:0}];let tp=0,fp=0;
+  for(const u of levels){let d=0,r=0;for(let i=0;i<sc.length;i++)if(sc[i]===u){rows[i].y?d++:r++;}tp+=d;fp+=r;pts.push({fpr:fp/n0,tpr:tp/n1,t:u,d,r});}
+  return pts;}
+function trapezoidArea(pts){let a=0;for(let k=1;k<pts.length;k++)a+=(pts[k].fpr-pts[k-1].fpr)*(pts[k].tpr+pts[k-1].tpr)/2;return a;}
+// Claim 2: the average count over positive-negative pairs (1, 1/2 or 0).
+function aucOf(sc,rows){const pos=[],neg=[];for(let i=0;i<sc.length;i++)(rows[i].y?pos:neg).push(sc[i]);
+  let s=0;for(const a of pos)for(const b of neg)s+=a>b?1:a===b?0.5:0;return s/(pos.length*neg.length);}
+// Folds of whole election years: with the years in order, the k-th year goes to fold k mod V,
+// so each fold holds every V-th election year.
+function foldOf(rows,folds){const years=[...new Set(rows.map(r=>r.year))].sort((a,b)=>a-b);return rows.map(r=>years.indexOf(r.year)%folds);}
+// One tree per fold, each grown on the other folds.
+function cvFit(rows,feats,minLeaf,LMAX,folds){folds=folds||3;const fo=foldOf(rows,folds);const trees=[];
+  for(let v=0;v<folds;v++){const tr=[];rows.forEach((r,i)=>{if(fo[i]!==v)tr.push(i);});trees.push(growTree(rows,tr,feats,minLeaf,LMAX));}
+  return {fo,trees,folds};}
+// Definition 5: the score of each contest from the tree grown without its fold.
+function cvScores(rows,fit,L){return rows.map((r,i)=>leafFor(fit.trees[fit.fo[i]],r.x,L).p);}
+// Pooled cross-validated accuracy at each number of leaves.
+function cvCurve(rows,feats,minLeaf,LMAX,folds){const fit=cvFit(rows,feats,minLeaf,LMAX,folds);const out=[null];
+  for(let L=1;L<=LMAX;L++)out.push(accuracy(cvScores(rows,fit,L),rows));return out;}
+if(typeof module!=='undefined')module.exports={FEAT_KEYS,parseRows,entOf,meanEntropy,bestSplit,growTree,leafFor,pathFor,leavesAt,scoresFor,accuracy,confusion,rocPoints,trapezoidArea,aucOf,foldOf,cvFit,cvScores,cvCurve};
+</script>
+
+<script>
+// ----- data and state -----------------------------------------------------------------------
+const ROWS=parseRows(RAW);
+// All 733 past contests are used to fit; trees are checked by three-fold cross-validation over years.
+const PAST=ROWS.filter(r=>r.year<=2024),TEST=ROWS.filter(r=>r.year===2026);
+const FOLDS=3,FOLD=foldOf(PAST,FOLDS);
+const LMAX=200;
+const S={scene:0,beat:0,L:5,minLeaf:1,feats:'all',cutoff:0.5,cv:false,picked:null,enter:false,results:{},cut:{f:0,s:-7,crit:'ent'},hoverLeaf:null};
+try{const r=JSON.parse(localStorage.getItem('senate-results')||'{}');if(r&&typeof r==='object')S.results=r;}catch(e){}
+const treeCache=new Map();
+function featIdx(){return S.feats==='two'?[0,1]:FEAT_KEYS.map((_,i)=>i);}
+function trainedTree(){return fullTree();}
+function fullTree(){const k='F'+S.feats+S.minLeaf;if(!treeCache.has(k))treeCache.set(k,growTree(PAST,PAST.map((_,i)=>i),featIdx(),S.minLeaf,200));return treeCache.get(k);}
+function cvFitCached(){const k='V'+S.feats+S.minLeaf;if(!treeCache.has(k))treeCache.set(k,cvFit(PAST,featIdx(),S.minLeaf,LMAX,FOLDS));return treeCache.get(k);}
+// Accuracy and entropy at each number of leaves, on the contests used to fit and cross-validated.
+function curves(){const k='C'+S.feats+S.minLeaf;if(!treeCache.has(k)){const t=fullTree(),fit=cvFitCached(),cap=Math.min(LMAX,t.maxLeaves);const tr=[null],va=[null],trH=[null],vaH=[null];
+  for(let L=1;L<=cap;L++){const a=scoresFor(t,PAST,L),b=cvScores(PAST,fit,L);tr.push(accuracy(a,PAST));va.push(accuracy(b,PAST));trH.push(meanEntropy(a,PAST));vaH.push(meanEntropy(b,PAST));}treeCache.set(k,{tr,va,trH,vaH,cap});}return treeCache.get(k);}
+function Lcap(){return Math.min(LMAX,trainedTree().maxLeaves);}
+
+// ----- helpers ---------------------------------------------------------------------------------
+const $=s=>document.querySelector(s);
+function h(tag,attrs,...kids){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs||{})){if(v==null||v===false)continue;if(k==='class')e.className=v;else if(k==='html')e.innerHTML=v;else if(k.startsWith('on'))e.addEventListener(k.slice(2),v);else e.setAttribute(k,v);}
+  for(const c of kids.flat(3)){if(c==null||c===false)continue;e.append(c.nodeType?c:document.createTextNode(c));}return e;}
+const NS='http://www.w3.org/2000/svg';
+function sv(tag,attrs,...kids){const e=document.createElementNS(NS,tag);for(const[k,v]of Object.entries(attrs||{})){if(v==null||v===false)continue;if(k.startsWith('on'))e.addEventListener(k.slice(2),v);else e.setAttribute(k,v);}
+  for(const c of kids.flat(3)){if(c==null||c===false)continue;e.append(c.nodeType?c:document.createTextNode(c));}return e;}
+function css(name){return getComputedStyle(document.documentElement).getPropertyValue(name).trim();}
+function hex2rgb(x){x=x.replace('#','');if(x.length===3)x=x.split('').map(c=>c+c).join('');return [0,2,4].map(i=>parseInt(x.slice(i,i+2),16));}
+function mix(a,b,t){const A=hex2rgb(a),B=hex2rgb(b);return 'rgb('+A.map((v,i)=>Math.round(v+(B[i]-v)*t)).join(',')+')';}
+function pColor(p){return p<0.5?mix(css('--rep'),css('--neutral'),p*2):mix(css('--neutral'),css('--dem'),(p-0.5)*2);}
+function party(y){return y===1?css('--dem'):css('--rep');}
+const fmt=(x,d)=>x.toFixed(d===undefined?1:d);
+const pct=(x,d)=>(100*x).toFixed(d===undefined?1:d)+'%';
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function marginText(s){return (s>=0?'D +':'R +')+fmt(Math.abs(s));}
+const UNIT={margin:' (points, Democratic minus Republican)',money:' (thousands of 2025 dollars)',pct:' (percent)',yes:' (yes or no)'};
+function condText(nd,goLeft){const f=nd.split.f;if(FEAT_BINARY[f])return FEAT_NAME[f]+(goLeft?': no':': yes');return FEAT_SHORT[f]+(goLeft?' ≤ ':' > ')+fmtFeat(f,nd.split.s);}
+function tooltip(host){const t=h('div',{class:'tip',hidden:''});host.append(t);
+  return {show(html,ev){t.innerHTML=html;t.hidden=false;const r=host.getBoundingClientRect(),z=host.currentCSSZoom||1;let x=(ev.clientX-r.left)/z+14,y=(ev.clientY-r.top)/z+14;if(x+280>r.width/z)x=Math.max(0,(ev.clientX-r.left)/z-290);t.style.left=x+'px';t.style.top=y+'px';},hide(){t.hidden=true;}};}
+// Motion: every animation runs through anim() so that an instant replay (navigating back, or arriving by link) lands on the same final state.
+const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+let TIMERS=[];
+function later(fn,ms,instant){if(instant||reduced){fn();return;}TIMERS.push(setTimeout(fn,ms));}
+function clearTimers(){TIMERS.forEach(t=>{if(t&&t._raf!==undefined)cancelAnimationFrame(t._raf);else clearTimeout(t);});TIMERS=[];}
+function anim(ms,fn,done,instant){if(instant||reduced){fn(1);done&&done();return;}const t0=performance.now();let id;const step=now=>{const t=Math.min(1,(now-t0)/ms);fn(ease(t));if(t<1){id=requestAnimationFrame(step);TIMERS.push({_raf:id});}else done&&done();};id=requestAnimationFrame(step);}
+function count(el,to,f,ms,instant){const from=el._v===undefined?0:el._v;el._v=to;anim(ms||900,t=>{el.textContent=f(from+(to-from)*t);},null,instant);}
+function trace(path,ms,instant){if(!path||!path.getTotalLength)return;const L=path.getTotalLength();if(instant||reduced){path.style.strokeDasharray='none';return;}path.style.strokeDasharray=L+' '+L;path.style.strokeDashoffset=L;anim(ms,t=>{path.style.strokeDashoffset=L*(1-t);},()=>{path.style.strokeDasharray='none';});}
+function show(el,instant){if(instant||reduced){el.classList.add('in');el.style.transition='none';requestAnimationFrame(()=>el.style.transition='');}else requestAnimationFrame(()=>el.classList.add('in'));}
+
+// ----- tile map ----------------------------------------------------------------------------------
+const TILES={AK:[0,0],ME:[10,0],WI:[5,1],VT:[9,1],NH:[10,1],WA:[0,2],ID:[1,2],MT:[2,2],ND:[3,2],MN:[4,2],IL:[5,2],MI:[6,2],NY:[8,2],MA:[9,2],RI:[10,2],
+ OR:[0,3],NV:[1,3],WY:[2,3],SD:[3,3],IA:[4,3],IN:[5,3],OH:[6,3],PA:[7,3],NJ:[8,3],CT:[9,3],CA:[0,4],UT:[1,4],CO:[2,4],NE:[3,4],MO:[4,4],KY:[5,4],WV:[6,4],VA:[7,4],MD:[8,4],DE:[9,4],
+ AZ:[1,5],NM:[2,5],KS:[3,5],AR:[4,5],TN:[5,5],NC:[6,5],SC:[7,5],OK:[3,6],LA:[4,6],MS:[5,6],AL:[6,6],GA:[7,6],HI:[0,7],TX:[3,7],FL:[8,7]};
+const RACE_BY_STATE=Object.fromEntries(TEST.map(r=>[r.state,r]));
+const TILE_ORDER=Object.keys(TILES).sort((a,b)=>TILES[a][1]-TILES[b][1]||TILES[a][0]-TILES[b][0]);
+function tileMap(opts){const W=56,G=5,cols=11,rows=8;const svg=sv('svg',{viewBox:`0 0 ${cols*(W+G)} ${rows*(W+G)+6}`,role:'img','aria-label':'Tile map of the states with Senate contests in 2026'});
+  const defs=sv('defs');const grad=sv('linearGradient',{id:'unknown',x1:0,x2:1,y1:0,y2:0});grad.append(sv('stop',{offset:'0%','stop-color':css('--dem'),'stop-opacity':.55}),sv('stop',{offset:'50%','stop-color':css('--dem'),'stop-opacity':.55}),sv('stop',{offset:'50%','stop-color':css('--rep'),'stop-opacity':.55}),sv('stop',{offset:'100%','stop-color':css('--rep'),'stop-opacity':.55}));defs.append(grad);svg.append(defs);
+  const tiles={};
+  for(const st of TILE_ORDER){const [c,r]=TILES[st];const race=RACE_BY_STATE[st];const g=sv('g',{transform:`translate(${c*(W+G)},${r*(W+G)})`,style:race?'cursor:pointer':''});
+    const rect=sv('rect',{width:W,height:W,rx:7,fill:race?(opts.fill?opts.fill(race):css('--surface-2')):'transparent',stroke:race?css('--line'):css('--grid'),'stroke-width':1});
+    const txt=sv('text',{x:W/2,y:opts.sub?W/2-2:W/2+6,'text-anchor':'middle','font-size':opts.sub?17:19,'font-weight':race?700:400,style:'fill:'+(race?(opts.ink?opts.ink(race):css('--ink')):css('--muted'))},st);
+    g.append(rect,txt);
+    if(race&&opts.sub)g.append(sv('text',{x:W/2,y:W/2+17,'text-anchor':'middle','font-size':14,style:'fill:'+(opts.ink?opts.ink(race):css('--ink')),'font-variant-numeric':'tabular-nums'},opts.sub(race)));
+    if(race&&opts.onHover){g.addEventListener('mousemove',ev=>opts.onHover(race,ev));g.addEventListener('mouseleave',()=>opts.onLeave&&opts.onLeave());}
+    if(race&&opts.onClick)g.addEventListener('click',ev=>opts.onClick(race,ev));
+    svg.append(g);if(race)tiles[st]={g,rect,txt};}
+  svg._tiles=tiles;return svg;}
+function raceCard(r){const inc=r.x[2]?'Democrat':'Republican';
+  return `<b>${r.state} 2026</b>. The seat is held by a ${inc}. The incumbent, ${r.inc}, ${r.x[3]?'is on the ballot':'is not on the ballot'}.<br>Presidential margin in 2024: ${marginText(r.x[0])}. Last election for this seat (${r.year-6}): ${marginText(r.x[1])}.<br>Income ${fmtFeat(6,r.x[6])}, unemployment ${fmtFeat(7,r.x[7])}, ten-year growth ${fmtFeat(8,r.x[8])}, aged 65 and over ${fmtFeat(9,r.x[9])}, white non-Hispanic ${fmtFeat(10,r.x[10])}.`;}
+
+// ----- tree diagram ---------------------------------------------------------------------------------
+function drawTree(tree,L,opts){opts=opts||{};const leaves=leavesAt(tree,L);const n=leaves.length;const colW=Math.max(46,Math.min(124,900/n));const depthMax=Math.max(...leaves.map(l=>l.depth));const rowH=opts.rowH||66;
+  const W=Math.max(360,n*colW+20),H=(depthMax+1)*rowH+30;const pos=new Map();leaves.forEach((l,i)=>pos.set(l.id,{x:10+colW/2+i*colW}));
+  (function place(id){const nd=tree.nodes[id];if(isInternal(nd,L)){place(nd.left);place(nd.right);pos.set(id,{x:(pos.get(nd.left).x+pos.get(nd.right).x)/2});}})(0);
+  const svg=sv('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':'The tree'});const hl=opts.highlight||new Set();const hlEdge=opts.highlightEdges||new Set();const fresh=opts.fresh||new Set();
+  const small=n>24;
+  (function rec(id){const nd=tree.nodes[id];const x=pos.get(id).x,y=20+nd.depth*rowH;
+    if(isInternal(nd,L)){for(const [cid,goLeft] of [[nd.left,true],[nd.right,false]]){const c=tree.nodes[cid];const cx=pos.get(cid).x,cy=20+c.depth*rowH;const on=hlEdge.has(cid);
+        svg.append(sv('path',{d:`M${x} ${y+12} C ${x} ${y+rowH/2}, ${cx} ${y+rowH/2}, ${cx} ${cy-12}`,fill:'none',stroke:on?css('--hilite'):css('--line'),'stroke-width':on?4:1.5}));
+        if(!small)svg.append(sv('text',{x:(x+cx)/2+(goLeft?-4:4),y:y+rowH/2+4,'text-anchor':goLeft?'end':'start','font-size':12,style:'fill:'+css('--muted')},FEAT_BINARY[nd.split.f]?(goLeft?'no':'yes'):(goLeft?'≤':'>')));
+        rec(cid);}
+      const label=FEAT_BINARY[nd.split.f]?FEAT_SHORT[nd.split.f]+'?':FEAT_SHORT[nd.split.f]+' ≤ '+fmtFeat(nd.split.f,nd.split.s);const w=small?8:Math.max(60,label.length*6.6+14);
+      const g=sv('g',{class:fresh.has(id)?'pulse':''});
+      g.append(sv('rect',{x:x-w/2,y:y-12,width:w,height:24,rx:6,fill:css('--surface-2'),stroke:hl.has(id)?css('--hilite'):css('--ink-2'),'stroke-width':hl.has(id)?3:1}));
+      if(!small)g.append(sv('text',{x,y:y+4,'text-anchor':'middle','font-size':12,style:'fill:'+css('--ink')},label));svg.append(g);
+    }else{const w=small?Math.max(10,colW-6):Math.min(colW-6,68);const g=sv('g',{style:opts.onLeaf?'cursor:pointer':'',class:fresh.has(id)?'pulse':''});
+      g.append(sv('rect',{x:x-w/2,y:y-12,width:w,height:small?20:30,rx:6,fill:pColor(nd.p),stroke:hl.has(id)?css('--hilite'):'none','stroke-width':3}));
+      if(!small)g.append(sv('text',{x,y:y+1,'text-anchor':'middle','font-size':12,'font-weight':700,style:'fill:#fff'},pct(nd.p,0)+' D'),sv('text',{x,y:y+14,'text-anchor':'middle','font-size':11,style:'fill:#fff'},'n = '+nd.n));
+      if(opts.onLeaf){g.addEventListener('mouseenter',()=>opts.onLeaf(nd));g.addEventListener('mouseleave',()=>opts.onLeaf(null));}
+      svg.append(g);}})(0);
+  return svg;}
+// The tree written as questions. A numeric split reads "feature <= value ?" with yes on the left;
+// a yes/no feature reads "feature ?" with no on the left. Above 8 leaves the labels no longer fit,
+// and the compact drawing is used instead.
+const FEAT_Q=['Presidential margin','Seat margin','Democrat holds the seat?','Incumbent on the ballot?','Democratic president?','Midterm year?','Median income','Unemployment','Population growth','Aged 65 and over','White, not Hispanic'];
+function drawTreeReadable(tree,L,opts){opts=opts||{};const leaves=leavesAt(tree,L);if(leaves.length>8)return drawTree(tree,L,opts);
+  const n=leaves.length,colW=184,rowH=100,PER=5;const extra=opts.leafExtra||new Map(),pend=opts.pending||new Set(),noun=opts.leafNoun||'past contests';
+  const lines=id=>Math.ceil((extra.get(id)||[]).length/PER);const yOf=d=>34+d*rowH;
+  const W=Math.max(560,n*colW+20),H=Math.max(...leaves.map(l=>yOf(l.depth)+30+(lines(l.id)?lines(l.id)*19+10:0)))+10;
+  const pos=new Map();leaves.forEach((l,i)=>pos.set(l.id,{x:10+colW/2+i*colW}));
+  (function place(id){const nd=tree.nodes[id];if(isInternal(nd,L)){place(nd.left);place(nd.right);pos.set(id,{x:(pos.get(nd.left).x+pos.get(nd.right).x)/2});}})(0);
+  if(n===1)pos.set(0,{x:W/2});
+  const svg=sv('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':'The tree, with each split written as a question'});
+  const hl=opts.highlight||new Set(),hlEdge=opts.highlightEdges||new Set(),fresh=opts.fresh||new Set();
+  (function rec(id){const nd=tree.nodes[id];const x=pos.get(id).x,y=yOf(nd.depth);
+    if(isInternal(nd,L)){const f=nd.split.f,bin=FEAT_BINARY[f];
+      for(const [cid,goLeft] of [[nd.left,true],[nd.right,false]]){const c=tree.nodes[cid];const cx=pos.get(cid).x,cy=yOf(c.depth);const on=hlEdge.has(cid);
+        svg.append(sv('path',{d:`M${x} ${y+24} C ${x} ${y+rowH/2}, ${cx} ${y+rowH/2}, ${cx} ${cy-26}`,fill:'none',stroke:on?css('--hilite'):css('--line'),'stroke-width':on?4:2}));
+        svg.append(sv('text',{x:(x+cx)/2+(goLeft?-8:8),y:y+rowH/2+4,'text-anchor':goLeft?'end':'start','font-size':15,'font-weight':600,style:'fill:'+css('--ink-2')},bin?(goLeft?'no':'yes'):(goLeft?'yes':'no')));
+        rec(cid);}
+      const l1=FEAT_Q[f],l2=bin?'':'≤ '+fmtFeat(f,nd.split.s)+' ?';const w=Math.max(150,Math.max(l1.length,l2.length)*8.6+26);
+      const g=sv('g',{class:fresh.has(id)?'pulse':''});
+      g.append(sv('rect',{x:x-w/2,y:y-24,width:w,height:48,rx:8,fill:css('--surface-2'),stroke:hl.has(id)?css('--hilite'):css('--ink-2'),'stroke-width':hl.has(id)?3:1.2}));
+      if(bin)g.append(sv('text',{x,y:y+5,'text-anchor':'middle','font-size':15,'font-weight':600,style:'fill:'+css('--ink')},l1));
+      else g.append(sv('text',{x,y:y-6,'text-anchor':'middle','font-size':15,'font-weight':600,style:'fill:'+css('--ink')},l1),sv('text',{x,y:y+16,'text-anchor':'middle','font-size':15,style:'fill:'+css('--ink')},l2));
+      svg.append(g);
+    }else{const w=colW-14,isP=pend.has(id),ink=isP?css('--ink'):'#fff';const g=sv('g',{style:opts.onLeaf?'cursor:pointer':'',class:fresh.has(id)?'pulse':''});
+      g.append(sv('rect',{x:x-w/2,y:y-26,width:w,height:52,rx:8,fill:isP?css('--surface-2'):pColor(nd.p),stroke:hl.has(id)?css('--hilite'):(isP?css('--muted'):'none'),'stroke-width':hl.has(id)?3:1.5,'stroke-dasharray':isP&&!hl.has(id)?'5 4':null}));
+      g.append(sv('text',{x,y:y-4,'text-anchor':'middle','font-size':15,'font-weight':700,style:'fill:'+ink},isP?(opts.pendingName?opts.pendingName(nd):'Not yet grown'):'Democrats won '+pct(nd.p,0)),sv('text',{x,y:y+15,'text-anchor':'middle','font-size':13,style:'fill:'+ink},(isP?'':'of ')+nd.n+' '+(nd.n===1?noun.replace('contests','contest'):noun)));
+      if(opts.onLeaf){g.addEventListener('mouseenter',()=>opts.onLeaf(nd));g.addEventListener('mouseleave',()=>opts.onLeaf(null));}
+      svg.append(g);
+      const ex=extra.get(id)||[];for(let j=0;j<lines(id);j++)svg.append(sv('text',{x,y:y+50+j*19,'text-anchor':'middle','font-size':15,'font-weight':700,style:'fill:'+css('--ink')},ex.slice(j*PER,(j+1)*PER).join('  ')));}})(0);
+  return svg;}
+function treeControls(onChange,extra){const cap=Lcap();if(S.L>cap)S.L=cap;
+  const slider=h('input',{type:'range',min:1,max:cap,step:1,value:S.L,id:'leaves',oninput:e=>{S.L=+e.target.value;onChange();}});
+  const out=h('span',{style:'min-width:2ch;font-weight:700'},S.L);
+  const minSel=h('select',{id:'minleaf',onchange:e=>{S.minLeaf=+e.target.value;S.L=Math.min(S.L,Lcap());onChange(true);}},[1,2,5,10,20,40].map(v=>h('option',{value:v,selected:v===S.minLeaf?'':null},v)));minSel.value=S.minLeaf;
+  const seg=h('div',{class:'seg'},h('button',{class:S.feats==='two'?'on':'',onclick:()=>{S.feats='two';S.L=Math.min(S.L,Lcap());onChange(true);}},'two margins'),h('button',{class:S.feats==='all'?'on':'',onclick:()=>{S.feats='all';S.L=Math.min(S.L,Lcap());onChange(true);}},'all eleven features'));
+  return h('div',{class:'controls'},h('label',{for:'leaves'},'Leaves'),slider,out,h('label',{for:'minleaf'},'Smallest leaf'),minSel,seg,extra||null);}
+function panel(title,...kids){return h('div',{class:'panel hid'},title?h('h3',{},title):null,...kids);}
+
+// ----- shared pieces for the scenes ------------------------------------------------------------------
+const ALL_FEATS=FEAT_KEYS.map((_,i)=>i);
+// Stat labels are set in capitals; the symbols ŷ and y keep their case.
+const yh=t=>t.replace(/ŷ/g,'<i class="nc">ŷ</i>').replace(/= y\b/g,'= <i class="nc">y</i>');
+const stat=(v,l,col)=>h('div',{class:'stat'},h('span',{class:'v',style:col?'color:'+col:null},String(v)),h('span',{class:'l',html:yh(l)}));
+const capFirst=s=>s.charAt(0).toUpperCase()+s.slice(1);
+function bestL(){const c=curves();let b=1;for(let L=1;L<=c.cap;L++)if(c.vaH[L]<c.vaH[b]-1e-12)b=L;return b;}
+// The default setting (all eleven features, smallest leaf 1). The narration quotes its numbers.
+const D0=(()=>{const c=curves();return {cap:c.cap,best:bestL(),trH:c.trH[c.cap],trAcc:c.tr[c.cap]};})();
+S.L=D0.best;
+// The tree on the presidential margin alone, grown until no leaf can be split.
+const T1=growTree(PAST,PAST.map((_,i)=>i),[0],1,2000);
+// The four-leaf tree of the scene "Reading a tree", and the two contests sent down it.
+const READ=(()=>{const t=growTree(PAST,PAST.map((_,i)=>i),ALL_FEATS,1,4);const ga=PAST.find(r=>r.year===2022&&r.state==='GA'),pa=PAST.find(r=>r.year===2022&&r.state==='PA');
+  const seat=t.nodes.find(nd=>nd.split&&nd.split.f===1);return {t,ga,pa,lga:leafFor(t,ga.x,4),lpa:leafFor(t,pa.x,4),seatCut:seat?fmtFeat(1,seat.split.s):''};})();
+const STATE_NAME={AL:'Alabama',AK:'Alaska',AZ:'Arizona',AR:'Arkansas',CA:'California',CO:'Colorado',CT:'Connecticut',DE:'Delaware',FL:'Florida',GA:'Georgia',HI:'Hawaii',ID:'Idaho',IL:'Illinois',IN:'Indiana',IA:'Iowa',KS:'Kansas',KY:'Kentucky',LA:'Louisiana',ME:'Maine',MD:'Maryland',MA:'Massachusetts',MI:'Michigan',MN:'Minnesota',MS:'Mississippi',MO:'Missouri',MT:'Montana',NE:'Nebraska',NV:'Nevada',NH:'New Hampshire',NJ:'New Jersey',NM:'New Mexico',NY:'New York',NC:'North Carolina',ND:'North Dakota',OH:'Ohio',OK:'Oklahoma',OR:'Oregon',PA:'Pennsylvania',RI:'Rhode Island',SC:'South Carolina',SD:'South Dakota',TN:'Tennessee',TX:'Texas',UT:'Utah',VT:'Vermont',VA:'Virginia',WA:'Washington',WV:'West Virginia',WI:'Wisconsin',WY:'Wyoming'};
+// A contest's answer at one node of its path, as words.
+const POS={2:'a Democrat holds the seat',3:'the incumbent is on the ballot',4:'the president is a Democrat',5:'it is a midterm year'},NEG={2:'a Republican holds the seat',3:'the incumbent is not on the ballot',4:'the president is a Republican',5:'it is not a midterm year'};
+const NUMW={0:'the presidential margin at the last election',1:'the margin at the last race for this seat',6:'the median household income',7:'the unemployment rate in September',8:'the population growth over ten years',9:'the share aged 65 and over',10:'the share white and not Hispanic'};
+function answerText(node,goLeft){const f=node.split.f;if(FEAT_BINARY[f])return goLeft?NEG[f]:POS[f];return NUMW[f]+(goLeft?' is at most ':' is above ')+fmtFeat(f,node.split.s);}
+function joinAnd(a){return a.length<2?a.join(''):a.slice(0,-1).join(', ')+(a.length>2?',':'')+' and '+a[a.length-1];}
+// The 2026 contest nearest to one half under the chosen tree, and the reason for its prediction.
+function whyText(){const tree=fullTree();const L=Math.min(S.L,tree.maxLeaves);const sc=r=>leafFor(tree,r.x,L).p;const ex=TEST.slice().sort((a,b)=>Math.abs(sc(a)-0.5)-Math.abs(sc(b)-0.5))[0];const {path,leaf}=pathFor(tree,ex.x,L);
+  return `<b>Why: ${STATE_NAME[ex.state]}.</b><ul class="sub">${path.map(p=>'<li>'+answerText(p.node,p.goLeft)+'</li>').join('')}<li>leaf: Democrats won ${pct(leaf.p,0)} of ${leaf.n} past contests, so <i>f</i>(<i>x</i>) = ${fmt(leaf.p,2)}</li></ul>`;}
+
+// The past contests along the presidential margin, with a rule drawn over them: the least-squares line, or the tree T1 with L leaves.
+function marginPlot(){const W=700,H=330,m={l:64,r:16,t:14,b:46};const X=[-60,50],Y=[-0.22,1.22];
+  const xs=v=>m.l+(v-X[0])/(X[1]-X[0])*(W-m.l-m.r),ys=v=>m.t+(1-(v-Y[0])/(Y[1]-Y[0]))*(H-m.t-m.b);const clx=v=>Math.max(X[0],Math.min(X[1],v));
+  const svg=sv('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':'Past contests along the presidential margin, with a prediction rule f'});
+  const jit=PAST.map((_,i)=>(((i*7919)%1000)/1000-0.5)*0.13);
+  const n=PAST.length,mx=PAST.reduce((a,r)=>a+r.x[0],0)/n,my=PAST.reduce((a,r)=>a+r.y,0)/n;let sxy=0,sxx=0;PAST.forEach(r=>{sxy+=(r.x[0]-mx)*(r.y-my);sxx+=(r.x[0]-mx)**2;});const b=sxy/sxx,a=my-b*mx;
+  const view={dots:0,line:0,lineOn:true,L:0};
+  function steps(L){const cuts=[];(function rec(id){const nd=T1.nodes[id];if(isInternal(nd,L)){cuts.push(nd.split.s);rec(nd.left);rec(nd.right);}})(0);cuts.sort((p,q)=>p-q);
+    const e=[X[0],...cuts.filter(s=>s>X[0]&&s<X[1]),X[1]];const out=[];for(let k=0;k<e.length-1;k++){const leaf=leafFor(T1,[(e[k]+e[k+1])/2],L);out.push({x0:e[k],x1:e[k+1],p:leaf.p,n:leaf.n,lo:k?e[k]:null,hi:k<e.length-2?e[k+1]:null});}return out;}
+  function draw(){svg.replaceChildren();
+    for(const v of [0,0.5,1])svg.append(sv('line',{x1:m.l,x2:W-m.r,y1:ys(v),y2:ys(v),stroke:css('--grid')}),sv('text',{x:m.l-8,y:ys(v)+4,'text-anchor':'end','font-size':13},v));
+    for(const v of [-50,-25,0,25,50])svg.append(sv('text',{x:xs(v),y:H-m.b+18,'text-anchor':'middle','font-size':13},(v>0?'D+':v<0?'R+':'')+Math.abs(v)));
+    svg.append(sv('text',{x:(m.l+W-m.r)/2,y:H-6,'text-anchor':'middle','font-size':13},'presidential margin at the last election (points, Democratic minus Republican)'),
+      sv('text',{x:14,y:(m.t+H-m.b)/2,'font-size':13,transform:`rotate(-90 14 ${(m.t+H-m.b)/2})`,'text-anchor':'middle'},'outcome y (1 = Democrat won), and f(x)'));
+    PAST.forEach((r,i)=>{if(i>=view.dots)return;svg.append(sv('circle',{cx:xs(clx(r.x[0])),cy:ys(r.y+jit[i]),r:2.6,fill:party(r.y),opacity:.5}));});
+    if(view.line>0&&view.lineOn){const x1=X[0]+(X[1]-X[0])*view.line;svg.append(sv('line',{x1:xs(X[0]),y1:ys(a+b*X[0]),x2:xs(x1),y2:ys(a+b*x1),stroke:css('--ink'),'stroke-width':2.5,'stroke-dasharray':'8 5'}));
+    }
+    if(view.L>0){const sg=steps(view.L);let d='';sg.forEach((s,k)=>{d+=(k?'L':'M')+xs(s.x0)+' '+ys(s.p)+'L'+xs(s.x1)+' '+ys(s.p);});svg.append(sv('path',{d,fill:'none',stroke:css('--hilite'),'stroke-width':3}));}
+    // legend in the empty band above the points
+    let lx=m.l+8;const ly=m.t+12;
+    if(view.line>0&&view.lineOn){svg.append(sv('line',{x1:lx,x2:lx+26,y1:ly-4,y2:ly-4,stroke:css('--ink'),'stroke-width':2.5,'stroke-dasharray':'6 4'}),sv('text',{x:lx+32,y:ly,'font-size':13,style:'fill:'+css('--ink-2')},'least-squares line'));lx+=170;}
+    if(view.L>0)svg.append(sv('line',{x1:lx,x2:lx+26,y1:ly-4,y2:ly-4,stroke:css('--hilite'),'stroke-width':3}),sv('text',{x:lx+32,y:ly,'font-size':13,style:'fill:'+css('--ink-2')},'tree, '+view.L+(view.L===1?' leaf':' leaves')));}
+  return {svg,view,draw,steps};}
+
+// Entropy against the number of leaves, for the contests used to fit and for the held-out contests.
+function curvePlot(view,onPick){const W=700,H=330,m={l:64,r:20,t:22,b:46},YM=1.8;
+  const svg=sv('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':'Entropy against the number of leaves'});
+  function draw(){const c=curves(),cap=c.cap;const xs=L=>m.l+(L-1)/(cap-1)*(W-m.l-m.r),ys=v=>m.t+(1-Math.min(v,YM)/YM)*(H-m.t-m.b);svg.replaceChildren();
+    for(const v of [0,0.5,1,1.5])svg.append(sv('line',{x1:m.l,x2:W-m.r,y1:ys(v),y2:ys(v),stroke:css('--grid')}),sv('text',{x:m.l-8,y:ys(v)+4,'text-anchor':'end','font-size':13},v.toFixed(1)));
+    const step=cap>120?25:10;const tk=[1];for(let L=step;L<cap;L+=step)if(cap-L>cap*0.06)tk.push(L);tk.push(cap);
+    for(const L of tk)svg.append(sv('text',{x:xs(L),y:H-m.b+18,'text-anchor':'middle','font-size':13},L));
+    svg.append(sv('text',{x:(m.l+W-m.r)/2,y:H-6,'text-anchor':'middle','font-size':14},'number of leaves L'),sv('text',{x:14,y:(m.t+H-m.b)/2,'font-size':14,transform:`rotate(-90 14 ${(m.t+H-m.b)/2})`,'text-anchor':'middle'},'entropy (bits per contest)'));
+    const line=(arr,col,w)=>{let d='';for(let L=1;L<=cap;L++)d+=(L>1?'L':'M')+xs(L)+' '+ys(arr[L]);const p=sv('path',{d,fill:'none',stroke:col,'stroke-width':w});svg.append(p);return p;};
+    const paths={};if(view.tr)paths.tr=line(c.trH,css('--train'),2.5);if(view.va)paths.va=line(c.vaH,css('--valid'),3.2);
+    const b=bestL();
+    if(view.regions)svg.append(sv('text',{x:m.l+8,y:m.t-6,'font-size':14,'font-weight':600,style:'fill:'+css('--ink-2')},'few leaves: underfitting'),sv('text',{x:W-m.r-6,y:m.t-6,'text-anchor':'end','font-size':14,'font-weight':600,style:'fill:'+css('--ink-2')},'many leaves: overfitting'));
+    if(view.best)svg.append(sv('line',{x1:xs(b),x2:xs(b),y1:m.t,y2:H-m.b,stroke:css('--hilite'),'stroke-dasharray':'4 4'}),sv('circle',{cx:xs(b),cy:ys(c.vaH[b]),r:8,fill:'none',stroke:css('--hilite'),'stroke-width':3,class:'pulse'}),
+      sv('text',{x:xs(b)+12,y:ys(0.07),'font-size':13,'font-weight':700,style:'fill:'+css('--hilite')},`lowest cross-validated entropy: ${b} ${b===1?'leaf':'leaves'}, ${fmt(c.vaH[b],3)} bits per contest`));
+    if(view.marker){const L=Math.min(S.L,cap);svg.append(sv('line',{x1:xs(L),x2:xs(L),y1:m.t,y2:H-m.b,stroke:css('--ink-2'),'stroke-dasharray':'5 4'}),sv('circle',{cx:xs(L),cy:ys(c.trH[L]),r:5,fill:css('--train')}),sv('circle',{cx:xs(L),cy:ys(c.vaH[L]),r:5,fill:css('--valid')}));
+      const pick=ev=>{const pt=svg.createSVGPoint();pt.x=ev.clientX;pt.y=ev.clientY;const p=pt.matrixTransform(svg.getScreenCTM().inverse());onPick&&onPick(Math.max(1,Math.min(cap,Math.round(1+(p.x-m.l)/(W-m.l-m.r)*(cap-1)))));};
+      svg.append(sv('rect',{x:m.l,y:m.t,width:W-m.l-m.r,height:H-m.t-m.b,fill:'transparent',style:'cursor:col-resize',onpointerdown:ev=>{pick(ev);svg.onpointermove=pick;svg.setPointerCapture(ev.pointerId);},onpointerup:()=>{svg.onpointermove=null;}}));}
+    return paths;}
+  return {svg,draw};}
+
+// The 733 past contests in three folds of years, as a bar.
+function foldBar(){const bar=sv('svg',{viewBox:'0 0 760 90',role:'img','aria-label':'The past contests in three folds of years'});
+  const foldYears=v=>[...new Set(PAST.filter((r,i)=>FOLD[i]===v).map(r=>r.year))].sort((a,b)=>a-b);
+  const segs=[0,1,2].map(v=>{const ys=foldYears(v);return [FOLD.filter(f=>f===v).length,`${ys[0]}, ${ys[1]}, …, ${ys[ys.length-1]}`,'fold '+(v+1)];});
+  const rects=[];let x=0;segs.forEach(([n,yrs,name])=>{const w=740*n/PAST.length;const rc=sv('rect',{x:x+10,y:8,width:0,height:30,rx:5,fill:css('--train')});rects.push([rc,w-4]);
+    bar.append(rc,sv('text',{x:x+10+(w-4)/2,y:28,'text-anchor':'middle','font-size':14,'font-weight':700,style:'fill:'+css('--on-color')},n+' contests'),sv('text',{x:x+10+(w-4)/2,y:58,'text-anchor':'middle','font-size':14,'font-weight':600},name),sv('text',{x:x+10+(w-4)/2,y:78,'text-anchor':'middle','font-size':14},yrs));x+=w;});
+  return {bar,grow(inst){rects.forEach(([rc,w],i)=>later(()=>anim(700,t=>rc.setAttribute('width',w*t),null,inst),i*300,inst));}};}
+
+// ----- scenes: each returns {bullets, note, beats:[{bullet, q, run(instant)}]} ------------------------
+const SCENES=[
+{id:'today',chip:'The question',kicker:'November 3, 2026',title:'The question',
+ bullets:['<b>Today.</b> The 2026 midterm election.<ul class="sub"><li>35 Senate seats on the ballot</li><li>33 regular contests, and special elections in Ohio and Florida</li></ul>','<b>Question.</b> For a given contest, who wins, the Republican or the Democrat?','<b>Data.</b><ul class="sub"><li>733 past Senate contests, 1982 to 2024</li><li>eleven facts per contest, public the day before</li><li>no polls</li></ul>'],
+ note:'Each tile is a state, and all tiles have the same size. Hovering over a state shows its contest.',
+ make(stage){const wrap=h('div',{class:'panel rel'});const tip=tooltip(wrap);const map=tileMap({onHover:(r,ev)=>tip.show(raceCard(r),ev),onLeave:()=>tip.hide(),onClick:(r,ev)=>tip.show(raceCard(r),ev)});
+   const q=h('div',{class:'bigq'},'Who wins each contest, the Republican or the Democrat?');const stats=h('div',{class:'stats hid',style:'justify-content:center;margin-top:8px'});
+   const c1=h('span',{class:'v'}),c2=h('span',{class:'v'}),c3=h('span',{class:'v'});
+   stats.append(h('div',{class:'stat'},c1,h('span',{class:'l'},'past contests, 1982 to 2024')),h('div',{class:'stat'},c2,h('span',{class:'l'},'facts public the day before')),h('div',{class:'stat'},c3,h('span',{class:'l'},'contests to predict today')));
+   const counter=h('div',{class:'stat',style:'align-items:center;margin-bottom:6px'},h('span',{class:'v',id:'n-seats'},'0'),h('span',{class:'l'},'seats on the ballot'));
+   wrap.append(counter,map);stage.append(wrap,q,stats);
+   const tiles=map._tiles;for(const st in tiles)tiles[st].g.style.opacity=0;
+   return {beats:[
+    {bullet:0,run(inst){let k=0;const order=TILE_ORDER.filter(st=>tiles[st]);order.forEach((st,i)=>later(()=>{tiles[st].g.style.transition='opacity .4s';tiles[st].g.style.opacity=1;k++;$('#n-seats').textContent=k;},120+i*55,inst));if(inst)$('#n-seats').textContent=order.length;}},
+    {bullet:1,run(inst){show(q,inst);TILE_ORDER.filter(st=>tiles[st]).forEach((st,i)=>later(()=>{tiles[st].rect.style.transition='fill .5s';tiles[st].rect.setAttribute('fill','url(#unknown)');tiles[st].txt.textContent=st;},i*30,inst));}},
+    {bullet:2,run(inst){show(stats,inst);count(c1,733,v=>Math.round(v),1200,inst);count(c2,11,v=>Math.round(v),1200,inst);count(c3,35,v=>Math.round(v),1200,inst);}}]};}},
+
+{id:'question',chip:'Formally',kicker:'Formally',title:'The question, written formally',
+ bullets:['<b>Outcome <i>Y</i>.</b><ul class="sub"><li><i>Y</i> = 1: the Democrat wins</li><li><i>Y</i> = 0: the Republican wins</li><li>Georgia 2022: Warnock (D) beat Walker (R), so <i>Y</i> = 1</li></ul>','<b>Features <i>X</i>.</b> Eleven facts public the day before.<ul class="sub"><li>contest (6): presidential margin, seat margin, seat holder, incumbent running, president\'s party, midterm</li><li>state (5): income, unemployment, population growth, share 65+, share white non-Hispanic</li></ul>','<b>Data <i>D</i>.</b><ul class="sub"><li>733 past contests, one row each</li><li>each row has <i>X</i> and <i>Y</i></li></ul>','<b>2026.</b><ul class="sub"><li>35 rows with <i>X</i> and no <i>Y</i></li><li>we predict <i>Y</i></li></ul>','<b>Goal.</b> A rule <i>f</i> with<ul class="sub"><li><i>f</i>(<i>x</i>) ∈ [0, 1], the probability that the Democrat wins</li><li><i>ŷ</i> = 1 when <i>f</i>(<i>x</i>) ≥ 1/2, and <i>ŷ</i> = 0 otherwise</li></ul>'],
+ note:'Margin = Democratic share minus Republican share of the two-party vote, in points. Clicking a column heading shows the definition of the feature.',
+ make(stage){const ga=PAST.find(r=>r.year===2022&&r.state==='GA');
+   const card=h('div',{class:'panel card'},h('h3',{},'Georgia, November 8, 2022: Warnock against Walker'));const facts=[];
+   const yrow=h('div',{class:'fact keep'},h('span',{},'Did the Democrat receive more votes?'),h('span',{style:'color:'+party(ga.y)},ga.y?'yes, Y = 1':'no, Y = 0'));
+   card.append(yrow,h('div',{class:'group'},'About the contest'));
+   FEAT_KEYS.forEach((k,f)=>{if(f===6)card.append(h('div',{class:'group'},'About the state'));const el=h('div',{class:'fact'},h('span',{},FEAT_NAME[f]),h('span',{},FEAT_BINARY[f]?(ga.x[f]?'yes':'no'):fmtFeat(f,ga.x[f])));facts.push(el);card.append(el);});
+   const sample=[PAST.find(r=>r.year===1982&&r.state==='AZ'),PAST.find(r=>r.year===1994&&r.state==='PA'),PAST.find(r=>r.year===2000&&r.state==='WA'),PAST.find(r=>r.year===2008&&r.state==='NC'),PAST.find(r=>r.year===2018&&r.state==='WV'),ga,PAST.find(r=>r.year===2024&&r.state==='OH')].filter(Boolean);
+   const test=[TEST.find(r=>r.state==='ME'),TEST.find(r=>r.state==='GA'),TEST.find(r=>r.state==='TX')];
+   const sel={f:null};const tableWrap=h('div',{class:'scroll',tabindex:'0',role:'region','aria-label':'Scrollable panel'});const defn=h('p',{class:'small',style:'margin:8px 0 0'});const tpanel=panel('One row is one contest',tableWrap,defn);
+   let showTest=false,animRows=false;
+   function table(){const head=h('tr',{},h('th',{},'Year'),h('th',{},'State'),FEAT_SHORT.map((s,f)=>h('th',{class:sel.f===f?'on':'',onclick:()=>{sel.f=sel.f===f?null:f;animRows=false;redraw();}},s)),h('th',{},'Y'));
+     const rowsHtml=(showTest?sample.concat(test):sample).map((r,i)=>h('tr',{class:animRows?'row-in':'',style:animRows?`animation-delay:${i*90}ms`:''},h('td',{},r.year),h('td',{},r.state),r.x.map((v,f)=>h('td',{style:sel.f===f?'background:var(--grid)':''},FEAT_BINARY[f]?(v?'1':'0'):FEAT_KIND[f]==='margin'?fmt(v):fmtFeat(f,v))),h('td',{class:'y',style:'color:'+(r.y<0?css('--hilite'):party(r.y))},r.y<0?'?':r.y)));
+     return h('table',{class:'data fit'},h('thead',{},head),h('tbody',{},rowsHtml));}
+   function redraw(){tableWrap.replaceChildren(table());defn.textContent=sel.f===null?'Y = 1 when the Democrat received more votes. The last five columns describe the state as of the day before the contest.':FEAT_SHORT[sel.f]+': '+FEAT_NAME[sel.f]+({yes:' (1 = yes, 0 = no).',margin:', in percentage points.',money:', in thousands of 2025 dollars.',pct:', in percent.'})[FEAT_KIND[sel.f]];}
+   const task=panel('The task',h('div',{class:'formula',html:'<b>Data.</b> <i>D</i> = {(<i>x<sub>i</sub></i>, <i>y<sub>i</sub></i>)}, one pair for each of the <i>n</i> = 733 past contests, with <i>y<sub>i</sub></i> = 1 when the Democrat won.'}),h('div',{class:'formula',html:'<b>Find.</b> A rule <i>f</i> with <i>f</i>(<i>x</i>) ≈ Pr(<i>Y</i> = 1 | <i>X</i> = <i>x</i>), a number between 0 and 1.'}),h('div',{class:'formula',html:'<b>Predict.</b> <i>f</i>(<i>x</i>) for each of the 35 contests of 2026, and <i>ŷ</i> = 1 when <i>f</i>(<i>x</i>) ≥ 1/2.'}));
+   stage.append(card,tpanel,task);
+   return {beats:[
+    {bullet:0,run(inst){later(()=>yrow.classList.add('lit'),300,inst);}},
+    {bullet:1,run(inst){yrow.classList.remove('lit');facts.forEach((el,i)=>later(()=>{el.classList.add('lit');later(()=>el.classList.remove('lit'),900,inst);},i*140,inst));}},
+    {bullet:2,run(inst){showTest=false;animRows=!inst;redraw();show(tpanel,inst);later(()=>card.classList.add('folded'),inst?0:900,inst);}},
+    {bullet:3,run(inst){showTest=true;animRows=!inst;redraw();}},
+    {bullet:4,run(inst){show(task,inst);}}]};}},
+
+{id:'metric',chip:'The metric',kicker:'The metric',title:'Metrics for a prediction',
+ bullets:['<b>Constant rule.</b><ul class="sub"><li>the same prediction <i>c</i> for every contest</li><li>each outcome is 0 or 1</li></ul>','<b>Three metrics.</b><ul class="sub"><li><b>Error rate</b>: fraction with <i>ŷ</i> ≠ <i>y</i></li><li><b>Squared error</b>: average of (<i>y</i> − <i>c</i>)²</li><li><b>Entropy</b>: average of −log₂ <i>q</i>, with <i>q</i> the predicted probability of the observed outcome</li></ul>','What does each metric cost for one contest, as a function of <i>q</i>?','<b>Cost of one contest.</b><ul class="sub"><li>error rate: the same at <i>q</i> = 0.51 and <i>q</i> = 0.99</li><li>squared error: at most 1</li><li>entropy: grows without bound as <i>q</i> → 0</li></ul>','<b>We choose entropy.</b><ul class="sub"><li>it uses the probability <i>f</i>(<i>x</i>)</li><li>a wrong prediction with <i>q</i> near 0 costs the most</li><li>for a constant, it is smallest at <i>c</i> = <i>ȳ</i> = 0.508</li></ul>'],
+ note:'The error rate is constant on each side of 1/2. With <i>ŷ</i> = 1 for every contest, it is 49.2 percent. The slider moves <i>c</i>, and the switch changes the metric.',
+ make(stage){const n=PAST.length,n1=PAST.reduce((a,r)=>a+r.y,0),n0=n-n1,ybar=n1/n;const st={c:0.5,obj:'ent'};const clamp=c=>Math.min(0.995,Math.max(0.005,c));
+   const OBJ={err:{name:'error rate',ymax:0.6,ticks:[0,0.2,0.4,0.6],f:c=>c>=0.5?n0/n:n1/n,per:[c=>c>=0.5?1:0,c=>c>=0.5?0:1],lab:['ŷ ≠ y when c ≥ 0.5','ŷ ≠ y when c < 0.5'],min:'lowest for every c ≥ 0.5'},
+     sq:{name:'squared error',ymax:0.6,ticks:[0,0.2,0.4,0.6],f:c=>(n0*c*c+n1*(1-c)**2)/n,per:[c=>c*c,c=>(1-c)**2],lab:['(c − 0)² per contest','(1 − c)² per contest'],min:'lowest at c = ȳ = 0.508'},
+     ent:{name:'entropy',ymax:3,ticks:[0,1,2,3],f:c=>{c=clamp(c);return -(n0*Math.log2(1-c)+n1*Math.log2(c))/n;},per:[c=>-Math.log2(1-clamp(c)),c=>-Math.log2(clamp(c))],lab:['−log₂(1 − c) per contest','−log₂ c per contest'],min:'lowest at c = ȳ = 0.508'}};
+   const W=640,H1=162;const xs=c=>86+c*(W-112);
+   const line=sv('svg',{viewBox:`0 0 ${W} ${H1}`,role:'img','aria-label':'Past outcomes at 0 and 1 and a constant prediction c',style:'max-height:150px'});
+   const barR=sv('rect',{x:xs(0)-20,y:120,width:40,height:0,fill:css('--rep'),opacity:.9}),barD=sv('rect',{x:xs(1)-20,y:120,width:40,height:0,fill:css('--dem'),opacity:.9});
+   const cntR=sv('text',{x:xs(0),y:115,'text-anchor':'middle','font-size':14,'font-weight':700}),cntD=sv('text',{x:xs(1),y:115,'text-anchor':'middle','font-size':14,'font-weight':700});
+   line.append(sv('line',{x1:xs(0),x2:xs(1),y1:120,y2:120,stroke:css('--line'),'stroke-width':2}),barR,barD,sv('text',{x:xs(0)-20,y:136,'text-anchor':'start','font-size':13},'0: the Republican won'),sv('text',{x:xs(0.5),y:136,'text-anchor':'middle','font-size':13},'0.5'),sv('text',{x:xs(1)+20,y:136,'text-anchor':'end','font-size':13},'1: the Democrat won'),
+     sv('text',{x:xs(0.5),y:158,'text-anchor':'middle','font-size':13},'outcome y of a past contest, and the constant prediction c'),sv('text',{x:16,y:78,transform:'rotate(-90 16 78)','text-anchor':'middle','font-size':12},'number of past contests'),cntR,cntD);
+   const cg=sv('g',{opacity:0});const cl=sv('line',{y1:28,y2:124,stroke:css('--hilite'),'stroke-width':3});const ct=sv('text',{y:20,'text-anchor':'middle','font-size':15,'font-weight':700,style:'fill:'+css('--hilite')});
+   const dR=sv('line',{y1:60,y2:60,stroke:css('--rep'),'stroke-width':2,'stroke-dasharray':'4 3'}),dD=sv('line',{y1:80,y2:80,stroke:css('--dem'),'stroke-width':2,'stroke-dasharray':'4 3'});
+   const tR=sv('text',{y:55,'text-anchor':'middle','font-size':12}),tD=sv('text',{y:96,'text-anchor':'middle','font-size':12});cg.append(dR,dD,cl,ct,tR,tD);line.append(cg);
+   const W2=520,H2=290,m={l:56,r:16,t:16,b:44};const px=c=>m.l+c*(W2-m.l-m.r);const py=v=>m.t+(1-v/OBJ[st.obj].ymax)*(H2-m.t-m.b);
+   const para=sv('svg',{viewBox:`0 0 ${W2} ${H2}`,role:'img','aria-label':'A metric of a constant prediction'});let curve=null,minMark=null,dot=null;const view={min:false};
+   function drawPara(){para.replaceChildren();const o=OBJ[st.obj];for(const v of o.ticks)para.append(sv('line',{x1:m.l,x2:W2-m.r,y1:py(v),y2:py(v),stroke:css('--grid')}),sv('text',{x:m.l-8,y:py(v)+4,'text-anchor':'end','font-size':13},v.toFixed(1)));
+     for(const v of [0,0.25,0.5,0.75,1])para.append(sv('text',{x:px(v),y:H2-m.b+22,'text-anchor':'middle','font-size':13},v.toFixed(2)));
+     para.append(sv('text',{x:(m.l+W2-m.r)/2,y:H2-4,'text-anchor':'middle','font-size':14},'constant prediction c'),sv('text',{x:14,y:(m.t+H2-m.b)/2,'font-size':13,transform:`rotate(-90 14 ${(m.t+H2-m.b)/2})`,'text-anchor':'middle'},o.name+(st.obj==='ent'?' (bits per contest)':'')));
+     let d='';const N=200;for(let i=0;i<=N;i++){const c=i/N;const v=Math.min(o.ymax,o.f(c));d+=(i?'L':'M')+px(c)+' '+py(v);}curve=sv('path',{d,fill:'none',stroke:css('--train'),'stroke-width':3});para.append(curve);
+     minMark=sv('g',{opacity:view.min?1:0});if(st.obj==='err')minMark.append(sv('line',{x1:px(0.5),x2:px(1),y1:py(n0/n)+8,y2:py(n0/n)+8,stroke:css('--hilite'),'stroke-width':3}),sv('text',{x:px(0.75),y:py(n0/n)+26,'text-anchor':'middle','font-size':13,style:'fill:'+css('--hilite')},o.min));
+     else minMark.append(sv('line',{x1:px(ybar),x2:px(ybar),y1:py(0),y2:py(o.f(ybar)),stroke:css('--hilite'),'stroke-dasharray':'4 4'}),sv('text',{x:px(ybar),y:py(0)-6,'text-anchor':'middle','font-size':13,style:'fill:'+css('--hilite')},o.min));
+     para.append(minMark);dot=sv('circle',{r:8,fill:css('--hilite'),stroke:css('--bg'),'stroke-width':2});para.append(dot);setC();}
+   const stats=h('div',{class:'stats'});const vC=h('span',{class:'v'}),vL=h('span',{class:'v'}),vE=h('span',{class:'v'});const lL=h('span',{class:'l'},'entropy');
+   stats.append(h('div',{class:'stat'},vC,h('span',{class:'l'},'constant c')),h('div',{class:'stat'},vL,lL),h('div',{class:'stat'},vE,h('span',{class:'l'},'error rate')));
+   const slider=h('input',{type:'range',min:0,max:1,step:0.01,value:0.5,id:'const-c',oninput:e=>{st.c=+e.target.value;setC();}});
+   const seg=h('div',{class:'seg'},...Object.keys(OBJ).map(k=>h('button',{class:st.obj===k?'on':'',onclick:()=>{st.obj=k;segs();drawPara();}},OBJ[k].name)));
+   function segs(){[...seg.children].forEach((b,i)=>b.className=Object.keys(OBJ)[i]===st.obj?'on':'');}
+   const ctl=h('div',{class:'controls hid'},h('label',{for:'const-c'},'c'),slider,h('button',{class:'btn ghost',onclick:()=>{st.c=0.51;slider.value=0.51;setC();}},'Set c = ȳ'),seg);
+   function setC(){const c=st.c,o=OBJ[st.obj];cg.setAttribute('transform',`translate(${xs(c)},0)`);ct.textContent='c = '+fmt(c,2);dR.setAttribute('x1',xs(0)-xs(c));dR.setAttribute('x2',0);dD.setAttribute('x1',0);dD.setAttribute('x2',xs(1)-xs(c));
+     tR.setAttribute('x',(xs(0)-xs(c))/2);tR.textContent=o.lab[0]+(st.obj==='err'?'':' = '+fmt(o.per[0](c),2));tD.setAttribute('x',(xs(1)-xs(c))/2);tD.textContent=o.lab[1]+(st.obj==='err'?'':' = '+fmt(o.per[1](c),2));
+     if(dot){dot.setAttribute('cx',px(c));dot.setAttribute('cy',py(Math.min(o.ymax,o.f(c))));}vC.textContent=fmt(c,2);vL.textContent=fmt(o.f(c),3);lL.textContent=o.name;vE.textContent=pct(OBJ.err.f(c));}
+   // the cost of one contest against the probability q given to the outcome that occurred
+   const W3=460,H3=290,m3={l:54,r:14,t:16,b:44};const qx=q=>m3.l+q*(W3-m3.l-m3.r),qy=v=>m3.t+(1-Math.min(v,4)/4)*(H3-m3.t-m3.b);
+   const cost=sv('svg',{viewBox:`0 0 ${W3} ${H3}`,role:'img','aria-label':'Cost of one contest against the predicted probability of the observed outcome'});const cv3={mark:false};let cpaths=[];
+   function drawCost(){cost.replaceChildren();for(const v of [0,1,2,3,4])cost.append(sv('line',{x1:m3.l,x2:W3-m3.r,y1:qy(v),y2:qy(v),stroke:css('--grid')}),sv('text',{x:m3.l-8,y:qy(v)+4,'text-anchor':'end','font-size':13},v));
+     for(const v of [0,0.25,0.5,0.75,1])cost.append(sv('text',{x:qx(v),y:H3-m3.b+18,'text-anchor':'middle','font-size':13},v));
+     cost.append(sv('text',{x:(m3.l+W3-m3.r)/2,y:H3-4,'text-anchor':'middle','font-size':13},'predicted probability q of the observed outcome'),sv('text',{x:14,y:(m3.t+H3-m3.b)/2,'font-size':13,transform:`rotate(-90 14 ${(m3.t+H3-m3.b)/2})`,'text-anchor':'middle'},'cost of one contest'));
+     let de='',ds='';const N=200;for(let i=0;i<=N;i++){const q=i/N;ds+=(i?'L':'M')+qx(q)+' '+qy((1-q)**2);const qe=Math.max(1/16,q);de+=(i?'L':'M')+qx(qe)+' '+qy(-Math.log2(qe));}
+     const pe=sv('path',{d:`M${qx(0)} ${qy(1)}L${qx(0.5)} ${qy(1)}M${qx(0.5)} ${qy(0)}L${qx(1)} ${qy(0)}`,fill:'none',stroke:css('--cv'),'stroke-width':3}),ps=sv('path',{d:ds,fill:'none',stroke:css('--train'),'stroke-width':3}),pn=sv('path',{d:de,fill:'none',stroke:css('--hilite'),'stroke-width':3.5});
+     cost.append(pe,ps,pn,sv('text',{x:qx(0.14),y:qy(3.92),'font-size':13,style:'fill:'+css('--hilite')},'entropy → ∞ as q → 0'));cpaths=[pe,ps,pn];
+     if(cv3.mark){const q=0.1;cost.append(sv('line',{x1:qx(q),x2:qx(q),y1:qy(0),y2:qy(4),stroke:css('--ink-2'),'stroke-dasharray':'4 4'}));
+       for(const [v,col] of [[1,css('--cv')],[(1-q)**2,css('--train')],[-Math.log2(q),css('--hilite')]])cost.append(sv('circle',{cx:qx(q),cy:qy(v),r:6,fill:col,stroke:css('--bg'),'stroke-width':2}));
+       cost.append(sv('text',{x:qx(0.42),y:qy(3.5),'font-size':14,'font-weight':600,style:'fill:'+css('--ink')},'at q = 0.1:'),sv('text',{x:qx(0.42),y:qy(3.5)+19,'font-size':14,style:'fill:'+css('--ink-2')},'error 1, squared error 0.81,'),sv('text',{x:qx(0.42),y:qy(3.5)+38,'font-size':14,style:'fill:'+css('--ink-2')},'entropy 3.32 bits'));}}
+   const legend3=h('div',{class:'legend'},h('span',{},h('span',{class:'sw',style:'background:'+css('--cv')}),'error rate: 1 when ŷ ≠ y'),h('span',{},h('span',{class:'sw',style:'background:'+css('--train')}),'squared error: (1 − q)²'),h('span',{},h('span',{class:'sw',style:'background:'+css('--hilite')}),'entropy: −log₂ q'));
+   const forms=h('div',{class:'hid',style:'display:grid;gap:4px'},h('div',{class:'formula',html:'error rate = (1/<i>n</i>) Σ<sub><i>i</i></sub> 1[<i>ŷ<sub>i</sub></i> ≠ <i>y<sub>i</sub></i>]'}),h('div',{class:'formula',html:'squared error = (1/<i>n</i>) Σ<sub><i>i</i></sub> (<i>y<sub>i</sub></i> − <i>f</i>(<i>x<sub>i</sub></i>))²'}),h('div',{class:'formula',html:'entropy = −(1/<i>n</i>) Σ<sub><i>i</i></sub> [<i>y<sub>i</sub></i> log₂ <i>f</i>(<i>x<sub>i</sub></i>) + (1 − <i>y<sub>i</sub></i>) log₂(1 − <i>f</i>(<i>x<sub>i</sub></i>))]'}));
+   const p1=panel('Every past outcome is a 0 or a 1',line),p2=panel('A metric of the constant c',para,stats,ctl),p3=panel('The cost of one contest',cost,legend3,forms);
+   const grid=h('div',{style:'display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;align-items:start'},p2,p3);
+   const obs=new ResizeObserver(()=>{grid.style.gridTemplateColumns=grid.clientWidth<760?'1fr':'minmax(0,1fr) minmax(0,1fr)';});obs.observe(grid);
+   stage.append(p1,grid);drawPara();drawCost();
+   function tourTo(k,inst,ms){st.obj=k;segs();drawPara();trace(curve,ms,inst);}
+   return {beats:[
+    {bullet:0,run(inst){show(p1,inst);anim(1000,t=>{t=Math.max(0,t);barR.setAttribute('height',80*t);barR.setAttribute('y',120-80*t);barD.setAttribute('height',80*t*n1/n0);barD.setAttribute('y',120-80*t*n1/n0);cntR.textContent=Math.round(n0*t);cntD.textContent=Math.round(n1*t);},null,inst);later(()=>anim(600,t=>cg.setAttribute('opacity',t),null,inst),inst?0:900,inst);}},
+    {bullet:1,run(inst){show(p2,inst);if(inst||reduced){tourTo('ent',true);return;}tourTo('err',false,1100);later(()=>tourTo('sq',false,1100),1500);later(()=>tourTo('ent',false,1100),3000);}},
+    {bullet:2,q:true,run(inst){show(p3,inst);drawCost();cpaths.forEach((p,i)=>later(()=>trace(p,1000,inst),i*700,inst));}},
+    {bullet:3,run(inst){cv3.mark=true;drawCost();}},
+    {bullet:4,run(inst){view.min=true;st.obj='ent';segs();drawPara();show(ctl,inst);show(forms,inst);if(inst||reduced){st.c=ybar;setC();return;}const c0=st.c;anim(900,t=>{st.c=c0+(ybar-c0)*t;setC();},()=>{slider.value=0.51;vL.classList.add('pulse');});}}]};}},
+
+{id:'objective',chip:'The objective',kicker:'The objective',title:'The objective function',
+ bullets:['<b>Entropy of a rule.</b> Entropy(<i>D</i>, <i>f</i>)<ul class="sub"><li>average of −log₂ <i>q</i> over the 733 past contests</li><li>unit: bits per contest</li></ul>','<b>Objective.</b> <i>f</i>* ∈ argmin<sub><i>f</i></sub> Entropy(<i>D</i>, <i>f</i>).','Over all functions <i>f</i>, which rule is best, and what is its entropy?','<b>Answer.</b> <i>f</i>(<i>x<sub>i</sub></i>) = <i>y<sub>i</sub></i><ul class="sub"><li>entropy 0 on the past contests</li><li>no guarantee for 2026</li></ul>','<b>Restrict <i>f</i>.</b><ul class="sub"><li>minimize over a set ℱ that we choose</li><li>check on contests not used to fit</li></ul>'],
+ note:'argmin = the set of minimizers. Predicting 1/2 for every contest costs 1 bit per contest.',
+ make(stage){const n=PAST.length,yb=PAST.reduce((a,r)=>a+r.y,0)/n;const H2=p=>-(p*Math.log2(p)+(1-p)*Math.log2(1-p));
+   const f1=h('div',{class:'formula',style:'font-size:22px;padding:12px 16px;text-align:center',html:'Entropy(<i>D</i>, <i>f</i>) = −(1/<i>n</i>) Σ<sub><i>i</i></sub> [ <i>y<sub>i</sub></i> log₂ <i>f</i>(<i>x<sub>i</sub></i>) + (1 − <i>y<sub>i</sub></i>) log₂(1 − <i>f</i>(<i>x<sub>i</sub></i>)) ]'});
+   const f2=h('div',{class:'formula hid',style:'font-size:26px;padding:12px 16px;text-align:center',html:'<i>f</i>* ∈ argmin<sub><i>f</i></sub> Entropy(<i>D</i>, <i>f</i>)'});
+   const r3=h('tr',{class:'hid'},h('td',{html:'<i>f</i>(<i>x<sub>i</sub></i>) = <i>y<sub>i</sub></i> for every past contest'}),h('td',{},'0.0000'));
+   const tbl=h('table',{class:'data',style:'font-size:18px'},h('thead',{},h('tr',{},h('th',{},'Rule'),h('th',{},'Entropy(D, f), bits per contest'))),h('tbody',{},
+     h('tr',{},h('td',{html:'<i>f</i>(<i>x</i>) = 0.5 for every contest'}),h('td',{},'1.0000')),h('tr',{},h('td',{html:`<i>f</i>(<i>x</i>) = <i>ȳ</i> = ${yb.toFixed(3)} for every contest`}),h('td',{},H2(yb).toFixed(4))),r3));
+   const p1=panel('The entropy of a rule f on the 733 past contests',f1),p2=panel('Three rules on the 733 past contests',tbl);
+   stage.append(p1,f2,p2);
+   return {beats:[
+    {bullet:0,run(inst){show(p1,inst);show(p2,inst);}},
+    {bullet:1,run(inst){show(f2,inst);}},
+    {bullet:2,q:true,run(inst){}},
+    {bullet:3,run(inst){show(r3,inst);}},
+    {bullet:4,run(inst){f2.innerHTML='<i>f</i>* ∈ argmin<sub><i>f</i> ∈ <span style="color:var(--hilite)">ℱ</span></sub> Entropy(<i>D</i>, <i>f</i>)';f2.classList.add('pulse');}}]};}},
+
+{id:'shape',chip:'Flexible f',kicker:'The set of rules',title:'A flexible and readable rule',
+ bullets:['<b>One feature.</b> The presidential margin.<ul class="sub"><li>Democratic wins at 1</li><li>Republican wins at 0</li></ul>','<b>Parametric.</b> The least-squares line <i>a</i> + <i>bx</i>.<ul class="sub"><li>two parameters, a shape fixed in advance</li><li>values below 0 and above 1</li></ul>','<b>Tree.</b> A step function.<ul class="sub"><li>three leaves</li><li>thresholds from the data</li></ul>','<b>Readable.</b><ul class="sub"><li>one rule per leaf</li><li>each prediction comes with a reason</li></ul>','<b>A tree is both.</b><ul class="sub"><li>flexible: no shape fixed in advance</li><li>readable: a reason for each prediction</li></ul>'],
+ note:'The line is a least-squares fit to outcomes coded 0 and 1. The points are spread vertically so that they do not overlap.',
+ make(stage){const mp=marginPlot();const rules=h('div',{class:'panel hid'});
+   const sg=mp.steps(3);rules.append(h('h3',{},'The three-leaf tree as rules'),h('ul',{class:'pathlist',style:'font-size:17px'},sg.map(s=>h('li',{},h('span',{class:'sw',style:'background:'+pColor(s.p)}),'presidential margin '+(s.lo===null?'at most '+fmtFeat(0,s.hi):s.hi===null?'above '+fmtFeat(0,s.lo):'above '+fmtFeat(0,s.lo)+' and at most '+fmtFeat(0,s.hi))+`: Democrats won ${pct(s.p,0)} of ${s.n} past contests`))));
+   stage.append(panel('The past contests along one feature',mp.svg),rules);show(stage.firstChild,true);mp.draw();
+   return {beats:[
+    {bullet:0,run(inst){anim(1200,t=>{mp.view.dots=Math.round(PAST.length*t);mp.draw();},null,inst);}},
+    {bullet:1,run(inst){mp.view.dots=PAST.length;anim(1400,t=>{mp.view.line=t;mp.draw();},null,inst);}},
+    {bullet:2,run(inst){mp.view.line=1;mp.view.L=3;mp.draw();}},
+    {bullet:3,run(inst){show(rules,inst);}},
+    {bullet:4,run(inst){mp.view.lineOn=false;mp.draw();}}]};}},
+
+{id:'read',chip:'Reading',kicker:'Reading a tree',title:'How to read a tree',
+ bullets:['<b>Node.</b><ul class="sub"><li>a question about one feature</li><li>the top node is the root</li></ul>','<b>Path.</b><ul class="sub"><li>start at the root</li><li>answer each question and follow the branch</li><li>stop at a leaf: <i>f</i>(<i>x</i>) = fraction of Democratic wins in it</li></ul>',`<b>Georgia 2022.</b><ul class="sub"><li>a Democrat holds the seat</li><li>Warnock is on the ballot</li><li>leaf: Democrats won ${pct(READ.lga.p,0)} of ${READ.lga.n}, so <i>f</i>(<i>x</i>) = ${fmt(READ.lga.p,2)} and <i>ŷ</i> = 1</li></ul>`,'<b>Pennsylvania 2022.</b> Which leaf, and what is <i>ŷ</i>?<ul class="sub"><li>a Republican holds the seat, and Toomey is not running</li><li>seat margin R +1.5</li></ul>',`<b>Answer.</b><ul class="sub"><li>leaf: Democrats won ${pct(READ.lpa.p,0)} of ${READ.lpa.n}, so <i>ŷ</i> = 0</li><li>Fetterman won, so <i>y</i> = 1</li><li>in this leaf, one contest in three went to the Democrat</li></ul>`,'<b>Rules.</b><ul class="sub"><li>one rule per path from the root to a leaf</li><li>each contest satisfies exactly one rule</li><li>the tree uses 3 of the 11 features</li></ul>'],
+ note:`${READ.seatCut} = a margin of −${READ.seatCut.replace('R +','')} points. For a yes/no question, the left branch is “no”.`,
+ make(stage){const t=READ.t;const treeWrap=h('div',{class:'scroll',tabindex:'0',role:'region','aria-label':'Scrollable panel'});const treeP=h('div',{class:'panel hid'},h('h3',{},'A tree with four leaves, fitted on the 733 past contests'),treeWrap);const cardP=h('div',{class:'panel hid'});
+   const view={r:null,upto:-1,root:false,lit:false};
+   function drawT(){const hl=new Set(),ed=new Set();if(view.root)hl.add(0);if(view.r){const pf=pathFor(t,view.r.x,4);const nodes=pf.path.map(p=>p.node.id).concat([pf.leaf.id]),edges=pf.path.map(p=>p.goLeft?p.node.left:p.node.right);nodes.slice(0,view.upto+1).forEach(id=>hl.add(id));edges.slice(0,view.upto).forEach(id=>ed.add(id));}
+     treeWrap.replaceChildren(drawTreeReadable(t,4,{highlight:hl,highlightEdges:ed}));}
+   function card(r,title){const used=new Set(pathFor(t,r.x,4).path.map(p=>p.node.split.f));cardP.replaceChildren(h('h3',{},title),h('div',{class:'card',style:'font-size:15px;line-height:1.3;display:grid;grid-template-columns:1fr 1fr;gap:0 22px'},FEAT_KEYS.map((k,f)=>h('div',{class:'fact'+(view.lit&&used.has(f)?' lit':'')},h('span',{},FEAT_NAME[f]),h('span',{},fmtFeat(f,r.x[f]))))));}
+   function walk(r,title,inst){view.r=r;view.lit=true;card(r,title);const len=pathFor(t,r.x,4).path.length;if(inst||reduced){view.upto=len;drawT();return;}view.upto=0;drawT();for(let k=1;k<=len;k++)later(()=>{view.upto=k;drawT();},k*800);}
+   stage.append(treeP,cardP);drawT();
+   return {beats:[
+    {bullet:0,run(inst){show(treeP,inst);view.root=true;drawT();}},
+    {bullet:1,run(inst){view.root=false;drawT();}},
+    {bullet:2,run(inst){show(cardP,inst);walk(READ.ga,'Georgia, 2022: Warnock against Walker. The Democrat won.',inst);}},
+    {bullet:3,q:true,run(inst){view.r=null;view.lit=false;drawT();card(READ.pa,'Pennsylvania, 2022: Fetterman against Oz');}},
+    {bullet:4,run(inst){walk(READ.pa,'Pennsylvania, 2022: Fetterman against Oz. The Democrat won.',inst);}},
+    {bullet:5,run(inst){view.r=null;drawT();}}]};}},
+
+{id:'one-cut',chip:'One split',kicker:'One split',title:'One cut on one feature',
+ bullets:['<b>First question.</b> One feature, the presidential margin.','<b>A cut at <i>s</i>.</b><ul class="sub"><li>two sides: <i>x</i> ≤ <i>s</i> and <i>x</i> &gt; <i>s</i></li><li>each side predicts its fraction of Democratic wins</li></ul>','Where should we place the cut to make the entropy small?','<b>Entropy of a cut.</b><ul class="sub"><li>the size-weighted average of the two sides</li><li>computed for every <i>s</i></li></ul>','<b>Best cut.</b> The smallest entropy over all features and thresholds.'],
+ note:'Entropy of a side with fraction <i>p</i>: −[<i>p</i> log₂ <i>p</i> + (1 − <i>p</i>) log₂(1 − <i>p</i>)]. It is 0 for a pure side and 1 for an even split. The other features and the squared error are in the controls.',
+ make(stage){const rows=PAST;const idx=rows.map((_,i)=>i);const f=()=>S.cut.f;const binary=()=>FEAT_BINARY[f()];const crit=()=>S.cut.crit;const N=rows.length;
+   function range(){if(binary())return [-0.5,1.5];const v=rows.map(r=>r.x[f()]);return [Math.min(...v)-2,Math.max(...v)+2];}
+   function thresholds(){if(binary())return [0.5];const v=[...new Set(rows.map(r=>r.x[f()]))].sort((a,b)=>a-b);const t=[];for(let i=1;i<v.length;i++)t.push((v[i-1]+v[i])/2);return t;}
+   function split(s){const L=[],R=[];for(const i of idx)(rows[i].x[f()]<=s?L:R).push(i);const kl=L.reduce((a,i)=>a+rows[i].y,0),kr=R.reduce((a,i)=>a+rows[i].y,0);const pl=L.length?kl/L.length:0,pr=R.length?kr/R.length:0;
+     const rss=L.reduce((a,i)=>a+(rows[i].y-pl)**2,0)+R.reduce((a,i)=>a+(rows[i].y-pr)**2,0);const ent=entOf(kl,L.length)+entOf(kr,R.length);const err=(L.filter(i=>((pl>=0.5)?1:0)!==rows[i].y).length+R.filter(i=>((pr>=0.5)?1:0)!==rows[i].y).length)/N;return {L,R,pl,pr,loss:(crit()==='sq'?rss:ent)/N,err};}
+   const W=640,H1=256,H2=192,m={l:124,r:20};const top=sv('svg',{viewBox:`0 0 ${W} ${H1}`,role:'img','aria-label':'Past contests along one feature, with a movable cut'});const bot=sv('svg',{viewBox:`0 0 ${W} ${H2+14}`,role:'img','aria-label':'Entropy of every cut'});
+   const stats=h('div',{class:'stats'});const wrap=h('div',{class:'panel rel'});const tip=tooltip(wrap);const jit=rows.map((_,i)=>((i*7919)%1000)/1000);
+   const view={cut:false,curveUpTo:-1,best:false,dotsIn:0};const lossName=()=>crit()==='sq'?'squared error':'entropy';
+   const imp=sv('svg',{viewBox:'0 0 260 160',role:'img','aria-label':'Entropy of a side as a function of the fraction p'});const ix=p=>36+p*210,iy=v=>120-v*95;
+   function drawImp(sp){imp.replaceChildren();for(const v of [0,0.5,1])imp.append(sv('text',{x:ix(v),y:136,'text-anchor':'middle','font-size':11},v));imp.append(sv('line',{x1:ix(0),x2:ix(1),y1:iy(0),y2:iy(0),stroke:css('--line')}),sv('line',{x1:ix(0),x2:ix(0),y1:iy(0),y2:iy(1),stroke:css('--line')}),sv('text',{x:ix(0)-5,y:iy(0)+4,'text-anchor':'end','font-size':10},'0'),sv('text',{x:ix(0)-5,y:iy(1)+4,'text-anchor':'end','font-size':10},'1'),sv('text',{x:10,y:(iy(0)+iy(1))/2,transform:`rotate(-90 10 ${(iy(0)+iy(1))/2})`,'text-anchor':'middle','font-size':10},crit()==='sq'?'squared error × 4':'entropy (bits)'),sv('text',{x:ix(0.5),y:154,'text-anchor':'middle','font-size':11},'fraction p of Democratic wins'));
+     const g=p=>p*(1-p),e=p=>p<=0||p>=1?0:-(p*Math.log2(p)+(1-p)*Math.log2(1-p));let dg='',de='';for(let i=0;i<=50;i++){const p=i/50;dg+=(i?'L':'M')+ix(p)+' '+iy(g(p)/0.25);de+=(i?'L':'M')+ix(p)+' '+iy(e(p));}
+     imp.append(sv('path',{d:crit()==='sq'?dg:de,fill:'none',stroke:css('--train'),'stroke-width':2.5}));
+     for(const p of [sp.pl,sp.pr]){const v=crit()==='sq'?g(p)/0.25:e(p);imp.append(sv('circle',{cx:ix(p),cy:iy(v),r:5,fill:pColor(p),stroke:css('--ink'),'stroke-width':1.5}));}}
+   function draw(){const [lo,hi]=range();const xs=v=>m.l+(v-lo)/(hi-lo)*(W-m.l-m.r);const s=S.cut.s;const sp=split(s);
+     top.replaceChildren();const yD=70,yR=150,band=46;
+     if(view.cut)top.append(sv('rect',{x:m.l,y:20,width:Math.max(0,xs(s)-m.l),height:180,fill:pColor(sp.pl),opacity:.2}),sv('rect',{x:xs(s),y:20,width:Math.max(0,W-m.r-xs(s)),height:180,fill:pColor(sp.pr),opacity:.2}));
+     top.append(sv('text',{x:m.l-6,y:yD+4,'text-anchor':'end','font-size':13},'Democrat won'),sv('text',{x:m.l-6,y:yR+4,'text-anchor':'end','font-size':13},'Republican won'),sv('text',{x:14,y:110,transform:'rotate(-90 14 110)','text-anchor':'middle','font-size':13},'outcome of the contest'));
+     rows.forEach((r,i)=>{const cx=binary()?xs(r.x[f()])+(jit[i]-0.5)*120:xs(r.x[f()]);const cy=(r.y?yD:yR)+(jit[i]-0.5)*band;const vis=i<view.dotsIn;top.append(sv('circle',{cx,cy,r:3.2,fill:party(r.y),opacity:vis?.8:0}));});
+     if(view.cut){top.append(sv('line',{x1:xs(s),x2:xs(s),y1:14,y2:206,stroke:css('--hilite'),'stroke-width':2.5,'stroke-dasharray':'7 4'}));
+       top.append(sv('text',{x:xs(s)-8,y:14,'text-anchor':'end','font-size':14,'font-weight':700},`${sp.L.length} contests, ${pct(sp.pl,0)} won by Democrats`),sv('text',{x:xs(s)+8,y:14,'text-anchor':'start','font-size':14,'font-weight':700},`${sp.R.length} contests, ${pct(sp.pr,0)} won by Democrats`));}
+     const ticks=[];if(binary())ticks.push([0,'no'],[1,'yes']);else{const step=FEAT_KIND[f()]==='margin'?20:(hi-lo>60?20:hi-lo>25?10:hi-lo>12?5:2);for(let v=Math.ceil(lo/step)*step;v<=hi;v+=step)ticks.push([v,FEAT_KIND[f()]==='margin'?(v>0?'D+':v<0?'R+':'')+Math.abs(v):FEAT_KIND[f()]==='money'?'$'+v+'k':v+'%']);}
+     for(const [v,lab] of ticks)top.append(sv('text',{x:xs(v),y:H1-28,'text-anchor':'middle','font-size':13},lab));
+     top.append(sv('text',{x:(m.l+W-m.r)/2,y:H1-6,'text-anchor':'middle','font-size':13},FEAT_NAME[f()]+UNIT[FEAT_KIND[f()]]));
+     const drag=ev=>{const pt=top.createSVGPoint();pt.x=ev.clientX;pt.y=ev.clientY;const p=pt.matrixTransform(top.getScreenCTM().inverse());const v=lo+(p.x-m.l)/(W-m.l-m.r)*(hi-lo);const th=thresholds();let best=th[0];for(const t of th)if(Math.abs(t-v)<Math.abs(best-v))best=t;S.cut.s=best;draw();};
+     top.onpointerdown=view.cut?ev=>{top.setPointerCapture(ev.pointerId);drag(ev);top.onpointermove=drag;}:null;top.onpointerup=()=>{top.onpointermove=null;};top.style.cursor=view.cut?'col-resize':'default';
+     bot.replaceChildren();const th=thresholds();const vals=th.map(t=>split(t).loss);const vmin=Math.min(...vals),vmax=Math.max(...vals,split(s).loss);const ys=v=>22+(1-(v-vmin*0.98)/(vmax-vmin*0.98+1e-9))*(H2-52);
+     bot.append(sv('text',{x:14,y:(22+H2-52)/2,'font-size':13,transform:`rotate(-90 14 ${(22+H2-52)/2})`,'text-anchor':'middle'},crit()==='sq'?'squared error per contest':'entropy, bits per contest'));
+     for(const v of [vmin,vmax])bot.append(sv('line',{x1:m.l,x2:W-m.r,y1:ys(v),y2:ys(v),stroke:css('--grid')}),sv('text',{x:m.l-6,y:ys(v)+4,'text-anchor':'end','font-size':12},fmt(v,3)));
+     const upto=view.curveUpTo<0?th.length:Math.min(th.length,view.curveUpTo+1);let d='';for(let i=0;i<upto;i++)d+=(i?'L':'M')+xs(th[i])+' '+ys(vals[i]);if(upto>1)bot.append(sv('path',{d,fill:'none',stroke:css('--train'),'stroke-width':2.5}));
+     for(let i=0;i<upto;i++)bot.append(sv('circle',{cx:xs(th[i]),cy:ys(vals[i]),r:binary()?6:2.4,fill:css('--train'),onmousemove:ev=>tip.show(`cut at ${binary()?'yes/no':fmtFeat(f(),th[i])}<br>${lossName()} ${fmt(vals[i],3)}`,ev),onmouseleave:()=>tip.hide(),style:'cursor:pointer',onclick:()=>{S.cut.s=th[i];draw();}}));
+     const bi=vals.indexOf(vmin);if(view.best)bot.append(sv('circle',{cx:xs(th[bi]),cy:ys(vmin),r:7,fill:'none',stroke:css('--hilite'),'stroke-width':2.5}),sv('text',{x:W-m.r,y:16,'text-anchor':'end','font-size':13,'font-weight':700,style:'fill:'+css('--hilite')},'best cut: '+(binary()?'yes/no':fmtFeat(f(),th[bi]))+', '+lossName()+' '+fmt(vmin,3)));
+     if(view.cut)bot.append(sv('circle',{cx:xs(s),cy:ys(split(s).loss),r:6,fill:css('--hilite')}),sv('line',{x1:xs(s),x2:xs(s),y1:10,y2:H2-28,stroke:css('--hilite'),'stroke-dasharray':'7 4'}));
+     bot.append(sv('line',{x1:m.l,x2:W-m.r,y1:H2-26,y2:H2-26,stroke:css('--line')}));for(const [v,lab] of ticks)bot.append(sv('text',{x:xs(v),y:H2-12,'text-anchor':'middle','font-size':12},lab));bot.append(sv('text',{x:(m.l+W-m.r)/2,y:H2+10,'text-anchor':'middle','font-size':12},'threshold s (same axis as above)'));
+     const k1=rows.reduce((a,r)=>a+r.y,0);const one=(crit()==='sq'?k1-k1*k1/N:entOf(k1,N))/N;
+     stats.replaceChildren(h('div',{class:'stat'},h('span',{class:'v'},binary()?'yes / no':fmtFeat(f(),s)),h('span',{class:'l'},'cut at s')),h('div',{class:'stat'},h('span',{class:'v'},fmt(sp.loss,3)),h('span',{class:'l'},(crit()==='sq'?'squared error per contest':'entropy, bits per contest')+', against '+fmt(one,3)+' for a single constant')),h('div',{class:'stat'},h('span',{class:'v'},pct(sp.err)),h('span',{class:'l'},'error rate on the 733 past contests')));
+     drawImp(sp);}
+   const sel=h('select',{id:'cut-feat',onchange:e=>{S.cut.f=+e.target.value;const th0=thresholds();S.cut.s=FEAT_BINARY[S.cut.f]?0.5:th0[Math.floor(th0.length/2)];view.curveUpTo=-1;view.best=true;draw();}},FEAT_NAME.map((nm,i)=>h('option',{value:i,selected:i===S.cut.f?'':null},nm)));sel.value=S.cut.f;
+   let timer=null;function sweep(inst,done){const th=thresholds();const best=th.reduce((b,t)=>split(t).loss<split(b).loss?t:b,th[0]);if(inst||reduced){view.curveUpTo=-1;view.best=true;S.cut.s=best;draw();done&&done();return;}
+     let k=0;view.curveUpTo=0;const step=Math.max(1,Math.floor(th.length/140));sweepBtn.textContent='Stop';
+     timer=setInterval(()=>{if(k>=th.length){clearInterval(timer);timer=null;view.curveUpTo=-1;view.best=true;S.cut.s=best;draw();sweepBtn.textContent='Compute every cut';done&&done();return;}S.cut.s=th[k];view.curveUpTo=k;draw();k+=step;},28);TIMERS.push(timer);}
+   const sweepBtn=h('button',{class:'btn',onclick:()=>{if(timer){clearInterval(timer);timer=null;view.curveUpTo=-1;view.best=true;draw();sweepBtn.textContent='Compute every cut';return;}view.best=false;sweep(false);}},'Compute every cut');
+   const critSeg=h('div',{class:'seg'},h('button',{onclick:()=>{S.cut.crit='ent';segs();}},'entropy'),h('button',{onclick:()=>{S.cut.crit='sq';segs();}},'squared error'));
+   function segs(){[...critSeg.children].forEach((b,i)=>b.className=(i===0)===(crit()==='ent')?'on':'');draw();}
+   const ctl=h('div',{class:'controls hid'},h('label',{for:'cut-feat'},'Feature'),sel,h('span',{},'Score'),critSeg,sweepBtn);
+   const lossPanel=h('div',{class:'hid'},bot);const impPanel=h('div',{class:'panel hid'},h('h3',{},'One side, as a function of p'),imp);
+   wrap.append(h('h3',{},'A cut at s, each side predicted by its fraction of Democratic wins'),ctl,top,lossPanel,stats);
+   const grid=h('div',{style:'display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:12px;align-items:start'},wrap,impPanel);stage.append(grid);
+   const obs=new ResizeObserver(()=>{grid.style.gridTemplateColumns=grid.clientWidth<760?'1fr':'minmax(0,1fr) 280px';});obs.observe(grid);
+   S.cut.f=0;S.cut.s=-7;S.cut.crit='ent';[...critSeg.children].forEach((b,i)=>b.className=i===0?'on':'');view.cut=false;view.curveUpTo=0;view.best=false;view.dotsIn=0;draw();
+   return {beats:[
+    {bullet:0,run(inst){anim(1400,t=>{view.dotsIn=Math.round(rows.length*t);draw();},null,inst);}},
+    {bullet:1,run(inst){view.cut=true;const target=-7;const [lo]=range();S.cut.s=lo;anim(1200,t=>{S.cut.s=lo+(target-lo)*t;draw();},()=>{S.cut.s=target;draw();},inst);show(impPanel,inst);}},
+    {bullet:2,q:true,run(inst){}},
+    {bullet:3,run(inst){show(lossPanel,inst);sweep(inst);}},
+    {bullet:4,run(inst){show(ctl,inst);}}]};}},
+
+{id:'grow',chip:'Growing',kicker:'Growing a tree',title:'A recursive algorithm',
+ bullets:['<b><code>grow(S)</code></b><ul class="sub"><li>input: a list <i>S</i> of pairs (<i>x</i>, <i>y</i>)</li><li>output: a tree</li><li>it calls itself, so it is recursive</li></ul>','<b>Recursion.</b> If the entropy of <i>S</i> is above 0. Here <i>S</i> = the 33 contests of 2020.<ul class="sub stepped"><li><code>best_cut(S)</code> computes the cut (<i>j</i>, <i>s</i>) with the smallest entropy</li><li><code>split(S, j, s)</code> divides <i>S</i> into <i>A</i> (<i>x<sub>j</sub></i> ≤ <i>s</i>) and <i>B</i> (<i>x<sub>j</sub></i> &gt; <i>s</i>)</li><li><code>grow(A)</code> and <code>grow(B)</code> build the two subtrees</li></ul>','<b>Base case.</b> Entropy of <i>S</i> = 0.<ul class="sub"><li>all contests in <i>S</i> have the same outcome</li><li><code>grow</code> returns a leaf</li><li>here <i>A</i> holds 20 Republican wins</li></ul>','<b>Example.</b><ul class="sub"><li>the 33 contests of 2020</li><li><i>x</i> = (presidential margin, seat margin)</li><li>one step = one call</li></ul>','<b>Result.</b><ul class="sub"><li>every leaf has entropy 0</li><li><i>ŷ</i> = <i>y</i> for all 33 contests</li></ul>'],
+ note:'The helpers are on the second tab. <code>best_cut(S)</code> returns <code>None</code> when all contests in <i>S</i> have the same <i>x</i>, since no threshold lies between two different values. Then <code>grow</code> returns a leaf, even if the entropy is above 0. Georgia 2020 counts as a Republican win (Perdue led in November, and Ossoff won the January runoff).',
+ make(stage){const YR=2020;const ix=PAST.map((_,i)=>i).filter(i=>PAST[i].year===YR);const base=growTree(PAST,ix,[0,1],1,100);
+   const order=[];(function dfs(id){order.push(id);const nd=base.nodes[id];if(nd.split){dfs(nd.left);dfs(nd.right);}})(0);
+   const X=[-60,50],Y=[-104,104];const W=560,H=400,m={l:56,r:14,t:14,b:42};const xs=v=>m.l+(v-X[0])/(X[1]-X[0])*(W-m.l-m.r),ys=v=>m.t+(1-(v-Y[0])/(Y[1]-Y[0]))*(H-m.t-m.b);
+   function boxOf(id){const box=[X[0],X[1],Y[0],Y[1]];let c=id;while(base.nodes[c].parent!==null){const p=base.nodes[base.nodes[c].parent];const left=p.left===c,f=p.split.f,s=p.split.s;if(f===0){if(left)box[1]=Math.min(box[1],s);else box[0]=Math.max(box[0],s);}else{if(left)box[3]=Math.min(box[3],s);else box[2]=Math.max(box[2],s);}c=p.id;}return box;}
+   function pathTo(id){const p=[];let c=id;while(base.nodes[c].parent!==null){const par=base.nodes[base.nodes[c].parent];p.unshift({node:par,goLeft:par.left===c});c=par.id;}return p;}
+   // the tree after call k: the questions asked so far, and the sets still to be grown
+   function treeAfter(k){const vis=new Set(order.slice(0,k+1));let r=0;const nodes=base.nodes.map(nd=>({...nd,step:undefined}));for(const id of order.slice(0,k+1))if(base.nodes[id].split)nodes[id].step=r++;
+     return {tree:{nodes},L:r+1,pending:new Set(base.nodes.filter(nd=>!vis.has(nd.id)).map(nd=>nd.id))};}
+   const plane=sv('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':`The ${ix.length} contests of ${YR} on the two margins, with the cuts made so far`});
+   const view={k:-1,dots:0,sweep:null,final:false,demo:null};const wrapP=h('div',{class:'panel rel'});const tip=tooltip(wrapP);
+   const cutLine=(f,v,bx,col)=>f===0?sv('line',{x1:xs(v),x2:xs(v),y1:ys(bx[3]),y2:ys(bx[2]),stroke:col,'stroke-width':3}):sv('line',{x1:xs(bx[0]),x2:xs(bx[1]),y1:ys(v),y2:ys(v),stroke:col,'stroke-width':3});
+   function drawPlane(){plane.replaceChildren();const vis=order.slice(0,view.k+1);const cur=view.final||view.k<0?null:order[view.k];
+     for(const id of vis){const nd=base.nodes[id];if(!nd.split){const bx=boxOf(id);plane.append(sv('rect',{x:xs(bx[0]),y:ys(bx[3]),width:Math.max(0,xs(bx[1])-xs(bx[0])),height:Math.max(0,ys(bx[2])-ys(bx[3])),fill:pColor(nd.p),opacity:.3}));}}
+     for(const v of [-50,-25,0,25,50])plane.append(sv('line',{x1:xs(v),x2:xs(v),y1:m.t,y2:H-m.b,stroke:css('--grid')}),sv('text',{x:xs(v),y:H-m.b+16,'text-anchor':'middle','font-size':12},(v>0?'D+':v<0?'R+':'')+Math.abs(v)));
+     for(const v of [-100,-50,0,50,100])plane.append(sv('line',{x1:m.l,x2:W-m.r,y1:ys(v),y2:ys(v),stroke:css('--grid')}),sv('text',{x:m.l-6,y:ys(v)+4,'text-anchor':'end','font-size':12},(v>0?'D+':v<0?'R+':'')+Math.abs(v)));
+     plane.append(sv('text',{x:(m.l+W-m.r)/2,y:H-6,'text-anchor':'middle','font-size':13},'presidential margin at the last election (points)'),sv('text',{x:14,y:(m.t+H-m.b)/2,'font-size':13,transform:`rotate(-90 14 ${(m.t+H-m.b)/2})`,'text-anchor':'middle'},'margin at the last race for this seat (points)'));
+     for(const id of vis){const nd=base.nodes[id];if(nd.split&&!(view.sweep&&view.sweep.id===id))plane.append(cutLine(nd.split.f,nd.split.s,boxOf(id),css('--ink-2')));}
+     if(view.sweep)plane.append(cutLine(view.sweep.f,view.sweep.v,view.sweep.box,css('--hilite')));
+     if(view.demo){const r=base.nodes[0];if(view.demo!=='r1')for(const [nd,name] of [[base.nodes[r.left],'A'],[base.nodes[r.right],'B']]){const bx=boxOf(nd.id),leafA=view.demo==='base'&&name==='A';
+         plane.append(sv('rect',{x:xs(bx[0])+3,y:ys(bx[3])+3,width:xs(bx[1])-xs(bx[0])-6,height:ys(bx[2])-ys(bx[3])-6,fill:'none',stroke:leafA?css('--hilite'):css('--ink-2'),'stroke-width':leafA?3:1.5,'stroke-dasharray':'8 5',rx:6}),
+           sv('text',{x:(xs(bx[0])+xs(bx[1]))/2,y:ys(bx[3])+28,'text-anchor':'middle','font-size':18,'font-weight':700,style:'fill:'+(leafA?css('--hilite'):css('--ink'))},name+': '+nd.n+' contests'+(leafA?', entropy 0':'')));}
+       plane.append(cutLine(r.split.f,r.split.s,boxOf(0),css('--hilite')));}
+     if(cur!==null){const bx=boxOf(cur);plane.append(sv('rect',{x:xs(bx[0]),y:ys(bx[3]),width:Math.max(0,xs(bx[1])-xs(bx[0])),height:Math.max(0,ys(bx[2])-ys(bx[3])),fill:'none',stroke:css('--hilite'),'stroke-width':3,'stroke-dasharray':'8 5'}));}
+     const inS=cur===null?null:new Set(base.nodes[cur].idx);
+     ix.forEach((i,k)=>{if(k>=view.dots)return;const r=PAST[i];const on=!inS||inS.has(i);const cx=xs(Math.max(X[0],Math.min(X[1],r.x[0]))),cy=ys(r.x[1]);
+       plane.append(sv('circle',{cx,cy,r:6,fill:party(r.y),opacity:on?.95:.2,stroke:css('--bg'),'stroke-width':1.5,onmousemove:ev=>tip.show(`<b>${STATE_NAME[r.state]} ${r.year}</b>. The ${r.y?'Democrat':'Republican'} won.<br>Presidential margin ${marginText(r.x[0])}, seat margin ${marginText(r.x[1])}.`,ev),onmouseleave:()=>tip.hide()}),(r.state==='ME'?sv('text',{x:cx+9,y:cy+4,'font-size':13,'font-weight':700,opacity:on?1:.3},'Maine'):null));});}
+   // the algorithm as Python: grow on the first tab, its helper functions on the second
+   const PY_GROW=[["", "def grow(S):                    # S: list of (x, y)"], ["split base", "    if entropy(S) > 0:          # recursion"], ["split r1", "        cut = best_cut(S)"], ["split r1", "        if cut is not None:"], ["split r1", "            j, s = cut"], ["split r2", "            A, B = split(S, j, s)"], ["split r3", "            return {\"feature\": j, \"threshold\": s,"], ["split r3", "                    \"at_most\": grow(A),"], ["split r3", "                    \"above\": grow(B)}"], ["base", "    return leaf(S)              # base case"]];
+   const PY_HELP=["from math import log2", "", "def leaf(S):          # fraction of Democratic wins", "    p = sum(y for x, y in S) / len(S)", "    return {\"leaf\": p}", "", "def entropy(S):       # bits per contest", "    p = sum(y for x, y in S) / len(S)", "    if p == 0 or p == 1:", "        return 0.0", "    return -(p * log2(p) + (1 - p) * log2(1 - p))", "", "def split(S, j, s):   # A: x[j] <= s, B: x[j] > s", "    A = [(x, y) for x, y in S if x[j] <= s]", "    B = [(x, y) for x, y in S if x[j] > s]", "    return A, B", "", "def best_cut(S):      # smallest entropy of a cut", "    best = None", "    for j in range(len(S[0][0])):", "        v = sorted({x[j] for x, y in S})", "        for a, b in zip(v, v[1:]):", "            s = (a + b) / 2", "            A, B = split(S, j, s)", "            H = (len(A) * entropy(A)", "                 + len(B) * entropy(B)) / len(S)", "            if best is None or H < best[0]:", "                best = (H, j, s)", "    # None: all x in S are equal, so no threshold", "    return None if best is None else best[1:]"];
+   const pyLine=t=>{const e=t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');const k=e.indexOf('#');const c=k<0?e:e.slice(0,k),m=k<0?'':e.slice(k);
+     return c.replace(/("[^"]*")/g,'<span class="py-st">$1</span>').replace(/\b(def|if|return|for|in|is|not|None|from|import|or|else)\b/g,'<span class="py-kw">$1</span>')+(m?'<span class="py-cm">'+m+'</span>':'');};
+   const codeLines=PY_GROW.map(([tag,t])=>h('span',{class:'ln','data-tag':tag,html:pyLine(t)||' '}));
+   const growPre=h('pre',{},...codeLines),helpPre=h('pre',{class:'helpers',hidden:''},...PY_HELP.map(t=>h('span',{class:'ln',html:pyLine(t)||' '})));
+   const tabs=h('div',{class:'seg',style:'margin-bottom:6px'},h('button',{class:'on',onclick:()=>tab(0)},'grow(S)'),h('button',{onclick:()=>tab(1)},'leaf, entropy, split, best_cut'));
+   function tab(k){growPre.hidden=k!==0;helpPre.hidden=k!==1;[...tabs.children].forEach((b,i)=>b.className=i===k?'on':'');}
+   const codeP=h('div',{class:'panel code hid'},h('h3',{},'The algorithm in Python'),tabs,growPre,helpPre);
+   function lit(tag){if(tag)tab(0);codeLines.forEach(el=>el.classList.toggle('lit',!!tag&&el.dataset.tag.split(' ').includes(tag)));}
+   const stack=h('div',{style:'font-size:16px;color:var(--ink-2);min-height:2.6em'}),sStat=h('div',{class:'stats'});const callP=h('div',{class:'panel hid'},h('h3',{},'The current call'),stack,sStat);
+   const treeWrap=h('div',{class:'scroll',tabindex:'0',role:'region','aria-label':'Scrollable panel'});const treeP=h('div',{class:'panel hid'},h('h3',{},'The tree so far'),treeWrap);
+   function drawSide(k){const cur=order[k],nd=base.nodes[cur];
+     if(view.final){stack.textContent='All calls have returned.';const leaves=base.nodes.filter(x=>!x.split);sStat.replaceChildren(stat(ix.length,'contests of '+YR),stat(leaves.length,'leaves'),stat('0','entropy of every leaf'),stat(ix.length+' of '+ix.length,'contests with ŷ = y'));}
+     else{const p=pathTo(cur);const calls=[`grow(all ${ix.length})`].concat(p.map(st=>`grow(${base.nodes[st.goLeft?st.node.left:st.node.right].n}: ${condText(st.node,st.goLeft)})`));
+       stack.replaceChildren(h('b',{},'Open calls: '),calls.join('  ›  '));sStat.replaceChildren(stat(nd.n,'contests in S'),stat(nd.n1,'won by Democrats'),stat(fmt(entOf(nd.n1,nd.n)/nd.n,2),'entropy of S, bits per contest'),stat(nd.split?'a question':'a leaf','this call returns',nd.split?null:css('--hilite')));}
+     const tr=treeAfter(view.final?order.length-1:k);treeWrap.replaceChildren(drawTreeReadable(tr.tree,tr.L,{pending:tr.pending,pendingName,highlight:view.final?new Set():new Set([cur]),leafNoun:'contests of '+YR}));}
+   function pendingName(nd){const p=base.nodes[nd.parent];return 'grow('+(p.left===nd.id?'A':'B')+')';}
+   function call(k,inst){view.k=k;view.final=false;view.demo=null;const id=order[k],nd=base.nodes[id];
+     if(!nd.split){view.sweep=null;lit('base');drawPlane();drawSide(k);return;}
+     lit('split');const bx=boxOf(id),f=nd.split.f,lo=f===0?bx[0]:bx[2];
+     if(inst||reduced){view.sweep=null;drawPlane();drawSide(k);return;}
+     view.sweep={id,f,box:bx,v:lo};drawPlane();if(k>0)drawSide(k-1);
+     anim(1100,t=>{view.sweep.v=lo+(nd.split.s-lo)*t;drawPlane();},()=>{view.sweep=null;drawPlane();drawSide(k);});}
+   wrapP.append(h('h3',{},`The ${ix.length} contests of ${YR} on the two margins`),plane);
+   const left=h('div',{style:'display:grid;gap:10px;align-content:start;min-width:0'},codeP,callP);
+   const grid=h('div',{style:'display:grid;grid-template-columns:minmax(0,11fr) minmax(0,9fr);gap:12px;align-items:start'},left,wrapP);
+   const obs=new ResizeObserver(()=>{grid.style.gridTemplateColumns=grid.clientWidth<760?'1fr':'minmax(0,11fr) minmax(0,9fr)';});obs.observe(grid);
+   stage.append(grid,treeP);drawPlane();
+   return {beats:[
+    {bullet:0,run(inst){show(codeP,inst);anim(900,t=>{view.dots=Math.round(ix.length*t);drawPlane();},null,inst);}},
+    {bullet:1,sub:0,run(inst){view.dots=ix.length;view.k=-1;lit('r1');const r=base.nodes[0],bx=boxOf(0),f=r.split.f,lo=f===0?bx[0]:bx[2];
+      if(inst||reduced){view.demo='r1';drawPlane();return;}view.demo=null;view.sweep={id:0,f,box:bx,v:lo};anim(1100,t=>{view.sweep.v=lo+(r.split.s-lo)*t;drawPlane();},()=>{view.sweep=null;view.demo='r1';drawPlane();});}},
+    {bullet:1,sub:1,run(inst){view.dots=ix.length;view.k=-1;view.demo='r2';lit('r2');drawPlane();}},
+    {bullet:1,sub:2,run(inst){view.dots=ix.length;view.k=-1;view.demo='r3';lit('r3');drawPlane();show(treeP,inst);const tr=treeAfter(0);treeWrap.replaceChildren(drawTreeReadable(tr.tree,tr.L,{pending:tr.pending,pendingName,highlight:new Set([base.nodes[0].left,base.nodes[0].right]),leafNoun:'contests of '+YR}));}},
+    {bullet:2,run(inst){view.dots=ix.length;view.k=-1;view.demo='base';lit('base');drawPlane();show(treeP,inst);const tr=treeAfter(1);treeWrap.replaceChildren(drawTreeReadable(tr.tree,tr.L,{pending:tr.pending,pendingName,highlight:new Set([base.nodes[0].left]),leafNoun:'contests of '+YR}));}},
+    ...order.map((id,k)=>({bullet:3,run(inst){view.dots=ix.length;if(k===0){show(callP,inst);show(treeP,inst);}call(k,inst);}})),
+    {bullet:4,run(inst){view.demo=null;view.final=true;view.k=order.length-1;view.sweep=null;lit(null);drawPlane();drawSide(order.length-1);}}]};}},
+
+{id:'overfit',chip:'Overfitting',kicker:'Generalization',title:'Underfitting and overfitting',
+ bullets:['<b>Underfitting.</b> One leaf.<ul class="sub"><li><i>f</i> = 0.508 for every contest</li><li>entropy 1.00 bit per contest</li></ul>',`<b>Grown out.</b><ul class="sub"><li>${T1.maxLeaves} leaves</li><li>many with one to three contests</li></ul>`,'<b>Overfitting.</b><ul class="sub"><li>each step covers a few past contests</li><li>a small change in the margin moves <i>f</i> from near 0 to near 1</li></ul>',`<b>All eleven features.</b><ul class="sub"><li>${D0.cap} pure leaves</li><li>entropy 0</li><li><i>ŷ</i> = <i>y</i> for every past contest</li></ul>`,'<b>Which tree for 2026?</b><ul class="sub"><li>the fitted entropy falls with every split</li><li>so it does not answer this</li></ul>'],
+ note:'The slider sets the number of leaves of the margin-only tree. Contests with the same margin and different outcomes stay together, so this tree cannot reach entropy 0.',
+ make(stage){const mp=marginPlot();mp.view.dots=PAST.length;mp.view.lineOn=false;mp.view.L=1;const MAX=T1.maxLeaves;
+   const vL=h('span',{class:'v'}),vH=h('span',{class:'v'}),vS=h('span',{class:'v'});
+   const stats=h('div',{class:'stats'},h('div',{class:'stat'},vL,h('span',{class:'l'},'leaves')),h('div',{class:'stat'},vH,h('span',{class:'l'},'entropy on the 733 past contests, bits per contest')),h('div',{class:'stat'},vS,h('span',{class:'l'},'leaves with at most 3 contests')));
+   const slider=h('input',{type:'range',min:1,max:MAX,step:1,value:1,id:'of-leaves',oninput:e=>{mp.view.L=+e.target.value;upd();}});
+   function upd(){const L=mp.view.L;mp.draw();vL.textContent=L;vH.textContent=fmt(meanEntropy(scoresFor(T1,PAST,L),PAST),2);vS.textContent=leavesAt(T1,L).filter(l=>l.n<=3).length;slider.value=L;}
+   const ctl=h('div',{class:'controls hid'},h('label',{for:'of-leaves'},'Leaves'),slider,...[1,3,MAX].map(L=>h('button',{class:'btn ghost',onclick:()=>{mp.view.L=L;upd();}},L===1?'1 leaf':L+' leaves')));
+   const p11=panel('All eleven features, grown to the base case',h('div',{class:'stats'},stat(D0.cap,'leaves'),stat(fmt(D0.trH,2),'entropy on the 733 past contests, bits per contest'),stat(pct(D0.trAcc,0),'past contests with ŷ = y')));
+   const main=h('div',{class:'panel'},h('h3',{},'A tree on the presidential margin alone'),ctl,mp.svg,stats);stage.append(main,p11);upd();
+   return {beats:[
+    {bullet:0,run(inst){mp.view.L=1;upd();}},
+    {bullet:1,run(inst){anim(3200,t=>{mp.view.L=Math.max(1,Math.round(1+t*(MAX-1)));upd();},null,inst);}},
+    {bullet:2,run(inst){mp.view.L=MAX;upd();show(ctl,inst);}},
+    {bullet:3,run(inst){show(p11,inst);}},
+    {bullet:4,q:true,run(inst){}}]};}},
+
+{id:'validate',chip:'Held out',kicker:'Held-out contests',title:'Validation on held-out contests',
+ bullets:[`<b>Problem.</b><ul class="sub"><li>the fitted entropy reaches 0 at ${D0.cap} leaves</li><li>to compare trees, we need held-out contests</li></ul>`,'<b>Folds.</b><ul class="sub"><li>three folds of election years</li><li>each fold holds every third year</li></ul>','<b>Rounds.</b><ul class="sub"><li>fit on two folds</li><li>compute the entropy on the third</li><li>once for each fold</li></ul>','<b>Cross-validated entropy.</b><ul class="sub"><li>the average over all 733 held-out predictions</li></ul>'],
+ note:'Folds hold whole years, because contests in one year share national conditions. The cost of one contest is capped at 6.6 bits (probability 0.01), since −log₂ 0 is infinite.',
+ make(stage){const view={tr:false,va:false};const cp=curvePlot(view);const fb=foldBar();const Lb=bestL();const sc=cvScores(PAST,cvFitCached(),Lb);
+   const foldH=[0,1,2].map(v=>{const rr=[],ss=[];PAST.forEach((r,i)=>{if(FOLD[i]===v){rr.push(r);ss.push(sc[i]);}});return meanEntropy(ss,rr);});
+   const sizes=[0,1,2].map(v=>FOLD.filter(f=>f===v).length);const rounds=sv('svg',{viewBox:'0 0 860 196',role:'img','aria-label':'Three rounds: fit on two folds, compute the entropy on the third'});const rowEls=[];
+   [0,1,2].forEach(v=>{const y=8+v*48;const g=sv('g',{opacity:0});let x=8;[0,1,2].forEach(u=>{const w=sizes[u]/PAST.length*420;g.append(sv('rect',{x,y,width:w-4,height:34,rx:5,fill:u===v?css('--valid'):css('--train')}),sv('text',{x:x+(w-4)/2,y:y+22,'text-anchor':'middle','font-size':14,'font-weight':700,style:'fill:'+css('--on-color')},(u===v?'held out: fold ':'fit: fold ')+(u+1)));x+=w;});
+     g.append(sv('text',{x:442,y:y+22,'font-size':15},`round ${v+1}: entropy on fold ${v+1} = ${fmt(foldH[v],3)} bits per contest`));rounds.append(g);rowEls.push(g);});
+   const pooled=sv('text',{x:8,y:182,'font-size':16,'font-weight':700,opacity:0,style:'fill:'+css('--valid')},`cross-validated entropy at ${Lb} leaves: ${fmt(meanEntropy(sc,PAST),3)} bits per contest, the average over all 733 held-out predictions`);rounds.append(pooled);
+   const p1=h('div',{class:'panel hid'},h('h3',{},'Entropy on the 733 contests used to fit, all eleven features'),cp.svg,h('div',{class:'legend'},h('span',{},h('span',{class:'sw',style:'background:'+css('--train')}),'entropy on the 733 contests used to fit')));
+   const p2=panel('The 733 past contests in three folds of years',fb.bar),p3=panel(`Three rounds, each with a tree of ${Lb} leaves`,rounds);
+   const grid=h('div',{style:'display:grid;grid-template-columns:minmax(0,1fr);gap:10px'},p2,p3);stage.append(p1,grid);cp.draw();
+   return {beats:[
+    {bullet:0,run(inst){show(p1,inst);view.tr=true;const p=cp.draw();trace(p.tr,1800,inst);}},
+    {bullet:1,run(inst){show(p2,inst);fb.grow(inst);}},
+    {bullet:2,run(inst){show(p3,inst);rowEls.forEach((g,i)=>later(()=>anim(500,t=>g.setAttribute('opacity',t),null,inst),i*900,inst));}},
+    {bullet:3,run(inst){anim(600,t=>pooled.setAttribute('opacity',t),null,inst);}}]};}},
+
+{id:'leaves',chip:'The size',kicker:'Regularization',title:'Choosing the number of leaves',
+ bullets:['<b>Regularization.</b><ul class="sub"><li>limit the tree to <i>L</i> leaves, or to a maximum depth</li><li>what shape will the two curves have?</li></ul>',`<b>Purple.</b><ul class="sub"><li>entropy on the fitted contests</li><li>falls to 0 at ${D0.cap} leaves</li></ul>`,`<b>Green.</b><ul class="sub"><li>cross-validated entropy</li><li>lowest at ${D0.best} leaves, then rises</li></ul>`,'<b>Choice.</b><ul class="sub"><li>the <i>L</i> with the smallest cross-validated entropy</li><li>clicking the plot sets another <i>L</i></li></ul>'],
+ note:'Left of the minimum the tree underfits, and right of it the tree overfits. The table adds the fraction with <i>ŷ</i> = <i>y</i>.',
+ make(stage){const view={tr:false,va:false,best:false,marker:false,regions:false};const cp=curvePlot(view,L=>{S.L=L;rebuild(true);});const ctl=h('div',{class:'hid'});const tbl=h('div',{class:'scroll hid',tabindex:'0',role:'region','aria-label':'Scrollable panel'});
+   function drawTbl(){const c=curves();const cols=[...new Set([1,2,3,4,5,6,8,10,15,20,30,50,c.cap].filter(v=>v<=c.cap))];
+     tbl.replaceChildren(h('table',{class:'data'},h('thead',{},h('tr',{},h('th',{},'Leaves'),cols.map(v=>h('th',{class:v===S.L?'on':'',onclick:()=>{S.L=v;rebuild(true);}},v)))),h('tbody',{},
+       h('tr',{},h('td',{},h('span',{class:'sw',style:'background:'+css('--train')}),'entropy, fit'),cols.map(v=>h('td',{},fmt(c.trH[v],3)))),
+       h('tr',{},h('td',{},h('span',{class:'sw',style:'background:'+css('--valid')}),'entropy, cross-validated'),cols.map(v=>h('td',{},fmt(c.vaH[v],3)))),
+       h('tr',{},h('td',{},'fraction with ŷ = y, fit'),cols.map(v=>h('td',{},pct(c.tr[v],1)))),h('tr',{},h('td',{},'fraction with ŷ = y, cross-validated'),cols.map(v=>h('td',{},pct(c.va[v],1)))))));}
+   function rebuild(full){if(full)ctl.replaceChildren(treeControls(rebuild));cp.draw();drawTbl();}
+   const legend=h('div',{class:'legend'},h('span',{},h('span',{class:'sw',style:'background:'+css('--train')}),'entropy on the 733 contests used to fit'),h('span',{},h('span',{class:'sw',style:'background:'+css('--valid')}),'three-fold cross-validated entropy'));
+   stage.append(h('div',{class:'panel'},ctl,cp.svg,legend,tbl));S.L=Math.max(1,Math.min(S.L,Lcap()));cp.draw();
+   return {beats:[
+    {bullet:0,q:true,run(inst){cp.draw();}},
+    {bullet:1,run(inst){view.tr=true;const p=cp.draw();trace(p.tr,2000,inst);}},
+    {bullet:2,run(inst){view.va=true;const p=cp.draw();trace(p.va,2000,inst);later(()=>{view.best=true;view.regions=true;cp.draw();},inst?0:2100,inst);}},
+    {bullet:3,run(inst){S.L=bestL();view.best=true;view.regions=true;view.marker=true;show(ctl,inst);show(tbl,inst);rebuild(true);}}]};}},
+
+{id:'predict',chip:'2026',kicker:'2026',title:'Predictions for the 35 contests',
+ get bullets(){return ['<b>Refit.</b> The chosen tree on all 733 past contests.','<b>2026 contests.</b><ul class="sub"><li>each follows its path to a leaf</li><li>under each leaf: the contests that end there</li></ul>',whyText(),'<b>Cutoff.</b><ul class="sub"><li><i>ŷ</i> = 1 when <i>f</i>(<i>x</i>) ≥ 1/2</li><li>the counts above the map change with it</li></ul>','<b>Next.</b><ul class="sub"><li>clicking a state shows its path</li><li>Thursday: enter the results and count <i>ŷ</i> = <i>y</i></li></ul>'];},
+ note:'The features do not include the candidates, the campaigns, the polls, or the national conditions of this year.',
+ make(stage){const tree=fullTree();const L=Math.min(S.L,tree.maxLeaves);const sc=Object.fromEntries(TEST.map(r=>[r.state,leafFor(tree,r.x,L).p]));
+   const ex=TEST.slice().sort((a,b)=>Math.abs(sc[a.state]-0.5)-Math.abs(sc[b.state]-0.5))[0];
+   const mapWrap=h('div',{class:'panel rel'});const mapInner=h('div');mapWrap.append(mapInner);const tip=tooltip(mapWrap);const side=h('div',{class:'panel hid'});const treeWrap=h('div',{class:'scroll',tabindex:'0',role:'region','aria-label':'Scrollable panel'});const stats=h('div',{class:'stats hid'});const ctl=h('div',{class:'controls hid'});
+   const view={colored:new Set(),hl:null,listed:new Set(),path:null};
+   const vD=h('span',{class:'v',style:'color:'+css('--dem')}),vR=h('span',{class:'v',style:'color:'+css('--rep')}),vS=h('span',{class:'v'});const sS=h('div',{class:'stat'},vS,h('span',{class:'l',html:yh('results entered, contests with ŷ = y')}));
+   const sorted=TEST.slice().sort((a,b)=>Math.abs(sc[a.state]-0.5)-Math.abs(sc[b.state]-0.5)).slice(0,4);
+   const near=h('div',{class:'stat'},h('span',{class:'v',style:'font-size:20px;line-height:1.5'},sorted.map(r=>`${r.state} ${pct(sc[r.state],0)}`).join(', ')),h('span',{class:'l'},'nearest to one half'));
+   stats.append(h('div',{class:'stat'},vD,h('span',{class:'l',html:yh('ŷ = 1, the Democrat')})),h('div',{class:'stat'},vR,h('span',{class:'l',html:yh('ŷ = 0, the Republican')})),near,sS);
+   function tally(inst){const d=TEST.filter(r=>sc[r.state]>=S.cutoff).length;count(vD,d,v=>Math.round(v),800,inst);count(vR,35-d,v=>Math.round(v),800,inst);const entered=TEST.filter(r=>S.results[r.state]!==undefined);const right=entered.filter(r=>((sc[r.state]>=S.cutoff)?1:0)===S.results[r.state]).length;sS.hidden=!entered.length;vS.textContent=`${right} of ${entered.length}`;}
+   let map;
+   function drawMap(){mapInner.replaceChildren();mapInner.append(h('h3',{},S.enter?'Enter results: a click cycles Democrat, Republican, unknown':'Predicted probability of a Democratic win, '+L+' leaves'));
+     map=tileMap({fill:r=>view.colored.has(r.state)?pColor(sc[r.state]):css('--surface-2'),ink:r=>view.colored.has(r.state)?'#fff':css('--ink'),sub:r=>view.colored.has(r.state)?pct(sc[r.state],0):'',
+       onHover:(r,ev)=>tip.show(raceCard(r)+`<br><b>Predicted probability of a Democratic win: ${pct(sc[r.state],0)}.</b>${S.results[r.state]!==undefined?'<br>Result entered: '+(S.results[r.state]?'Democrat':'Republican')+'.':''}`,ev),onLeave:()=>tip.hide(),
+       onClick:r=>{if(S.enter){const cur=S.results[r.state];if(cur===undefined)S.results[r.state]=1;else if(cur===1)S.results[r.state]=0;else delete S.results[r.state];try{localStorage.setItem('senate-results',JSON.stringify(S.results));}catch(e){}drawMap();tally(true);}else{S.picked=r.state;drawSide();}}});
+     for(const st in map._tiles){const res=S.results[st];if(res!==undefined){map._tiles[st].rect.setAttribute('stroke',res?css('--dem'):css('--rep'));map._tiles[st].rect.setAttribute('stroke-width',3);}if(view.hl===st){map._tiles[st].rect.setAttribute('stroke',css('--hilite'));map._tiles[st].rect.setAttribute('stroke-width',3);}}
+     mapInner.append(map,h('div',{class:'legend'},h('span',{},h('span',{class:'sw',style:'background:'+pColor(1)}),'100% Democrat'),h('span',{},h('span',{class:'sw',style:'background:'+pColor(0.5)}),'50%'),h('span',{},h('span',{class:'sw',style:'background:'+pColor(0)}),'0% Democrat'),h('span',{},'A ring marks a result entered.')));}
+   function lists(){const out=new Map();TILE_ORDER.filter(st=>RACE_BY_STATE[st]&&view.listed.has(st)).forEach(st=>{const id=leafFor(tree,RACE_BY_STATE[st].x,L).id;if(!out.has(id))out.set(id,[]);out.get(id).push(st);});out.forEach(v=>v.sort());return out;}
+   function drawTreeFor(r){const pf=r?pathFor(tree,r.x,L):null;const hl=pf?new Set(pf.path.map(p=>p.node.id).concat([pf.leaf.id])):new Set();const edges=pf?new Set(pf.path.map(p=>p.goLeft?p.node.left:p.node.right)):new Set();treeWrap.replaceChildren(drawTreeReadable(tree,L,{highlight:hl,highlightEdges:edges,leafExtra:lists()}));}
+   function drawSide(){side.replaceChildren();const r=TEST.find(t=>t.state===S.picked)||ex;S.picked=r.state;const {path,leaf}=pathFor(tree,r.x,L);
+     side.append(h('h3',{},'The path of '+STATE_NAME[r.state]),h('ul',{class:'pathlist'},path.map(({node,goLeft})=>h('li',{},capFirst(answerText(node,goLeft))+'.'))),h('p',{style:'margin:6px 0 0'},h('b',{},`Democrats won ${pct(leaf.p,0)} of the ${leaf.n} past contests in this leaf.`)),h('p',{class:'small'},`At cutoff ${fmt(S.cutoff,2)}: ŷ = ${sc[r.state]>=S.cutoff?'1, the Democrat':'0, the Republican'}.`));
+     drawTreeFor(r);}
+   ctl.append(h('label',{for:'cut2'},'Cutoff t'),h('input',{type:'range',min:0,max:1,step:0.01,value:S.cutoff,id:'cut2',oninput:e=>{S.cutoff=+e.target.value;tally(true);drawSide();}}),h('span',{},'Leaves: '+L),h('label',{},h('input',{type:'checkbox',id:'enter',checked:S.enter?'':null,onchange:e=>{S.enter=e.target.checked;drawMap();}}),'Enter results'),h('button',{class:'btn ghost',onclick:()=>{S.results={};try{localStorage.removeItem('senate-results');}catch(e){}drawMap();tally(true);}},'Clear results'));
+   const treePanel=h('div',{class:'panel hid'},h('h3',{},`The tree with ${L} leaves, fitted on all 733 past contests`),treeWrap);
+   const right=h('div',{style:'display:grid;gap:10px;min-width:0'},treePanel,side);
+   const grid=h('div',{style:'display:grid;grid-template-columns:minmax(0,9fr) minmax(0,11fr);gap:10px;align-items:start'},mapWrap,right);
+   const topPanel=h('div',{class:'panel',hidden:''},ctl,stats);stage.append(topPanel,grid);
+   let treeOnly=true;function layout8(){mapWrap.hidden=treeOnly;grid.style.gridTemplateColumns=(treeOnly||grid.clientWidth<700)?'minmax(0,1fr)':'minmax(0,9fr) minmax(0,11fr)';}
+   const obs=new ResizeObserver(layout8);obs.observe(grid);layout8();
+   drawMap();drawTreeFor(null);
+   const order=TILE_ORDER.filter(st=>RACE_BY_STATE[st]);
+   return {beats:[
+    {bullet:0,run(inst){treeOnly=true;layout8();show(treePanel,inst);}},
+    {bullet:1,run(inst){if(inst||reduced){order.forEach(st=>view.listed.add(st));drawTreeFor(null);return;}order.forEach((st,i)=>later(()=>{view.listed.add(st);drawTreeFor(RACE_BY_STATE[st]);if(i===order.length-1)later(()=>drawTreeFor(null),500);},i*160));}},
+    {bullet:2,run(inst){order.forEach(st=>view.listed.add(st));drawTreeFor(ex);}},
+    {bullet:3,run(inst){treeOnly=false;layout8();topPanel.hidden=false;show(stats,inst);tally(inst);if(inst||reduced){order.forEach(st=>view.colored.add(st));drawMap();drawTreeFor(null);return;}order.forEach((st,i)=>later(()=>{view.colored.add(st);drawMap();},i*60));drawTreeFor(null);}},
+    {bullet:4,run(inst){order.forEach(st=>view.colored.add(st));drawMap();topPanel.hidden=false;show(ctl,inst);show(side,inst);drawSide();}}]};}},
+
+{id:'roc',chip:'ROC',kicker:'Cutoffs',title:'The ROC curve',
+ bullets:['<b>Probabilities.</b><ul class="sub"><li>cross-validated, for the 733 past contests</li><li>ordered highest first</li><li>blue = a Democratic win</li></ul>','<b>Cutoff <i>t</i>.</b><ul class="sub"><li><i>ŷ</i> = 1 to its left</li><li>a lower <i>t</i> gives more true and more false positives</li></ul>','<b>ROC curve.</b> True positive rate against false positive rate, over all cutoffs.','<b>Area.</b> The fraction of pairs (Democratic win, Republican win) in which the Democratic win has the higher probability.','<b>Choosing <i>t</i>.</b><ul class="sub"><li>needs the costs of the two kinds of error</li><li>these costs are not in the data</li><li>dashed curve: the deepest tree</li></ul>'],
+ note:'The lecture note gives the details: Definitions 3 and 4, and Claim 2.',
+ make(stage){const size=340,m={l:50,r:16,t:16,b:46};const W=size+m.l+m.r,H=size+m.t+m.b;const xs=v=>m.l+v*size,ys=v=>m.t+(1-v)*size;
+   const svg=sv('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':'ROC curves of the cross-validated probabilities'});const strip=sv('svg',{viewBox:'0 0 680 130',role:'img','aria-label':'Past contests ordered by cross-validated probability'});
+   const wrap=h('div',{class:'panel rel'});const tip=tooltip(wrap);const cm=h('div',{class:'hid'});const ctl=h('div',{class:'hid'});const stats=h('div',{class:'stats'});const rocPanel=h('div',{class:'hid'});
+   const view={bars:0,cut:false,curveK:-1,area:false,deep:false};let walk=null;
+   function data(){const L=S.L;const sc=cvScores(PAST,cvFitCached(),L);return {sc,pts:rocPoints(sc,PAST),area:aucOf(sc,PAST)};}
+   function draw(){const L=S.L;const {sc,pts,area}=data();const deep=cvScores(PAST,cvFitCached(),Lcap()),dpts=rocPoints(deep,PAST);
+     svg.replaceChildren();for(const v of [0.2,0.4,0.6,0.8])svg.append(sv('line',{x1:xs(v),x2:xs(v),y1:m.t,y2:m.t+size,stroke:css('--grid')}),sv('line',{x1:m.l,x2:m.l+size,y1:ys(v),y2:ys(v),stroke:css('--grid')}));
+     for(const v of [0,0.5,1])svg.append(sv('text',{x:xs(v),y:H-m.b+18,'text-anchor':'middle','font-size':13},v),sv('text',{x:m.l-8,y:ys(v)+4,'text-anchor':'end','font-size':13},v));
+     svg.append(sv('rect',{x:m.l,y:m.t,width:size,height:size,fill:'none',stroke:css('--line')}),sv('line',{x1:xs(0),y1:ys(0),x2:xs(1),y2:ys(1),stroke:css('--muted'),'stroke-dasharray':'3 4'}));
+     svg.append(sv('text',{x:m.l+size/2,y:H-6,'text-anchor':'middle','font-size':13},'false positive rate: fraction of Republican wins with ŷ = 1'),sv('text',{x:14,y:m.t+size/2,'font-size':13,transform:`rotate(-90 14 ${m.t+size/2})`,'text-anchor':'middle'},'true positive rate: fraction of Democratic wins with ŷ = 1'));
+     const upto=view.curveK<0?pts.length:Math.min(pts.length,view.curveK+1);const shown=pts.slice(0,upto);
+     if(view.area&&upto===pts.length)svg.append(sv('path',{d:pts.map((q,i)=>(i?'L':'M')+xs(q.fpr)+' '+ys(q.tpr)).join('')+`L${xs(1)} ${ys(0)}Z`,fill:css('--valid'),opacity:.18}));
+     if(view.deep)svg.append(sv('path',{d:dpts.map((q,i)=>(i?'L':'M')+xs(q.fpr)+' '+ys(q.tpr)).join(''),fill:'none',stroke:css('--muted'),'stroke-width':1.5,'stroke-dasharray':'6 4'}));
+     if(shown.length>1)svg.append(sv('path',{d:shown.map((q,i)=>(i?'L':'M')+xs(q.fpr)+' '+ys(q.tpr)).join(''),fill:'none',stroke:css('--valid'),'stroke-width':3.2}));
+     shown.forEach((q,k)=>svg.append(sv('circle',{cx:xs(q.fpr),cy:ys(q.tpr),r:4.5,fill:css('--valid'),stroke:css('--bg'),'stroke-width':1.5,style:'cursor:pointer',onclick:()=>{S.cutoff=q.t===Infinity?1.01:q.t;draw();},onmousemove:ev=>tip.show(`cutoff ${q.t===Infinity?'above every probability':'t = '+fmt(q.t,2)}<br>true positive rate ${fmt(q.tpr,2)}, false positive rate ${fmt(q.fpr,2)}${k?`<br>this step adds ${q.d} Democratic and ${q.r} Republican wins`:''}`,ev),onmouseleave:()=>tip.hide()})));
+     const cf=confusion(sc,PAST,S.cutoff);const n1=cf.tp+cf.fn,n0=cf.fp+cf.tn;if(view.cut)svg.append(sv('circle',{cx:xs(cf.fp/n0),cy:ys(cf.tp/n1),r:9,fill:'none',stroke:css('--hilite'),'stroke-width':3}));
+     if(view.deep)svg.append(sv('text',{x:xs(1)-4,y:ys(0)-8,'text-anchor':'end','font-size':13,style:'fill:'+css('--muted')},`dashed: ${Lcap()} leaves`));
+     strip.replaceChildren();const order=PAST.map((r,i)=>i).sort((a,b)=>sc[b]-sc[a]||PAST[b].y-PAST[a].y);const X0=58,bw=610/order.length,Y0=102;
+     strip.append(sv('line',{x1:X0-4,x2:X0-4,y1:Y0-90,y2:Y0,stroke:css('--line')}),sv('text',{x:X0-8,y:Y0+4,'text-anchor':'end','font-size':11},'0'),sv('text',{x:X0-8,y:Y0-90+4,'text-anchor':'end','font-size':11},'1'),sv('text',{x:12,y:Y0-45,transform:`rotate(-90 12 ${Y0-45})`,'text-anchor':'middle','font-size':11},'predicted probability'));
+     order.forEach((i,k)=>{const r=PAST[i];const hgt=2+sc[i]*88;const active=!view.cut||sc[i]>=S.cutoff;const vis=k<view.bars;strip.append(sv('rect',{x:X0+k*bw,y:Y0-hgt,width:Math.max(1,bw-0.6),height:hgt,fill:party(r.y),opacity:vis?(active?.95:.28):0,onmousemove:ev=>tip.show(`<b>${r.state} ${r.year}</b>. The ${r.y?'Democrat':'Republican'} won.<br>Predicted probability of a Democratic win: ${pct(sc[i],0)}.`,ev),onmouseleave:()=>tip.hide()}));});
+     if(view.cut){const cutX=X0+order.filter(i=>sc[i]>=S.cutoff).length*bw;strip.append(sv('line',{x1:cutX,x2:cutX,y1:6,y2:Y0+2,stroke:css('--hilite'),'stroke-width':2.5,'stroke-dasharray':'6 3'}),sv('text',{x:cutX+4,y:14,'font-size':12,style:'fill:'+css('--hilite')},'ŷ = 1 ← | → ŷ = 0'));}
+     strip.append(sv('text',{x:X0+305,y:Y0+20,'text-anchor':'middle','font-size':12},'the 733 past contests, ordered by cross-validated probability of a Democratic win, highest first'));
+     cm.replaceChildren(h('table',{class:'cm'},h('tr',{},h('td',{}),h('th',{},'Democrat won'),h('th',{},'Republican won')),h('tr',{},h('th',{},'ŷ = 1'),h('td',{},cf.tp+' true positives'),h('td',{},cf.fp+' false positives')),h('tr',{},h('th',{},'ŷ = 0'),h('td',{},cf.fn+' false negatives'),h('td',{},cf.tn+' true negatives'))));
+     stats.replaceChildren(...[view.cut?h('div',{class:'stat'},h('span',{class:'v'},S.cutoff>1?'none':fmt(S.cutoff,2)),h('span',{class:'l'},'cutoff t')):null,view.cut?h('div',{class:'stat'},h('span',{class:'v'},fmt(cf.tp/n1,2)),h('span',{class:'l'},'true positive rate')):null,view.cut?h('div',{class:'stat'},h('span',{class:'v'},fmt(cf.fp/n0,2)),h('span',{class:'l'},'false positive rate')):null,
+       view.area?h('div',{class:'stat'},h('span',{class:'v',style:'color:'+css('--valid')},fmt(area,3)),h('span',{class:'l'},`area under the curve, ${L} ${L===1?'leaf':'leaves'}`)):null,view.deep?h('div',{class:'stat'},h('span',{class:'v',style:'color:'+css('--muted')},fmt(aucOf(deep,PAST),3)),h('span',{class:'l'},`area, ${Lcap()} leaves`)):null].filter(Boolean));}
+   function doWalk(inst,done){const {pts}=data();if(inst||reduced){view.curveK=-1;S.cutoff=0.5;draw();done&&done();return;}let k=0;view.curveK=0;S.cutoff=1.01;draw();
+     walk=setInterval(()=>{k++;if(k>=pts.length){clearInterval(walk);walk=null;view.curveK=-1;S.cutoff=0.5;draw();done&&done();return;}S.cutoff=pts[k].t;view.curveK=k;const c=$('#cut');if(c)c.value=Math.min(S.cutoff,1.01);draw();},650);TIMERS.push(walk);}
+   function rebuild(full){if(full)ctl.replaceChildren(treeControls(rebuild,h('span',{style:'display:inline-flex;gap:14px;align-items:center'},h('label',{for:'cut'},'Cutoff t'),h('input',{type:'range',min:0,max:1.01,step:0.01,value:Math.min(S.cutoff,1.01),id:'cut',oninput:e=>{S.cutoff=+e.target.value;draw();}}),h('button',{class:'btn',onclick:()=>{if(walk){clearInterval(walk);walk=null;view.curveK=-1;draw();return;}doWalk(false);}},'Replay the curve'))));draw();}
+   const grid=h('div',{style:'display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;align-items:start'},rocPanel,h('div',{},stats,h('div',{style:'height:12px'}),cm));rocPanel.append(svg);
+   wrap.append(h('h3',{},'Cross-validated probabilities on the 733 past contests'),ctl,strip,grid);stage.append(wrap);
+   const obs=new ResizeObserver(()=>{grid.style.gridTemplateColumns=grid.clientWidth<640?'1fr':'minmax(0,1fr) minmax(0,1fr)';});obs.observe(grid);
+   S.cutoff=0.5;view.bars=0;draw();
+   return {beats:[
+    {bullet:0,run(inst){anim(1600,t=>{view.bars=Math.round(PAST.length*t);draw();},null,inst);}},
+    {bullet:1,run(inst){view.bars=PAST.length;view.cut=true;show(cm,inst);const {pts}=data();if(inst||reduced){S.cutoff=0.5;draw();return;}let k=0;S.cutoff=1.01;draw();const step=()=>{k++;if(k>=pts.length||pts[k].t<0.5){S.cutoff=0.5;draw();return;}S.cutoff=pts[k].t;draw();later(step,900);};later(step,800);}},
+    {bullet:2,run(inst){view.cut=true;show(rocPanel,inst);doWalk(inst);}},
+    {bullet:3,run(inst){view.curveK=-1;view.area=true;draw();}},
+    {bullet:4,run(inst){view.deep=true;show(ctl,inst);rebuild(true);}}]};}}
+];
+
+// ----- sizing: a click selects a panel or the narration; the bar or the keys - + 0 resize it ----------
+// Sizes are kept per scene and per element in this browser.
+let ZOOM={};try{const z=JSON.parse(localStorage.getItem('senate-zoom')||'{}');if(z&&typeof z==='object')ZOOM=z;}catch(e){}
+let SEL=null;
+function zoomKey(el){const sc=SCENES[S.scene].id;if(el.classList.contains('story'))return sc+':story';return sc+':p'+[...document.querySelectorAll('#scene .stage .panel')].indexOf(el);}
+function applyZoom(){document.querySelectorAll('#scene .story,#scene .stage .panel').forEach(el=>{const k=ZOOM[zoomKey(el)];el.style.zoom=k&&k!==1?k:'';});}
+function zbar(el){document.querySelectorAll('.zbar').forEach(b=>b.remove());if(!el)return;const k=ZOOM[zoomKey(el)]||1;
+  el.append(h('div',{class:'zbar',style:'zoom:'+(1/k)},h('button',{title:'Smaller (key −)',onclick:e=>{e.stopPropagation();resize(1/1.1);}},'−'),h('span',{},Math.round(k*100)+'%'),
+    h('button',{title:'Larger (key +)',onclick:e=>{e.stopPropagation();resize(1.1);}},'+'),h('button',{title:'Original size (key 0)',onclick:e=>{e.stopPropagation();resize(0);}},'reset')));}
+function select(el){if(SEL)SEL.classList.remove('zsel');SEL=el;if(el)el.classList.add('zsel');zbar(el);}
+function resize(f){if(!SEL||!SEL.isConnected)return;const key=zoomKey(SEL);let k=f===0?1:Math.min(3,Math.max(0.5,(ZOOM[key]||1)*f));k=Math.round(k*100)/100;
+  if(k===1)delete ZOOM[key];else ZOOM[key]=k;try{localStorage.setItem('senate-zoom',JSON.stringify(ZOOM));}catch(e){}applyZoom();zbar(SEL);fit();}
+$('#scene').addEventListener('click',e=>{if(e.target.closest('.zbar'))return;const el=e.target.closest('.stage .panel,.story');if(el!==SEL)select(el||null);});
+
+// ----- the beat engine ---------------------------------------------------------------------------
+let CTX=null;
+// The page is a slide: when a scene is taller than the space under the top bar, it is scaled down to fit, so the presentation never needs a scroll bar. Phones scroll instead.
+function fit(){const scene=$('#scene'),main=$('main');if(!scene||!main)return;if(window.innerWidth<=960){scene.style.transform='';scene.style.width='';return;}
+  scene.style.transform='';scene.style.width='';const avail=main.clientHeight-16;const need=scene.scrollHeight;
+  if(need>avail){const k=Math.max(0.55,avail/need);scene.style.transform=`scale(${k})`;}}
+const fitObserver=new ResizeObserver(()=>fit());window.addEventListener('resize',fit);
+function render(animate){clearTimers();const sc=SCENES[S.scene];const story=h('div',{class:'story'},sc.id==='today'?h('p',{class:'kicker'},sc.kicker):null,h('h2',{},sc.title),h('ol',{},sc.bullets.map(t=>h('li',{html:t}))),h('div',{class:'note',html:sc.note}));
+  const stage=h('div',{class:'stage'});$('#scene').replaceChildren(story,stage);fitObserver.disconnect();fitObserver.observe(stage);fitObserver.observe(story);
+  CTX=sc.make(stage);const beats=CTX.beats;S.beat=Math.max(0,Math.min(beats.length-1,S.beat));
+  for(let k=0;k<S.beat;k++)beats[k].run(true);
+  beats[S.beat].run(!animate);
+  SEL=null;applyZoom();
+  const lis=story.querySelectorAll('ol>li');beats.forEach((b,k)=>{if(k<=S.beat&&b.bullet!==undefined){lis[b.bullet].classList.add('on');if(b.q)lis[b.bullet].classList.add('q');}});
+  beats.forEach((b,k)=>{if(k<=S.beat&&b.sub!==undefined){const sl=lis[b.bullet].querySelectorAll('ul.sub>li')[b.sub];if(sl){sl.classList.add('on');if(k===S.beat)sl.classList.add('now');}}});
+  if(S.beat===beats.length-1)story.querySelector('.note').classList.add('on');
+  $('#chips').replaceChildren(...SCENES.map((s,i)=>h('button',{class:'chip'+(i===S.scene?' on':''),onclick:()=>{S.scene=i;S.beat=0;render(true);},'aria-current':i===S.scene?'step':null},h('b',{},i+1),s.chip)));
+  $('#beats').replaceChildren(...beats.map((b,k)=>h('i',{class:k<S.beat?'done':k===S.beat?'now':''})));
+  $('#where').textContent=`Scene ${S.scene+1} of ${SCENES.length} · step ${S.beat+1} of ${beats.length}`;
+  const total=SCENES.reduce((a,s)=>a+1,0);$('#prog').style.width=(100*(S.scene+(S.beat+1)/beats.length)/total)+'%';
+  $('#prev').disabled=S.scene===0&&S.beat===0;$('#next').textContent=S.beat<beats.length-1?'Next step →':(S.scene<SCENES.length-1?'Next scene →':'Done');$('#next').disabled=S.scene===SCENES.length-1&&S.beat===beats.length-1;
+  const hash='#'+sc.id+(S.beat?'-'+S.beat:'');if(location.hash!==hash)history.replaceState(null,'',hash);try{localStorage.setItem('senate-scene',hash);}catch(e){}fit();later(fit,700,false);later(fit,1800,false);}
+function next(){if(S.beat<CTX.beats.length-1){S.beat++;render(true);}else if(S.scene<SCENES.length-1){S.scene++;S.beat=0;render(true);window.scrollTo({top:0,behavior:reduced?'auto':'smooth'});}}
+function prev(){if(S.beat>0){S.beat--;render(false);}else if(S.scene>0){S.scene--;S.beat=0;render(false);}}
+$('#prev').addEventListener('click',prev);$('#next').addEventListener('click',next);
+document.addEventListener('keydown',e=>{if(e.target.matches('input,select,textarea'))return;
+  if(SEL&&(e.key==='+'||e.key==='=')){e.preventDefault();resize(1.1);return;}if(SEL&&(e.key==='-'||e.key==='_')){e.preventDefault();resize(1/1.1);return;}if(SEL&&e.key==='0'){e.preventDefault();resize(0);return;}if(e.key==='Escape'){select(null);return;}
+ if(e.key===' '&&e.target.matches('button'))return;if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();next();}if(e.key==='ArrowLeft'){e.preventDefault();prev();}});
+function fromHash(){const m=location.hash.replace('#','').match(/^([a-z-]+?)(?:-(\d+))?$/);if(!m)return false;const i=SCENES.findIndex(s=>s.id===m[1]);if(i<0)return false;S.scene=i;S.beat=m[2]?+m[2]:0;return true;}
+window.addEventListener('hashchange',()=>{if(fromHash())render(false);});
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>render(false));
+function themeLabel(){$('#theme').textContent=document.documentElement.getAttribute('data-theme')==='light'?'Dark stage':'Light page';}
+$('#theme').addEventListener('click',()=>{const cur=document.documentElement.getAttribute('data-theme');const next=cur==='light'?'dark':'light';document.documentElement.setAttribute('data-theme',next);try{localStorage.setItem('senate-theme',next);}catch(e){}themeLabel();render(false);});
+function start(saved){if(saved&&typeof saved==='object')Object.assign(S,saved);try{const t=localStorage.getItem('senate-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}themeLabel();if(!fromHash()){let last=null;try{last=localStorage.getItem('senate-scene');}catch(e){}if(last){location.hash=last;fromHash();}}render(false);}
+if(window.claude&&window.claude.hot&&window.claude.hot.snapshot)window.claude.hot.snapshot(()=>({L:S.L,minLeaf:S.minLeaf,feats:S.feats,cutoff:S.cutoff,cv:S.cv,picked:S.picked}));
+(window.claude&&window.claude.hot&&window.claude.hot.ready)?window.claude.hot.ready(start):start((window.claude&&window.claude.hot&&window.claude.hot.data)||{});
+</script>

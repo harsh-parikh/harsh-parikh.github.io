@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body style="margin:0">
+<title>K-Means Van Placement</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap">
+<style>
+/* Layout: a city map (the stage) beside an instrument panel; the panel stacks under the map on narrow screens. */
+:root {
+  --bg: #eef1ef;  --surface: #ffffff;  --ink: #1b2629;  --muted: #5b6a6d;  --rule: #d6ddd9;  --grid: #e1e7e3;
+  --accent: #1b2629;  --focus: #2a78d6;
+  --c0: #2a78d6; --c1: #eb6834; --c2: #1baf7a; --c3: #eda100; --c4: #e87ba4;   /* van colors, validated categorical slots 1-5 */
+  --land: #ebeee6;  --block: #e0e5da;  --street: #ffffff;  --casing: #cdd5ca;  --road: #fbf1cf;  --road-casing: #d5c690;
+  --water: #b6d3e4;  --water-ink: #3d6f8c;  --park: #cfe3c2;  --park-ink: #4f7a43;  --map-label: #4c5b59;  --halo: rgba(255,255,255,0.85);
+  --display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --body: "Public Sans", "Helvetica Neue", Arial, sans-serif;
+  --step-0: 0.95rem; --step-1: 1.15rem; --step-2: 1.6rem; --step-3: 2.4rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12191b; --surface: #1a2326; --ink: #e5ebe8; --muted: #9aaaa7; --rule: #2c393c; --grid: #223033;
+    --accent: #e5ebe8; --focus: #6da7ec;
+    --c0: #3987e5; --c1: #d95926; --c2: #199e70; --c3: #c98500; --c4: #d55181;
+    --land: #182123; --block: #1e292b; --street: #2e3b3d; --casing: #111819; --road: #3a3a2b; --road-casing: #111819;
+    --water: #1b3544; --water-ink: #7fb0cc; --park: #1d3325; --park-ink: #86b57a; --map-label: #a7b6b3; --halo: rgba(18,25,27,0.85);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12191b; --surface: #1a2326; --ink: #e5ebe8; --muted: #9aaaa7; --rule: #2c393c; --grid: #223033;
+  --accent: #e5ebe8; --focus: #6da7ec;
+  --c0: #3987e5; --c1: #d95926; --c2: #199e70; --c3: #c98500; --c4: #d55181;
+  --land: #182123; --block: #1e292b; --street: #2e3b3d; --casing: #111819; --road: #3a3a2b; --road-casing: #111819;
+  --water: #1b3544; --water-ink: #7fb0cc; --park: #1d3325; --park-ink: #86b57a; --map-label: #a7b6b3; --halo: rgba(18,25,27,0.85);
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: var(--step-0); line-height: 1.45; }
+.wrap { padding-inline: clamp(16px, 2.5vw, 32px); padding-block: 18px 28px; max-width: 1400px; margin: 0 auto; display: grid; gap: 16px; }
+header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 24px; }
+h1 { font-family: var(--display); font-weight: 700; font-size: var(--step-3); line-height: 1; letter-spacing: 0.01em; margin: 0; text-wrap: balance; }
+.byline { color: var(--muted); }
+.app { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 380px); gap: 18px; align-items: start; }
+@media (max-width: 900px) { .app { grid-template-columns: minmax(0, 1fr); } }
+.stage { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 10px; min-width: 0; }
+.mapbox { position: relative; width: 100%; max-width: 100%; aspect-ratio: 1 / 1; max-height: 80vh; margin-inline: auto; }
+#map { display: block; margin-inline: auto; touch-action: none; cursor: crosshair; border-radius: 3px; }
+#map.dragging { cursor: grabbing; }
+.hint { position: absolute; left: 50%; top: 12px; transform: translateX(-50%); background: var(--ink); color: var(--surface); font-weight: 600; font-size: 0.9rem; padding: 6px 12px; border-radius: 999px; pointer-events: none; white-space: nowrap; max-width: calc(100% - 20px); overflow: hidden; text-overflow: ellipsis; }
+.panel { display: grid; gap: 14px; min-width: 0; }
+.card { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 14px; display: grid; gap: 10px; min-width: 0; }
+.label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; }
+.phase { display: inline-flex; align-items: center; gap: 8px; font-family: var(--display); font-weight: 600; font-size: var(--step-2); line-height: 1.05; }
+.dot { width: 12px; height: 12px; border-radius: 50%; background: var(--muted); flex: none; }
+.phase[data-kind="partition"] .dot { background: var(--ink); }
+.phase[data-kind="learning"] .dot { background: transparent; border: 2px solid var(--ink); }
+.phase[data-kind="stopped"] .dot { background: var(--ink); border-radius: 2px; }
+.explain { color: var(--muted); min-height: 2.9em; margin: 0; }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.stat { display: grid; gap: 2px; min-width: 0; }
+.num { font-family: var(--display); font-weight: 600; font-size: var(--step-2); font-variant-numeric: tabular-nums; line-height: 1; }
+.unit { color: var(--muted); font-size: 0.78rem; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+button, select { font: inherit; font-size: 0.95rem; }
+button { border: 1px solid var(--ink); background: var(--surface); color: var(--ink); padding: 8px 14px; border-radius: 5px; cursor: pointer; font-weight: 600; }
+button.primary { background: var(--accent); color: var(--surface); }
+button:disabled { opacity: 0.4; cursor: not-allowed; }
+button:hover:not(:disabled) { filter: brightness(0.94); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+select { padding: 7px 8px; border: 1px solid var(--rule); border-radius: 5px; background: var(--surface); color: var(--ink); max-width: 100%; }
+.field { display: grid; gap: 4px; min-width: 0; }
+.fields { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; }
+input[type="range"] { width: 100%; accent-color: var(--ink); }
+.toggles { display: grid; gap: 6px; }
+.toggles label { display: flex; gap: 8px; align-items: center; cursor: pointer; }
+#chart { width: 100%; height: 170px; display: block; }
+.note { font-size: 0.86rem; color: var(--muted); margin: 0; }
+kbd { font-family: var(--body); font-size: 0.8rem; border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: var(--bg); }
+details summary { cursor: pointer; font-weight: 600; }
+details li { color: var(--muted); }
+details ul { margin: 6px 0 0; padding-left: 18px; display: grid; gap: 4px; }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Where should the vans park?</h1>
+    <div class="byline">k-means, one step at a time &middot; BIS 527</div>
+  </header>
+
+  <div class="app" role="main">
+    <section class="stage" aria-label="City map">
+      <div class="mapbox" id="mapbox">
+        <canvas id="map" aria-label="Map of households and vans. Click to place a van." role="img"></canvas>
+        <div class="hint" id="hint" hidden></div>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="card" aria-live="polite">
+        <div class="phase" id="phase" data-kind="ready"><span class="dot"></span><span id="phaseText">Ready</span></div>
+        <p class="explain" id="explain"></p>
+        <div class="stats">
+          <div class="stat"><span class="label">Round</span><span class="num" id="round">0</span></div>
+          <div class="stat"><span class="label">W now</span><span class="num" id="wnow">&ndash;</span><span class="unit">(100&nbsp;m)&sup2;</span></div>
+          <div class="stat"><span class="label">Best W found</span><span class="num" id="wbest">&ndash;</span><span class="unit" id="gap">&nbsp;</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row">
+          <button class="primary" id="run" title="Space">Run</button>
+          <button id="step" title="Right arrow">Step</button>
+          <button id="reset" title="R">Reset run</button>
+          <button id="clear" title="C">Clear vans</button>
+        </div>
+        <div class="field">
+          <label class="label" for="speed">Speed</label>
+          <input type="range" id="speed" min="1" max="10" value="5">
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="fields">
+          <div class="field">
+            <label class="label" for="preset">Households</label>
+            <select id="preset">
+              <option value="harbor">Harbor District: 192 visit requests</option>
+              <option value="fig3">Notes, Figure 3: 90 households</option>
+              <option value="survey">Notes, survey A: 6 households</option>
+              <option value="trap">Notes, Claim 4: the trap</option>
+              <option value="random">Random neighborhoods</option>
+              <option value="uniform">Spread evenly, no neighborhoods</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="label" for="k">Vans, K</label>
+            <select id="k">
+              <option>1</option><option>2</option><option>3</option><option selected>4</option><option>5</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <button id="depotStart">Start at the depot</button>
+          <button id="randStart">Start at random households</button>
+          <button id="ppStart">Start with k-means++</button>
+          <button id="resample" hidden>New sample</button>
+        </div>
+        <div class="toggles">
+          <label><input type="checkbox" id="tRegions" checked> Shade the area nearest each van</label>
+          <label><input type="checkbox" id="tLines"> Draw each household's trip to its van</label>
+          <label><input type="checkbox" id="tTrails" checked> Show where the vans have been</label>
+          <label><input type="checkbox" id="tShapes"> Mark vans' households by shape as well as color</label>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="label">W after every step &middot; filled: partition, hollow: learning</div>
+        <canvas id="chart" aria-label="Line chart of W after every partition and learning step" role="img"></canvas>
+        <p class="note" id="presetNote"></p>
+      </div>
+
+      <details class="card">
+        <summary>How to use</summary>
+        <ul>
+          <li>Click the map to park each van. Drag a parked van to move it before the run starts.</li>
+          <li><kbd>Space</kbd> runs or pauses, <kbd>&rarr;</kbd> takes one step, <kbd>R</kbd> replays from the same vans, <kbd>C</kbd> clears the vans.</li>
+          <li>A <b>partition step</b> sends each household to its nearest van. A ring marks households that switched van.</li>
+          <li>A <b>learning step</b> moves each van to the centroid of its households. A van with no households stays put.</li>
+          <li>k-means stops when a partition step moves no household. <b>Best W found</b> is the smallest W over 200 runs from random households, and the gap is W now divided by it.</li>
+          <li>Distances are straight lines. Real trips follow streets and bridges.</li>
+        </ul>
+      </details>
+    </aside>
+  </div>
+</div>
+
+<script id="core">
+/* Pure functions, no DOM: the k-means of Section 4 of the Lecture 10 notes, and the
+   synthetic Harbor District map. Tie rule: a household keeps its van when that van is
+   among the nearest. A van with no households keeps its place. Map units are 100 m. */
+(function (root) {
+  function sqd(a, b) { const dx = a[0] - b[0], dy = a[1] - b[1]; return dx * dx + dy * dy; }
+  function W(X, z, mu) { let s = 0; for (let i = 0; i < X.length; i++) s += sqd(X[i], mu[z[i]]); return s; }
+  function partition(X, mu, z) {
+    const out = new Array(X.length); let changed = 0;
+    for (let i = 0; i < X.length; i++) {
+      let best = Infinity, arg = 0; const d = mu.map(m => sqd(X[i], m));
+      for (let k = 0; k < d.length; k++) if (d[k] < best) { best = d[k]; arg = k; }
+      out[i] = (z && z[i] != null && d[z[i]] === best) ? z[i] : arg;
+      if (!z || out[i] !== z[i]) changed++;
+    }
+    return { z: out, changed };
+  }
+  function learn(X, z, mu) {
+    return mu.map((m, k) => { let sx = 0, sy = 0, c = 0;
+      for (let i = 0; i < X.length; i++) if (z[i] === k) { sx += X[i][0]; sy += X[i][1]; c++; }
+      return c ? [sx / c, sy / c] : [m[0], m[1]]; });
+  }
+  function run(X, start, maxRounds = 500) {
+    let mu = start.map(p => [p[0], p[1]]), z = null; const hist = [];
+    for (let r = 0; r < maxRounds; r++) {
+      const p = partition(X, mu, z);
+      if (z && p.changed === 0) return { z, mu, W: W(X, z, mu), hist, rounds: r };
+      z = p.z; hist.push(W(X, z, mu)); mu = learn(X, z, mu); hist.push(W(X, z, mu));
+    }
+    return { z, mu, W: W(X, z, mu), hist, rounds: maxRounds };
+  }
+  function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  function randomStart(X, K, rnd) {
+    const idx = [...X.keys()];
+    for (let i = idx.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [idx[i], idx[j]] = [idx[j], idx[i]]; }
+    return idx.slice(0, K).map(i => [X[i][0], X[i][1]]);
+  }
+  function plusplusStart(X, K, rnd) {
+    const mu = [X[Math.floor(rnd() * X.length)].slice()];
+    while (mu.length < K) {
+      const d = X.map(x => Math.min(...mu.map(m => sqd(x, m)))), tot = d.reduce((a, b) => a + b, 0);
+      if (tot === 0) { mu.push(X[Math.floor(rnd() * X.length)].slice()); continue; }
+      let u = rnd() * tot, i = 0; while (u > d[i] && i < X.length - 1) { u -= d[i]; i++; }
+      mu.push(X[i].slice());
+    }
+    return mu;
+  }
+  function bestW(X, K, tries = 200, seed = 7) {
+    if (X.length <= K) return 0;
+    const rnd = mulberry32(seed); let best = Infinity;
+    for (let t = 0; t < tries; t++) { const r = run(X, randomStart(X, K, rnd)); if (r.W < best) best = r.W; }
+    return best;
+  }
+  root.KM = { sqd, W, partition, learn, run, mulberry32, randomStart, plusplusStart, bestW };
+
+  /* ---------- Harbor District: a synthetic 1 km x 1 km map ---------- */
+  const riverY = x => 4.7 + 0.55 * Math.sin(0.62 * x + 0.4);
+  const RIVER_HALF = 0.34;
+  const CITY = {
+    parks: [ { name: 'Linden Park', x0: 4.15, x1: 5.5, y0: 7.25, y1: 8.85 } ],
+    roads: [ { name: 'Main Street', pts: [[0, 5.78], [10, 5.78]], major: true, label: [1.05, 5.78, 0] },
+             { name: 'South Road', pts: [[0, 3.62], [10, 3.62]], major: true, label: [8.6, 3.62, 0] },
+             { name: 'Bridge Street', pts: [[3.78, 0], [3.78, 10]], major: true, label: [3.78, 9.0, 90] },
+             { name: 'Harbor Road', pts: [[5.82, 0], [5.82, 10]], major: true, label: [5.82, 9.0, 90] },
+             { name: 'Old Mill Road', pts: [[3.78, 3.62], [5.82, 1.2], [10, 0.6]], major: false, label: [8.0, 0.86, -8.2] } ],
+    hoods: [
+      { name: 'OLD TOWN',      label: [1.9, 9.76],  x0: 0.45, x1: 3.35, y0: 6.05, y1: 9.55, angle: 14, gap: 0.52, step: 0.26, keep: 0.52 },
+      { name: 'HILLCREST',     label: [7.85, 9.76], x0: 6.15, x1: 9.55, y0: 6.25, y1: 9.55, angle: 0,  gap: 0.70, step: 0.30, keep: 0.36 },
+      { name: 'RIVERSIDE',     label: [1.9, 3.34],  x0: 0.45, x1: 3.35, y0: 0.45, y1: 3.15, angle: -8, gap: 0.60, step: 0.28, keep: 0.40 },
+      { name: 'EASTFIELD',     label: [7.9, 3.32],  x0: 6.25, x1: 9.55, y0: 0.9,  y1: 3.1,  angle: 0,  gap: 0.80, step: 0.34, keep: 0.30 },
+      { name: 'MILL DISTRICT', label: [4.8, 0.24],  x0: 4.05, x1: 5.55, y0: 0.45, y1: 2.15, angle: 0,  gap: 0.60, step: 0.30, keep: 0.10 } ],
+    landmarks: [ { name: "St. Mary's Hospital", kind: 'H', at: [4.85, 6.55] },
+                 { name: 'Lincoln School', kind: 'S', at: [2.0, 3.9] },
+                 { name: 'Library', kind: 'L', at: [8.25, 5.3] },
+                 { name: 'Market Hall', kind: 'M', at: [4.85, 3.05] } ],
+    depot: [4.85, 6.15]
+  };
+  const inWater = p => Math.abs(p[1] - riverY(p[0])) < RIVER_HALF + 0.08;
+  const inPark = p => CITY.parks.some(k => p[0] > k.x0 - 0.05 && p[0] < k.x1 + 0.05 && p[1] > k.y0 - 0.05 && p[1] < k.y1 + 0.05);
+  const nearMajor = p => [5.78, 3.62].some(y => Math.abs(p[1] - y) < 0.14) || [3.78, 5.82].some(x => Math.abs(p[0] - x) < 0.14);
+  function streetFrame(h) {
+    const cx = (h.x0 + h.x1) / 2, cy = (h.y0 + h.y1) / 2, a = h.angle * Math.PI / 180, R = 3.2;
+    return { R, rot: (u, v) => [cx + u * Math.cos(a) - v * Math.sin(a), cy + u * Math.sin(a) + v * Math.cos(a)] };
+  }
+  function households(seed = 2026) {
+    const rnd = mulberry32(seed), X = [];
+    CITY.hoods.forEach(h => {
+      const { rot, R } = streetFrame(h);
+      for (let v = -R; v <= R + 1e-9; v += h.gap) for (const side of [-1, 1]) for (let u = -R; u <= R; u += h.step) {
+        if (rnd() > h.keep) continue;
+        const p = rot(u + (rnd() - 0.5) * 0.08, v + side * 0.13 + (rnd() - 0.5) * 0.03);
+        if (p[0] < h.x0 || p[0] > h.x1 || p[1] < h.y0 || p[1] > h.y1) continue;
+        if (inWater(p) || inPark(p) || nearMajor(p)) continue;
+        X.push([Math.round(p[0] * 100) / 100, Math.round(p[1] * 100) / 100]);
+      }
+    });
+    return X;
+  }
+  root.CITYMAP = { CITY, riverY, RIVER_HALF, streetFrame, households };
+})(typeof window !== 'undefined' ? window : globalThis);
+</script>
+
+<script>
+(function () {
+  const KM = window.KM, CM = window.CITYMAP;
+  /* ---------- data sets ---------- */
+  const FIG3 = [[3.4,7.3],[4.1,8.6],[2.8,8.0],[2.1,6.1],[3.2,6.8],[2.1,7.0],[2.3,7.3],[2.8,7.7],[2.0,5.5],[3.5,9.6],[2.7,7.9],[2.9,8.6],[1.2,6.9],[2.6,8.7],[3.5,8.0],[1.8,6.8],[2.6,7.6],[1.9,8.1],[2.4,7.1],[1.8,7.6],[2.4,8.0],[2.5,7.6],[1.4,7.8],[3.2,6.0],[1.9,7.8],[2.8,6.9],[2.7,9.8],[2.4,6.6],[2.2,8.0],[3.2,6.6],[1.6,6.8],[4.0,8.4],[3.2,6.7],[2.0,6.6],[7.6,7.6],[6.8,8.2],[8.6,5.7],[8.7,7.6],[5.9,8.3],[8.4,5.7],[9.0,6.4],[8.2,7.5],[5.9,7.0],[7.5,6.6],[6.4,7.6],[7.7,5.2],[7.9,6.8],[6.1,8.2],[7.1,8.0],[8.3,7.5],[7.7,8.0],[9.2,6.9],[7.3,6.3],[7.8,8.7],[8.5,7.8],[7.0,8.7],[7.5,7.5],[7.4,8.9],[7.3,7.1],[7.0,6.8],[5.5,2.7],[4.8,2.6],[5.5,0.2],[6.8,2.0],[6.9,1.9],[2.6,2.9],[5.4,0.4],[3.4,3.9],[6.0,0.5],[5.4,3.8],[4.4,2.7],[6.6,2.9],[5.0,2.7],[5.4,1.8],[5.9,0.2],[4.6,2.5],[6.1,0.5],[4.5,2.1],[5.4,4.5],[4.7,1.8],[5.8,1.9],[4.1,1.5],[4.3,3.9],[7.7,4.7],[5.8,2.3],[5.9,3.0],[6.5,1.9],[6.1,1.3],[3.7,1.8],[4.9,3.4]];
+  const HARBOR = CM.households();
+  /* the vans park in a row in the hospital lot, 50 m apart */
+  const depotStart = K => { const d = CM.CITY.depot; return [...Array(K).keys()].map(i => [d[0] + (i - (K - 1) / 2) * 0.5, d[1]]); };
+  const PRESETS = {
+    harbor: { X: HARBOR, K: 4, start: K => depotStart(K), city: true,
+              note: 'Each house is a household that asked for a home visit this week. All vans leave from the depot at St. Mary’s Hospital. With 4 vans, watch where k-means stops, then compare a k-means++ start.' },
+    fig3:   { X: FIG3, K: 3, start: () => [65, 67, 88].map(i => FIG3[i].slice()),
+              note: 'Figure 3 of the notes: the vans start at three southern households. W falls from 1449.0 to 163.4 in seven rounds.' },
+    survey: { X: [[4,8],[3,6],[2,10],[8,3],[7,3],[6,0]], K: 2, start: () => [[4,8],[3,6]],
+              note: 'Survey A from the notes, starting at households 0 and 1. W goes 112, 36, 27, 18, 18, and household 1 changes van in round 2.' },
+    trap:   { X: [[1,4],[1,6],[9,4],[9,6]], K: 2, start: () => [[1,4],[1,6]],
+              note: 'Claim 4: from the two western households, k-means stops at W = 64 while the best split has W = 4. Try other starting pairs.' },
+    random: { X: null, K: 3, start: null, note: 'Fresh neighborhoods with each New sample. Compare runs from random households with runs from k-means++.' },
+    uniform:{ X: null, K: 3, start: null, note: 'No neighborhoods at all. k-means still returns K clusters, because it always does: a cluster is not proof of a group.' }
+  };
+  const clamp = v => Math.max(0.2, Math.min(9.8, Math.round(v * 10) / 10));
+  function genRandom(seed) {
+    const r = KM.mulberry32(seed), X = [], m = 3 + Math.floor(r() * 3), g = () => { let u = 0; for (let i = 0; i < 6; i++) u += r(); return (u - 3) / Math.sqrt(0.5); };
+    for (let c = 0; c < m; c++) { const cx = 1.5 + r() * 7, cy = 1.5 + r() * 7, s = 0.45 + r() * 0.6, n = 18 + Math.floor(r() * 25);
+      for (let i = 0; i < n; i++) X.push([clamp(cx + s * g() * 0.7), clamp(cy + s * g() * 0.7)]); }
+    return X;
+  }
+  function genUniform(seed) { const r = KM.mulberry32(seed), X = []; for (let i = 0; i < 150; i++) X.push([0.3 + r() * 9.4, 0.3 + r() * 9.4]); return X; }
+
+  /* ---------- state ---------- */
+  const S = { preset: 'harbor', X: [], K: 4, start: [], mu: [], z: null, phase: 'place', round: 0, hist: [], trails: [],
+              changedSet: new Set(), best: null, seed: 11, anim: null, running: false, timer: null, drag: -1 };
+  const $ = id => document.getElementById(id);
+  const map = $('map'), chart = $('chart'), mapbox = $('mapbox');
+  const ui = { run: $('run'), step: $('step'), reset: $('reset'), clear: $('clear'), speed: $('speed'), preset: $('preset'), k: $('k'),
+               depotStart: $('depotStart'), randStart: $('randStart'), ppStart: $('ppStart'), resample: $('resample'),
+               tRegions: $('tRegions'), tLines: $('tLines'), tTrails: $('tTrails'), tShapes: $('tShapes'),
+               phase: $('phase'), phaseText: $('phaseText'), explain: $('explain'), round: $('round'),
+               wnow: $('wnow'), wbest: $('wbest'), gap: $('gap'), hint: $('hint'), presetNote: $('presetNote') };
+
+  let C = {};
+  function readColors() {
+    const cs = getComputedStyle(document.documentElement), v = n => cs.getPropertyValue(n).trim();
+    ['bg','surface','ink','muted','rule','grid','land','block','street','casing','road','road-casing','water','water-ink','park','park-ink','map-label','halo']
+      .forEach(n => C[n] = v('--' + n));
+    C.k = [v('--c0'), v('--c1'), v('--c2'), v('--c3'), v('--c4')];
+    baseCache = null;
+  }
+  function alpha(hex, a) { const h = hex.replace('#', ''); const n = parseInt(h.length === 3 ? h.split('').map(c => c + c).join('') : h, 16);
+    return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`; }
+
+  /* ---------- setup ---------- */
+  const isCity = () => !!PRESETS[S.preset].city;
+  function loadPreset(name, keepK) {
+    stop(); S.preset = name; const P = PRESETS[name];
+    S.X = name === 'random' ? genRandom(S.seed) : name === 'uniform' ? genUniform(S.seed) : P.X.map(p => p.slice());
+    if (!keepK) { S.K = P.K; ui.k.value = String(P.K); }
+    ui.resample.hidden = !(name === 'random' || name === 'uniform');
+    ui.depotStart.hidden = !P.city;
+    ui.presetNote.textContent = P.note;
+    baseCache = null;
+    setStart(P.start && !keepK ? P.start(S.K) : KM.randomStart(S.X, S.K, KM.mulberry32(S.seed + 1)));
+    computeBest(); render();
+  }
+  function setStart(mu) { S.start = mu.map(p => p.slice()); resetRun(); }
+  function resetRun() {
+    stop(); S.mu = S.start.map(p => p.slice()); S.z = null; S.round = 0; S.hist = []; S.changedSet = new Set(); S.anim = null;
+    S.trails = S.mu.map(p => [p.slice()]); S.phase = S.mu.length < S.K ? 'place' : 'ready'; render();
+  }
+  const clearVans = () => { S.start = []; resetRun(); };
+  const computeBest = () => { S.best = S.X.length ? KM.bestW(S.X, S.K) : null; };
+
+  /* ---------- the two steps ---------- */
+  function step() {
+    if (S.phase === 'place' || S.phase === 'stopped') return false;
+    S.anim = null;
+    if (S.phase === 'ready' || S.phase === 'learning') {
+      const p = KM.partition(S.X, S.mu, S.z);
+      if (S.z && p.changed === 0) { S.round += 1; S.hist.push({ tag: 'P' + S.round, w: KM.W(S.X, S.z, S.mu) });
+        S.phase = 'stopped'; S.changedSet = new Set(); render(); return false; }
+      S.changedSet = new Set(S.z ? p.z.map((k, i) => k !== S.z[i] ? i : -1).filter(i => i >= 0) : []);
+      S.z = p.z; S.round += 1; S.hist.push({ tag: 'P' + S.round, w: KM.W(S.X, S.z, S.mu) }); S.phase = 'partition';
+    } else {
+      const from = S.mu.map(p => p.slice()), to = KM.learn(S.X, S.z, S.mu);
+      S.mu = to; S.hist.push({ tag: 'L' + S.round, w: KM.W(S.X, S.z, S.mu) });
+      S.trails.forEach((t, k) => t.push(to[k].slice())); S.changedSet = new Set(); S.phase = 'learning';
+      if (!reduced()) S.anim = { from, to, t0: performance.now(), dur: Math.min(650, delay() * 0.7) };
+    }
+    render(); return true;
+  }
+  const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const delay = () => 1300 - 115 * Number(ui.speed.value);
+  function play() {
+    if (S.phase === 'place' || S.phase === 'stopped') return;
+    S.running = true; ui.run.textContent = 'Pause';
+    const tick = () => { if (!S.running) return; const moved = step(); if (!moved || S.phase === 'stopped') { stop(); render(); return; } S.timer = setTimeout(tick, delay()); };
+    tick();
+  }
+  function stop() { S.running = false; clearTimeout(S.timer); ui.run.textContent = 'Run'; }
+
+  /* ---------- geometry ---------- */
+  const geo = { size: 600, pad: 34, dpr: 1 };
+  const span = () => geo.size - 2 * geo.pad;
+  const toPx = p => [geo.pad + p[0] / 10 * span(), geo.size - geo.pad - p[1] / 10 * span()];
+  const toMap = (px, py) => [Math.max(0, Math.min(10, (px - geo.pad) / span() * 10)), Math.max(0, Math.min(10, (geo.size - geo.pad - py) / span() * 10))];
+  const u2px = u => u / 10 * span();
+  function resize() {
+    const r = mapbox.getBoundingClientRect(); const size = Math.floor(Math.max(220, Math.min(r.width, r.height || r.width)));
+    geo.dpr = window.devicePixelRatio || 1; geo.size = size;
+    geo.pad = isCity() ? 6 : (size < 420 ? 26 : 36);
+    map.width = size * geo.dpr; map.height = size * geo.dpr; map.style.width = size + 'px'; map.style.height = size + 'px';
+    const cw = chart.getBoundingClientRect().width || 300; chart.width = cw * geo.dpr; chart.height = 170 * geo.dpr;
+    baseCache = null; render();
+  }
+
+  /* ---------- base maps ---------- */
+  let baseCache = null;
+  function haloText(ctx, text, x, y, opts) {
+    ctx.save(); ctx.translate(x, y); if (opts.rot) ctx.rotate(-opts.rot * Math.PI / 180);
+    ctx.font = opts.font; ctx.textAlign = opts.align || 'center'; ctx.textBaseline = 'middle';
+    if (opts.spacing && 'letterSpacing' in ctx) ctx.letterSpacing = opts.spacing;
+    ctx.lineWidth = 3.5; ctx.strokeStyle = C.halo; ctx.lineJoin = 'round'; ctx.strokeText(text, 0, 0);
+    ctx.fillStyle = opts.color; ctx.fillText(text, 0, 0); ctx.restore();
+  }
+  function drawCityBase(ctx) {
+    const sz = geo.size, CITY = CM.CITY, s = sz / 700;
+    ctx.fillStyle = C.land; ctx.fillRect(0, 0, sz, sz);
+    // neighborhoods: blocks and local streets
+    CITY.hoods.forEach(h => {
+      const [ax, ay] = toPx([h.x0, h.y1]), [bx, by] = toPx([h.x1, h.y0]);
+      ctx.save(); ctx.beginPath(); ctx.rect(ax, ay, bx - ax, by - ay); ctx.clip();
+      ctx.fillStyle = C.block; ctx.fillRect(ax, ay, bx - ax, by - ay);
+      const { rot, R } = CM.streetFrame(h);
+      const lines = [];
+      for (let v = -R; v <= R + 1e-9; v += h.gap) lines.push([rot(-R, v), rot(R, v)]);
+      for (let u = -R; u <= R + 1e-9; u += h.gap * 1.6) lines.push([rot(u, -R), rot(u, R)]);
+      [[C.casing, Math.max(3, 5.5 * s)], [C.street, Math.max(2, 3.6 * s)]].forEach(([col, lw]) => {
+        ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.lineCap = 'round';
+        lines.forEach(([a, b]) => { const p = toPx(a), q = toPx(b); ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(q[0], q[1]); ctx.stroke(); });
+      });
+      ctx.restore();
+    });
+    // parks
+    CITY.parks.forEach(k => { const [ax, ay] = toPx([k.x0, k.y1]), [bx, by] = toPx([k.x1, k.y0]);
+      ctx.fillStyle = C.park; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(ax, ay, bx - ax, by - ay, 6 * s) : ctx.rect(ax, ay, bx - ax, by - ay); ctx.fill();
+      ctx.fillStyle = alpha(C['park-ink'], 0.35);
+      for (let t = 0; t < 26; t++) { const rx = ax + ((t * 37) % 97) / 97 * (bx - ax), ry = ay + ((t * 61) % 89) / 89 * (by - ay); ctx.beginPath(); ctx.arc(rx, ry, 3.2 * s, 0, 2 * Math.PI); ctx.fill(); }
+      haloText(ctx, k.name, (ax + bx) / 2, (ay + by) / 2, { font: `italic 500 ${Math.round(13 * s)}px "Public Sans", sans-serif`, color: C['park-ink'] }); });
+    // river
+    const top = [], bot = [];
+    for (let x = -0.2; x <= 10.2; x += 0.1) { top.push(toPx([x, CM.riverY(x) + CM.RIVER_HALF])); bot.push(toPx([x, CM.riverY(x) - CM.RIVER_HALF])); }
+    ctx.fillStyle = C.water; ctx.beginPath(); top.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]));
+    bot.reverse().forEach(p => ctx.lineTo(p[0], p[1])); ctx.closePath(); ctx.fill();
+    // major roads, then the river label over the water
+    CITY.roads.forEach(r => {
+      const lw = r.major ? 11 * s : 7 * s;
+      [[C['road-casing'], lw + 3 * s], [C.road, lw]].forEach(([col, w]) => {
+        ctx.strokeStyle = col; ctx.lineWidth = w; ctx.lineCap = 'butt'; ctx.lineJoin = 'round'; ctx.beginPath();
+        r.pts.forEach((p, i) => { const q = toPx(p); i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]); }); ctx.stroke(); });
+    });
+    // bridge rails where the avenues cross the river
+    [3.78, 5.82].forEach(x => { const y0 = CM.riverY(x) - CM.RIVER_HALF - 0.05, y1 = CM.riverY(x) + CM.RIVER_HALF + 0.05;
+      [-1, 1].forEach(sd => { const off = sd * (u2px(0.07) + 7 * s); const p = toPx([x, y0]), q = toPx([x, y1]);
+        ctx.strokeStyle = C.ink; ctx.lineWidth = 1.4 * s + 0.4; ctx.beginPath(); ctx.moveTo(p[0] + off, p[1]); ctx.lineTo(q[0] + off, q[1]); ctx.stroke(); }); });
+    { const x = 1.6, p = toPx([x, CM.riverY(x)]), slope = 0.55 * 0.62 * Math.cos(0.62 * x + 0.4), ang = Math.atan(slope) * 180 / Math.PI;
+      haloText(ctx, 'Harbor River', p[0], p[1], { font: `italic 600 ${Math.round(14 * s)}px "Public Sans", sans-serif`, color: C['water-ink'], rot: ang }); }
+    CITY.roads.forEach(r => { const [x, y, a] = r.label, p = toPx([x, y]);
+      haloText(ctx, r.name, p[0], p[1], { font: `600 ${Math.round(10.5 * s)}px "Public Sans", sans-serif`, color: C['map-label'], rot: a }); });
+    // neighborhood names
+    CITY.hoods.forEach(h => { const p = toPx(h.label);
+      haloText(ctx, h.name, p[0], p[1], { font: `700 ${Math.round(15 * s)}px "Barlow Condensed", sans-serif`, color: C['map-label'], spacing: '2px' }); });
+    // landmarks
+    CITY.landmarks.forEach(l => { const p = toPx(l.at), r0 = 9 * s + 2;
+      ctx.fillStyle = l.kind === 'H' ? '#c8372d' : C.ink; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(p[0] - r0, p[1] - r0, 2 * r0, 2 * r0, 3) : ctx.rect(p[0] - r0, p[1] - r0, 2 * r0, 2 * r0); ctx.fill();
+      ctx.fillStyle = '#ffffff'; ctx.font = `700 ${Math.round(12 * s + 1)}px "Public Sans", sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(l.kind === 'H' ? '+' : l.kind, p[0], p[1] + 0.5);
+      haloText(ctx, l.name, p[0] + r0 + 4, p[1], { font: `600 ${Math.round(11 * s + 1)}px "Public Sans", sans-serif`, color: C.ink, align: 'left' }); });
+    // scale bar and north arrow
+    const sb = toPx([0.35, 0.3]), len = u2px(2);
+    ctx.fillStyle = C.halo; ctx.fillRect(sb[0] - 6, sb[1] - 22, len + 46, 30);
+    ctx.strokeStyle = C.ink; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(sb[0], sb[1] - 4); ctx.lineTo(sb[0], sb[1]); ctx.lineTo(sb[0] + len, sb[1]); ctx.lineTo(sb[0] + len, sb[1] - 4); ctx.stroke();
+    ctx.fillStyle = C.ink; ctx.font = `600 ${Math.round(11 * s + 1)}px "Public Sans", sans-serif`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText('200 m', sb[0], sb[1] - 6);
+    const na = toPx([9.55, 9.25]);
+    ctx.fillStyle = C.ink; ctx.beginPath(); ctx.moveTo(na[0], na[1] - 16 * s - 4); ctx.lineTo(na[0] + 7 * s + 2, na[1] + 6 * s); ctx.lineTo(na[0], na[1]); ctx.lineTo(na[0] - 7 * s - 2, na[1] + 6 * s); ctx.closePath(); ctx.fill();
+    haloText(ctx, 'N', na[0], na[1] + 16 * s + 4, { font: `700 ${Math.round(12 * s + 1)}px "Public Sans", sans-serif`, color: C.ink });
+  }
+  function drawPlainBase(ctx) {
+    const sz = geo.size; ctx.fillStyle = C.surface; ctx.fillRect(0, 0, sz, sz);
+    ctx.strokeStyle = C.grid; ctx.lineWidth = 1;
+    for (let g = 0; g <= 10; g++) { const [x] = toPx([g, 0]); const [, y] = toPx([0, g]);
+      ctx.beginPath(); ctx.moveTo(x, geo.pad); ctx.lineTo(x, sz - geo.pad); ctx.stroke(); ctx.beginPath(); ctx.moveTo(geo.pad, y); ctx.lineTo(sz - geo.pad, y); ctx.stroke(); }
+    ctx.strokeStyle = C.rule; ctx.strokeRect(geo.pad, geo.pad, span(), span());
+    ctx.fillStyle = C.muted; ctx.font = `500 ${sz < 420 ? 10 : 12}px "Public Sans", sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let g = 0; g <= 10; g += 2) { const [x] = toPx([g, 0]); ctx.fillText(String(g), x, sz - geo.pad + 5); }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let g = 0; g <= 10; g += 2) { const [, y] = toPx([0, g]); ctx.fillText(String(g), geo.pad - 6, y); }
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('units of 100 m', geo.pad + 4, geo.pad + 4);
+  }
+  function base() {
+    if (baseCache && baseCache.key === `${geo.size}|${geo.dpr}|${S.preset}`) return baseCache.canvas;
+    const cv = document.createElement('canvas'); cv.width = geo.size * geo.dpr; cv.height = geo.size * geo.dpr;
+    const ctx = cv.getContext('2d'); ctx.setTransform(geo.dpr, 0, 0, geo.dpr, 0, 0);
+    isCity() ? drawCityBase(ctx) : drawPlainBase(ctx);
+    baseCache = { key: `${geo.size}|${geo.dpr}|${S.preset}`, canvas: cv }; return cv;
+  }
+
+  /* ---------- markers ---------- */
+  const SHAPES = ['circle', 'square', 'triangle', 'diamond', 'pentagon'];
+  function shape(ctx, kind, x, y, r) {
+    ctx.beginPath();
+    if (kind === 'circle') ctx.arc(x, y, r, 0, 2 * Math.PI);
+    else if (kind === 'square') ctx.rect(x - r * 0.88, y - r * 0.88, r * 1.76, r * 1.76);
+    else if (kind === 'triangle') { ctx.moveTo(x, y - r * 1.15); ctx.lineTo(x + r * 1.05, y + r * 0.8); ctx.lineTo(x - r * 1.05, y + r * 0.8); ctx.closePath(); }
+    else if (kind === 'diamond') { ctx.moveTo(x, y - r * 1.2); ctx.lineTo(x + r * 1.05, y); ctx.lineTo(x, y + r * 1.2); ctx.lineTo(x - r * 1.05, y); ctx.closePath(); }
+    else { for (let j = 0; j < 5; j++) { const a = -Math.PI / 2 + j * 2 * Math.PI / 5; ctx[j ? 'lineTo' : 'moveTo'](x + r * 1.1 * Math.cos(a), y + r * 1.1 * Math.sin(a)); } ctx.closePath(); }
+  }
+  function house(ctx, x, y, r) {
+    ctx.beginPath(); ctx.moveTo(x - r, y + r * 0.85); ctx.lineTo(x - r, y - r * 0.15); ctx.lineTo(x, y - r * 1.1);
+    ctx.lineTo(x + r, y - r * 0.15); ctx.lineTo(x + r, y + r * 0.85); ctx.closePath();
+  }
+  function van(ctx, x, y, k, ghost) {
+    const s = Math.max(0.8, geo.size / 700), w = 34 * s, h = 18 * s;
+    ctx.save(); ctx.translate(x, y);
+    const body = () => { ctx.beginPath(); ctx.moveTo(-w / 2, h / 2); ctx.lineTo(-w / 2, -h / 2 + 3 * s); ctx.quadraticCurveTo(-w / 2, -h / 2, -w / 2 + 3 * s, -h / 2);
+      ctx.lineTo(w * 0.18, -h / 2); ctx.lineTo(w / 2, -h * 0.05); ctx.lineTo(w / 2, h / 2); ctx.closePath(); };
+    body();
+    if (ghost) { ctx.setLineDash([3, 3]); ctx.lineWidth = 1.6; ctx.strokeStyle = C.k[k]; ctx.stroke(); ctx.restore(); return; }
+    ctx.shadowColor = 'rgba(0,0,0,0.25)'; ctx.shadowBlur = 4 * s; ctx.fillStyle = C.k[k]; ctx.fill(); ctx.shadowBlur = 0;
+    ctx.lineWidth = 2; ctx.strokeStyle = C.ink; ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.75)'; ctx.beginPath(); ctx.moveTo(w * 0.2, -h / 2 + 2.5 * s); ctx.lineTo(w / 2 - 2 * s, -h * 0.08); ctx.lineTo(w * 0.2, -h * 0.08); ctx.closePath(); ctx.fill();
+    [[-w * 0.28, h / 2], [w * 0.3, h / 2]].forEach(([wx, wy]) => { ctx.beginPath(); ctx.arc(wx, wy, 3.6 * s, 0, 2 * Math.PI); ctx.fillStyle = C.ink; ctx.fill(); });
+    ctx.fillStyle = '#ffffff'; ctx.font = `700 ${Math.round(12 * s)}px "Public Sans", sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(String(k + 1), -w * 0.12, 0.5);
+    ctx.restore();
+  }
+
+  /* ---------- drawing ---------- */
+  function currentMu(now) {
+    if (!S.anim) return S.mu;
+    const t = Math.min(1, (now - S.anim.t0) / S.anim.dur), e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    if (t >= 1) { S.anim = null; return S.mu; }
+    return S.anim.from.map((f, k) => [f[0] + (S.anim.to[k][0] - f[0]) * e, f[1] + (S.anim.to[k][1] - f[1]) * e]);
+  }
+  /* the area nearest each van, drawn once as an opaque image and laid over the map at low opacity */
+  const regionCv = document.createElement('canvas'), RN = 200; regionCv.width = RN; regionCv.height = RN;
+  const rgb = hex => { const h = hex.replace('#', ''), n = parseInt(h.length === 3 ? h.split('').map(c => c + c).join('') : h, 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+  function drawRegions(ctx, mu) {
+    const rc = regionCv.getContext('2d'), img = rc.createImageData(RN, RN), cols = C.k.map(rgb), d = img.data;
+    for (let py = 0; py < RN; py++) for (let px = 0; px < RN; px++) {
+      const x = (px + 0.5) / RN * 10, y = 10 - (py + 0.5) / RN * 10; let best = Infinity, arg = 0;
+      for (let k = 0; k < mu.length; k++) { const dx = x - mu[k][0], dy = y - mu[k][1], v = dx * dx + dy * dy; if (v < best) { best = v; arg = k; } }
+      const o = (py * RN + px) * 4, c = cols[arg]; d[o] = c[0]; d[o + 1] = c[1]; d[o + 2] = c[2]; d[o + 3] = 255;
+    }
+    rc.putImageData(img, 0, 0);
+    ctx.save(); ctx.globalAlpha = isCity() ? 0.17 : 0.12; ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(regionCv, geo.pad, geo.pad, span(), span()); ctx.restore();
+  }
+  function drawMap(now) {
+    const ctx = map.getContext('2d'); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(base(), 0, 0); ctx.setTransform(geo.dpr, 0, 0, geo.dpr, 0, 0);
+    const sz = geo.size, mu = currentMu(now);
+    if (ui.tRegions.checked && mu.length) drawRegions(ctx, mu);
+    if (ui.tLines.checked && S.z) { ctx.lineWidth = 1;
+      S.X.forEach((x, i) => { const [a, b] = toPx(x), [c, d] = toPx(mu[S.z[i]]); ctx.strokeStyle = alpha(C.k[S.z[i]], 0.5); ctx.beginPath(); ctx.moveTo(a, b); ctx.lineTo(c, d); ctx.stroke(); }); }
+    if (ui.tTrails.checked) { ctx.setLineDash([5, 4]); ctx.lineWidth = 2;
+      S.trails.forEach((t, k) => { if (t.length < 2) return; ctx.strokeStyle = C.k[k]; ctx.beginPath();
+        t.forEach((p, j) => { const [x, y] = toPx(j === t.length - 1 ? mu[k] : p); j ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }); ctx.stroke(); });
+      ctx.setLineDash([]); }
+    const r = Math.max(3.2, sz / (isCity() ? 175 : 150)), shapes = ui.tShapes.checked;
+    S.X.forEach((x, i) => {
+      const [px, py] = toPx(x), k = S.z ? S.z[i] : -1;
+      if (shapes && k >= 0) shape(ctx, SHAPES[k], px, py, r * 0.95);
+      else if (isCity()) house(ctx, px, py, r); else shape(ctx, 'circle', px, py, r);
+      ctx.fillStyle = k >= 0 ? C.k[k] : C.surface; ctx.fill(); ctx.lineWidth = k >= 0 ? 0.9 : 1.2; ctx.strokeStyle = k >= 0 ? alpha(C.ink, 0.55) : C.ink; ctx.stroke();
+      if (S.changedSet.has(i)) { ctx.beginPath(); ctx.arc(px, py, r + 5, 0, 2 * Math.PI); ctx.lineWidth = 2.2; ctx.strokeStyle = C.ink; ctx.stroke(); }
+    });
+    if (S.anim) S.anim.from.forEach((f, k) => { const [x, y] = toPx(f); van(ctx, x, y, k, true); });
+    mu.forEach((m, k) => { const [x, y] = toPx(m); van(ctx, x, y, k, false); });
+  }
+  function drawChart() {
+    const ctx = chart.getContext('2d'); ctx.setTransform(geo.dpr, 0, 0, geo.dpr, 0, 0);
+    const w = chart.width / geo.dpr, h = chart.height / geo.dpr; ctx.clearRect(0, 0, w, h);
+    const L = 46, R = 12, T = 10, B = 24, H = S.hist;
+    ctx.font = '500 11px "Public Sans", sans-serif'; ctx.fillStyle = C.muted;
+    if (!H.length) { ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('Press Step or Run to start.', L, h / 2); return; }
+    const top = Math.max(...H.map(p => p.w), S.best || 0) * 1.08 || 1;
+    const xs = i => L + (H.length === 1 ? 0 : i / (H.length - 1)) * (w - L - R), ys = v => T + (1 - v / top) * (h - T - B);
+    ctx.strokeStyle = C.grid; ctx.lineWidth = 1; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let j = 0; j <= 4; j++) { const v = top * j / 4, y = ys(v); ctx.beginPath(); ctx.moveTo(L, y); ctx.lineTo(w - R, y); ctx.stroke(); ctx.fillText(fmt(v, 0), L - 6, y); }
+    if (S.best != null) { const y = ys(S.best); ctx.setLineDash([5, 4]); ctx.strokeStyle = C.muted; ctx.beginPath(); ctx.moveTo(L, y); ctx.lineTo(w - R, y); ctx.stroke(); ctx.setLineDash([]);
+      ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('best W found', w - R, y - 3); }
+    ctx.strokeStyle = C.ink; ctx.lineWidth = 2; ctx.beginPath(); H.forEach((p, i) => { const x = xs(i), y = ys(p.w); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }); ctx.stroke();
+    H.forEach((p, i) => { ctx.beginPath(); ctx.arc(xs(i), ys(p.w), i === H.length - 1 ? 4.5 : 3, 0, 2 * Math.PI);
+      if (p.tag[0] === 'P') { ctx.fillStyle = C.ink; ctx.fill(); } else { ctx.fillStyle = C.surface; ctx.fill(); ctx.lineWidth = 1.5; ctx.strokeStyle = C.ink; ctx.stroke(); } });
+    ctx.fillStyle = C.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    const every = Math.max(1, Math.ceil(H.length / 12));
+    H.forEach((p, i) => { if (p.tag[0] === 'P' && (Math.round(i / 2) % every === 0 || i === H.length - 1)) ctx.fillText(p.tag, xs(i), h - B + 6); });
+  }
+  const fmt = (v, d = 1) => v == null || !isFinite(v) ? '–' : v.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+
+  /* ---------- text ---------- */
+  function render() {
+    drawMap(performance.now()); drawChart();
+    const n = S.X.length, placed = S.mu.length, unit = isCity() ? 'household' : 'point';
+    const kinds = { place: ['Park the vans', 'ready'], ready: ['Ready', 'ready'], partition: ['Partition step', 'partition'], learning: ['Learning step', 'learning'], stopped: ['Stopped', 'stopped'] };
+    ui.phaseText.textContent = kinds[S.phase][0]; ui.phase.dataset.kind = kinds[S.phase][1];
+    const sw = S.changedSet.size;
+    ui.explain.textContent = {
+      place: `Click the map to park van ${placed + 1} of ${S.K}.`,
+      ready: `${S.K} van${S.K > 1 ? 's' : ''} parked, ${n} ${unit}s to serve. Step or Run to begin.`,
+      partition: `Each ${unit} goes to its nearest van.${sw ? ` ${sw} ${unit}${sw > 1 ? 's' : ''} switched van (ringed).` : ''}`,
+      learning: `Each van moves to the centroid of its ${unit}s. W cannot go up.`,
+      stopped: `In round ${S.round} no ${unit} switched van, so k-means stops.`
+    }[S.phase];
+    ui.round.textContent = String(S.round);
+    const w = S.z ? KM.W(S.X, S.z, S.mu) : null; ui.wnow.textContent = fmt(w); ui.wbest.textContent = fmt(S.best);
+    ui.gap.textContent = (w != null && S.best) ? `gap ${fmt(w / S.best, 2)}×` : ' ';
+    ui.step.disabled = ui.run.disabled = S.phase === 'place' || S.phase === 'stopped';
+    ui.reset.disabled = S.phase === 'place' || (S.phase === 'ready' && !S.hist.length);
+    ui.hint.hidden = S.phase !== 'place'; ui.hint.textContent = `Click to park van ${placed + 1} of ${S.K}`;
+    if (S.anim) requestAnimationFrame(render);
+  }
+
+  /* ---------- pointer: park and drag vans ---------- */
+  function vanAt(px, py) { for (let k = S.mu.length - 1; k >= 0; k--) { const [x, y] = toPx(S.mu[k]); if (Math.abs(px - x) < 22 && Math.abs(py - y) < 14) return k; } return -1; }
+  const canEdit = () => S.phase === 'place' || (S.phase === 'ready' && !S.hist.length);
+  let flashTimer = null;
+  function flash(msg) { ui.hint.hidden = false; ui.hint.textContent = msg; clearTimeout(flashTimer); flashTimer = setTimeout(render, 1600); }
+  map.addEventListener('pointerdown', e => {
+    if (!canEdit()) { flash('Reset run or clear vans to move them.'); return; }
+    const r = map.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top, k = vanAt(px, py);
+    if (k >= 0) { S.drag = k; map.setPointerCapture(e.pointerId); map.classList.add('dragging'); return; }
+    if (S.mu.length < S.K) { S.start.push(toMap(px, py)); S.mu = S.start.map(p => p.slice()); S.trails = S.mu.map(p => [p.slice()]); S.phase = S.mu.length < S.K ? 'place' : 'ready'; render(); }
+  });
+  map.addEventListener('pointermove', e => { if (S.drag < 0) return; const r = map.getBoundingClientRect();
+    S.start[S.drag] = toMap(e.clientX - r.left, e.clientY - r.top); S.mu = S.start.map(p => p.slice()); S.trails = S.mu.map(p => [p.slice()]); render(); });
+  const endDrag = () => { S.drag = -1; map.classList.remove('dragging'); };
+  map.addEventListener('pointerup', endDrag); map.addEventListener('pointercancel', endDrag);
+
+  /* ---------- controls ---------- */
+  ui.run.addEventListener('click', () => S.running ? stop() : play());
+  ui.step.addEventListener('click', () => { stop(); step(); });
+  ui.reset.addEventListener('click', resetRun);
+  ui.clear.addEventListener('click', clearVans);
+  ui.preset.addEventListener('change', () => { loadPreset(ui.preset.value, false); resize(); });
+  ui.k.addEventListener('change', () => { S.K = Number(ui.k.value); const P = PRESETS[S.preset];
+    setStart(P.city ? depotStart(S.K) : KM.randomStart(S.X, S.K, KM.mulberry32(++S.seed))); computeBest(); render(); });
+  ui.depotStart.addEventListener('click', () => setStart(depotStart(S.K)));
+  ui.randStart.addEventListener('click', () => setStart(KM.randomStart(S.X, S.K, KM.mulberry32(++S.seed * 7919))));
+  ui.ppStart.addEventListener('click', () => setStart(KM.plusplusStart(S.X, S.K, KM.mulberry32(++S.seed * 104729))));
+  ui.resample.addEventListener('click', () => { S.seed += 1; loadPreset(S.preset, true); });
+  [ui.tRegions, ui.tLines, ui.tTrails, ui.tShapes].forEach(t => t.addEventListener('change', render));
+  document.addEventListener('keydown', e => {
+    if (e.target.closest('select, input')) return;
+    if (e.target.closest('button, summary') && (e.key === ' ' || e.key === 'Enter')) return;
+    if (e.key === ' ') { e.preventDefault(); S.running ? stop() : play(); }
+    else if (e.key === 'ArrowRight' || e.key === 'n') { e.preventDefault(); stop(); step(); }
+    else if (e.key === 'r' || e.key === 'R') resetRun();
+    else if (e.key === 'c' || e.key === 'C') clearVans();
+  });
+
+  /* ---------- theme and size ---------- */
+  const refresh = () => { readColors(); render(); };
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', refresh);
+  new MutationObserver(refresh).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  new ResizeObserver(resize).observe(mapbox);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(refresh);
+  readColors(); loadPreset('harbor', false); resize();
+})();
+</script>
+
+</body>
+</html>

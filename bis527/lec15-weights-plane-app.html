@@ -1,0 +1,1168 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Weights in the Plane</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+/* Layout: the ink band carries the title and the one form; below it two drawings side by side, the feature plane on the left and the outcomes along the ray from the sample mean to the new point on the right, then one table of every estimator at the new point and a strip of repeated samples. Serif for headings and axis text, sans for controls and numbers, as in the Lecture 14 demo. */
+:root {
+  --bg: #f3f5f8; --surface: #ffffff; --fg: #141a22; --fg-2: #4b5563; --fg-3: #626a77;
+  --rule: #e2e6ec; --rule-2: #c6ccd5; --ink: #00356b; --ink-2: #1c5cab; --on-ink: #f4f7fb; --on-ink-2: #b9cbe3;
+  --band: rgba(0, 53, 107, 0.08); --knn: #eb6834; --kernel: #2a78d6; --loclin: #8e44ad; --plane: #1baf7a; --nna: #0f8b8d; --floor: #a0522d; --truth: #7b8491;
+  --neg: #c0392b; --box: #eceff4; --hull: rgba(238, 150, 60, 0.16); --hullline: #d9822b; --mirror: #66707f; --thumb-ring: #ffffff; --sel: rgba(28, 92, 171, 0.10);
+  --font-ui: "Source Sans 3", "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "STIX Two Text", "Times New Roman", Times, serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1218; --surface: #161b23; --fg: #e8ecf1; --fg-2: #b3bcc8; --fg-3: #7f8a98;
+    --rule: #262d38; --rule-2: #3a4350; --ink: #10284a; --ink-2: #8ab4ec; --on-ink: #e8eef7; --on-ink-2: #9fb5d2;
+    --band: rgba(138, 180, 236, 0.14); --knn: #d95926; --kernel: #3987e5; --loclin: #a569c4; --plane: #199e70; --nna: #22a3a5; --floor: #c0744d; --truth: #7f8a98;
+    --neg: #e66767; --box: #1d2430; --hull: rgba(238, 150, 60, 0.18); --hullline: #e0913c; --mirror: #808b9b; --thumb-ring: #161b23; --sel: rgba(138, 180, 236, 0.14); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1218; --surface: #161b23; --fg: #e8ecf1; --fg-2: #b3bcc8; --fg-3: #7f8a98;
+  --rule: #262d38; --rule-2: #3a4350; --ink: #10284a; --ink-2: #8ab4ec; --on-ink: #e8eef7; --on-ink-2: #9fb5d2;
+  --band: rgba(138, 180, 236, 0.14); --knn: #d95926; --kernel: #3987e5; --loclin: #a569c4; --plane: #199e70; --nna: #22a3a5; --floor: #c0744d; --truth: #7f8a98;
+  --neg: #e66767; --box: #1d2430; --hull: rgba(238, 150, 60, 0.18); --hullline: #e0913c; --mirror: #808b9b; --thumb-ring: #161b23; --sel: rgba(138, 180, 236, 0.14); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; padding-block: 0 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.band { background: var(--ink); color: var(--on-ink); margin: 0 calc(-1 * max(16px, env(safe-area-inset-left, 0px))) 0 calc(-1 * max(16px, env(safe-area-inset-right, 0px)));
+  padding-block: 30px 26px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.band-in { max-width: 1240px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 10px 32px; }
+h1 { font-family: var(--font-serif); font-weight: 400; font-size: clamp(30px, 4.2vw, 42px); margin: 0; line-height: 1.05; letter-spacing: -0.01em; text-wrap: balance; }
+h1 em { font-style: italic; color: var(--on-ink-2); }
+.form { font-family: var(--font-serif); font-style: italic; font-size: clamp(20px, 2.8vw, 30px); color: var(--on-ink-2); white-space: nowrap; letter-spacing: 0.01em; }
+.form b { font-weight: 400; font-style: normal; }
+.form sub, .form sup { font-size: 0.55em; font-style: normal; }
+.wrap { max-width: 1240px; margin: 0 auto; display: grid; gap: 18px; padding-top: 12px; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: end; padding: 8px 2px 2px; }
+.ctl { display: grid; gap: 4px; min-width: 0; }
+.ctl label, .ctl .lab { font-size: 12.5px; letter-spacing: 0.03em; color: var(--fg-3); }
+.ctl .val { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--fg); margin-left: 8px; letter-spacing: 0; font-size: 14px; }
+.ctl select, .ctl input[type=number] { font: inherit; padding: 5px 8px; border: 1px solid var(--rule-2); border-radius: 6px; background: var(--surface); color: var(--fg); }
+.ctl input[type=number] { width: 72px; font-variant-numeric: tabular-nums; }
+input[type=range] { -webkit-appearance: none; appearance: none; width: 150px; height: 22px; background: transparent; margin: 0; cursor: pointer; }
+input[type=range]::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: var(--rule-2); }
+input[type=range]::-moz-range-track { height: 4px; border-radius: 2px; background: var(--rule-2); }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; margin-top: -7px; border-radius: 50%; background: var(--ink-2); border: 3px solid var(--thumb-ring); box-shadow: 0 0 0 1px var(--rule-2); }
+input[type=range]::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: var(--ink-2); border: 3px solid var(--thumb-ring); box-shadow: 0 0 0 1px var(--rule-2); }
+input[type=range]:disabled { opacity: 0.35; cursor: default; }
+.checks { display: flex; gap: 12px 16px; flex-wrap: wrap; align-items: center; }
+.checks label { display: inline-flex; gap: 7px; align-items: center; font-size: 14px; color: var(--fg); letter-spacing: 0; cursor: pointer; }
+.checks input { accent-color: var(--ink-2); }
+button.btn { font: inherit; font-weight: 600; padding: 6px 14px; border: 1px solid var(--rule-2); background: var(--surface); color: var(--fg); border-radius: 6px; cursor: pointer; }
+button.btn:hover { border-color: var(--ink-2); color: var(--ink-2); }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--ink-2); outline-offset: 2px; }
+.panels { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; }
+@media (max-width: 860px) { .panels { grid-template-columns: 1fr; } }
+.panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 14px 16px 12px; min-width: 0; display: grid; gap: 8px; align-content: start; }
+.panel h2 { font-family: var(--font-serif); font-weight: 400; font-size: 20px; margin: 0; line-height: 1.2; }
+.panel .hint { font-size: 13px; color: var(--fg-3); margin: 0; }
+svg { width: 100%; max-width: 100%; min-width: 0; height: auto; display: block; font-family: var(--font-ui); }
+.axis line, .axis path { stroke: var(--rule-2); stroke-width: 1; }
+.grid line { stroke: var(--rule); stroke-width: 1; }
+.tick text { fill: var(--fg-3); font-size: 11px; font-variant-numeric: tabular-nums; }
+.axlab { fill: var(--fg-2); font-size: 12.5px; font-family: var(--font-serif); font-style: italic; }
+.hullfill { fill: var(--hull); stroke: var(--hullline); stroke-width: 1.4; stroke-linejoin: round; }
+.boxline { fill: none; stroke: var(--rule-2); stroke-width: 1; stroke-dasharray: 2 3; }
+.mirrorhull { fill: none; stroke: var(--mirror); stroke-width: 1.2; stroke-dasharray: 5 4; stroke-linejoin: round; }
+.reachhull { fill: none; stroke-width: 1.4; stroke-dasharray: 6 4; stroke-linejoin: round; }
+.reachhull.floor { stroke: var(--floor); }
+.reachhull.mirror { stroke: var(--mirror); stroke-dasharray: 2 3; }
+.ray { stroke: var(--ink-2); stroke-width: 1; opacity: 0.55; }
+.disc.pos { stroke: var(--surface); stroke-width: 1; }
+.disc.pos.knn { fill: var(--knn); } .disc.pos.kernel { fill: var(--kernel); } .disc.pos.loclin { fill: var(--loclin); } .disc.pos.plane { fill: var(--plane); } .disc.pos.nna { fill: var(--nna); } .disc.pos.floor { fill: var(--floor); }
+.disc.neg { fill: none; stroke: var(--neg); stroke-width: 1.7; }
+.disc.zero { fill: var(--fg-3); }
+.disc.moved { opacity: 0.55; }
+.hit { fill: transparent; cursor: grab; }
+.hit.dragging { cursor: grabbing; }
+.mpt { fill: none; stroke: var(--mirror); stroke-width: 1.2; }
+.mline { stroke: var(--mirror); stroke-width: 0.8; stroke-dasharray: 3 3; }
+.newpt { fill: var(--fg); font-size: 20px; cursor: grab; user-select: none; }
+.wmean { fill: var(--surface); stroke-width: 2.2; }
+.wmean.knn { stroke: var(--knn); } .wmean.kernel { stroke: var(--kernel); } .wmean.loclin { stroke: var(--loclin); } .wmean.plane { stroke: var(--plane); } .wmean.nna { stroke: var(--nna); } .wmean.floor { stroke: var(--floor); }
+.gap { stroke: var(--fg); stroke-width: 1.6; }
+.gaplab { fill: var(--fg); font-size: 11.5px; font-variant-numeric: tabular-nums; }
+.zmark { fill: var(--surface); stroke: var(--fg); stroke-width: 1.4; }
+.zline { stroke: var(--fg-2); stroke-width: 1; stroke-dasharray: 4 3; }
+.grp { stroke-width: 1.6; fill: var(--surface); }
+.grp.plus { stroke: var(--fg); fill: var(--fg); } .grp.minus { stroke: var(--neg); }
+.grpline { stroke: var(--fg-2); stroke-width: 1; stroke-dasharray: 5 3; }
+.meanmark { fill: var(--fg); font-size: 13px; font-family: var(--font-serif); font-style: italic; }
+.small { fill: var(--fg-2); font-size: 11px; font-variant-numeric: tabular-nums; }
+.label { fill: var(--fg-2); font-size: 11.5px; }
+.curve { fill: none; stroke-width: 2; stroke-linejoin: round; }
+.curve.truth { stroke: var(--truth); stroke-dasharray: 5 4; stroke-width: 1.6; }
+.curve.mtruth { stroke: var(--mirror); stroke-dasharray: 2 3; stroke-width: 1.4; }
+.yband { fill: var(--box); }
+.x0line { stroke: var(--ink-2); stroke-width: 1; opacity: 0.6; }
+.pred { stroke: var(--surface); stroke-width: 2; }
+.pred.knn { fill: var(--knn); } .pred.kernel { fill: var(--kernel); } .pred.loclin { fill: var(--loclin); } .pred.plane { fill: var(--plane); } .pred.nna { fill: var(--nna); } .pred.floor { fill: var(--floor); }
+.ftick { stroke: var(--fg); stroke-width: 1.6; }
+.postick { stroke: var(--fg); stroke-width: 1.4; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+th, td { text-align: right; padding: 6px 10px; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+th { font-weight: 400; color: var(--fg-3); font-size: 13px; letter-spacing: 0.02em; }
+td:first-child, th:first-child { text-align: left; }
+td:first-child { font-family: var(--font-serif); font-size: 15.5px; }
+td.neg { color: var(--neg); }
+td.dim, th.dim { color: var(--fg-3); }
+tr.sel td { background: var(--sel); }
+tbody tr { cursor: pointer; }
+tr:last-child td { border-bottom: 0; }
+.tablewrap { overflow-x: auto; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--fg-2); }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.mk-disc { width: 12px; height: 12px; border-radius: 50%; background: var(--fg-3); }
+.mk-hollow { width: 12px; height: 12px; border-radius: 50%; border: 1.6px solid var(--neg); }
+.mk-mirror { width: 11px; height: 11px; border-radius: 50%; border: 1.3px solid var(--mirror); }
+.mk-ring { width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--fg); }
+.mk-hull { width: 16px; height: 11px; background: var(--hull); border: 1px solid var(--hullline); }
+.mk-box { width: 16px; height: 11px; border: 1px dashed var(--rule-2); }
+.mk-x { font-size: 15px; line-height: 1; }
+.mk-sq { width: 10px; height: 10px; border: 1.4px solid var(--fg); }
+.sw { display: inline-block; width: 18px; height: 3px; border-radius: 2px; }
+.sw.truth { background: repeating-linear-gradient(90deg, var(--truth) 0 4px, transparent 4px 7px); }
+.sw.mtruth { background: repeating-linear-gradient(90deg, var(--mirror) 0 2px, transparent 2px 5px); }
+.strip circle { opacity: 0.55; }
+.strip .knn { fill: var(--knn); } .strip .kernel { fill: var(--kernel); } .strip .loclin { fill: var(--loclin); } .strip .plane { fill: var(--plane); } .strip .nna { fill: var(--nna); } .strip .floor { fill: var(--floor); }
+.rowlab { fill: var(--fg); font-size: 13px; font-family: var(--font-serif); }
+.swatch { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 7px; vertical-align: middle; }
+.swatch.knn { background: var(--knn); } .swatch.kernel { background: var(--kernel); } .swatch.loclin { background: var(--loclin); } .swatch.plane { background: var(--plane); } .swatch.nna { background: var(--nna); } .swatch.floor { background: var(--floor); }
+#tip { position: fixed; pointer-events: none; background: var(--surface); color: var(--fg); border: 1px solid var(--rule-2); border-radius: 6px; padding: 7px 10px; font-size: 13px; box-shadow: 0 4px 14px rgba(0,0,0,0.14); max-width: 260px; font-variant-numeric: tabular-nums; z-index: 5; }
+#tip b { font-weight: 600; font-size: 14px; }
+.frame { fill: none; stroke: var(--rule-2); stroke-width: 1; }
+.label, .gaplab, .small, .meanmark, .signlab { paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+.signlab { font-size: 11px; fill: var(--fg-2); } .signlab.neg { fill: var(--neg); }
+.negside { fill: var(--negfill); stroke: none; }
+.zeroline { stroke: var(--neg); stroke-width: 1.2; stroke-dasharray: 6 4; opacity: 0.8; }
+.ring { fill: none; stroke-width: 1.2; stroke-dasharray: 4 3; opacity: 0.8; }
+.ring.knn { stroke: var(--knn); } .ring.kernel { stroke: var(--kernel); } .ring.loclin { stroke: var(--loclin); }
+.halo { fill: var(--ink-2); opacity: 0.14; }
+.cmark { fill: var(--fg); }
+svg.dragging { cursor: grabbing; }
+#plane, #ray { touch-action: none; }
+.curve.fit { stroke-width: 2.4; }
+.curve.fit.knn { stroke: var(--knn); } .curve.fit.kernel { stroke: var(--kernel); } .curve.fit.loclin { stroke: var(--loclin); } .curve.fit.plane { stroke: var(--plane); } .curve.fit.nna { stroke: var(--nna); } .curve.fit.floor { stroke: var(--floor); }
+.sw.fit { background: var(--fg-2); } .sw.zero { background: repeating-linear-gradient(90deg, var(--neg) 0 6px, transparent 6px 10px); } .sw.reach { background: repeating-linear-gradient(90deg, var(--floor) 0 6px, transparent 6px 10px); }
+.rowlab.sel { font-weight: 600; }
+.rowhead { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.disc { transition: none; }
+.orig { fill: var(--mirror); opacity: 0.8; }
+.mline { stroke: var(--mirror); stroke-width: 1.1; stroke-dasharray: none; opacity: 0.9; }
+.mk-arrow { color: var(--mirror); font-size: 14px; line-height: 1; }
+svg:focus-visible { outline: 2px solid var(--ink-2); outline-offset: 2px; border-radius: 4px; }
+:root { --negfill: rgba(192, 57, 43, 0.07); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --negfill: rgba(230, 103, 103, 0.11); } }
+:root[data-theme="dark"] { --negfill: rgba(230, 103, 103, 0.11); }
+.yband { opacity: 0.6; } .bandlab { fill: var(--fg-3); font-size: 11px; }
+.mline { stroke-width: 0.9; opacity: 0.55; }
+.zoom { display: flex; gap: 6px; } button.btn.sm { padding: 3px 10px; min-width: 34px; line-height: 1.2; font-size: 13px; }
+button.btn:disabled { opacity: 0.4; cursor: default; } button.btn:disabled:hover { border-color: var(--rule-2); color: var(--fg); }
+#plane, #ray { cursor: grab; } svg.dragging { cursor: grabbing; }
+
+/* the controls as one card with labelled rows */
+.card { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; }
+.controls-card { padding: 2px 18px; }
+.crow { display: grid; grid-template-columns: 78px minmax(0, 1fr); gap: 10px 14px; align-items: center; padding: 11px 0; border-bottom: 1px solid var(--rule); }
+.crow:last-child { border-bottom: 0; }
+.clab { font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-3); font-weight: 600; }
+.cbody { display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: end; min-width: 0; }
+.cbody.checks { align-items: center; gap: 8px 18px; }
+.btns { display: flex; gap: 6px; }
+input[type=range] { width: 132px; }
+.ctl .val { background: var(--bg); border-radius: 999px; padding: 0 7px; margin-left: 6px; font-size: 13px; }
+@media (max-width: 640px) { .crow { grid-template-columns: 1fr; gap: 6px; } .controls-card { padding: 2px 14px; } }
+.panel .hint { line-height: 1.4; }
+.legend { font-size: 12.5px; }
+.mk-band { width: 16px; height: 11px; background: var(--box); border: 1px solid var(--rule-2); }
+.mk-brace { font-family: var(--font-serif); font-size: 16px; line-height: 1; color: var(--fg); }
+.brace { fill: none; stroke: var(--fg); stroke-width: 1.3; stroke-linejoin: round; }
+.brace.part { stroke: var(--fg-2); }
+.bracelab { fill: var(--fg); font-size: 11.5px; font-variant-numeric: tabular-nums; paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+.bracelab.part { fill: var(--fg-2); }
+th { white-space: nowrap; }
+tbody tr:hover td { background: var(--sel); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --hull: rgba(238, 150, 60, 0.11); --negfill: rgba(230, 103, 103, 0.09); } }
+:root[data-theme="dark"] { --hull: rgba(238, 150, 60, 0.11); --negfill: rgba(230, 103, 103, 0.09); }
+.cbody .hint { font-size: 13px; color: var(--fg-3); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+</style>
+
+<header class="band">
+  <div class="band-in">
+    <h1>Weights <em>in the plane</em></h1>
+    <div class="form" aria-label="y hat of x star equals the sum over i of w i times y i">ŷ(x<sup>*</sup>) <b>=</b> <b>Σ</b><sub>i</sub> w<sub>i</sub> y<sub>i</sub></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="card controls-card" aria-label="Controls">
+    <div class="crow">
+      <div class="clab">Sample</div>
+      <div class="cbody">
+        <div class="ctl"><label for="preset">Points</label>
+          <select id="preset"><option value="cloud">Cloud</option><option value="grid">Grid</option><option value="clusters">Two clusters</option><option value="ring">Ring</option><option value="students">Ten students (age, weight)</option></select></div>
+        <div class="ctl"><label for="nsamp">n</label><input type="number" id="nsamp" min="4" max="60" value="16"></div>
+        <div class="ctl"><span class="lab">&nbsp;</span><button class="btn" id="newpoints">New points</button></div>
+        <div class="ctl"><label for="truth">Truth f</label>
+          <select id="truth"><option value="plane">Plane</option><option value="bend">Bend</option><option value="plateau">Plateau</option></select></div>
+        <div class="ctl" id="gamctl"><label for="gam">bend γ<span class="val" id="gamval">1.00</span></label><input type="range" id="gam" min="0" max="4" step="0.1" value="1"></div>
+        <div class="ctl"><label for="sigma">noise σ<span class="val" id="sigmaval">2.0</span></label><input type="range" id="sigma" min="0" max="10" step="0.5" value="2"></div>
+        <div class="ctl"><span class="lab">&nbsp;</span><button class="btn" id="renoise">New noise</button></div>
+      </div>
+    </div>
+    <div class="crow">
+      <div class="clab">Move x*</div>
+      <div class="cbody"><div class="btns"><button class="btn" id="walk">Walk out</button><button class="btn" id="orbit">Orbit</button></div><span class="hint">or drag × in the feature plane, or use the arrow keys once the plane has focus</span></div>
+    </div>
+    <div class="crow">
+      <div class="clab">Weights</div>
+      <div class="cbody">
+        <div class="ctl"><label for="est">Rule</label>
+          <select id="est">
+            <option value="knn">k nearest neighbours</option><option value="kernel">Kernel</option><option value="loclin">Local linear</option>
+            <option value="plane" selected>Least-squares plane</option><option value="nna">Nonnegative aligned</option><option value="floor">Aligned with a floor</option>
+          </select></div>
+        <div class="ctl"><label for="k">k<span class="val" id="kval">3</span></label><input type="range" id="k" min="1" max="16" step="1" value="3"></div>
+        <div class="ctl"><label for="h">bandwidth h<span class="val" id="hval">0.8</span></label><input type="range" id="h" min="0.2" max="4" step="0.1" value="0.8"></div>
+        <div class="ctl"><label for="floor">floor c<span class="val" id="floorval">0.05</span></label><input type="range" id="floor" min="0" max="1" step="0.01" value="0.05"></div>
+      </div>
+    </div>
+    <div class="crow">
+      <div class="clab">Show</div>
+      <div class="cbody checks">
+        <label><input type="checkbox" id="showhull" checked><span class="mk-hull"></span>hull</label>
+        <label><input type="checkbox" id="showbox"><span class="mk-box"></span>box</label>
+        <label><input type="checkbox" id="showzero" checked><span class="sw zero"></span>where the plane's weight is 0</label>
+        <label><input type="checkbox" id="showreach"><span class="sw reach"></span>reach of the floor</label>
+        <label><input type="checkbox" id="showmirror"><span class="mk-mirror"></span>images</label>
+        <label><input type="checkbox" id="showgroups"><span class="mk-sq"></span>two groups</label>
+        <label><input type="checkbox" id="showtruth" checked><span class="sw truth"></span>truth</label>
+        <label><input type="checkbox" id="scaled" checked>scaled distance</label>
+      </div>
+    </div>
+  </section>
+
+  <div class="panels">
+    <div class="panel">
+      <div class="rowhead"><h2>Features</h2><div class="zoom" role="group" aria-label="Zoom the feature plane"><button class="btn sm" id="pzin" title="Zoom in"><span aria-hidden="true">+</span><span class="sr-only">Zoom in</span></button><button class="btn sm" id="pzout" title="Zoom out"><span aria-hidden="true">−</span><span class="sr-only">Zoom out</span></button><button class="btn sm" id="pfit">Fit</button></div></div>
+      <p class="hint">Drag a point or ×, or move × with the arrow keys. Drag empty space to pan. Pinch or ⌘/ctrl + scroll to zoom. Double-click adds a point, shift-click removes one.</p>
+      <svg id="plane" viewBox="0 0 560 540" role="img" tabindex="0" aria-label="The sampled points in the plane of the two features, their convex hull, the new point and the weights of the chosen estimator"></svg>
+      <div class="legend">
+        <span><span class="mk-disc"></span>wᵢ, area ∝ |wᵢ|</span><span><span class="mk-hollow"></span>negative</span><span><span class="mk-ring"></span>Σᵢwᵢxᵢ</span><span><span class="mk-x">×</span>x*</span><span><span class="mk-mirror"></span>original, when images are shown</span><span><span class="mk-arrow">→</span>to its image</span><span><span class="mk-sq"></span>X⁺, X⁻</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="rowhead"><h2>Outcomes along the ray from x̄ to x*</h2><div class="zoom" role="group" aria-label="Zoom the outcomes"><button class="btn sm" id="rzin" title="Zoom in"><span aria-hidden="true">+</span><span class="sr-only">Zoom in</span></button><button class="btn sm" id="rzout" title="Zoom out"><span aria-hidden="true">−</span><span class="sr-only">Zoom out</span></button><button class="btn sm" id="rfit">Fit</button></div></div>
+      <p class="hint" id="rayhint">Drag a point up or down to change its outcome.</p>
+      <svg id="ray" viewBox="0 0 560 540" role="img" tabindex="0" aria-label="The outcomes against the position of each point along the ray from the sample mean to the new point, with the truth, the fitted curve, the prediction and the weighted mean position"></svg>
+      <div class="legend">
+        <span><span class="sw truth"></span>f along the ray</span><span><span class="sw fit"></span>ŷ along the ray</span><span><span class="mk-mirror"></span>original, when images are shown</span><span><span class="mk-ring"></span>Σᵢwᵢtᵢ</span><span>▲ f(x*)</span><span><span class="mk-brace">}</span>bias, as balance + bend</span><span><span class="mk-band"></span>range of the sampled y</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>At x*</h2>
+    <div class="tablewrap" tabindex="0" role="region" aria-label="Table of every estimator, scrolls sideways"><table id="table" aria-label="Every estimator at the new point"><thead><tr>
+      <th>Weights</th><th>Σwᵢ</th><th>|x* − Σwᵢxᵢ|</th><th>Σwᵢ²</th><th>Σ|wᵢ|</th><th>negative</th><th>ŷ(x*)</th><th class="dim">f(x*)</th><th class="dim">bias</th><th class="dim">balance</th><th class="dim">bend</th><th>σ²Σwᵢ²</th><th class="dim">error</th>
+    </tr></thead><tbody></tbody></table></div>
+    <p class="hint" id="feas"></p>
+  </div>
+
+  <div class="panel">
+    <div class="rowhead"><h2>200 noise draws at x*</h2><button class="btn" id="redraw">Redraw</button></div>
+    <svg id="strip" viewBox="0 0 1000 250" role="img" aria-label="Strip plot of the predictions over 200 noise draws, one row per estimator"></svg>
+  </div>
+</main>
+<div id="tip" hidden></div>
+
+<script>
+const Core = (() => {
+  const sum = a => a.reduce((s, v) => s + v, 0);
+  const mean = a => sum(a) / a.length;
+  function knnWeights(dists, k) {
+    const n = dists.length, kk = Math.max(1, Math.min(k, n));
+    const order = dists.map((d, i) => i).sort((a, b) => dists[a] - dists[b] || a - b);
+    const w = new Array(n).fill(0);
+    for (let j = 0; j < kk; j++) w[order[j]] = 1 / kk;
+    return w;
+  }
+  function kernelValues(dists, h) {
+    const d2 = dists.map(d => d * d), m = Math.min(...d2);
+    return d2.map(v => Math.exp(-(v - m) / (2 * h * h)));
+  }
+  function kernelWeights(dists, h) { const kv = kernelValues(dists, h), s = sum(kv); return kv.map(v => v / s); }
+  function invert(A) {
+    const n = A.length, M = A.map((r, i) => [...r, ...Array.from({ length: n }, (_, j) => (i === j ? 1 : 0))]);
+    for (let c = 0; c < n; c++) {
+      let piv = c;
+      for (let r = c + 1; r < n; r++) if (Math.abs(M[r][c]) > Math.abs(M[piv][c])) piv = r;
+      if (Math.abs(M[piv][c]) < 1e-10) return null;
+      [M[c], M[piv]] = [M[piv], M[c]];
+      const p = M[c][c];
+      for (let j = 0; j < 2 * n; j++) M[c][j] /= p;
+      for (let r = 0; r < n; r++) if (r !== c && M[r][c] !== 0) { const f = M[r][c]; for (let j = 0; j < 2 * n; j++) M[r][j] -= f * M[c][j]; }
+    }
+    return M.map(r => r.slice(n));
+  }
+  // Weighted least squares weights: w_i = K_i xt^T (X^T K X)^{-1} xt_i. With K = 1 these are the least-squares weights.
+  function wlsWeights(rows, xt, K) {
+    const m = xt.length;
+    const A = Array.from({ length: m }, () => new Array(m).fill(0));
+    rows.forEach((r, i) => { for (let a = 0; a < m; a++) for (let b = 0; b < m; b++) A[a][b] += K[i] * r[a] * r[b]; });
+    const inv = invert(A);
+    if (!inv) return null;
+    const row = xt.map((_, j) => sum(xt.map((v, i) => v * inv[i][j])));
+    return rows.map((r, i) => K[i] * sum(r.map((v, j) => v * row[j])));
+  }
+  const lsWeights = (rows, xt) => wlsWeights(rows, xt, rows.map(() => 1));
+  // Projection of the origin onto {w : A w = b, w >= lo}: the aligned weights of smallest size with a floor (Dykstra's alternating projections).
+  function floorWeights(P, x0, lo, iters = 4000) {
+    const n = P.length;
+    const A = [P.map(() => 1), P.map(p => p[0]), P.map(p => p[1])];
+    const b = [1, x0[0], x0[1]];
+    const G = A.map(r => A.map(s => sum(r.map((v, i) => v * s[i]))));
+    const Ginv = invert(G);
+    if (!Ginv) return null;
+    const projA = w => {
+      const res = A.map((r, a) => sum(r.map((v, i) => v * w[i])) - b[a]);
+      const lam = Ginv.map(r => sum(r.map((v, a) => v * res[a])));
+      return w.map((v, i) => v - sum(A.map((r, a) => r[i] * lam[a])));
+    };
+    let w = new Array(n).fill(0), p = new Array(n).fill(0), q = new Array(n).fill(0);
+    for (let it = 0; it < iters; it++) {
+      const y = projA(w.map((v, i) => v + p[i]));
+      p = w.map((v, i) => v + p[i] - y[i]);
+      const z = y.map((v, i) => Math.max(lo, v + q[i]));
+      q = y.map((v, i) => v + q[i] - z[i]);
+      const delta = Math.max(...z.map((v, i) => Math.abs(v - w[i])));
+      w = z;
+      if (delta < 1e-11 && it > 50) break;
+    }
+    const res = A.map((r, a) => Math.abs(sum(r.map((v, i) => v * w[i])) - b[a]));
+    if (Math.max(...res) > 1e-5) return null;    // the constraints cannot all be met: x0 is outside the reach of this floor
+    return w;
+  }
+  // Convex hull by the monotone chain, counter-clockwise; a point-in-hull test; the hull scaled about a centre.
+  function hull(points) {
+    const pts = [...points].map((p, i) => [p[0], p[1], i]).sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+    if (pts.length < 3) return pts.map(p => [p[0], p[1]]);
+    const cross = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
+    const lower = [];
+    for (const p of pts) { while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], p) <= 0) lower.pop(); lower.push(p); }
+    const upper = [];
+    for (const p of [...pts].reverse()) { while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], p) <= 0) upper.pop(); upper.push(p); }
+    return [...lower.slice(0, -1), ...upper.slice(0, -1)].map(p => [p[0], p[1]]);
+  }
+  function inHull(H, q, tol = 1e-9) {
+    if (H.length < 3) {
+      if (H.length === 0) return false;
+      if (H.length === 1) return Math.hypot(q[0] - H[0][0], q[1] - H[0][1]) < 1e-7;
+      const [a, b] = H; const cr = (b[0] - a[0]) * (q[1] - a[1]) - (b[1] - a[1]) * (q[0] - a[0]);
+      const t = ((q[0] - a[0]) * (b[0] - a[0]) + (q[1] - a[1]) * (b[1] - a[1])) / ((b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2);
+      return Math.abs(cr) < 1e-7 && t >= -tol && t <= 1 + tol;
+    }
+    for (let i = 0; i < H.length; i++) {
+      const a = H[i], b = H[(i + 1) % H.length];
+      if ((b[0] - a[0]) * (q[1] - a[1]) - (b[1] - a[1]) * (q[0] - a[0]) < -tol) return false;
+    }
+    return true;
+  }
+  const scaleAbout = (pts, c, f) => pts.map(p => [c[0] + f * (p[0] - c[0]), c[1] + f * (p[1] - c[1])]);
+  const mirrorAbout = (pts, c) => pts.map(p => [2 * c[0] - p[0], 2 * c[1] - p[1]]);
+  function centroid(P) { return [mean(P.map(p => p[0])), mean(P.map(p => p[1]))]; }
+  function spreads(P) { const c = centroid(P); return [0, 1].map(j => Math.sqrt(mean(P.map(p => (p[j] - c[j]) ** 2)))); }
+  // The negative part m and the two groups of a weight vector; the reflection decomposition of Claim 6.
+  function groups(w, P, ys) {
+    const m = sum(w.map(v => Math.max(-v, 0)));
+    const pos = w.map((v, i) => v > 0 ? i : -1).filter(i => i >= 0), neg = w.map((v, i) => v < 0 ? i : -1).filter(i => i >= 0);
+    const avg = (idx, f, tot) => idx.length ? [sum(idx.map(i => Math.abs(w[i]) * f(i)[0])) / tot, sum(idx.map(i => Math.abs(w[i]) * f(i)[1])) / tot] : null;
+    const Xp = avg(pos, i => P[i], 1 + m), Xm = m > 0 ? avg(neg, i => P[i], m) : null;
+    const Ap = pos.length ? sum(pos.map(i => w[i] * ys[i])) / (1 + m) : null, Am = m > 0 ? sum(neg.map(i => -w[i] * ys[i])) / m : null;
+    return { m, pos, neg, Xp, Xm, Ap, Am };
+  }
+  function reflection(w, P, c) {
+    const m = sum(w.map(v => Math.max(-v, 0)));
+    const z = [0, 1].map(j => sum(w.map((v, i) => v > 0 ? v * P[i][j] : -v * (2 * c[j] - P[i][j]))) / (1 + 2 * m));
+    return { m, z, factor: 1 + 2 * m };
+  }
+  function rng(seed) {
+    let a = seed >>> 0;
+    const u = () => { a += 0x6D2B79F5; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+    const normal = () => { const u1 = Math.max(u(), 1e-12), u2 = u(); return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2); };
+    return { u, normal };
+  }
+  return { sum, mean, knnWeights, kernelValues, kernelWeights, invert, wlsWeights, lsWeights, floorWeights, hull, inHull, scaleAbout, mirrorAbout, centroid, spreads, groups, reflection, rng };
+})();
+if (typeof module !== 'undefined') module.exports = Core;
+</script>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const el = (name, attrs = {}, parent) => { const e = document.createElementNS(svgNS, name); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); if (parent) parent.appendChild(e); return e; };
+  const setA = (e, attrs) => { for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); return e; };
+  const show = (e, on) => { if (on) e.removeAttribute('hidden'); else e.setAttribute('hidden', ''); };
+  const fmt = (v, d = 2) => (v === null || v === undefined || Number.isNaN(v)) ? '–' : (Math.abs(v) < 0.5 * Math.pow(10, -d) ? (0).toFixed(d) : v.toFixed(d));
+  const tip = $('tip');
+  function showTip(lines, x, y) { tip.innerHTML = ''; for (const line of lines) { const d = document.createElement('div'); if (line.b) { const b = document.createElement('b'); b.textContent = line.b; d.appendChild(b); d.appendChild(document.createTextNode(' ' + (line.t || ''))); } else d.textContent = line.t; tip.appendChild(d); }
+    tip.hidden = false; const w = tip.offsetWidth, h = tip.offsetHeight; tip.style.left = Math.min(x + 14, window.innerWidth - w - 8) + 'px'; tip.style.top = Math.max(8, y - h - 10) + 'px'; }
+  const hideTip = () => { tip.hidden = true; };
+  const toSvg = (svg, ev) => { const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY; return pt.matrixTransform(svg.getScreenCTM().inverse()); };
+  const REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const EST = [
+    { key: 'knn', name: 'k nearest neighbours' },
+    { key: 'kernel', name: 'Kernel' },
+    { key: 'loclin', name: 'Local linear' },
+    { key: 'plane', name: 'Least-squares plane' },
+    { key: 'nna', name: 'Nonnegative aligned' },
+    { key: 'floor', name: 'Aligned with a floor' },
+  ];
+  const KEYS = EST.map(e => e.key);
+
+  // ---------- presets: a domain, a way to make the points, and the plane that the truth starts from ----------
+  const UNIT = { x: [0, 10], y: [0, 10], xlab: 'feature 1', ylab: 'feature 2', plane: p => 20 + 3 * p[0] + 2 * p[1], grad: [3, 2], x0: [8.6, 7.8] };
+  const STUD = { x: [12, 20], y: [40, 80], xlab: 'age (years)', ylab: 'weight (kg)', plane: p => 89 + 4 * p[0] + 0.25 * p[1], grad: [4, 0.25], x0: [18, 70] };
+  const TEN = { age: [14, 14, 15, 15, 16, 16, 17, 17, 18, 18], wt: [51, 65, 57, 65, 56, 68, 55, 67, 51, 65], ht: [158, 162, 164, 165, 165, 169, 171, 174, 174, 178] };
+  const PRESETS = {
+    cloud: { dom: UNIT, make: (n, r) => Array.from({ length: n }, () => [1.5 + 7 * r.u(), 1.5 + 7 * r.u()]) },
+    grid: { dom: UNIT, make: n => { const m = Math.max(2, Math.round(Math.sqrt(n))), P = []; for (let i = 0; i < m; i++) for (let j = 0; j < m; j++) P.push([2 + 6 * i / (m - 1), 2 + 6 * j / (m - 1)]); return P; } },
+    clusters: { dom: UNIT, make: (n, r) => Array.from({ length: n }, (_, i) => { const c = i % 2 ? [7, 7] : [3, 3]; return [c[0] + 0.9 * r.normal(), c[1] + 0.9 * r.normal()]; }) },
+    ring: { dom: UNIT, make: (n, r) => Array.from({ length: n }, (_, i) => { const a = 2 * Math.PI * i / n + 0.15 * r.normal(), rad = 3 + 0.3 * r.normal(); return [5 + rad * Math.cos(a), 5 + rad * Math.sin(a)]; }) },
+    students: { dom: STUD, make: () => TEN.age.map((a, i) => [a, TEN.wt[i]]), outcomes: TEN.ht },
+  };
+  const S = { P: [], eps: [], x0: [8.6, 7.8], est: 'plane', k: 3, h: 0.8, floor: 0.05, truth: 'plane', gam: 1.0, sigma: 2, preset: 'cloud', n: 16, seed: 15, noiseSeed: 1527, drawSeed: 99, scaled: true,
+    drag: null, hover: -1, anim: null, pinch: null };
+  const dom = () => PRESETS[S.preset].dom;
+  // x* and the points may go half a span beyond the preset's box, which a zoomed-out view can show
+  const EXT = 0.5;
+  const clampX = v => { const [lo, hi] = dom().x, s = (hi - lo) * EXT; return Math.min(hi + s, Math.max(lo - s, v)); }, clampY = v => { const [lo, hi] = dom().y, s = (hi - lo) * EXT; return Math.min(hi + s, Math.max(lo - s, v)); };
+  const clampIn = p => [clampX(p[0]), clampY(p[1])];
+
+  // ---------- the truth and the sample ----------
+  function truthFn() {
+    const base = dom().plane, c = Core.centroid(S.P), s = Core.spreads(S.P).map(v => v > 1e-9 ? v : 1);
+    const d2 = p => ((p[0] - c[0]) / s[0]) ** 2 + ((p[1] - c[1]) / s[1]) ** 2;
+    const dbar = Core.mean(S.P.map(d2));
+    if (S.truth === 'bend') return p => base(p) - S.gam * (d2(p) - dbar);
+    if (S.truth === 'plateau') { const vals = S.P.map(base).sort((a, b) => a - b), cap = vals[Math.floor(0.65 * (vals.length - 1))]; return p => Math.min(base(p), cap); }
+    return base;
+  }
+  // the gradient of the truth, for the split of the bias into a balance term and a bend term
+  function truthGrad() {
+    const d = dom(), base = d.plane, g0 = d.grad, c = Core.centroid(S.P), s = Core.spreads(S.P).map(v => v > 1e-9 ? v : 1);
+    if (S.truth === 'bend') return p => [g0[0] - 2 * S.gam * (p[0] - c[0]) / (s[0] * s[0]), g0[1] - 2 * S.gam * (p[1] - c[1]) / (s[1] * s[1])];
+    if (S.truth === 'plateau') { const vals = S.P.map(base).sort((a, b) => a - b), cap = vals[Math.floor(0.65 * (vals.length - 1))]; return p => base(p) < cap ? g0.slice() : [0, 0]; }
+    return () => g0.slice();
+  }
+  function makeNoise(n, seed) { const r = Core.rng(seed); return Array.from({ length: n }, () => r.normal()); }
+  function resetSample() {
+    const pr = PRESETS[S.preset], r = Core.rng(S.seed);
+    S.P = pr.make(S.n, r).map(clampIn);
+    S.x0 = pr.dom.x0.slice();
+    if (pr.outcomes) { const f = pr.dom.plane; S.eps = pr.outcomes.map((y, i) => (y - f(S.P[i])) / 2); S.sigma = 2; $('sigma').value = 2; $('sigmaval').textContent = '2.0'; S.truth = 'plane'; $('truth').value = 'plane'; }
+    else S.eps = makeNoise(S.P.length, S.noiseSeed);
+    syncK();
+  }
+  function syncK() { $('k').max = S.P.length; if (S.k > S.P.length) { S.k = S.P.length; $('k').value = S.k; $('kval').textContent = S.k; } }
+
+  // ---------- the weights ----------
+  function spreadsOf(P) { return S.scaled ? Core.spreads(P).map(v => v > 1e-9 ? v : 1) : [1, 1]; }
+  function dists(P, x0, s) { return P.map(p => Math.sqrt(((p[0] - x0[0]) / s[0]) ** 2 + ((p[1] - x0[1]) / s[1]) ** 2)); }
+  function weightsFor(key, P, x0, s, iters) {
+    const d = dists(P, x0, s), rows = P.map(p => [1, p[0], p[1]]), xt = [1, x0[0], x0[1]];
+    if (key === 'knn') return Core.knnWeights(d, S.k);
+    if (key === 'kernel') return Core.kernelWeights(d, S.h);
+    if (key === 'loclin') return Core.wlsWeights(rows, xt, Core.kernelValues(d, S.h));
+    if (key === 'plane') return Core.lsWeights(rows, xt);
+    if (key === 'nna') return Core.floorWeights(P, x0, 0, iters);
+    if (key === 'floor') return Core.floorWeights(P, x0, -S.floor, iters);
+    return null;
+  }
+  function summary(w, P, x0, ys, f, grad) {
+    if (!w) return null;
+    const wm = [0, 1].map(j => Core.sum(w.map((v, i) => v * P[i][j])));
+    const gap = Math.hypot(x0[0] - wm[0], x0[1] - wm[1]);
+    const size = Core.sum(w.map(v => v * v)), abs = Core.sum(w.map(v => Math.abs(v))), negs = w.filter(v => v < -1e-9).length;
+    const yhat = Core.sum(w.map((v, i) => v * ys[i]));
+    const fx = f(x0), bias = Core.sum(w.map((v, i) => v * f(P[i]))) - fx, variance = S.sigma * S.sigma * size;
+    // Claim 8: the balance term is the gradient of f at x* times the gap, the bend term is the rest of the bias
+    const balance = grad[0] * (wm[0] - x0[0]) + grad[1] * (wm[1] - x0[1]), bend = bias - balance;
+    return { sum: Core.sum(w), wm, gap, size, abs, negs, yhat, fx, bias, balance, bend, variance, mse: bias * bias + variance };
+  }
+  // Everything the drawings need, computed once per change of state.
+  function model() {
+    const P = S.P, f = truthFn(), grad = truthGrad()(S.x0), ys = P.map((p, i) => f(p) + S.sigma * S.eps[i]);
+    const s = spreadsOf(P), c = Core.centroid(P), H = Core.hull(P);
+    const W = {}, sums = {};
+    const iters = interacting() ? 500 : undefined;
+    for (const k of KEYS) { W[k] = weightsFor(k, P, S.x0, s, iters); sums[k] = summary(W[k], P, S.x0, ys, f, grad); }
+    // the ray from the mean to x*, measured in the distance the local rules use
+    let d = [(S.x0[0] - c[0]) / s[0], (S.x0[1] - c[1]) / s[1]]; const len = Math.hypot(d[0], d[1]);
+    const u = len > 1e-9 ? [d[0] / len, d[1] / len] : [1, 0];
+    const ts = P.map(p => ((p[0] - c[0]) / s[0]) * u[0] + ((p[1] - c[1]) / s[1]) * u[1]);
+    const onRay = t => [c[0] + t * u[0] * s[0], c[1] + t * u[1] * s[1]];
+    const w = W[S.est], sm = sums[S.est];
+    // the images of Claim 6: reflected through the mean when the weight is negative, then scaled by 1 + 2m
+    const refl = w ? Core.reflection(w, P, c) : null, fac = refl ? refl.factor : 1;
+    const showImg = $('showmirror').checked && !!w;
+    const sgn = i => (w && w[i] < -1e-9 ? -1 : 1);
+    const img = P.map((p, i) => showImg ? [c[0] + fac * sgn(i) * (p[0] - c[0]), c[1] + fac * sgn(i) * (p[1] - c[1])] : p);
+    const ybar = Core.mean(ys);
+    const it = ts.map((t, i) => showImg ? fac * sgn(i) * t : t), iy = ys.map((y, i) => showImg ? ybar + fac * sgn(i) * (y - ybar) : y);
+    return { P, f, ys, s, c, H, W, sums, u, tstar: len, ts, onRay, inH: Core.inHull(H, S.x0), w, sm, refl, fac, showImg, img, it, iy, ybar };
+  }
+
+  // ---------- tweens and the frame loop ----------
+  const V = new Map();
+  let raf = 0, LAST = null;
+  // Every key names one drawn quantity in one panel: the plane prefixes its keys with p, the ray with r.
+  function tw(key, tgt, immediate) {
+    let v = V.get(key);
+    if (!v) { v = { cur: tgt, tgt }; V.set(key, v); return tgt; }
+    v.tgt = tgt;
+    if (immediate || REDUCED) v.cur = tgt;
+    return v.cur;
+  }
+  function stepTweens() {
+    let active = false;
+    for (const v of V.values()) { const d = v.tgt - v.cur; if (Math.abs(d) > 1e-3) { v.cur += d * 0.28; active = true; } else v.cur = v.tgt; }
+    return active;
+  }
+  function animate() {
+    if (raf) return;
+    const loop = () => {
+      raf = 0;
+      let again = false;
+      if (S.anim) { stepAnim(); LAST = model(); updateViews(LAST); again = true; }
+      const active = stepTweens();
+      paint(LAST, false);
+      if (active || again) raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+  }
+
+  // ---------- views: what each panel shows, fitted or zoomed ----------
+  // A view is a target rectangle in data units. The drawn rectangle follows it through tweens, so a refit or a zoom moves smoothly.
+  // While something is being dragged or animated the views hold still, and they refit once the interaction ends.
+  const nice = (span, target) => { const raw = Math.abs(span) / target || 1, p = Math.pow(10, Math.floor(Math.log10(raw))), r = raw / p; return (r < 1.5 ? 1 : r < 3.5 ? 2 : r < 7.5 ? 5 : 10) * p; };
+  const tickFmt = step => { const d = Math.max(0, -Math.floor(Math.log10(step) + 1e-9)); return v => (+v.toFixed(d)).toString(); };
+  const ticksOf = (lo, hi, step) => { const out = []; for (let k = Math.ceil(lo / step - 1e-9); k * step <= hi + 1e-9; k++) out.push(k * step); return out; };
+  function makeView(prefix) { return { auto: true, fitted: false, x: [0, 1], y: [0, 1], prefix }; }
+  // A fitted view moves only when it has to: when the content leaves it, or when the content fills less than half of it.
+  function settleView(v, fit) {
+    const inside = fit.x[0] >= v.x[0] - 1e-9 && fit.x[1] <= v.x[1] + 1e-9 && fit.y[0] >= v.y[0] - 1e-9 && fit.y[1] <= v.y[1] + 1e-9;
+    const rx = (fit.x[1] - fit.x[0]) / (v.x[1] - v.x[0]), ry = (fit.y[1] - fit.y[0]) / (v.y[1] - v.y[0]);
+    if (!v.fitted || !inside || rx < 0.5 || ry < 0.5) { v.x = fit.x.slice(); v.y = fit.y.slice(); v.fitted = true; }
+  }
+  const refit = v => { v.auto = true; v.fitted = false; render(false); };
+  function viewCur(v, immediate) { const p = v.prefix; return { x: [tw(p + 'x0', v.x[0], immediate), tw(p + 'x1', v.x[1], immediate)], y: [tw(p + 'y0', v.y[0], immediate), tw(p + 'y1', v.y[1], immediate)] }; }
+  function scalesOf(rect, cur) {
+    const { W, H, L, R, T, B } = rect, w = W - L - R, h = H - T - B;
+    return { sx: v => L + (v - cur.x[0]) / (cur.x[1] - cur.x[0]) * w, sy: v => H - B - (v - cur.y[0]) / (cur.y[1] - cur.y[0]) * h,
+      ix: X => cur.x[0] + (X - L) / w * (cur.x[1] - cur.x[0]), iy: Y => cur.y[0] + (H - B - Y) / h * (cur.y[1] - cur.y[0]), cur, w, h };
+  }
+  const bbox = pts => { let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity; for (const p of pts) { x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); } return { x: [x0, x1], y: [y0, y1] }; };
+  const padBox = (b, fx, fy) => { const dx = (b.x[1] - b.x[0]) * fx, dy = (b.y[1] - b.y[0]) * fy; return { x: [b.x[0] - dx, b.x[1] + dx], y: [b.y[0] - dy, b.y[1] + dy] }; };
+  const unionBox = (a, b) => ({ x: [Math.min(a.x[0], b.x[0]), Math.max(a.x[1], b.x[1])], y: [Math.min(a.y[0], b.y[0]), Math.max(a.y[1], b.y[1])] });
+  // zooming about a data point or panning by a data offset leaves the automatic fit, until Fit is pressed
+  function zoomView(v, cur, factor, ax, ay, lim) {
+    const sx = (cur.x[1] - cur.x[0]) * factor, sy = (cur.y[1] - cur.y[0]) * factor;
+    if (sx < lim.x / 200 || sx > lim.x * 20 || sy < lim.y / 200 || sy > lim.y * 20) return false;
+    v.auto = false; v.x = [ax - (ax - cur.x[0]) * factor, ax + (cur.x[1] - ax) * factor]; v.y = [ay - (ay - cur.y[0]) * factor, ay + (cur.y[1] - ay) * factor]; return true;
+  }
+  function panView(v, from, dx, dy) { v.auto = false; v.x = [from.x[0] - dx, from.x[1] - dx]; v.y = [from.y[0] - dy, from.y[1] - dy]; }
+  let keyHold = 0, keyTimer = 0;
+  const interacting = () => !!S.drag || !!S.anim || !!S.pinch || keyHold > 0;
+  // the views hold still for a moment after an arrow key, then refit
+  function holdKeys() { keyHold = 1; clearTimeout(keyTimer); keyTimer = setTimeout(() => { keyHold = 0; render(false); }, 450); }
+  // ctrl + wheel, which is also what a trackpad pinch sends, and a two-finger pinch zoom a panel about the pointer
+  function zoomGestures(svg, view, getScales, lim) {
+    svg.addEventListener('wheel', ev => {
+      if (!(ev.ctrlKey || ev.metaKey)) return;
+      ev.preventDefault();
+      const q = toSvg(svg, ev), sc = getScales(), k = ev.deltaMode === 1 ? 16 : ev.deltaMode === 2 ? 400 : 1;
+      const factor = Math.min(1.6, Math.max(0.625, Math.exp(ev.deltaY * k * 0.008)));
+      if (zoomView(view, sc.cur, factor, sc.ix(q.x), sc.iy(q.y), lim())) render(true);
+    }, { passive: false });
+    const ptrs = new Map();
+    svg.addEventListener('pointerdown', ev => {
+      if (ev.button !== 0) return;
+      ptrs.set(ev.pointerId, ev); svg.setPointerCapture(ev.pointerId);
+      if (ptrs.size !== 2) return;
+      const [a, b] = [...ptrs.values()], qa = toSvg(svg, a), qb = toSvg(svg, b), sc = getScales();
+      S.drag = null; svg.classList.remove('dragging'); hideTip();
+      S.pinch = { d0: Math.hypot(qa.x - qb.x, qa.y - qb.y) || 1, cur: sc.cur, ax: sc.ix((qa.x + qb.x) / 2), ay: sc.iy((qa.y + qb.y) / 2) };
+    }, true);
+    svg.addEventListener('pointermove', ev => {
+      if (!ptrs.has(ev.pointerId)) return;
+      ptrs.set(ev.pointerId, ev);
+      if (!S.pinch || ptrs.size !== 2) return;
+      const [a, b] = [...ptrs.values()], qa = toSvg(svg, a), qb = toSvg(svg, b), d = Math.hypot(qa.x - qb.x, qa.y - qb.y) || 1;
+      if (zoomView(view, S.pinch.cur, S.pinch.d0 / d, S.pinch.ax, S.pinch.ay, lim())) render(true);
+    }, true);
+    const up = ev => { ptrs.delete(ev.pointerId); if (S.pinch && ptrs.size < 2) { S.pinch = null; render(false); } };
+    svg.addEventListener('pointerup', up, true); svg.addEventListener('pointercancel', up, true); svg.addEventListener('lostpointercapture', up, true);
+  }
+
+  // ---------- the plane ----------
+  const PL = { W: 560, H: 540, L: 46, R: 16, T: 18, B: 44 };
+  const PV = makeView('v');
+  let PS = scalesOf(PL, { x: [0, 10], y: [0, 10] });
+  const px = v => PS.sx(v), py = v => PS.sy(v);
+  const inv = (X, Y) => [PS.ix(X), PS.iy(Y)];
+  const poly = pts => pts.map(p => `${px(p[0]).toFixed(1)},${py(p[1]).toFixed(1)}`).join(' ');
+  const discR = w => Math.max(2.4, 11.5 * Math.sqrt(Math.abs(w) / 0.25));
+  const domBox = () => ({ x: dom().x.slice(), y: dom().y.slice() });
+  const domSpan = () => ({ x: dom().x[1] - dom().x[0], y: dom().y[1] - dom().y[0] });
+  // the fitted view holds the preset's domain, every point, x*, and the images and the reach when they are shown
+  function fitPlane(m) {
+    const pts = [...m.P, S.x0];
+    if (m.showImg) pts.push(...m.img);
+    if ($('showreach').checked && m.H.length >= 3) pts.push(...Core.scaleAbout(m.H, m.c, 1 + m.P.length * S.floor));
+    const b = padBox(unionBox(domBox(), bbox(pts)), 0.05, 0.05); b.y[1] += (b.y[1] - b.y[0]) * 0.07; return b;
+  }
+  function zoomPlaneBy(factor) { const cx = (PS.cur.x[0] + PS.cur.x[1]) / 2, cy = (PS.cur.y[0] + PS.cur.y[1]) / 2; if (zoomView(PV, PS.cur, factor, cx, cy, domSpan())) render(false); }
+  const G = {};
+  let axesKey = '';
+  function buildPlane() {
+    const svg = $('plane'); svg.innerHTML = '';
+    const defs = el('defs', {}, svg);
+    el('rect', { x: PL.L, y: PL.T, width: PL.W - PL.L - PL.R, height: PL.H - PL.T - PL.B }, el('clipPath', { id: 'clipP' }, defs));
+    const mk = el('marker', { id: 'arrow', viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: 'auto-start-reverse' }, defs);
+    el('path', { d: 'M0,0 L10,5 L0,10 z', fill: 'var(--fg)' }, mk);
+    const mk2 = el('marker', { id: 'arrowp', viewBox: '0 0 10 10', refX: 8, refY: 5, markerWidth: 6, markerHeight: 6, orient: 'auto' }, defs);
+    el('path', { d: 'M0,0 L10,5 L0,10 z', fill: 'var(--mirror)' }, mk2);
+    G.axes = el('g', {}, svg);
+    // everything drawn in data units is clipped to the frame
+    const c = el('g', { 'clip-path': 'url(#clipP)' }, svg);
+    G.negside = el('polygon', { class: 'negside' }, c);
+    G.box = el('rect', { class: 'boxline' }, c);
+    G.reach = el('polygon', { class: 'reachhull floor' }, c);
+    G.mhull = el('polygon', { class: 'mirrorhull' }, c);
+    G.hull = el('polygon', { class: 'hullfill' }, c);
+    G.zero = el('line', { class: 'zeroline' }, c);
+    G.zeroplus = el('text', { class: 'label signlab', 'text-anchor': 'middle' }, c); G.zerominus = el('text', { class: 'label signlab neg', 'text-anchor': 'middle' }, c);
+    G.ray = el('line', { class: 'ray' }, c);
+    G.ring1 = el('ellipse', { class: 'ring' }, c); G.ring2 = el('ellipse', { class: 'ring' }, c);
+    G.mlines = el('g', {}, c); G.mpts = el('g', {}, c);
+    G.halo = el('circle', { class: 'halo', r: 0 }, c);
+    G.discs = el('g', {}, c);
+    G.cmark = el('circle', { class: 'cmark', r: 2.6 }, c); G.clab = el('text', { class: 'meanmark' }, c); G.clab.textContent = 'x̄';
+    G.grpline = el('line', { class: 'grpline' }, c);
+    G.gm = el('rect', { class: 'grp minus', width: 10, height: 10 }, c); G.gmlab = el('text', { class: 'label' }, c); G.gmlab.textContent = 'X⁻';
+    G.gp = el('rect', { class: 'grp plus', width: 10, height: 10 }, c); G.gplab = el('text', { class: 'label' }, c);
+    G.gap = el('line', { class: 'gap', 'marker-end': 'url(#arrow)' }, c); G.gaplab = el('text', { class: 'gaplab' }, c);
+    G.wmean = el('circle', { class: 'wmean', r: 6.5 }, c); G.wlab = el('text', { class: 'label' }, c); G.wlab.textContent = 'Σwᵢxᵢ';
+    G.newpt = el('text', { class: 'newpt', 'text-anchor': 'middle' }, c); G.newpt.textContent = '×';
+    G.newlab = el('text', { class: 'label' }, c); G.newlab.textContent = 'x*';
+    G.frame = el('rect', { class: 'frame', x: PL.L, y: PL.T, width: PL.W - PL.L - PL.R, height: PL.H - PL.T - PL.B }, svg);
+    // two status lines at the top left of the frame, the hull status at the top right
+    G.imglab = el('text', { class: 'label', x: PL.L + 6, y: PL.T + 12 }, svg);
+    G.reachlab = el('text', { class: 'label', x: PL.L + 6, y: PL.T + 26 }, svg);
+    G.status = el('text', { class: 'small', x: PL.W - PL.R, y: PL.T + 12, 'text-anchor': 'end' }, svg);
+    el('text', { class: 'axlab', x: (PL.L + PL.W - PL.R) / 2, y: PL.H - 8, 'text-anchor': 'middle', id: 'pxlab' }, svg);
+    el('text', { class: 'axlab', x: 12, y: (PL.T + PL.H - PL.B) / 2, 'text-anchor': 'middle', transform: `rotate(-90 12 ${(PL.T + PL.H - PL.B) / 2})`, id: 'pylab' }, svg);
+    // pointer handling on the canvas itself, so that repainting never loses a drag. Empty space pans.
+    svg.addEventListener('pointerdown', ev => {
+      if (S.pinch || ev.button !== 0) return;
+      const q = toSvg(svg, ev), target = pickPlane(q);
+      if (target.kind === 'pt' && ev.shiftKey) { removePoint(target.i); return; }
+      S.drag = target.kind === 'none' ? { kind: 'pan', q0: q, view0: { x: PS.cur.x.slice(), y: PS.cur.y.slice() } } : target;
+      svg.setPointerCapture(ev.pointerId); hideTip(); stopAnim(false); svg.classList.add('dragging'); ev.preventDefault();
+    });
+    svg.addEventListener('pointermove', ev => {
+      if (S.pinch) return;
+      const q = toSvg(svg, ev);
+      if (S.drag) {
+        if (S.drag.kind === 'pan') { const v0 = S.drag.view0; panView(PV, v0, (q.x - S.drag.q0.x) / PS.w * (v0.x[1] - v0.x[0]), -(q.y - S.drag.q0.y) / PS.h * (v0.y[1] - v0.y[0])); render(true); return; }
+        if (S.drag.kind === 'y') return;
+        const r = inv(q.x, q.y);
+        if (S.drag.kind === 'pt') S.P[S.drag.i] = clampIn(r); else S.x0 = [clampX(r[0]), clampY(r[1])];
+        render(true); return;
+      }
+      const t = pickPlane(q), i = t.kind === 'pt' ? t.i : -1;
+      if (i !== S.hover) { S.hover = i; render(true); }
+      if (i >= 0) tipFor(i, ev); else hideTip();
+    });
+    const end = () => { if (S.drag) { S.drag = null; svg.classList.remove('dragging'); render(false); } };
+    svg.addEventListener('pointerup', end); svg.addEventListener('pointercancel', end);
+    svg.addEventListener('pointerleave', () => { if (!S.drag && S.hover >= 0) { S.hover = -1; hideTip(); render(true); } });
+    svg.addEventListener('dblclick', ev => { const q = toSvg(svg, ev); if (pickPlane(q).kind !== 'none') return; S.P.push(clampIn(inv(q.x, q.y))); S.eps.push(Core.rng(S.noiseSeed + S.P.length * 7).normal()); syncK(); render(false); });
+    // arrow keys move x*, plus and minus zoom, 0 fits
+    svg.addEventListener('keydown', ev => {
+      if (ev.key === '+' || ev.key === '=' ) { ev.preventDefault(); zoomPlaneBy(0.8); return; }
+      if (ev.key === '-' || ev.key === '_') { ev.preventDefault(); zoomPlaneBy(1.25); return; }
+      if (ev.key === '0') { ev.preventDefault(); refit(PV); return; }
+      const step = (ev.shiftKey ? 0.05 : 0.01) * (dom().x[1] - dom().x[0]);
+      const d = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, step], ArrowDown: [0, -step] }[ev.key];
+      if (!d) return;
+      ev.preventDefault(); stopAnim(false); S.x0 = [clampX(S.x0[0] + d[0]), clampY(S.x0[1] + d[1])]; holdKeys(); render(false);
+    });
+    zoomGestures(svg, PV, () => PS, domSpan);
+    $('pzin').addEventListener('click', () => zoomPlaneBy(0.8)); $('pzout').addEventListener('click', () => zoomPlaneBy(1.25)); $('pfit').addEventListener('click', () => refit(PV));
+  }
+  function tipFor(i, ev) {
+    const m = LAST; showTip([{ b: `point ${i}` }, { t: `x = (${m.P[i][0].toFixed(2)}, ${m.P[i][1].toFixed(2)}), y = ${m.ys[i].toFixed(1)}` }, { t: `w = ${m.w ? fmt(m.w[i], 3) : '–'}` + (m.showImg ? `, image weight ${fmt(Math.abs(m.w[i]) / m.fac, 3)}` : '') }], ev.clientX, ev.clientY);
+  }
+  // the grid and the tick labels follow the drawn view
+  function axesPlane() {
+    const d = dom(), cur = PS.cur, key = [cur.x[0], cur.x[1], cur.y[0], cur.y[1]].map(v => v.toFixed(5)).join('|') + d.xlab;
+    if (key === axesKey) return;
+    axesKey = key; G.axes.innerHTML = '';
+    const grid = el('g', { class: 'grid' }, G.axes), tk = el('g', { class: 'tick' }, G.axes);
+    const xs = nice(cur.x[1] - cur.x[0], 6), fx = tickFmt(xs), ys = nice(cur.y[1] - cur.y[0], 6), fy = tickFmt(ys);
+    for (const v of ticksOf(cur.x[0], cur.x[1], xs)) { el('line', { x1: px(v), x2: px(v), y1: PL.T, y2: PL.H - PL.B }, grid); el('text', { x: px(v), y: PL.H - PL.B + 14, 'text-anchor': 'middle' }, tk).textContent = fx(v); }
+    for (const v of ticksOf(cur.y[0], cur.y[1], ys)) { el('line', { x1: PL.L, x2: PL.W - PL.R, y1: py(v), y2: py(v) }, grid); el('text', { x: PL.L - 6, y: py(v) + 4, 'text-anchor': 'end' }, tk).textContent = fy(v); }
+    $('pxlab').textContent = d.xlab; $('pylab').textContent = d.ylab;
+  }
+  // hit testing is done on what is drawn: the images when they are shown
+  function pickPlane(q) {
+    let best = { kind: 'none', d: 1e9 };
+    const d0 = Math.hypot(px(S.x0[0]) - q.x, py(S.x0[1]) - q.y);
+    if (d0 < 16) best = { kind: 'x0', d: d0 };
+    const pos = LAST ? LAST.img : S.P;
+    pos.forEach((p, i) => { const d = Math.hypot(px(p[0]) - q.x, py(p[1]) - q.y); if (d < 13 && d < best.d) best = { kind: 'pt', i, d }; });
+    return best;
+  }
+  function removePoint(i) { if (S.P.length <= 4) return; S.P.splice(i, 1); S.eps.splice(i, 1); S.hover = -1; syncK(); render(false); }
+  function syncChildren(group, n, tag, cls) {
+    while (group.children.length < n) el(tag, { class: cls }, group);
+    while (group.children.length > n) group.removeChild(group.lastChild);
+    return Array.from(group.children);
+  }
+  // The drawn view clipped to the half-plane a.(x - c) + 1/n <= 0, where the plane's weight is negative.
+  function negativeRegion(a, c, n) {
+    const v = PS.cur, g = p => a[0] * (p[0] - c[0]) + a[1] * (p[1] - c[1]) + 1 / n;
+    const corners = [[v.x[0], v.y[0]], [v.x[1], v.y[0]], [v.x[1], v.y[1]], [v.x[0], v.y[1]]], res = [];
+    for (let i = 0; i < 4; i++) {
+      const p = corners[i], q = corners[(i + 1) % 4], gp = g(p), gq = g(q);
+      if (gp <= 0) res.push(p);
+      if ((gp <= 0) !== (gq <= 0)) { const t = gp / (gp - gq); res.push([p[0] + t * (q[0] - p[0]), p[1] + t * (q[1] - p[1])]); }
+    }
+    return res;
+  }
+  function paintPlane(m, immediate) {
+    PS = scalesOf(PL, viewCur(PV, immediate));
+    axesPlane();
+    const { P, c, H, w, sm, fac, showImg, img, refl } = m, key = S.est, n = P.length;
+    const xs = P.map(p => p[0]), ysx = P.map(p => p[1]);
+    show(G.box, $('showbox').checked);
+    setA(G.box, { x: px(Math.min(...xs)), y: py(Math.max(...ysx)), width: px(Math.max(...xs)) - px(Math.min(...xs)), height: py(Math.min(...ysx)) - py(Math.max(...ysx)) });
+    const showReach = $('showreach').checked && H.length >= 3;
+    show(G.reach, showReach); show(G.reachlab, showReach);
+    if (showReach) { const f2 = 1 + n * S.floor; setA(G.reach, { points: poly(Core.scaleAbout(H, c, f2)) }); G.reachlab.textContent = `reach of the floor ${S.floor.toFixed(2)}: the hull scaled by ${f2.toFixed(2)}`; }
+    const IH = showImg ? Core.hull(img) : null;
+    show(G.mhull, showImg && IH.length >= 3); if (showImg && IH.length >= 3) setA(G.mhull, { points: poly(IH) });
+    show(G.imglab, showImg); if (showImg) G.imglab.textContent = refl.m > 1e-9 ? `images: ${sm.negs} reflected through x̄, all scaled by ${fac.toFixed(2)}` : 'images: no negative weight, so nothing moves';
+    show(G.hull, $('showhull').checked && H.length >= 2);
+    if (H.length >= 2) setA(G.hull, { points: poly(H) });
+    // where the plane's weight is zero: w(x) = 1/n + a.(x - c), with a recovered from the weights by least squares
+    const Wp = m.W.plane, showZero = $('showzero').checked && Wp && n >= 3;
+    let zeroOn = false;
+    if (showZero) {
+      const A = [[0, 0], [0, 0]], b = [0, 0];
+      P.forEach((p, i) => { const d = [p[0] - c[0], p[1] - c[1]], r = Wp[i] - 1 / n; A[0][0] += d[0] * d[0]; A[0][1] += d[0] * d[1]; A[1][0] += d[0] * d[1]; A[1][1] += d[1] * d[1]; b[0] += d[0] * r; b[1] += d[1] * r; });
+      const Ai = Core.invert(A);
+      if (Ai) {
+        const a = [Ai[0][0] * b[0] + Ai[0][1] * b[1], Ai[1][0] * b[0] + Ai[1][1] * b[1]], na = Math.hypot(a[0], a[1]);
+        const region = negativeRegion(a, c, n);
+        const seg = region.filter(p => Math.abs(a[0] * (p[0] - c[0]) + a[1] * (p[1] - c[1]) + 1 / n) < 1e-7 * (1 + na));
+        if (na > 1e-12 && region.length >= 3 && seg.length >= 2) {
+          zeroOn = true;
+          setA(G.negside, { points: poly(region) });
+          const p0 = seg[0], p1 = seg[seg.length - 1];
+          setA(G.zero, { x1: px(p0[0]), y1: py(p0[1]), x2: px(p1[0]), y2: py(p1[1]) });
+          // the signs sit a fifth of the way along the line, offset to either side in screen units, w > 0 on the side of x*
+          const ax = px(p0[0]) + 0.2 * (px(p1[0]) - px(p0[0])), ay = py(p0[1]) + 0.2 * (py(p1[1]) - py(p0[1]));
+          const dx = px(p1[0]) - px(p0[0]), dy = py(p1[1]) - py(p0[1]), L = Math.hypot(dx, dy) || 1, nx = -dy / L, ny = dx / L;
+          const sidePos = (px(S.x0[0]) - ax) * nx + (py(S.x0[1]) - ay) * ny > 0 ? 1 : -1;
+          setA(G.zeroplus, { x: ax + 13 * sidePos * nx, y: ay + 13 * sidePos * ny + 4 }); G.zeroplus.textContent = 'w > 0';
+          setA(G.zerominus, { x: ax - 13 * sidePos * nx, y: ay - 13 * sidePos * ny + 4 }); G.zerominus.textContent = 'w < 0';
+        }
+      }
+    }
+    show(G.zero, zeroOn); show(G.zeroplus, zeroOn); show(G.zerominus, zeroOn); show(G.negside, zeroOn);
+    // the ray and the distance rings of the local rules
+    setA(G.ray, { x1: px(c[0]), y1: py(c[1]), x2: px(S.x0[0]), y2: py(S.x0[1]) });
+    const sx1 = px(1) - px(0), sy1 = py(0) - py(1);
+    const ringOn = key === 'knn' || key === 'kernel' || key === 'loclin';
+    show(G.ring1, ringOn); show(G.ring2, key === 'kernel' || key === 'loclin');
+    if (ringOn) {
+      let rad;
+      if (key === 'knn') { const d = dists(P, S.x0, m.s).slice().sort((a, b) => a - b); rad = d[Math.min(S.k, n) - 1]; } else rad = S.h;
+      setA(G.ring1, { class: `ring ${key}`, cx: px(S.x0[0]), cy: py(S.x0[1]), rx: rad * m.s[0] * sx1, ry: rad * m.s[1] * sy1 });
+      setA(G.ring2, { class: `ring ${key}`, cx: px(S.x0[0]), cy: py(S.x0[1]), rx: 2 * rad * m.s[0] * sx1, ry: 2 * rad * m.s[1] * sy1 });
+    }
+    // the points as weight discs, drawn at their images when those are shown, with an arrow from the original.
+    // Positions are tweened in data units, so the discs stay on the grid while the view moves.
+    const mp = syncChildren(G.mpts, n, 'circle', 'orig'), ml = syncChildren(G.mlines, n, 'line', 'mline'), discs = syncChildren(G.discs, n, 'circle', 'disc');
+    const cxs = [], cys = [];
+    P.forEach((p, i) => {
+      const v = w ? w[i] : 0, zero = !w || Math.abs(v) < 1e-9;
+      const cx = px(tw(`px${i}`, img[i][0], immediate)), cy = py(tw(`py${i}`, img[i][1], immediate));
+      cxs.push(cx); cys.push(cy);
+      const wi = showImg ? Math.abs(v) / fac : v;
+      setA(discs[i], { class: zero ? 'disc zero' : wi > 0 ? `disc pos ${key}` : 'disc neg', cx, cy, r: tw(`pr${i}`, zero ? 2.6 : discR(wi), immediate) });
+      const moved = showImg && Math.hypot(cx - px(p[0]), cy - py(p[1])) > 2.5;
+      show(mp[i], showImg); setA(mp[i], { cx: px(p[0]), cy: py(p[1]), r: 2.6 });
+      show(ml[i], moved); if (moved) setA(ml[i], { x1: px(p[0]), y1: py(p[1]), x2: cx, y2: cy, 'marker-end': 'url(#arrowp)' });
+    });
+    show(G.halo, S.hover >= 0 && S.hover < n);
+    if (S.hover >= 0 && S.hover < n) setA(G.halo, { cx: cxs[S.hover], cy: cys[S.hover], r: 15 });
+    // the mean, the two groups, the weighted mean and the gap
+    setA(G.cmark, { cx: px(c[0]), cy: py(c[1]) }); setA(G.clab, { x: px(c[0]) + 6, y: py(c[1]) - 6 });
+    const gr = ($('showgroups').checked && w) ? Core.groups(w, P, m.ys) : null, haveG = !!(gr && gr.Xm && gr.Xp);
+    show(G.grpline, haveG); show(G.gm, haveG); show(G.gmlab, haveG); show(G.gp, haveG); show(G.gplab, haveG);
+    show(G.wmean, !!w); show(G.gap, !!w && sm.gap > 1e-6); show(G.gaplab, !!w && sm.gap > 1e-6);
+    if (!w) show(G.wlab, false);
+    if (w) {
+      const wx = px(tw('wmx', sm.wm[0], immediate)), wy = py(tw('wmy', sm.wm[1], immediate));
+      setA(G.wmean, { class: `wmean ${key}`, cx: wx, cy: wy });
+      const apart = Math.hypot(wx - px(S.x0[0]), wy - py(S.x0[1])) > 22;
+      show(G.wlab, apart); if (apart) setA(G.wlab, { x: wx + 8, y: wy + 15 });
+      if (sm.gap > 1e-6) { setA(G.gap, { x1: wx, y1: wy, x2: px(S.x0[0]), y2: py(S.x0[1]) }); setA(G.gaplab, { x: (wx + px(S.x0[0])) / 2 + 7, y: (wy + py(S.x0[1])) / 2 - 7 }); G.gaplab.textContent = `gap ${sm.gap.toFixed(2)}`; }
+      if (haveG) {
+        const ax = px(tw('gmx', gr.Xm[0], immediate)), ay = py(tw('gmy', gr.Xm[1], immediate)), bx = px(tw('gpx', gr.Xp[0], immediate)), by = py(tw('gpy', gr.Xp[1], immediate));
+        setA(G.grpline, { x1: ax, y1: ay, x2: wx, y2: wy });
+        setA(G.gm, { x: ax - 5, y: ay - 5 }); setA(G.gmlab, { x: ax + 8, y: ay + 4 });
+        setA(G.gp, { x: bx - 5, y: by - 5 }); setA(G.gplab, { x: bx + 8, y: by + 4 }); G.gplab.textContent = `X⁺, m = ${gr.m.toFixed(2)}`;
+      }
+    }
+    setA(G.newpt, { x: px(S.x0[0]), y: py(S.x0[1]) + 7 }); setA(G.newlab, { x: px(S.x0[0]) + 9, y: py(S.x0[1]) - 8 });
+    G.status.textContent = m.inH ? 'x* in the hull' : 'x* outside the hull';
+  }
+
+  // ---------- the ray ----------
+  const RY = { W: 560, H: 540, L: 50, R: 16, T: 18, B: 44 };
+  const RV = makeView('u');
+  let RS = scalesOf(RY, { x: [0, 1], y: [0, 1] }), RLIM = { x: 1, y: 1 };
+  const R = {};
+  function buildRay() {
+    const svg = $('ray'); svg.innerHTML = '';
+    const defs = el('defs', {}, svg);
+    el('rect', { x: RY.L, y: RY.T, width: RY.W - RY.L - RY.R, height: RY.H - RY.T - RY.B }, el('clipPath', { id: 'clipR' }, defs));
+    const mk = el('marker', { id: 'arrowr', viewBox: '0 0 10 10', refX: 8, refY: 5, markerWidth: 6, markerHeight: 6, orient: 'auto' }, defs);
+    el('path', { d: 'M0,0 L10,5 L0,10 z', fill: 'var(--mirror)' }, mk);
+    R.ticks = el('g', { class: 'tick' }, svg);
+    const c = el('g', { 'clip-path': 'url(#clipR)' }, svg);
+    R.band = el('rect', { class: 'yband' }, c); R.bandlab = el('text', { class: 'bandlab', 'text-anchor': 'end' }, c); R.bandlab.textContent = 'range of the sampled y';
+    R.truth = el('path', { class: 'curve truth' }, c); R.fit = el('path', { class: 'curve fit' }, c);
+    R.x0line = el('line', { class: 'x0line' }, c); R.cline = el('line', { class: 'x0line', 'stroke-dasharray': '2 3' }, c);
+    R.clab = el('text', { class: 'small' }, c); R.clab.textContent = 'x̄'; R.xlab2 = el('text', { class: 'small' }, c); R.xlab2.textContent = 'x*';
+    R.mlines = el('g', {}, c); R.mpts = el('g', {}, c);
+    R.halo = el('circle', { class: 'halo', r: 0 }, c);
+    R.discs = el('g', {}, c);
+    R.postick = el('line', { class: 'postick' }, c); R.pos = el('circle', { class: 'wmean', r: 5 }, c);
+    R.gap = el('line', { class: 'gap' }, c); R.gaplab = el('text', { class: 'gaplab', 'text-anchor': 'middle' }, c);
+    R.pred = el('circle', { class: 'pred', r: 6.5 }, c); R.predlab = el('text', { class: 'gaplab' }, c);
+    R.ftick = el('path', { class: 'ftick', fill: 'var(--fg)' }, c); R.flab = el('text', { class: 'small', 'text-anchor': 'end' }, c);
+    // curly braces for the bias at x*, split into its balance and bend parts when both show
+    R.braces = [0, 1, 2].map(() => ({ path: el('path', { class: 'brace' }, c), lab: el('text', { class: 'bracelab' }, c) }));
+    R.frame = el('rect', { class: 'frame', x: RY.L, y: RY.T, width: RY.W - RY.L - RY.R, height: RY.H - RY.T - RY.B }, svg);
+    R.xlab = el('text', { class: 'axlab', 'text-anchor': 'middle', x: (RY.L + RY.W - RY.R) / 2, y: RY.H - 8 }, svg);
+    R.ylab = el('text', { class: 'axlab', 'text-anchor': 'middle', x: 14, y: (RY.T + RY.H - RY.B) / 2, transform: `rotate(-90 14 ${(RY.T + RY.H - RY.B) / 2})` }, svg); R.ylab.textContent = 'outcome y';
+    // dragging an outcome up or down changes that point's noise: the prediction moves by w_i times the change. Empty space pans.
+    svg.addEventListener('pointerdown', ev => {
+      if (S.pinch || ev.button !== 0) return;
+      const q = toSvg(svg, ev), i = pickRay(q);
+      if (i >= 0 && S.sigma <= 0) return;
+      S.drag = i >= 0 ? { kind: 'y', i } : { kind: 'rpan', q0: q, view0: { x: RS.cur.x.slice(), y: RS.cur.y.slice() } };
+      svg.setPointerCapture(ev.pointerId); hideTip(); stopAnim(false); svg.classList.add('dragging'); ev.preventDefault();
+    });
+    svg.addEventListener('pointermove', ev => {
+      if (S.pinch) return;
+      const q = toSvg(svg, ev);
+      if (S.drag && S.drag.kind === 'rpan') { const v0 = S.drag.view0; panView(RV, v0, (q.x - S.drag.q0.x) / RS.w * (v0.x[1] - v0.x[0]), -(q.y - S.drag.q0.y) / RS.h * (v0.y[1] - v0.y[0])); render(true); return; }
+      if (S.drag && S.drag.kind === 'y') {
+        const i = S.drag.i, m = LAST;
+        // the pointer sets the drawn outcome. Undo the image transform if the images are shown.
+        let y = RS.iy(q.y);
+        if (m.showImg) { const s = m.w[i] < -1e-9 ? -1 : 1; y = m.ybar + (y - m.ybar) / (m.fac * s); }
+        S.eps[i] = (y - m.f(S.P[i])) / S.sigma; render(true); return;
+      }
+      if (S.drag) return;
+      const i = pickRay(q);
+      if (i !== S.hover) { S.hover = i; render(true); }
+      if (i >= 0) tipFor(i, ev); else hideTip();
+    });
+    const end = () => { if (S.drag) { S.drag = null; svg.classList.remove('dragging'); render(false); } };
+    svg.addEventListener('pointerup', end); svg.addEventListener('pointercancel', end);
+    svg.addEventListener('pointerleave', () => { if (!S.drag && S.hover >= 0) { S.hover = -1; hideTip(); render(true); } });
+    svg.addEventListener('keydown', ev => {
+      const z = ev.key === '+' || ev.key === '=' ? 0.8 : ev.key === '-' || ev.key === '_' ? 1.25 : 0;
+      if (z) { ev.preventDefault(); zoomRayBy(z); } else if (ev.key === '0') { ev.preventDefault(); refit(RV); }
+    });
+    zoomGestures(svg, RV, () => RS, () => RLIM);
+    $('rzin').addEventListener('click', () => zoomRayBy(0.8)); $('rzout').addEventListener('click', () => zoomRayBy(1.25)); $('rfit').addEventListener('click', () => refit(RV));
+  }
+  // a curly brace from (x, y1) to (x, y2) whose tip points in direction dir, +1 right or -1 left
+  function bracePath(x, y1, y2, dir) {
+    const top = Math.min(y1, y2), bot = Math.max(y1, y2), h = bot - top, a = Math.min(6, h / 4), w = dir * a, m = (top + bot) / 2;
+    return `M${x},${top} Q${x + w},${top} ${x + w},${top + a} L${x + w},${m - a} Q${x + w},${m} ${x + 2 * w},${m} Q${x + w},${m} ${x + w},${m + a} L${x + w},${bot - a} Q${x + w},${bot} ${x},${bot}`;
+  }
+  function zoomRayBy(factor) { const cx = (RS.cur.x[0] + RS.cur.x[1]) / 2, cy = (RS.cur.y[0] + RS.cur.y[1]) / 2; if (zoomView(RV, RS.cur, factor, cx, cy, RLIM)) render(false); }
+  function pickRay(q) {
+    let best = -1, bd = 13;
+    if (!LAST) return best;
+    LAST.it.forEach((t, i) => { const d = Math.hypot(RS.sx(t) - q.x, RS.sy(LAST.iy[i]) - q.y); if (d < bd) { bd = d; best = i; } });
+    return best;
+  }
+  // the fitted curve along the ray. The slow rules get a coarser grid and solver while the view is still moving.
+  function fitAlongRay(m, grid, coarse) {
+    const heavy = S.est === 'nna' || S.est === 'floor';
+    return grid.map(t => { const w = weightsFor(S.est, m.P, m.onRay(t), m.s, heavy ? (coarse ? 150 : 600) : undefined); return w ? Core.sum(w.map((v, i) => v * m.ys[i])) : NaN; });
+  }
+  const gridOf = (t0, t1, N) => Array.from({ length: N }, (_, j) => t0 + (t1 - t0) * j / (N - 1));
+  // the fitted view: the t-range from the points, x* and the images, the y-range from the outcomes, the prediction, the truth at x* and the images
+  function fitRay(m) {
+    const { ys, ts, tstar, sm, f, showImg, it, iy } = m, showTruth = $('showtruth').checked;
+    const T = [...ts, tstar, 0, ...(showImg ? it : [])], Y = [...ys, ...(showImg ? iy : []), ...(sm ? [sm.yhat] : []), ...(showTruth ? [f(S.x0)] : [])];
+    let t0 = Math.min(...T), t1 = Math.max(...T); const tp = (t1 - t0) * 0.08 + 0.3; t0 -= tp; t1 += tp;
+    if (showTruth) t1 += (t1 - t0) * 0.16;  // room for the braces beside x*
+    let y0 = Math.min(...Y), y1 = Math.max(...Y); const yp = (y1 - y0) * 0.12 + 1; y0 -= yp; y1 += yp;
+    RLIM = { x: t1 - t0, y: y1 - y0 };
+    return { x: [t0, t1], y: [y0, y1] };
+  }
+  // while something moves, the view only grows, so that x*, the prediction and the images stay in the frame
+  function growRay(m, v) {
+    const { ys, ts, tstar, sm, f, showImg, it, iy } = m, showTruth = $('showtruth').checked;
+    const T = [...ts, tstar, 0, ...(showImg ? it : [])], Y = [...ys, ...(showImg ? iy : []), ...(sm ? [sm.yhat] : []), ...(showTruth ? [f(S.x0)] : [])];
+    return unionBox({ x: v.x.slice(), y: v.y.slice() }, padBox({ x: [Math.min(...T), Math.max(...T)], y: [Math.min(...Y), Math.max(...Y)] }, 0.05, 0.05));
+  }
+  function pathOf(xs, ys, sx, sy) {
+    let d = '', pen = false;
+    xs.forEach((x, j) => { const y = ys[j]; if (!Number.isFinite(y)) { pen = false; return; } d += `${pen ? 'L' : 'M'}${sx(x).toFixed(1)},${sy(y).toFixed(1)}`; pen = true; });
+    return d;
+  }
+  function paintRay(m, immediate) {
+    RS = scalesOf(RY, viewCur(RV, immediate));
+    const { sx, sy } = RS, [t0, t1] = RS.cur.x, [y0, y1] = RS.cur.y;
+    const { P, ys, ts, tstar, w, sm, f, onRay, showImg, fac, it, iy } = m, key = S.est, n = P.length;
+    const showTruth = $('showtruth').checked;
+    const fAlong = t => f(onRay(t));
+    // the curve is computed at full resolution once the view has settled, coarsely while it still moves, and kept with the model
+    const heavy = key === 'nna' || key === 'floor', moving = Math.abs(RV.x[0] - t0) > 1e-9 || Math.abs(RV.x[1] - t1) > 1e-9;
+    if (!(m.rayFit && m.rayFit.t0 === t0 && m.rayFit.t1 === t1 && (m.rayFit.full || moving))) {
+      const grid = gridOf(t0, t1, moving ? (heavy ? 21 : 49) : (heavy ? 41 : 97));
+      m.rayFit = { t0, t1, grid, fit: fitAlongRay(m, grid, moving), full: !moving };
+    }
+    const { grid, fit } = m.rayFit;
+    const yTop = Math.max(...ys), yBot = Math.min(...ys);
+    setA(R.band, { x: RY.L, y: sy(yTop), width: RY.W - RY.L - RY.R, height: sy(yBot) - sy(yTop) }); setA(R.bandlab, { x: RY.W - RY.R - 6, y: sy(yBot) - 5 });
+    R.ticks.innerHTML = '';
+    const tstep = nice(t1 - t0, 6), ft = tickFmt(tstep), ystep = nice(y1 - y0, 6), fy = tickFmt(ystep);
+    for (const t of ticksOf(t0, t1, tstep)) { el('line', { x1: sx(t), x2: sx(t), y1: RY.H - RY.B, y2: RY.H - RY.B + 4, stroke: 'var(--rule-2)' }, R.ticks); el('text', { x: sx(t), y: RY.H - RY.B + 15, 'text-anchor': 'middle' }, R.ticks).textContent = ft(t); }
+    for (const y of ticksOf(y0, y1, ystep)) { el('line', { x1: RY.L - 4, x2: RY.L, y1: sy(y), y2: sy(y), stroke: 'var(--rule-2)' }, R.ticks); el('text', { x: RY.L - 7, y: sy(y) + 4, 'text-anchor': 'end' }, R.ticks).textContent = fy(y); }
+    R.xlab.textContent = S.scaled ? 't, the position along the ray, in scaled distance' : 't, the position along the ray';
+    show(R.truth, showTruth);
+    if (showTruth) setA(R.truth, { d: pathOf(grid, grid.map(fAlong), sx, sy) });
+    setA(R.fit, { class: `curve fit ${key}`, d: pathOf(grid, fit, sx, sy) });
+    setA(R.x0line, { x1: sx(tstar), x2: sx(tstar), y1: RY.T, y2: RY.H - RY.B }); setA(R.cline, { x1: sx(0), x2: sx(0), y1: RY.T, y2: RY.H - RY.B });
+    setA(R.clab, { x: sx(0) + 4, y: RY.T + 12 }); setA(R.xlab2, { x: sx(tstar) + 4, y: RY.T + 12 });
+    const mp = syncChildren(R.mpts, n, 'circle', 'orig'), ml = syncChildren(R.mlines, n, 'line', 'mline'), discs = syncChildren(R.discs, n, 'circle', 'disc');
+    const cxs = [], cys = [];
+    ts.forEach((t, i) => {
+      const v = w ? w[i] : 0, zero = !w || Math.abs(v) < 1e-9;
+      const cx = sx(tw(`rt${i}`, it[i], immediate)), cy = sy(tw(`ry${i}`, iy[i], immediate));
+      cxs.push(cx); cys.push(cy);
+      const wi = showImg ? Math.abs(v) / fac : v;
+      setA(discs[i], { class: zero ? 'disc zero' : wi > 0 ? `disc pos ${key}` : 'disc neg', cx, cy, r: tw(`rr${i}`, zero ? 2.6 : discR(wi), immediate) });
+      const moved = showImg && Math.hypot(cx - sx(t), cy - sy(ys[i])) > 2.5;
+      show(mp[i], showImg); setA(mp[i], { cx: sx(t), cy: sy(ys[i]), r: 2.6 });
+      show(ml[i], moved); if (moved) setA(ml[i], { x1: sx(t), y1: sy(ys[i]), x2: cx, y2: cy, 'marker-end': 'url(#arrowr)' });
+    });
+    show(R.halo, S.hover >= 0 && S.hover < n); if (S.hover >= 0 && S.hover < n) setA(R.halo, { cx: cxs[S.hover], cy: cys[S.hover], r: 15 });
+    show(R.postick, !!w); show(R.pos, !!w); show(R.pred, !!w); show(R.predlab, !!w);
+    show(R.gap, false); show(R.gaplab, false); show(R.ftick, !!w && showTruth); show(R.flab, !!w && showTruth);
+    if (!w) R.braces.forEach(br => { show(br.path, false); show(br.lab, false); });
+    if (w) {
+      const twt = Core.sum(w.map((v, i) => v * ts[i])), base = RY.H - RY.B - 10;
+      const tx = sx(tw('tw', twt, immediate));
+      setA(R.postick, { x1: tx, x2: tx, y1: base - 7, y2: base + 7 }); setA(R.pos, { class: `wmean ${key}`, cx: tx, cy: base });
+      if (Math.abs(twt - tstar) > 1e-6) { show(R.gap, true); show(R.gaplab, true); setA(R.gap, { x1: tx, y1: base, x2: sx(tstar), y2: base }); setA(R.gaplab, { x: (tx + sx(tstar)) / 2, y: base - 10 }); R.gaplab.textContent = `t* − Σwᵢtᵢ = ${(tstar - twt).toFixed(2)}`; }
+      const yy = sy(tw('pred', sm.yhat, immediate)), xs0 = sx(tstar);
+      // the braces go on the side of x* with more room, the labels of ŷ and f(x*) on the other
+      const dir = xs0 > RY.L + 0.55 * RS.w ? -1 : 1, labx = xs0 - dir * 9, anchor = dir > 0 ? 'end' : 'start';
+      setA(R.pred, { class: `pred ${key}`, cx: xs0, cy: yy }); setA(R.predlab, { x: labx, y: yy + 4, 'text-anchor': anchor }); R.predlab.textContent = `ŷ = ${sm.yhat.toFixed(1)}`;
+      const items = [];
+      if (showTruth) {
+        const fx = f(S.x0), yF = sy(fx), yB = sy(fx + sm.balance);
+        setA(R.ftick, { d: `M${xs0 - 7},${yF + 5} L${xs0 + 7},${yF + 5} L${xs0},${yF - 6} Z` });
+        // keep the two labels apart when the bias is small
+        const close = Math.abs(yy - yF) < 14, fy = close ? (yy >= yF ? yF - 10 : yF + 10) : yF;
+        setA(R.flab, { x: labx, y: fy + 4, 'text-anchor': anchor }); R.flab.textContent = `f(x*) = ${fx.toFixed(1)}`;
+        const big = d => Math.abs(d) > 7, x1 = xs0 + dir * 9;
+        if (big(yB - yF) && big(yy - yB)) {
+          // the two part braces beside the line, their labels stacked in one column beyond them, the total brace beyond the labels
+          const xb = x1 + dir * 16, xl = xb + dir * 18;
+          let ya = (yF + yB) / 2, yb = (yB + yy) / 2;
+          if (Math.abs(ya - yb) < 13) { const mid = (ya + yb) / 2, up = ya <= yb ? -1 : 1; ya = mid + up * 7; yb = mid - up * 7; }
+          items.push({ x: x1, y1: yF, y2: yB, text: `balance ${fmt(sm.balance, 2)}`, part: true, lx: xl, ly: ya });
+          items.push({ x: xb, y1: yB, y2: yy, text: `bend ${fmt(sm.bend, 2)}`, part: true, lx: xl, ly: yb });
+          items.push({ x: xl + dir * 84, y1: yF, y2: yy, text: `bias ${fmt(sm.bias, 2)}`, part: false });
+        } else if (big(yy - yF)) {
+          const which = S.truth === 'plane' ? ', all balance' : Math.abs(sm.balance) < 1e-9 ? ', all bend' : Math.abs(sm.bend) < 1e-9 ? ', all balance' : '';
+          items.push({ x: x1, y1: yF, y2: yy, text: `bias ${fmt(sm.bias, 2)}${which}`, part: false });
+        }
+      }
+      R.braces.forEach((br, j) => {
+        const it = items[j]; show(br.path, !!it); show(br.lab, !!it);
+        if (!it) return;
+        const a = Math.min(6, Math.abs(it.y2 - it.y1) / 4);
+        setA(br.path, { class: it.part ? 'brace part' : 'brace', d: bracePath(it.x, it.y1, it.y2, dir) });
+        setA(br.lab, { class: it.part ? 'bracelab part' : 'bracelab', x: it.lx !== undefined ? it.lx : it.x + dir * (2 * a + 4), y: (it.ly !== undefined ? it.ly : (it.y1 + it.y2) / 2) + 4, 'text-anchor': dir > 0 ? 'start' : 'end' }); br.lab.textContent = it.text;
+      });
+    }
+    $('rayhint').textContent = `t* = ${tstar.toFixed(2)}. ${showImg ? `Images: negatives reflected through (0, ȳ), all scaled by ${fac.toFixed(2)}. ŷ is their average with weights |wᵢ| / ${fac.toFixed(2)}.` : 'Drag a point up or down to change its outcome.'}`;
+  }
+
+  // ---------- the table ----------
+  const ROWS = {};
+  function buildTable() {
+    const tb = $('table').querySelector('tbody'); tb.innerHTML = '';
+    for (const e of EST) {
+      const tr = document.createElement('tr'); tr.dataset.key = e.key;
+      const name = document.createElement('td'); const sw = document.createElement('span'); sw.className = `swatch ${e.key}`; name.appendChild(sw); name.appendChild(document.createTextNode(e.name)); tr.appendChild(name);
+      const cells = []; for (let j = 0; j < 12; j++) { const td = document.createElement('td'); tr.appendChild(td); cells.push(td); }
+      tr.addEventListener('click', () => { S.est = e.key; $('est').value = e.key; render(false); });
+      tb.appendChild(tr); ROWS[e.key] = { tr, cells };
+    }
+  }
+  function paintTable(m) {
+    const showTruth = $('showtruth').checked;
+    for (const e of EST) {
+      const { tr, cells } = ROWS[e.key], sm = m.sums[e.key];
+      tr.classList.toggle('sel', e.key === S.est);
+      if (!sm) {
+        cells.forEach((td, j) => { td.textContent = j ? '' : (e.key === 'nna' ? 'none: x* is outside the hull' : e.key === 'floor' ? `none: outside the reach of the floor ${S.floor.toFixed(2)}` : 'undefined: the features lie on a line'); td.className = 'dim'; td.style.textAlign = j ? '' : 'left'; });
+        continue;
+      }
+      const vals = [[fmt(sm.sum, 2)], [fmt(sm.gap, 2)], [fmt(sm.size, 3)], [fmt(sm.abs, 2)], [sm.negs ? `${sm.negs}` : '0', sm.negs ? 'neg' : ''], [fmt(sm.yhat, 1)],
+        [showTruth ? fmt(sm.fx, 1) : '–', 'truthcol'], [showTruth ? fmt(sm.bias, 2) : '–', 'truthcol'], [showTruth ? fmt(sm.balance, 2) : '–', 'truthcol'], [showTruth ? fmt(sm.bend, 2) : '–', 'truthcol'], [fmt(sm.variance, 2)], [showTruth ? fmt(sm.mse, 2) : '–', 'truthcol']];
+      vals.forEach(([t, cls], j) => { cells[j].textContent = t; cells[j].className = cls || ''; cells[j].style.textAlign = ''; });
+    }
+    const { H, c } = m;
+    let line = m.inH ? 'x* is in the hull, so nonnegative aligned weights exist.' : 'x* is outside the hull: no nonnegative weights are aligned there.';
+    if (!m.inH && H.length >= 3) {
+      let lo = 1, hi = 1e6;
+      const back = f2 => [c[0] + (S.x0[0] - c[0]) / f2, c[1] + (S.x0[1] - c[1]) / f2];
+      if (Core.inHull(H, back(hi))) { for (let it = 0; it < 60; it++) { const mid = (lo + hi) / 2; if (Core.inHull(H, back(mid))) hi = mid; else lo = mid; } line += ` The smallest floor that reaches it is ${((hi - 1) / m.P.length).toFixed(3)}, a factor of ${hi.toFixed(2)}.`; }
+    }
+    if (m.W.plane) { const r = Core.reflection(m.W.plane, m.P, c); if (r.m > 1e-9) line += ` The plane's weights have negative influence m = ${r.m.toFixed(2)} and total absolute weight ${(1 + 2 * r.m).toFixed(2)}.`; }
+    if (showTruth && m.sm) line += ` Bias of the ${EST.find(e => e.key === S.est).name.toLowerCase()} at x*: balance ${fmt(m.sm.balance, 2)}, the gradient of f at x* times the gap, plus bend ${fmt(m.sm.bend, 2)}, what the tangent plane at x* misses.`;
+    $('feas').textContent = line;
+  }
+
+  // ---------- repeated samples ----------
+  function paintStrip(m) {
+    const svg = $('strip'); svg.innerHTML = '';
+    const keys = KEYS.filter(k => m.W[k]), r = Core.rng(S.drawSeed);
+    const fP = m.P.map(p => m.f(p)), fx = m.f(S.x0), draws = {}; keys.forEach(k => draws[k] = []);
+    for (let d = 0; d < 200; d++) { const eps = m.P.map(() => r.normal()); for (const k of keys) draws[k].push(Core.sum(m.W[k].map((v, i) => v * (fP[i] + S.sigma * eps[i])))); }
+    const L = 190, Rr = 20, T = 14, rowH = 34, showTruth = $('showtruth').checked;
+    const all = keys.flatMap(k => draws[k]);
+    let lo = Math.min(...(showTruth ? [fx] : []), ...all), hi = Math.max(...(showTruth ? [fx] : []), ...all); const pad = (hi - lo) * 0.08 + 0.5; lo -= pad; hi += pad;
+    const sx = v => L + (v - lo) / (hi - lo) * (1000 - L - Rr);
+    const tk = el('g', { class: 'tick' }, svg);
+    const step = (hi - lo) > 40 ? 10 : (hi - lo) > 16 ? 5 : (hi - lo) > 6 ? 2 : 1;
+    for (let v = Math.ceil(lo / step) * step; v <= hi; v += step) { el('line', { x1: sx(v), x2: sx(v), y1: T, y2: T + keys.length * rowH, stroke: 'var(--rule)' }, tk); el('text', { x: sx(v), y: T + keys.length * rowH + 14, 'text-anchor': 'middle' }, tk).textContent = v; }
+    keys.forEach((k, row) => {
+      const y = T + row * rowH + rowH / 2;
+      const lab = el('text', { class: 'rowlab' + (k === S.est ? ' sel' : ''), x: 8, y: y + 4 }, svg); lab.textContent = EST.find(e => e.key === k).name;
+      const g = el('g', { class: 'strip' }, svg), jitter = Core.rng(7 + row);
+      for (const v of draws[k]) el('circle', { class: k, cx: sx(v), cy: y + (jitter.u() - 0.5) * 16, r: 3 }, g);
+      const mu = Core.mean(draws[k]), sd = Math.sqrt(Core.mean(draws[k].map(v => (v - mu) ** 2)));
+      el('text', { class: 'small', x: 1000 - Rr, y: y + 4, 'text-anchor': 'end' }, svg).textContent = `mean ${mu.toFixed(1)}, sd ${sd.toFixed(1)}`;
+    });
+    if (showTruth) { el('line', { class: 'ftick', x1: sx(fx), x2: sx(fx), y1: T - 4, y2: T + keys.length * rowH + 2 }, svg); el('text', { class: 'small', x: sx(fx) + 4, y: T + 8 }, svg).textContent = `f(x*) = ${fx.toFixed(1)}`; }
+    el('text', { class: 'axlab', x: (L + 1000 - Rr) / 2, y: T + keys.length * rowH + 30, 'text-anchor': 'middle' }, svg).textContent = 'ŷ(x*) over 200 noise draws, same features each time';
+  }
+
+  // ---------- animation of x* ----------
+  function stopAnim(repaint = true) { if (S.anim) { S.anim = null; $('walk').textContent = 'Walk out'; $('orbit').textContent = 'Orbit'; if (repaint) render(false); } }
+  function startAnim(kind) {
+    if (S.anim && S.anim.kind === kind) { stopAnim(); return; }
+    stopAnim(false);
+    const c = Core.centroid(S.P), d = dom();
+    let u = [S.x0[0] - c[0], S.x0[1] - c[1]]; const len = Math.hypot(u[0], u[1]); u = len > 1e-9 ? [u[0] / len, u[1] / len] : [1, 0];
+    let tmax = 1e9;
+    for (const j of [0, 1]) { const lo = j ? d.y[0] : d.x[0], hi = j ? d.y[1] : d.x[1]; if (u[j] > 1e-9) tmax = Math.min(tmax, (hi - c[j]) / u[j]); if (u[j] < -1e-9) tmax = Math.min(tmax, (lo - c[j]) / u[j]); }
+    S.anim = { kind, start: performance.now(), u, c, tmax: tmax * 0.98, r0: len, th0: Math.atan2(u[1] * (d.x[1] - d.x[0]), u[0] * (d.y[1] - d.y[0])), period: kind === 'walk' ? 9000 : 12000, ax: (d.x[1] - d.x[0]) / 10, ay: (d.y[1] - d.y[0]) / 10 };
+    $(kind).textContent = 'Stop';
+    animate();
+  }
+  function stepAnim() {
+    const a = S.anim, ph = ((performance.now() - a.start) % a.period) / a.period;
+    if (a.kind === 'walk') { const t = a.tmax * 0.5 * (1 - Math.cos(2 * Math.PI * ph)); S.x0 = [a.c[0] + t * a.u[0], a.c[1] + t * a.u[1]]; }
+    else {
+      // a circle in the drawing, whatever the units of the two axes
+      const rx = a.r0 * Math.abs(a.u[0]) / a.ax, ry = a.r0 * Math.abs(a.u[1]) / a.ay, rr = Math.hypot(rx, ry) || 1, th = a.th0 + 2 * Math.PI * ph;
+      S.x0 = [clampX(a.c[0] + rr * a.ax * Math.cos(th)), clampY(a.c[1] + rr * a.ay * Math.sin(th))];
+    }
+  }
+
+  // ---------- render ----------
+  // The views refit when nothing is being dragged or animated. While something moves, the plane holds still and the ray only grows.
+  function updateViews(m) {
+    const busy = interacting();
+    if (PV.auto && !busy) settleView(PV, fitPlane(m));
+    if (RV.auto) { if (busy && RV.fitted) Object.assign(RV, growRay(m, RV)); else settleView(RV, fitRay(m)); }
+  }
+  function paint(m, immediate) {
+    LAST = m;
+    paintPlane(m, immediate); paintRay(m, immediate); paintTable(m);
+    if (!S.drag && !S.anim && !S.pinch) paintStrip(m);
+  }
+  function render(immediate) {
+    const m = model();
+    updateViews(m);
+    if (immediate || REDUCED) { for (const v of V.values()) v.cur = v.tgt; }
+    paint(m, immediate);
+    if (!immediate && !REDUCED) animate();
+    $('k').disabled = S.est !== 'knn'; $('h').disabled = !(S.est === 'kernel' || S.est === 'loclin'); $('floor').disabled = !(S.est === 'floor' || $('showreach').checked);
+    $('gamctl').hidden = S.truth !== 'bend';
+    $('nsamp').disabled = S.preset === 'students';
+    $('pfit').disabled = PV.auto; $('rfit').disabled = RV.auto;
+  }
+
+  // ---------- controls ----------
+  const resetViews = () => { PV.auto = true; PV.fitted = false; RV.auto = true; RV.fitted = false; V.clear(); };
+  $('preset').addEventListener('change', e => { S.preset = e.target.value; stopAnim(false); resetSample(); resetViews(); render(true); });
+  $('nsamp').addEventListener('change', e => { S.n = Math.max(4, Math.min(60, +e.target.value || 16)); e.target.value = S.n; resetSample(); resetViews(); render(true); });
+  $('newpoints').addEventListener('click', () => { S.seed += 1; resetSample(); resetViews(); render(true); });
+  $('truth').addEventListener('change', e => { S.truth = e.target.value; render(false); });
+  $('gam').addEventListener('input', e => { S.gam = +e.target.value; $('gamval').textContent = S.gam.toFixed(2); render(true); });
+  $('sigma').addEventListener('input', e => { S.sigma = +e.target.value; $('sigmaval').textContent = S.sigma.toFixed(1); render(true); });
+  $('renoise').addEventListener('click', () => { S.noiseSeed += 1; S.eps = makeNoise(S.P.length, S.noiseSeed); render(false); });
+  $('est').addEventListener('change', e => { S.est = e.target.value; render(false); });
+  $('k').addEventListener('input', e => { S.k = +e.target.value; $('kval').textContent = S.k; render(false); });
+  $('h').addEventListener('input', e => { S.h = +e.target.value; $('hval').textContent = S.h.toFixed(1); render(false); });
+  $('floor').addEventListener('input', e => { S.floor = +e.target.value; $('floorval').textContent = S.floor.toFixed(2); render(false); });
+  for (const id of ['showhull', 'showbox', 'showzero', 'showreach', 'showmirror', 'showgroups', 'showtruth']) $(id).addEventListener('change', () => render(false));
+  $('scaled').addEventListener('change', e => { S.scaled = e.target.checked; render(false); });
+  $('redraw').addEventListener('click', () => { S.drawSeed += 1; paintStrip(model()); });
+  $('walk').addEventListener('click', () => startAnim('walk'));
+  $('orbit').addEventListener('click', () => startAnim('orbit'));
+  document.addEventListener('visibilitychange', () => { if (document.hidden) stopAnim(false); });
+
+  buildPlane(); buildRay(); buildTable();
+  resetSample();
+  render(true);
+  // a hook for the test harness
+  window.__weights = { S, PV, RV, last: () => LAST, cur: () => ({ plane: PS.cur, ray: RS.cur }), interacting };
+})();
+</script>
