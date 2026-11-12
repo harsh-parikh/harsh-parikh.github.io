@@ -24,7 +24,7 @@
       macros: {
         "\\cx": "\\textcolor{1f6fb2}{#1}", "\\cw": "\\textcolor{d9671e}{#1}", "\\ch": "\\textcolor{2a9d5c}{#1}",
         "\\cp": "\\textcolor{7a3fb0}{#1}", "\\cl": "\\textcolor{c0392b}{#1}", "\\R": "\\mathbb{R}",
-        "\\bx": "\\mathbf{x}", "\\bw": "\\mathbf{w}", "\\bh": "\\mathbf{h}", "\\bz": "\\mathbf{z}", "\\bp": "\\mathbf{p}", "\\bb": "\\mathbf{b}", "\\bW": "\\mathbf{W}", "\\btheta": "\\boldsymbol{\\theta}", "\\bdelta": "\\boldsymbol{\\delta}",
+        "\\bx": "\\mathbf{x}", "\\bw": "\\mathbf{w}", "\\bh": "\\mathbf{h}", "\\bz": "\\mathbf{z}", "\\bp": "\\mathbf{p}", "\\bb": "\\mathbf{b}", "\\bW": "\\mathbf{W}", "\\bTheta": "\\boldsymbol{\\Theta}", "\\btheta": "\\boldsymbol{\\theta}", "\\bdelta": "\\boldsymbol{\\delta}",
       },
     });
   }

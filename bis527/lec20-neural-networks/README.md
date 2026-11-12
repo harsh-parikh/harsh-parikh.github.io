@@ -21,8 +21,8 @@ you trained on slide 8 (choose "from the live run").
 ## What is in the folder
 
 ```
-index.html            the lecture: 13 slides and their speaker notes
-index_full.html       the longer version: 23 slides (adds the vector view, the linear limit, one neuron,
+index.html            the lecture: 12 slides and their speaker notes
+index_full.html       the longer version: 22 slides (adds the vector view, the linear limit, one neuron,
                       activation functions, shapes, the loss curve, backprop through the network,
                       SGD on a 2-parameter loss, and convolution)
 css/deck.css          layout and typography

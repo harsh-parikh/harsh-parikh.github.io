@@ -21,7 +21,7 @@
     <div class="col vis"><canvas id="titleCanvas"></canvas></div>
   </div>
   <div class="hint">Every figure is live. <span class="kbd">→</span> next &nbsp; <span class="kbd">←</span> back &nbsp; <span class="kbd">F</span> fullscreen &nbsp; <span class="kbd">N</span> notes</div>
-  <aside class="notes">The animation is a network with two hidden layers, one more than we build today: inputs on the left, outputs on the right; orange pulses are the forward pass. Plan for the hour: the task (MNIST), the model we already know (multinomial logistic regression), a hidden layer as learned features, the forward pass on a digit you draw, the loss and gradient descent, backpropagation, a live training run, what the hidden units learned, overfitting, the statistician's view, and the network as a weighting estimator.</aside>
+  <aside class="notes">The animation is a network with two hidden layers, one more than we build today: inputs on the left, outputs on the right; orange pulses are the forward pass. Plan for the hour: the task (MNIST), the model we already know (multinomial logistic regression), a hidden layer as learned features, the forward pass on a digit you draw, the loss and gradient descent, backpropagation, a live training run, what the hidden units learned, overfitting, and the network as a weighting estimator.</aside>
 </section>
 
 <!-- 2 ------------------------------------------------------------------ -->
@@ -68,14 +68,14 @@
       <div class="controls"><button id="logregRandom">another digit</button><span class="small">Click a template to enlarge it.</span></div>
     </div>
     <div class="col side">
-      <div class="eq">$\cp{p_k} = \Pr(y = k \mid \cx{\bx}) = \dfrac{\exp(\cw{\bw_k}^{\!\top}\cx{\bx} + \cw{b_k})}{\sum_{j} \exp(\cw{\bw_j}^{\!\top}\cx{\bx} + \cw{b_j})}$</div>
-      <p>One template $\cw{\bw_k}$ and intercept $\cw{b_k}$ per class.</p>
+      <div class="eq">$\cp{p_k} = \Pr(y = k \mid \cx{\bx}) = \dfrac{\exp(\cw{\btheta_k}^{\!\top}\cx{\bx} + \cw{b_k})}{\sum_{j} \exp(\cw{\btheta_j}^{\!\top}\cx{\bx} + \cw{b_j})}$</div>
+      <p>One template $\cw{\btheta_k}$ and intercept $\cw{b_k}$ per class.</p>
       <p>The softmax turns ten scores into probabilities.</p>
       <p><span class="cl">Red</span> pixels raise the score for $k$, <span class="cx">blue</span> lower it.</p>
       <p class="small">90% test accuracy. Every boundary is a straight line.</p>
     </div>
   </div>
-  <aside class="notes">This is multinomial logistic regression, the model the class already knows. The weights are a template per class. The score for class k is the match between the image and template k. Softmax turns the ten scores into probabilities. Ten percent of test digits are wrong, and no choice of the ten templates fixes that: the score for each class is linear in the pixels, so each boundary is flat. The weights were fit on all 60,000 training images. The score for class k is w_k transpose x plus b_k; the softmax exponentiates and normalizes the ten scores. Every boundary between two classes is a straight line, and the remaining ten percent of errors need boundaries that bend.</aside>
+  <aside class="notes">This is multinomial logistic regression, the model the class already knows. The weights are a template per class. The score for class k is the match between the image and template k. Softmax turns the ten scores into probabilities. Ten percent of test digits are wrong, and no choice of the ten templates fixes that: the score for each class is linear in the pixels, so each boundary is flat. The weights were fit on all 60,000 training images. The score for class k is theta_k transpose x plus b_k; the softmax exponentiates and normalizes the ten scores. Every boundary between two classes is a straight line, and the remaining ten percent of errors need boundaries that bend.</aside>
 </section>
 
 <!-- 5 ------------------------------------------------------------------ -->
@@ -91,7 +91,7 @@
     </div>
     <div class="col side">
       <p>Logistic regression draws one straight boundary.</p>
-      <div class="eq">$\cw{\bw}^{\!\top}\cx{\bx} + \cw{b} = 0$</div>
+      <div class="eq">$\cw{\btheta}^{\!\top}\cx{\bx} + \cw{b} = 0$</div>
       <p>For the XOR, ring, and spiral data no line separates the classes.</p>
       <p>The fix is new features. A neural network learns them.</p>
     </div>
@@ -105,14 +105,14 @@
   <div class="row">
     <div class="col vis"><canvas id="neuronCanvas"></canvas>
       <div class="controls">
-        <label>$\cw{w_1}$ <input type="range" id="nW1" min="-4" max="4" step="0.1" value="2"><span class="val" id="nW1v"></span></label>
-        <label>$\cw{w_2}$ <input type="range" id="nW2" min="-4" max="4" step="0.1" value="1.5"><span class="val" id="nW2v"></span></label>
+        <label>$\cw{\theta_1}$ <input type="range" id="nW1" min="-4" max="4" step="0.1" value="2"><span class="val" id="nW1v"></span></label>
+        <label>$\cw{\theta_2}$ <input type="range" id="nW2" min="-4" max="4" step="0.1" value="1.5"><span class="val" id="nW2v"></span></label>
         <label>$\cw{b}$ <input type="range" id="nB" min="-3" max="3" step="0.1" value="0"><span class="val" id="nBv"></span></label>
         <label>$\varphi$ <select id="nAct"><option value="sigmoid">sigmoid</option><option value="tanh">tanh</option><option value="relu">ReLU</option><option value="linear">linear</option></select></label>
       </div>
     </div>
     <div class="col side">
-      <div class="eq">$\ch{a} = \varphi\big(\cw{w_1}\cx{x_1} + \cw{w_2}\cx{x_2} + \cw{b}\big)$</div>
+      <div class="eq">$\ch{a} = \varphi\big(\cw{\theta_1}\cx{x_1} + \cw{\theta_2}\cx{x_2} + \cw{b}\big)$</div>
       <p>A neuron is a weighted sum followed by a nonlinear function $\varphi$.</p>
       <p>The weights set the direction of the boundary. The bias shifts it.</p>
       <p>With a sigmoid $\varphi$, one neuron is logistic regression.</p>
@@ -132,7 +132,7 @@
       <div class="eq" id="actEq"></div>
       <p>Solid: $\varphi(z)$. Dashed: the derivative $\varphi'(z)$, used in learning.</p>
       <p>Without a nonlinear $\varphi$, stacked layers collapse to one linear map.</p>
-      <div class="eq">$\cw{\bW_2}(\cw{\bW_1}\cx{\bx}) = (\cw{\bW_2}\cw{\bW_1})\,\cx{\bx}$</div>
+      <div class="eq">$\cw{\bTheta_2}(\cw{\bTheta_1}\cx{\bx}) = (\cw{\bTheta_2}\cw{\bTheta_1})\,\cx{\bx}$</div>
     </div>
   </div>
   <aside class="notes">Sigmoid and tanh saturate: the derivative vanishes far from zero, so learning slows. ReLU keeps a derivative of one on the positive side and is the default for hidden layers. The composition identity is why the nonlinearity is not optional.</aside>
@@ -153,14 +153,15 @@
       </div>
     </div>
     <div class="col side">
-      <div class="eq">$\ch{\bh} = \varphi(\cw{\bW_1}\cx{\bx} + \cw{\bb_1})$</div>
-      <div class="eq">$\cp{\bp} = \mathrm{softmax}(\cw{\bW_2}\ch{\bh} + \cw{\bb_2})$</div>
+      <div class="eq">$\ch{\bh} = \varphi(\cw{\bTheta_1}\cx{\bx} + \cw{\bb_1})$</div>
+      <div class="eq">$\cp{\bp} = \mathrm{softmax}(\cw{\bTheta_2}\ch{\bh} + \cw{\bb_2})$</div>
+      <p>$\ch{\bh}(\cx{\bx})$: the hidden layer's output, the learned features of $\cx{\bx}$.</p>
       <p>Each hidden unit: a weighted sum, then $\varphi(z) = \max(0, z)$.</p>
       <p>Its sum is zero along one line (small panels).</p>
       <p>Softmax on $\ch{\bh}$: straight in $\ch{\bh}$, bent in $\cx{\bx}$.</p>
     </div>
   </div>
-  <aside class="notes">This is the whole idea of the lecture. Two inputs instead of 784 so the boundary can be drawn; the data are the XOR pattern (classes by quadrant), rings, or a spiral. First set one hidden unit: one straight line, and on XOR accuracy stalls near fifty percent. Then raise the hidden units: each learned feature is a ramp that is zero on one side of its line, and multinomial logistic regression on those features gives a boundary that is straight in h and therefore bends in x (piecewise linear for ReLU). Switch to the linear activation (phi is called the activation function): two linear maps compose to one linear map, so the model is again logistic regression on the raw inputs and the boundary stays straight. The learning rate eta is the step size of training, defined two slides on. With a linear activation, W2 times W1 x equals (W2 W1) x: two linear maps compose to one, and the boundary is straight again. Phi is called the activation function.</aside>
+  <aside class="notes">This is the whole idea of the lecture. Two inputs instead of 784 so the boundary can be drawn; the data are the XOR pattern (classes by quadrant), rings, or a spiral. First set one hidden unit: one straight line, and on XOR accuracy stalls near fifty percent. Then raise the hidden units: each learned feature is a ramp that is zero on one side of its line, and multinomial logistic regression on those features gives a boundary that is straight in h and therefore bends in x (piecewise linear for ReLU). Switch to the linear activation (phi is called the activation function): two linear maps compose to one linear map, so the model is again logistic regression on the raw inputs and the boundary stays straight. The learning rate eta is the step size of training, defined two slides on. With a linear activation, Theta2 times Theta1 x equals (Theta2 Theta1) x: two linear maps compose to one, and the boundary is straight again. Phi is called the activation function.</aside>
 </section>
 
 <!-- 9 ------------------------------------------------------------------ -->
@@ -172,7 +173,7 @@
     </div>
     <div class="col side">
       <div class="eq">$\cx{\bx}\in\R^{784} \;\to\; \ch{\bh}\in\R^{m} \;\to\; \cp{\bp}\in\R^{10}$</div>
-      <div class="eq">$\cw{\bW_1}\in\R^{m\times 784},\quad \cw{\bW_2}\in\R^{10\times m}$</div>
+      <div class="eq">$\cw{\bTheta_1}\in\R^{m\times 784},\quad \cw{\bTheta_2}\in\R^{10\times m}$</div>
       <p>Two inputs become 784. Two classes become ten.</p>
       <p>With $m = 64$ hidden units: 50,890 parameters, against 7,850 for logistic regression.</p>
     </div>
@@ -189,7 +190,7 @@
       <div class="controls"><button id="fwClear">clear</button><button id="fwRandom">test digit</button><span class="small">Draw in the left box with the mouse.</span></div>
     </div>
     <div class="col side">
-      <div class="eq" style="font-size:24px">$\cx{\bx} \;\xrightarrow{\;\cw{\bW_1},\;\varphi\;}\; \ch{\bh} \;\xrightarrow{\;\cw{\bW_2},\;\mathrm{softmax}\;}\; \cp{\bp}$</div>
+      <div class="eq" style="font-size:24px">$\cx{\bx} \;\xrightarrow{\;\cw{\bTheta_1},\;\varphi\;}\; \ch{\bh} \;\xrightarrow{\;\cw{\bTheta_2},\;\mathrm{softmax}\;}\; \cp{\bp}$</div>
       <p>Pretrained: 64 ReLU units, 97% test accuracy.</p>
       <p>Draw a digit: 784 inputs, 64 features, 10 probabilities.</p>
     </div>
@@ -244,19 +245,19 @@
     <div class="col vis"><canvas id="bpCanvas"></canvas>
       <div class="controls">
         <label>$\cx{x}$ <input type="range" id="bpX" min="-2" max="2" step="0.1" value="1.5"><span class="val" id="bpXv"></span></label>
-        <label>$\cw{w}$ <input type="range" id="bpW" min="-2" max="2" step="0.1" value="0.8"><span class="val" id="bpWv"></span></label>
+        <label>$\cw{\theta}$ <input type="range" id="bpW" min="-2" max="2" step="0.1" value="0.8"><span class="val" id="bpWv"></span></label>
         <label>$\cw{b}$ <input type="range" id="bpB" min="-2" max="2" step="0.1" value="-0.5"><span class="val" id="bpBv"></span></label>
         <button id="bpFwd" class="primary">forward</button><button id="bpBwd">backward</button><button id="bpReset">reset</button>
       </div>
     </div>
     <div class="col side">
-      <div class="eq">$\dfrac{\partial L}{\partial \cw{w}} = \dfrac{\partial L}{\partial \ch{a}}\cdot\dfrac{\partial \ch{a}}{\partial z}\cdot\dfrac{\partial z}{\partial \cw{w}}$</div>
-      <p class="small">$z = \cw{w}\cx{x} + \cw{b}$, &nbsp; $\ch{a} = \sigma(z) = \frac{1}{1+e^{-z}}$, &nbsp; $L = -\log \ch{a}$ for $y = 1$.</p>
+      <div class="eq">$\dfrac{\partial L}{\partial \cw{\theta}} = \dfrac{\partial L}{\partial \ch{a}}\cdot\dfrac{\partial \ch{a}}{\partial z}\cdot\dfrac{\partial z}{\partial \cw{\theta}}$</div>
+      <p class="small">$z = \cw{\theta}\cx{x} + \cw{b}$, &nbsp; $\ch{a} = \sigma(z) = \frac{1}{1+e^{-z}}$, &nbsp; $L = -\log \ch{a}$ for $y = 1$.</p>
       <p>Forward: each node from the nodes before it.</p>
       <p>Backward: multiply local derivatives back to each weight.</p>
     </div>
   </div>
-  <aside class="notes">One neuron, one example with label y equal to one. Press forward: values fill left to right. Press backward: derivatives fill right to left, each edge multiplying by a local derivative, the derivative of a node with respect to its direct input. The gradient for w is the product along the path. In a network a weight in the first layer reaches the loss through every output, and the chain rule sums over those paths; backpropagation organizes this so each node's derivative is computed once and reused by everything upstream of it. That is why the backward pass costs about as much as the forward pass, however many weights there are. Frameworks such as PyTorch do the bookkeeping over graphs with millions of nodes. Every node stores one number forward (its value) and one number backward (the derivative of the loss with respect to it). Sigma is the logistic function, the two-class softmax.</aside>
+  <aside class="notes">One neuron, one example with label y equal to one. Press forward: values fill left to right. Press backward: derivatives fill right to left, each edge multiplying by a local derivative, the derivative of a node with respect to its direct input. The gradient for theta is the product along the path. In a network a weight in the first layer reaches the loss through every output, and the chain rule sums over those paths; backpropagation organizes this so each node's derivative is computed once and reused by everything upstream of it. That is why the backward pass costs about as much as the forward pass, however many weights there are. Frameworks such as PyTorch do the bookkeeping over graphs with millions of nodes. Every node stores one number forward (its value) and one number backward (the derivative of the loss with respect to it). Sigma is the logistic function, the two-class softmax.</aside>
 </section>
 
 <!-- 14 ----------------------------------------------------------------- -->
@@ -267,9 +268,9 @@
       <div class="controls"><button id="bp2Random">another digit</button><span class="small">Pretrained network on a test digit.</span></div>
     </div>
     <div class="col side">
-      <div class="eq" style="font-size:25px">$\cl{\bdelta_2} = \cp{\bp} - \mathbf{e}_{y}, \qquad \nabla_{\cw{\bW_2}} L = \cl{\bdelta_2}\,\ch{\bh}^{\!\top}$</div>
-      <div class="eq" style="font-size:25px">$\cl{\bdelta_1} = (\cw{\bW_2}^{\!\top}\cl{\bdelta_2}) \odot \varphi'(\bz_1)$</div>
-      <div class="eq" style="font-size:25px">$\nabla_{\cw{\bW_1}} L = \cl{\bdelta_1}\,\cx{\bx}^{\!\top}$</div>
+      <div class="eq" style="font-size:25px">$\cl{\bdelta_2} = \cp{\bp} - \mathbf{e}_{y}, \qquad \nabla_{\cw{\bTheta_2}} L = \cl{\bdelta_2}\,\ch{\bh}^{\!\top}$</div>
+      <div class="eq" style="font-size:25px">$\cl{\bdelta_1} = (\cw{\bTheta_2}^{\!\top}\cl{\bdelta_2}) \odot \varphi'(\bz_1)$</div>
+      <div class="eq" style="font-size:25px">$\nabla_{\cw{\bTheta_1}} L = \cl{\bdelta_1}\,\cx{\bx}^{\!\top}$</div>
       <p>The output error is probability minus truth.</p>
       <p>Each weight gradient is an outer product: error signal times the layer's input.</p>
     </div>
@@ -319,7 +320,7 @@
       <div class="controls"><label>weights <select id="featSrc"><option value="pre">pretrained (60,000 images)</option><option value="live">from the live run</option></select></label><span class="small">Click a tile.</span></div>
     </div>
     <div class="col side">
-      <p>Each tile: one row of $\cw{\bW_1}$ as a 28 &times; 28 image.</p>
+      <p>Each tile: one row of $\cw{\bTheta_1}$ as a 28 &times; 28 image.</p>
       <p>A hidden unit is a learned stroke template.</p>
       <p>Right: the validation digits that activate it, and its ten output weights.</p>
     </div>
@@ -336,7 +337,7 @@
       <canvas id="ofCanvas"></canvas>
     </div>
     <div class="col side" style="flex:0 0 360px">
-      <div class="eq">$L_\lambda(\btheta) = L(\btheta) + \frac{\lambda}{2}\big(\|\cw{\bW_1}\|^2 + \|\cw{\bW_2}\|^2\big)$</div>
+      <div class="eq">$L_\lambda(\btheta) = L(\btheta) + \frac{\lambda}{2}\big(\|\cw{\bTheta_1}\|^2 + \|\cw{\bTheta_2}\|^2\big)$</div>
       <p>500 images, 101,770 parameters: training hits 100%, validation stalls.</p>
       <p>Remedies: more data, weight decay $\lambda$, early stopping on validation.</p>
     </div>
@@ -365,22 +366,6 @@
   <aside class="notes">Edit the nine numbers in the grid. The fully connected network had to learn a stroke separately at every location; a convolution learns it once. That weight sharing is what makes image networks work.</aside>
 </section>
 
-<!-- 20 ----------------------------------------------------------------- -->
-<section class="slide" data-widget="ladder">
-  <h2>A statistician's view</h2>
-  <div class="ladder">
-    <div class="step"><h3>Generalized linear model</h3><canvas id="ladA"></canvas>
-      <div class="eq">$g(\mu) = \cw{\bw}^{\!\top}\cx{\bx} + \cw{b}$</div><p>Features fixed by the analyst.</p></div>
-    <div class="step"><h3>Basis expansion</h3><canvas id="ladB"></canvas>
-      <div class="eq">$g(\mu) = \sum_j \cw{w_j}\,B_j(\cx{\bx}) + \cw{b}$</div><p>Basis $B_j$ fixed: splines, polynomials.</p></div>
-    <div class="step"><h3>Neural network</h3><canvas id="ladC"></canvas>
-      <div class="eq">$g(\mu) = \sum_j \cw{w_j}\,\ch{h_j}(\cx{\bx};\cw{\bW_1}) + \cw{b}$</div><p>Basis learned from the data.</p></div>
-  </div>
-  <p style="margin-top:22px">$\mu = E[y \mid \cx{\bx}]$; $g$ is the link (the multinomial logit, inverse softmax); $\varphi$ is the hidden activation.</p>
-  <p>Many parameters, no convexity, no closed-form standard errors: regularize, hold out, resample.</p>
-  <aside class="notes">For this audience the network is a GLM with a learned basis. Everything they know about likelihood, overfitting, and validation carries over. What does not carry over: closed-form inference, convexity, and standard errors for free.</aside>
-</section>
-
 <!-- 11b -->
 <section class="slide" data-widget="weights">
   <h2>With its features fixed, a network is a weighting estimator</h2>
@@ -391,7 +376,7 @@
     <div class="col side">
       <div class="eq" style="font-size:26px">$\hat y(\bx) = \sum_{i=1}^{n} w_i(\bx)\, Y_i$</div>
       <div class="eq" style="font-size:23px">$w_i(\bx) = \ch{\bh}(\bx)^{\!\top}\,(\ch{H}^{\!\top}\ch{H} + \lambda I)^{-1}\,\ch{\bh}(\bx_i)$</div>
-      <p class="small">$\ch{H}$ stacks $\ch{\bh}(\bx_i)$ over $n = 4{,}000$ training images; $Y_i$ is the one-hot label.</p>
+      <p class="small">$\ch{\bh}(\bx)$: the 64 hidden features of $\bx$; $\ch{H}$ stacks $\ch{\bh}(\bx_i)$ over $n = 4{,}000$ training images; $Y_i$ is the one-hot label.</p>
       <p>Freeze the features; ridge-regress the labels on them.</p>
       <p>$w_i(\bx)$ ignores the labels: a linear smoother, like ridge and splines.</p>
       <p>Weights can be negative and need not sum to one.</p>

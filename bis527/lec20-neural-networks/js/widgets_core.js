@@ -176,17 +176,17 @@
       NN.drawDigit(ctx, img, 10, 10, 5); rect(ctx, 10, 10, 140, 140, null, "#ddd");
       text(ctx, `x  (true label ${y})`, 80, 170, { size: 15, align: "center", color: C.x, weight: 600 });
       NN.drawWeightImage(ctx, this.P.W, this.sel, 10, 180, 10, 5, 28, this.vmax);
-      text(ctx, `w${this.sel}`, 250, 170, { size: 15, align: "center", color: C.w, weight: 600 });
+      text(ctx, `θ${this.sel}`, 250, 170, { size: 15, align: "center", color: C.w, weight: 600 });
       text(ctx, "×  then sum  →", 330, 85, { size: 16, color: "#555" });
       const z = out.z2, p = out.p; let zmax = 1; for (let k = 0; k < 10; k++) zmax = Math.max(zmax, Math.abs(z[k]));
-      text(ctx, "score  wₖ·x + bₖ", 480, 25, { size: 14, color: C.w });
+      text(ctx, "score  θₖ·x + bₖ", 480, 25, { size: 14, color: C.w });
       bars(ctx, Array.from(z), 470, 30, 220, 60, { min: -zmax, max: zmax, color: (k) => (k === this.sel ? C.w : "#f2c4a4") });
       text(ctx, "probability  pₖ = softmax", 480, 112, { size: 14, color: C.p });
       bars(ctx, Array.from(p), 470, 118, 220, 50, { min: 0, max: 1, color: (k) => (k === y ? C.p : "#cdb6e0"), labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] });
       let pred = 0; for (let k = 1; k < 10; k++) if (p[k] > p[pred]) pred = k;
       text(ctx, `predicted ${pred}, p = ${fmt(p[pred])}`, 470, 215, { size: 15, color: pred === y ? C.h : C.loss, weight: 600 });
       // templates row
-      text(ctx, "the ten templates w₀ … w₉", 10, 245, { size: 15, color: "#555" });
+      text(ctx, "the ten templates θ₀ … θ₉", 10, 245, { size: 15, color: "#555" });
       for (let k = 0; k < 10; k++) {
         const x0 = 10 + k * 69;
         NN.drawWeightImage(ctx, this.P.W, k, 10, x0, 255, 2.2, 28, this.vmax);
@@ -252,9 +252,9 @@
       circle(ctx, S[0], S[1], 24, "#fff", C.ink, 2); text(ctx, "Σ", S[0], S[1] + 7, { size: 22, align: "center" });
       rect(ctx, G[0] - 26, G[1] - 22, 52, 44, "#fff", C.ink, 2); text(ctx, "φ", G[0], G[1] + 7, { size: 20, align: "center" });
       circle(ctx, A[0], A[1], 22, "#fff", C.h, 2.5); text(ctx, "a", A[0], A[1] + 6, { size: 18, align: "center", color: C.h, weight: 600 });
-      text(ctx, `w₁ = ${fmt(w1, 1)}`, 100, 150, { size: 15, color: C.w, weight: 600 }); text(ctx, `w₂ = ${fmt(w2, 1)}`, 100, 275, { size: 15, color: C.w, weight: 600 });
+      text(ctx, `θ₁ = ${fmt(w1, 1)}`, 100, 150, { size: 15, color: C.w, weight: 600 }); text(ctx, `θ₂ = ${fmt(w2, 1)}`, 100, 275, { size: 15, color: C.w, weight: 600 });
       text(ctx, `b = ${fmt(b, 1)}`, S[0] + 10, S[1] + 85, { size: 15, color: C.w, weight: 600 });
-      text(ctx, "z = w₁x₁ + w₂x₂ + b", 60, 380, { size: 16, color: "#555" }); text(ctx, "a = φ(z)", 60, 404, { size: 16, color: "#555" });
+      text(ctx, "z = θ₁x₁ + θ₂x₂ + b", 60, 380, { size: 16, color: "#555" }); text(ctx, "a = φ(z)", 60, 404, { size: 16, color: "#555" });
       // plane
       const n = 60, field = new Float32Array(n * n), px0 = 420, size = 280, py0 = 70;
       let lo = Infinity, hi = -Infinity;

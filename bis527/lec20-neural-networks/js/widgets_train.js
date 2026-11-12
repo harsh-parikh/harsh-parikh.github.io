@@ -118,7 +118,7 @@
       let vmax = 0; for (let i = 0; i < m.W1.length; i++) vmax = Math.max(vmax, Math.abs(m.W1[i])); vmax *= 0.7;
       const s = (cell - 4) / 28;
       for (let j = 0; j < Hn; j++) { const x0 = gx + (j % cols) * cell + 2, y0 = gy + Math.floor(j / cols) * cell + 2; NN.drawWeightImage(ctx, m.W1, j, Hn, x0, y0, s, 28, vmax); if (j === this.sel) rect(ctx, x0 - 2, y0 - 2, cell, cell, null, ACCENT, 3); }
-      text(ctx, `${Hn} rows of W₁, each drawn as 28 × 28`, gx, gy + rows * cell + 18, { size: 14, color: "#555" });
+      text(ctx, `${Hn} rows of Θ₁, each drawn as 28 × 28`, gx, gy + rows * cell + 18, { size: 14, color: "#555" });
       // right panel: top activating digits + output weights
       const rx = 450; text(ctx, `hidden unit ${this.sel + 1}`, rx, 28, { size: 17, weight: 600, color: C.h });
       NN.drawWeightImage(ctx, m.W1, this.sel, Hn, rx, 40, 3, 28, vmax); rect(ctx, rx, 40, 84, 84, null, "#ccc");
@@ -129,7 +129,7 @@
       for (let k = 0; k < 9; k++) { const [, i] = acts[k]; const x0 = rx + 100 + (k % 3) * 60, y0 = 60 + Math.floor(k / 3) * 60; NN.drawDigit(ctx, this.M.image("val", i), x0, y0, 2); rect(ctx, x0, y0, 56, 56, null, "#ddd"); }
       // output weights of the unit
       const wout = Array.from({ length: 10 }, (_, k) => m.W2[this.sel * 10 + k]); const wm = Math.max(0.01, ...wout.map(Math.abs));
-      text(ctx, "its weights into the ten outputs (row of W₂)", rx, 275, { size: 14, color: C.w });
+      text(ctx, "its weights into the ten outputs (row of Θ₂)", rx, 275, { size: 14, color: C.w });
       bars(ctx, wout, rx, 285, 300, 110, { min: -wm, max: wm, color: (k, v) => (v >= 0 ? C.loss : C.x), labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] });
       text(ctx, "red: evidence for the digit · blue: evidence against", rx, 425, { size: 13, color: "#555" });
     },
