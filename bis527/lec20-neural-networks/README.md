@@ -12,7 +12,6 @@ leaves your computer.
 | `←` `PageUp` | previous slide |
 | `Home` / `End` | first / last slide |
 | `F` | fullscreen |
-| `N` | show / hide the speaker notes |
 
 Every figure is live. Drag the sliders, change the menus, draw a digit on slide 5,
 and train a network on slide 8. Slide 9 can show the hidden units of the network
@@ -21,7 +20,7 @@ you trained on slide 8 (choose "from the live run").
 ## What is in the folder
 
 ```
-index.html            the lecture: 12 slides and their speaker notes
+index.html            the lecture: 12 slides
 index_full.html       the longer version: 22 slides (adds the vector view, the linear limit, one neuron,
                       activation functions, shapes, the loss curve, backprop through the network,
                       SGD on a 2-parameter loss, and convolution)

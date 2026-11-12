@@ -10,7 +10,6 @@
 <body>
 <div id="stage">
 
-<!-- 1 ------------------------------------------------------------------ -->
 <section class="slide title-slide" data-widget="titleNet">
   <div class="row">
     <div class="col side">
@@ -20,11 +19,9 @@
     </div>
     <div class="col vis"><canvas id="titleCanvas"></canvas></div>
   </div>
-  <div class="hint">Every figure is live. <span class="kbd">→</span> next &nbsp; <span class="kbd">←</span> back &nbsp; <span class="kbd">F</span> fullscreen &nbsp; <span class="kbd">N</span> notes</div>
-  <aside class="notes">The animation is a network with two hidden layers, one more than we build today: inputs on the left, outputs on the right; orange pulses are the forward pass. Plan for the hour: the task (MNIST), the model we already know (multinomial logistic regression), a hidden layer as learned features, the forward pass on a digit you draw, the loss and gradient descent, backpropagation, a live training run, what the hidden units learned, overfitting, and the network as a weighting estimator.</aside>
+  <div class="hint">Every figure is live. <span class="kbd">→</span> next &nbsp; <span class="kbd">←</span> back &nbsp; <span class="kbd">F</span> fullscreen</div>
 </section>
 
-<!-- 2 ------------------------------------------------------------------ -->
 <section class="slide" data-widget="digits">
   <h2>A task: read a handwritten digit</h2>
   <div class="row">
@@ -40,10 +37,8 @@
       <p class="small">4,000 training, 1,000 validation, 1,000 test images in this deck.</p>
     </div>
   </div>
-  <aside class="notes">Start concrete. The input is a grid of grey levels; the output is one of ten labels. Everything that follows is about building a function from the 784 numbers to the label. MNIST has 60,000 training and 10,000 test images (LeCun, Cortes, Burges); this deck carries 4,000 for training, 1,000 as a validation set for choosing epochs, and 1,000 test images reported once.</aside>
 </section>
 
-<!-- 3 ------------------------------------------------------------------ -->
 <section class="slide" data-widget="unroll">
   <h2>An image is a vector</h2>
   <div class="row">
@@ -57,10 +52,8 @@
       <p>We want a function $f(\cx{\bx})$ that returns the digit.</p>
     </div>
   </div>
-  <aside class="notes">The flattening throws away the neighbourhood structure. The fully connected network we build today does not know that pixel 29 sits under pixel 1. Convolutions, at the end, put that knowledge back.</aside>
 </section>
 
-<!-- 4 ------------------------------------------------------------------ -->
 <section class="slide" data-widget="logreg">
   <h2>Start from logistic regression</h2>
   <div class="row">
@@ -75,10 +68,8 @@
       <p class="small">90% test accuracy. Every boundary is a straight line.</p>
     </div>
   </div>
-  <aside class="notes">This is multinomial logistic regression, the model the class already knows. The weights are a template per class. The score for class k is the match between the image and template k. Softmax turns the ten scores into probabilities. Ten percent of test digits are wrong, and no choice of the ten templates fixes that: the score for each class is linear in the pixels, so each boundary is flat. The weights were fit on all 60,000 training images. The score for class k is theta_k transpose x plus b_k; the softmax exponentiates and normalizes the ten scores. Every boundary between two classes is a straight line, and the remaining ten percent of errors need boundaries that bend.</aside>
 </section>
 
-<!-- 5 ------------------------------------------------------------------ -->
 <section class="slide" data-widget="linearLimit">
   <h2>What one line cannot do</h2>
   <div class="row">
@@ -96,10 +87,8 @@
       <p>The fix is new features. A neural network learns them.</p>
     </div>
   </div>
-  <aside class="notes">Two inputs instead of 784, so we can draw the boundary. The logistic fit runs live. On the blobs it works; on the rest it stalls near fifty percent. Classically one would hand-build features such as x1 times x2 or the radius. The network builds them from data.</aside>
 </section>
 
-<!-- 6 ------------------------------------------------------------------ -->
 <section class="slide" data-widget="neuron">
   <h2>One neuron</h2>
   <div class="row">
@@ -118,10 +107,8 @@
       <p>With a sigmoid $\varphi$, one neuron is logistic regression.</p>
     </div>
   </div>
-  <aside class="notes">Drag the weights: the boundary rotates. Drag the bias: it translates. The shading is the activation a over the plane. Nothing here is new; a neuron is one logistic regression unit.</aside>
 </section>
 
-<!-- 7 ------------------------------------------------------------------ -->
 <section class="slide" data-widget="activations">
   <h2>Activation functions</h2>
   <div class="row">
@@ -135,10 +122,8 @@
       <div class="eq">$\cw{\bTheta_2}(\cw{\bTheta_1}\cx{\bx}) = (\cw{\bTheta_2}\cw{\bTheta_1})\,\cx{\bx}$</div>
     </div>
   </div>
-  <aside class="notes">Sigmoid and tanh saturate: the derivative vanishes far from zero, so learning slows. ReLU keeps a derivative of one on the positive side and is the default for hidden layers. The composition identity is why the nonlinearity is not optional.</aside>
 </section>
 
-<!-- 8 ------------------------------------------------------------------ -->
 <section class="slide" data-widget="playground">
   <h2>A hidden layer</h2>
   <div class="row">
@@ -161,10 +146,8 @@
       <p>Softmax on $\ch{\bh}$: straight in $\ch{\bh}$, bent in $\cx{\bx}$.</p>
     </div>
   </div>
-  <aside class="notes">This is the whole idea of the lecture. Two inputs instead of 784 so the boundary can be drawn; the data are the XOR pattern (classes by quadrant), rings, or a spiral. First set one hidden unit: one straight line, and on XOR accuracy stalls near fifty percent. Then raise the hidden units: each learned feature is a ramp that is zero on one side of its line, and multinomial logistic regression on those features gives a boundary that is straight in h and therefore bends in x (piecewise linear for ReLU). Switch to the linear activation (phi is called the activation function): two linear maps compose to one linear map, so the model is again logistic regression on the raw inputs and the boundary stays straight. The learning rate eta is the step size of training, defined two slides on. With a linear activation, Theta2 times Theta1 x equals (Theta2 Theta1) x: two linear maps compose to one, and the boundary is straight again. Phi is called the activation function.</aside>
 </section>
 
-<!-- 9 ------------------------------------------------------------------ -->
 <section class="slide" data-widget="shapes">
   <h2>The same network on MNIST</h2>
   <div class="row">
@@ -178,10 +161,8 @@
       <p>With $m = 64$ hidden units: 50,890 parameters, against 7,850 for logistic regression.</p>
     </div>
   </div>
-  <aside class="notes">Rectangles are drawn to scale. Zero hidden units is logistic regression. The parameter count grows linearly in m; the data stays at 60,000 images. Keep that ratio in mind for the overfitting slide.</aside>
 </section>
 
-<!-- 10 ----------------------------------------------------------------- -->
 <section class="slide" data-widget="forward">
   <h2>The forward pass on a digit you draw</h2>
   <div class="row">
@@ -195,10 +176,8 @@
       <p>Draw a digit: 784 inputs, 64 features, 10 probabilities.</p>
     </div>
   </div>
-  <aside class="notes">The 8 by 8 grid is the hidden vector h; dark cells are active units, those whose ReLU output is positive. The bars are p. Draw a 7 with a crossbar, or a thin 1, and watch the probabilities move. A badly centred digit fails: the network has no translation invariance. The forward pass computes p from x layer by layer. The network was trained beforehand on the 60,000 training images with 64 units and 20 epochs fixed in advance, so nothing about it was chosen on the test set.</aside>
 </section>
 
-<!-- 11 ----------------------------------------------------------------- -->
 <section class="slide" data-widget="loss">
   <h2>The loss: cross-entropy</h2>
   <div class="row">
@@ -212,10 +191,8 @@
       <p>A confident wrong answer costs far more than a hesitant one.</p>
     </div>
   </div>
-  <aside class="notes">Same loss as logistic regression; the parameters theta now include the hidden layer. Drag p toward zero and the loss explodes, which is why the gradient on a confident mistake is large.</aside>
 </section>
 
-<!-- 12 ----------------------------------------------------------------- -->
 <section class="slide" data-widget="gd">
   <h2>Learning: gradient descent</h2>
   <div class="row">
@@ -235,10 +212,8 @@
       <p>Too small an $\eta$ is slow; too large jumps across the valley.</p>
     </div>
   </div>
-  <aside class="notes">Two parameters so the surface can be drawn; the real surface has 50,890 dimensions. Show the three failure modes live: slow, oscillating, diverging. Then the two-minima surface: neural network losses are not convex, and initialisation matters. Theta holds every weight and intercept (called a bias in this literature). Logistic regression is convex and IRLS solves it in a few steps; here the loss is not convex and theta has 50,890 entries for the 64-unit network, so a Newton step would mean a 50,890 by 50,890 Hessian and we take first-order steps instead.</aside>
 </section>
 
-<!-- 13 ----------------------------------------------------------------- -->
 <section class="slide" data-widget="backprop">
   <h2>Backpropagation: the chain rule, organized</h2>
   <div class="row">
@@ -257,10 +232,8 @@
       <p>Backward: multiply local derivatives back to each weight.</p>
     </div>
   </div>
-  <aside class="notes">One neuron, one example with label y equal to one. Press forward: values fill left to right. Press backward: derivatives fill right to left, each edge multiplying by a local derivative, the derivative of a node with respect to its direct input. The gradient for theta is the product along the path. In a network a weight in the first layer reaches the loss through every output, and the chain rule sums over those paths; backpropagation organizes this so each node's derivative is computed once and reused by everything upstream of it. That is why the backward pass costs about as much as the forward pass, however many weights there are. Frameworks such as PyTorch do the bookkeeping over graphs with millions of nodes. Every node stores one number forward (its value) and one number backward (the derivative of the loss with respect to it). Sigma is the logistic function, the two-class softmax.</aside>
 </section>
 
-<!-- 14 ----------------------------------------------------------------- -->
 <section class="slide" data-widget="backprop2">
   <h2>Backpropagation through the whole network</h2>
   <div class="row">
@@ -275,10 +248,8 @@
       <p>Each weight gradient is an outer product: error signal times the layer's input.</p>
     </div>
   </div>
-  <aside class="notes">The top row is the forward pass; the bottom row is the backward pass in red. Delta two is the ten bars: the true class goes negative, the rest positive. Delta one is the 64 cells; ReLU zeroes the inactive units. The backward pass costs about as much as the forward pass.</aside>
 </section>
 
-<!-- 15 ----------------------------------------------------------------- -->
 <section class="slide" data-widget="sgd">
   <h2>Stochastic gradient descent</h2>
   <div class="row">
@@ -297,10 +268,8 @@
       <p>Smaller batches: more steps per epoch, noisier path.</p>
     </div>
   </div>
-  <aside class="notes">A real problem: logistic regression with one feature, so the two parameters w and b give a drawable loss surface over 200 points. Contours are the full-data loss. With batch size one the path jitters; with the full batch it is smooth but each step costs 200 gradients. Modern training uses batches of 32 to 512.</aside>
 </section>
 
-<!-- 16 ----------------------------------------------------------------- -->
 <section class="slide" data-widget="trainer">
   <h2>Train on MNIST, live</h2>
   <div class="row">
@@ -309,10 +278,8 @@
       <canvas id="trCanvas"></canvas>
     </div>
   </div>
-  <aside class="notes">Five thousand training images, one thousand test images, in the browser. Before each run, ask the class to predict: what happens with zero hidden units, with a learning rate ten times larger, with batch size one? Then run. Watch train and test accuracy diverge when the training set is small.</aside>
 </section>
 
-<!-- 17 ----------------------------------------------------------------- -->
 <section class="slide" data-widget="features">
   <h2>What the hidden units learned</h2>
   <div class="row">
@@ -325,10 +292,8 @@
       <p>Right: the validation digits that activate it, and its ten output weights.</p>
     </div>
   </div>
-  <aside class="notes">Compare with the ten logistic-regression templates: those were whole digits; these are parts. The output layer composes parts into digits with signed weights. This is the learned basis expansion. In 784 dimensions each unit's line from the playground is a hyperplane; drawn as an image it is a stroke template. Red is evidence for a digit, blue against.</aside>
 </section>
 
-<!-- 18 ----------------------------------------------------------------- -->
 <section class="slide" data-widget="overfit">
   <h2>Overfitting</h2>
   <div class="row">
@@ -342,10 +307,8 @@
       <p>Remedies: more data, weight decay $\lambda$, early stopping on validation.</p>
     </div>
   </div>
-  <aside class="notes">Same trainer, preset to a small sample and a large network: 128 hidden units give 101,770 parameters for 500 images. The dashed line marks the epoch with the best validation accuracy: early stopping. Raise lambda and the gap narrows. The validation set chooses the epoch; the test accuracy is then reported once at that epoch, so it stays an honest estimate. With this many parameters a held-out set is not optional. Weight decay shrinks the weights by a factor one minus eta lambda at each step; the intercepts are not penalized, as in ridge regression. The parameter count is 784 times 128 plus 128 plus 1,280 plus 10.</aside>
 </section>
 
-<!-- 19 ----------------------------------------------------------------- -->
 <section class="slide" data-widget="conv">
   <h2>Toward images: convolution</h2>
   <div class="row">
@@ -363,10 +326,8 @@
       <p>Convolutional networks learn the filters. Next lecture.</p>
     </div>
   </div>
-  <aside class="notes">Edit the nine numbers in the grid. The fully connected network had to learn a stroke separately at every location; a convolution learns it once. That weight sharing is what makes image networks work.</aside>
 </section>
 
-<!-- 11b -->
 <section class="slide" data-widget="weights">
   <h2>With its features fixed, a network is a weighting estimator</h2>
   <div class="row">
@@ -382,10 +343,8 @@
       <p>Weights can be negative and need not sum to one.</p>
     </div>
   </div>
-  <aside class="notes">The same formula as ridge regression, with h in place of x. Given the learned features the map from labels to prediction is linear, so every tool for linear smoothers applies: the hat matrix, degrees of freedom, leave-one-out. Two qualifications. The features were learned from the same labels, so the full map is not linear; the weighting view holds once the features are fixed, which is also the status of a random forest's weights given its trees. And the real output layer is a softmax trained jointly by gradient descent; the ridge smoother shown here replaces it on the same frozen features, and its test accuracy is printed next to the network's. Switch to raw pixels: the same formula with the pixels themselves as features, and the training digits with the largest weights stop resembling the test digit. The intercept is unpenalized, as on the previous slide. H stacks the 64 features of the 4,000 training images; Y_i is the ten-vector with a one at y_i, so the prediction is the largest entry of y-hat. Lambda is fixed at 0.001, not tuned; the intercept is unpenalized.</aside>
 </section>
 
-<!-- 21 ----------------------------------------------------------------- -->
 <section class="slide" data-widget="summary">
   <h2>Summary</h2>
   <div class="row">
@@ -400,10 +359,8 @@
       <p class="small">Data: MNIST (LeCun, Cortes, Burges). Maths: KaTeX. Every figure is plain JavaScript in this folder; <span class="kbd">index_full.html</span> has ten more slides.</p>
     </div>
   </div>
-  <aside class="notes">Close the loop with the diagram: forward pass, loss, backward pass, update. Then the readings.</aside>
 </section>
 
-<!-- 22 ----------------------------------------------------------------- -->
 <section class="slide readlist">
   <h2>Reading and credits</h2>
   <div class="two">
@@ -426,7 +383,6 @@
 </div>
 <div id="progress"></div>
 <div id="counter"></div>
-<div id="notesPane"></div>
 
 <script src="vendor/katex/katex.min.js"></script>
 <script src="vendor/katex/contrib/auto-render.min.js"></script>

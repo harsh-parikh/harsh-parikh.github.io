@@ -5,7 +5,6 @@
   const slides = Array.from(document.querySelectorAll(".slide"));
   const counter = document.getElementById("counter");
   const progress = document.getElementById("progress");
-  const notesPane = document.getElementById("notesPane");
   let cur = -1;
   const inited = new Set();
 
@@ -48,8 +47,6 @@
     location.hash = "#" + (cur + 1);
     counter.textContent = (cur + 1) + " / " + slides.length;
     progress.style.width = (100 * (cur + 1) / slides.length) + "%";
-    const notes = s.querySelector(".notes");
-    notesPane.innerHTML = notes ? notes.innerHTML : "";
   }
 
   document.addEventListener("keydown", (e) => {
@@ -62,7 +59,6 @@
       case "Home": go(0); break;
       case "End": go(slides.length - 1); break;
       case "f": case "F": if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen(); break;
-      case "n": case "N": notesPane.classList.toggle("on"); break;
       default: return;
     }
   });
