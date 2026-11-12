@@ -111,6 +111,9 @@ table.data tr.row-in{animation:rowin .5s both}
 .nav{border-top:1px solid var(--line);padding-block:10px 14px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .nav-inner{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
 .where{color:var(--muted);font-size:14px;text-align:center}
+.navmid{position:relative}
+.ai-note{color:var(--muted);font-size:12px;margin:0;position:absolute;left:0;bottom:0}
+@media (max-width:960px){.ai-note{position:static;text-align:center;margin-top:4px}}
 .beats{display:flex;gap:6px;justify-content:center;margin-bottom:4px}
 .beats i{width:9px;height:9px;border-radius:50%;background:var(--grid);border:1px solid var(--line);display:inline-block;transition:background .3s}
 .beats i.done{background:var(--muted)}
@@ -163,7 +166,7 @@ table.data tr.row-in{animation:rowin .5s both}
 </main>
 <footer class="nav"><div class="nav-inner">
   <button class="btn ghost" id="prev">&larr; Back</button>
-  <div><div class="beats" id="beats"></div><div class="where" id="where"></div></div>
+  <div class="navmid"><div class="beats" id="beats"></div><div class="where" id="where"></div><p class="ai-note">Claude was used to design this app.</p></div>
   <button class="btn" id="next">Next &rarr;</button>
 </div></footer>
 

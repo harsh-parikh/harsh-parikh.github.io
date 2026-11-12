@@ -45,6 +45,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--body); font-
 header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 24px; }
 h1 { font-family: var(--display); font-weight: 700; font-size: var(--step-3); line-height: 1; letter-spacing: 0.01em; margin: 0; text-wrap: balance; }
 .byline { color: var(--muted); }
+.ai-note { color: var(--muted); font-size: 0.85rem; margin: 16px 0 0; }
 .app { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 380px); gap: 18px; align-items: start; }
 @media (max-width: 900px) { .app { grid-template-columns: minmax(0, 1fr); } }
 .stage { background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 10px; min-width: 0; }
@@ -177,6 +178,7 @@ details ul { margin: 6px 0 0; padding-left: 18px; display: grid; gap: 4px; }
       </details>
     </aside>
   </div>
+  <p class="ai-note">Claude was used to design this app.</p>
 </div>
 
 <script id="core">

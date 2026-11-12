@@ -196,6 +196,7 @@ tbody tr:hover td { background: var(--sel); }
 :root[data-theme="dark"] { --hull: rgba(238, 150, 60, 0.11); --negfill: rgba(230, 103, 103, 0.09); }
 .cbody .hint { font-size: 13px; color: var(--fg-3); }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.ai-note { color: var(--fg-2); font-size: 0.85rem; margin: 20px 0 8px; }
 </style>
 
 <header class="band">
@@ -284,6 +285,7 @@ tbody tr:hover td { background: var(--sel); }
     <div class="rowhead"><h2>200 noise draws at x*</h2><button class="btn" id="redraw">Redraw</button></div>
     <svg id="strip" viewBox="0 0 1000 250" role="img" aria-label="Strip plot of the predictions over 200 noise draws, one row per estimator"></svg>
   </div>
+  <p class="ai-note">Claude was used to design this app.</p>
 </main>
 <div id="tip" hidden></div>
 
