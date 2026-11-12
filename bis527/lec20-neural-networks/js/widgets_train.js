@@ -3,6 +3,7 @@
   "use strict";
   const C = NN.COLORS, H = window.WH, W = window.Widgets, State = H.State;
   const { $, text, line, arrow, circle, rect, bars, fmt, heatmap, run, stop } = H;
+  const TEX = (s) => (window.katex ? katex.renderToString(s, { throwOnError: false }) : s);
   const ACCENT = "#00356b";
 
   // ========== Trainer (used by slides 16 and 18) ==========================
@@ -15,11 +16,11 @@
     const sel = (lab, name, vals, cur, f) => { const l = mk(`${lab} <select></select>`); const s = l.querySelector("select"); vals.forEach((v) => { const o = document.createElement("option"); o.value = v; o.textContent = f ? f(v) : v; if (String(v) === String(cur)) o.selected = true; s.appendChild(o); }); s.addEventListener("change", () => { this.o[name] = isNaN(+s.value) ? s.value : +s.value; this.reset(); }); return s; };
     this.c = {};
     this.c.hidden = sel("hidden units", "hidden", [0, 16, 32, 64, 128, 256], this.o.hidden, (v) => (v === 0 ? "0 (logistic regression)" : v));
-    this.c.act = sel("φ", "act", ["relu", "tanh", "sigmoid"], this.o.act, (v) => NN.ACT[v].name);
-    this.c.lr = sel("η", "lr", [0.001, 0.01, 0.03, 0.1, 0.3, 1, 3], this.o.lr);
+    this.c.act = sel(TEX("\\varphi"), "act", ["relu", "tanh", "sigmoid"], this.o.act, (v) => NN.ACT[v].name);
+    this.c.lr = sel(TEX("\\eta"), "lr", [0.001, 0.01, 0.03, 0.1, 0.3, 1, 3], this.o.lr);
     this.c.batch = sel("batch", "batch", [1, 8, 32, 128, 512], this.o.batch);
     this.c.nTrain = sel("training images", "nTrain", [200, 500, 1000, 2000, 4000], this.o.nTrain, (v) => v.toLocaleString());
-    this.c.l2 = sel("weight decay λ", "l2", [0, 0.0001, 0.001, 0.01], this.o.l2);
+    this.c.l2 = sel("weight decay " + TEX("\\lambda"), "l2", [0, 0.0001, 0.001, 0.01], this.o.l2);
     const btn = (label, cls, f) => { const b = document.createElement("button"); b.textContent = label; if (cls) b.className = cls; b.addEventListener("click", f); box.appendChild(b); return b; };
     this.runBtn = btn("run", "primary", () => this.toggle());
     btn("one epoch", "", () => { this.oneEpoch = true; this.running = true; this.runBtn.textContent = "pause"; run(this, () => this.frame()); });
@@ -76,17 +77,17 @@
     if (E.length > 2) { line(ctx, X(best.ep), p2.y + 8, X(best.ep), p2.y + p2.h - 4, C.p, 1.2, [4, 4]); text(ctx, "best validation", X(best.ep), p2.y + p2.h + 14, { size: 11, align: "center", color: C.p }); }
     text(ctx, "train", p2.x + 8, p2.y + 16, { size: 13, color: C.h, weight: 600 }); text(ctx, "validation", p2.x + 52, p2.y + 16, { size: 13, color: C.p, weight: 600 });
     // panel 3: confusion matrix
-    const p3 = { x: 700, y: 20, s: 20 }; if (wide) text(ctx, "validation confusion: true (rows) × predicted (columns)", p3.x, p3.y - 6, { size: 14, color: "#555" });
+    const p3 = { x: 700, y: 20, s: 20 }; if (wide) text(ctx, "validation confusion: true (rows) $\\times$ predicted (columns)", p3.x, p3.y - 6, { size: 14, color: "#555" });
     if (this.conf && wide) {
       let mx = 1; for (let i = 0; i < 100; i++) if (i % 11) mx = Math.max(mx, this.conf[i]);
       for (let r = 0; r < 10; r++) for (let c = 0; c < 10; c++) { const v = this.conf[r * 10 + c]; const t = r === c ? v / Math.max(1, this.M.nVal / 10) : v / mx; const col = r === c ? `rgba(42,157,92,${0.1 + 0.9 * Math.min(1, t)})` : `rgba(192,57,43,${v ? 0.15 + 0.85 * t : 0})`; rect(ctx, p3.x + 22 + c * p3.s, p3.y + 10 + r * p3.s, p3.s - 1, p3.s - 1, v ? col : "#f4f4f4"); if (v && r !== c && t > 0.45) text(ctx, String(v), p3.x + 22 + c * p3.s + p3.s / 2, p3.y + 10 + r * p3.s + 14, { size: 10, align: "center", color: "#fff" }); }
       for (let k = 0; k < 10; k++) { text(ctx, String(k), p3.x + 10, p3.y + 10 + k * p3.s + 14, { size: 11, align: "center", color: "#777" }); text(ctx, String(k), p3.x + 22 + k * p3.s + p3.s / 2, p3.y + 10 + 10 * p3.s + 12, { size: 11, align: "center", color: "#777" }); }
     }
     // panel 4: wrong examples
-    const p4 = { x: 0, y: 280 }; text(ctx, "validation digits the network gets wrong (predicted → true)", p4.x, p4.y - 6, { size: 14, color: "#555" });
-    if (this.wrong) { const ws = this.wrong.slice().sort((a, b) => b.conf - a.conf).slice(0, Math.floor(Wd / 72)); ws.forEach((w, i) => { const x0 = p4.x + i * 72; NN.drawDigit(ctx, this.M.image("val", w.i), x0, p4.y, 2); rect(ctx, x0, p4.y, 56, 56, null, "#ddd"); text(ctx, `${w.pred} → ${w.y}`, x0 + 28, p4.y + 72, { size: 13, align: "center", color: C.loss, mono: true }); }); }
+    const p4 = { x: 0, y: 280 }; text(ctx, "validation digits the network gets wrong (predicted $\\to$ true)", p4.x, p4.y - 6, { size: 14, color: "#555" });
+    if (this.wrong) { const ws = this.wrong.slice().sort((a, b) => b.conf - a.conf).slice(0, Math.floor(Wd / 72)); ws.forEach((w, i) => { const x0 = p4.x + i * 72; NN.drawDigit(ctx, this.M.image("val", w.i), x0, p4.y, 2); rect(ctx, x0, p4.y, 56, 56, null, "#ddd"); text(ctx, `$${w.pred} \\to ${w.y}$`, x0 + 28, p4.y + 72, { size: 13, align: "center", color: C.loss, mono: true }); }); }
     const cur = last;
-    this.stat.innerHTML = `epoch <b>${this.epoch}</b> &nbsp; train <b>${(100 * cur.trainAcc).toFixed(1)}%</b> &nbsp; validation <b>${(100 * cur.valAcc).toFixed(1)}%</b> &nbsp; test at best validation epoch (${this.best.ep}): <b>${(100 * this.best.testAcc).toFixed(1)}%</b> &nbsp; ${this.model.nParams().toLocaleString()} parameters` + (this.diverged ? ' &nbsp; <span style="color:#c0392b">diverged (η too large)</span>' : "");
+    this.stat.innerHTML = `epoch <b>${this.epoch}</b> &nbsp; train <b>${(100 * cur.trainAcc).toFixed(1)}%</b> &nbsp; validation <b>${(100 * cur.valAcc).toFixed(1)}%</b> &nbsp; test at best validation epoch (${this.best.ep}): <b>${(100 * this.best.testAcc).toFixed(1)}%</b> &nbsp; ${this.model.nParams().toLocaleString()} parameters` + (this.diverged ? ' &nbsp; <span style="color:#c0392b">diverged (' + TEX("\\eta") + ' too large)</span>' : "");
     if (this.diverged && !this.running) this.diverged = false;
   };
   Trainer.prototype.attach = function (canvas, w, h) { this.w = w; this.h = h; this.ctx = NN.setupCanvas(canvas, w, h); };
@@ -118,7 +119,7 @@
       let vmax = 0; for (let i = 0; i < m.W1.length; i++) vmax = Math.max(vmax, Math.abs(m.W1[i])); vmax *= 0.7;
       const s = (cell - 4) / 28;
       for (let j = 0; j < Hn; j++) { const x0 = gx + (j % cols) * cell + 2, y0 = gy + Math.floor(j / cols) * cell + 2; NN.drawWeightImage(ctx, m.W1, j, Hn, x0, y0, s, 28, vmax); if (j === this.sel) rect(ctx, x0 - 2, y0 - 2, cell, cell, null, ACCENT, 3); }
-      text(ctx, `${Hn} rows of Θ₁, each drawn as 28 × 28`, gx, gy + rows * cell + 18, { size: 14, color: "#555" });
+      text(ctx, `${Hn} rows of $\\boldsymbol{\\Theta}_1$, each drawn as $28 \\times 28$`, gx, gy + rows * cell + 18, { size: 14, color: "#555" });
       // right panel: top activating digits + output weights
       const rx = 450; text(ctx, `hidden unit ${this.sel + 1}`, rx, 28, { size: 17, weight: 600, color: C.h });
       NN.drawWeightImage(ctx, m.W1, this.sel, Hn, rx, 40, 3, 28, vmax); rect(ctx, rx, 40, 84, 84, null, "#ccc");
@@ -129,7 +130,7 @@
       for (let k = 0; k < 9; k++) { const [, i] = acts[k]; const x0 = rx + 100 + (k % 3) * 60, y0 = 60 + Math.floor(k / 3) * 60; NN.drawDigit(ctx, this.M.image("val", i), x0, y0, 2); rect(ctx, x0, y0, 56, 56, null, "#ddd"); }
       // output weights of the unit
       const wout = Array.from({ length: 10 }, (_, k) => m.W2[this.sel * 10 + k]); const wm = Math.max(0.01, ...wout.map(Math.abs));
-      text(ctx, "its weights into the ten outputs (column of Θ₂)", rx, 275, { size: 14, color: C.w });
+      text(ctx, "its weights into the ten outputs (column of $\\boldsymbol{\\Theta}_2$)", rx, 275, { size: 14, color: C.w });
       bars(ctx, wout, rx, 285, 300, 110, { min: -wm, max: wm, color: (k, v) => (v >= 0 ? C.loss : C.x), labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] });
       text(ctx, "red: evidence for the digit · blue: evidence against", rx, 425, { size: 13, color: "#555" });
     },
@@ -151,22 +152,22 @@
     draw() {
       const ctx = this.ctx, x = this.M.image("test", this.idx), K = this.K; ctx.clearRect(0, 0, 740, 400);
       const s = 10, ix = 10, iy = 50; NN.drawDigit(ctx, x, ix, iy, s); rect(ctx, ix, iy, 280, 280, null, C.x, 2);
-      text(ctx, "x   28 × 28", ix + 140, iy - 10, { size: 15, align: "center", color: C.x, weight: 600 });
+      text(ctx, "$\\mathbf{x}$   $28 \\times 28$", ix + 140, iy - 10, { size: 15, align: "center", color: C.x, weight: 600 });
       // kernel
       const kx = 320, ky = 150, ks = 30; let km = Math.max(0.01, ...K.map(Math.abs));
       for (let i = 0; i < 9; i++) { rect(ctx, kx + (i % 3) * ks, ky + Math.floor(i / 3) * ks, ks - 1, ks - 1, NN.divergeColor(K[i], km)); text(ctx, fmt(K[i], 1).replace(/\.0$/, ""), kx + (i % 3) * ks + ks / 2, ky + Math.floor(i / 3) * ks + 20, { size: 12, align: "center", color: "#333", mono: true }); }
-      rect(ctx, kx, ky, 3 * ks, 3 * ks, null, C.w, 2); text(ctx, "K   3 × 3", kx + 45, ky - 10, { size: 15, align: "center", color: C.w, weight: 600 });
-      text(ctx, "∗", kx + 45, ky + 125, { size: 26, align: "center", color: "#555" });
+      rect(ctx, kx, ky, 3 * ks, 3 * ks, null, C.w, 2); text(ctx, "$K$   $3 \\times 3$", kx + 45, ky - 10, { size: 15, align: "center", color: C.w, weight: 600 });
+      text(ctx, "$\\ast$", kx + 45, ky + 125, { size: 26, align: "center", color: "#555" });
       // output
       const out = new Float32Array(26 * 26); let om = 1e-6;
       for (let i = 0; i < 26; i++) for (let j = 0; j < 26; j++) { let v = 0; for (let u = 0; u < 3; u++) for (let w = 0; w < 3; w++) v += K[u * 3 + w] * x[(i + u) * 28 + j + w]; out[i * 26 + j] = v; om = Math.max(om, Math.abs(v)); }
       const ox = 450, oy = 60, os = 10;
       const nShow = this.pos >= 0 ? this.pos : 26 * 26;
       for (let i = 0; i < 26 * 26; i++) { if (i > nShow) break; rect(ctx, ox + (i % 26) * os, oy + Math.floor(i / 26) * os, os, os, NN.divergeColor(out[i], om)); }
-      rect(ctx, ox, oy, 260, 260, null, C.h, 2); text(ctx, "K ∗ x   26 × 26", ox + 130, oy - 10, { size: 15, align: "center", color: C.h, weight: 600 });
+      rect(ctx, ox, oy, 260, 260, null, C.h, 2); text(ctx, "$K \\ast \\mathbf{x}$   $26 \\times 26$", ox + 130, oy - 10, { size: 15, align: "center", color: C.h, weight: 600 });
       arrow(ctx, kx + 100, ky + 45, ox - 10, ky + 45, "#888", 1.5);
-      if (this.pos >= 0 && this.pos < 26 * 26) { const i = Math.floor(this.pos / 26), j = this.pos % 26; rect(ctx, ix + j * s, iy + i * s, 3 * s, 3 * s, null, C.w, 3); rect(ctx, ox + j * os, oy + i * os, os, os, null, C.w, 3); text(ctx, `output (${i + 1}, ${j + 1}) = ${fmt(out[this.pos], 2)}`, ox, oy + 285, { size: 14, color: C.w, mono: true }); }
-      text(ctx, "each output cell: the 3 × 3 patch times K, summed", ox, 365, { size: 13, color: "#555" });
+      if (this.pos >= 0 && this.pos < 26 * 26) { const i = Math.floor(this.pos / 26), j = this.pos % 26; rect(ctx, ix + j * s, iy + i * s, 3 * s, 3 * s, null, C.w, 3); rect(ctx, ox + j * os, oy + i * os, os, os, null, C.w, 3); text(ctx, `output $(${i + 1}, ${j + 1}) = ${fmt(out[this.pos], 2)}$`, ox, oy + 285, { size: 14, color: C.w, mono: true }); }
+      text(ctx, "each cell: the $3 \\times 3$ patch times $K$, summed", ox, 365, { size: 13, color: "#555" });
       text(ctx, "blue negative, red positive", ox, 385, { size: 13, color: "#555" });
     },
   };
@@ -193,8 +194,8 @@
     init() {
       const ctx = NN.setupCanvas($("sumCanvas"), 560, 420);
       const box = (x, y, w, h, title, sub, col) => { rect(ctx, x, y, w, h, "#fff", col, 2.5); text(ctx, title, x + w / 2, y + 32, { size: 20, align: "center", color: col, weight: 600 }); text(ctx, sub, x + w / 2, y + 60, { size: 15, align: "center", color: "#555" }); };
-      box(40, 40, 200, 80, "forward pass", "x → h → p", C.x); box(320, 40, 200, 80, "loss", "L = −log p_y", C.loss);
-      box(320, 290, 200, 80, "backward pass", "δ₂, δ₁ by the chain rule", C.loss); box(40, 290, 200, 80, "update", "θ ← θ − η ∇L", C.w);
+      box(40, 40, 200, 80, "forward pass", "$\\mathbf{x} \\to \\mathbf{h} \\to \\mathbf{p}$", C.x); box(320, 40, 200, 80, "loss", "$L = -\\log p_y$", C.loss);
+      box(320, 290, 200, 80, "backward pass", "$\\boldsymbol{\\delta}_2, \\boldsymbol{\\delta}_1$ by the chain rule", C.loss); box(40, 290, 200, 80, "update", "$\\boldsymbol{\\theta} \\leftarrow \\boldsymbol{\\theta} - \\eta \\nabla L$", C.w);
       arrow(ctx, 245, 80, 315, 80, "#555", 2); arrow(ctx, 420, 125, 420, 285, "#555", 2); arrow(ctx, 315, 330, 245, 330, "#555", 2); arrow(ctx, 140, 285, 140, 125, "#555", 2);
       text(ctx, "one mini-batch", 280, 215, { size: 16, align: "center", color: "#555" }); text(ctx, "repeat for many epochs", 280, 240, { size: 16, align: "center", color: "#555" });
       // small network glyph in the middle-left
@@ -202,7 +203,7 @@
       const pos = layers.map((n, li) => Array.from({ length: n }, (_, j) => [xs[li], 215 + (j - (n - 1) / 2) * 24]));
       for (let li = 0; li < 2; li++) for (const a of pos[li]) for (const b of pos[li + 1]) line(ctx, a[0], a[1], b[0], b[1], "#ddd", 1);
       pos.forEach((L, li) => L.forEach((p) => circle(ctx, p[0], p[1], 7, "#fff", cols[li], 2)));
-      text(ctx, "Monitor test accuracy every epoch; stop when it stops improving.", 280, 405, { size: 15, align: "center", color: "#555" });
+      text(ctx, "Monitor validation accuracy every epoch; stop when it stops improving.", 280, 405, { size: 15, align: "center", color: "#555" });
     },
   };
 })();
@@ -260,35 +261,35 @@
     },
     draw() {
       const ctx = this.ctx, kind = $("wtFeat").value, M = this.M; ctx.clearRect(0, 0, 760, 440);
-      if (!this.cache[kind]) { text(ctx, kind === "hidden" ? "computing the 65 × 65 smoother …" : "computing the 785 × 785 smoother (a few seconds) …", 10, 40, { size: 16, color: "#555" }); setTimeout(() => { this.build(kind); this.draw(); }, 30); return; }
+      if (!this.cache[kind]) { text(ctx, kind === "hidden" ? "computing the $65 \\times 65$ smoother …" : "computing the $785 \\times 785$ smoother (a few seconds) …", 10, 40, { size: 16, color: "#555" }); setTimeout(() => { this.build(kind); this.draw(); }, 30); return; }
       const S = this.build(kind), x = M.image("test", this.idx), y = M.label("test", this.idx), f = this.feat(kind, x), d = S.d;
       const v = new Float64Array(d); for (let a = 0; a < d; a++) { let s = 0; for (let b = 0; b < d; b++) s += S.A[a * d + b] * f[b]; v[a] = s; }
       const w = new Float64Array(M.nTrain), yhat = new Float64Array(10); let sum = 0, sq = 0;
       for (let i = 0; i < M.nTrain; i++) { const fi = S.F[i]; let s = 0; for (let a = 0; a < d; a++) if (fi[a] !== 0) s += fi[a] * v[a]; w[i] = s; sum += s; sq += s * s; yhat[M.label("train", i)] += s; }
       const order = Array.from(w.keys()).sort((a, b) => Math.abs(w[b]) - Math.abs(w[a]));
       // query digit
-      rect(ctx, 10, 30, 112, 112, "#fff", C.x, 2); NN.drawDigit(ctx, x, 10, 30, 4); text(ctx, `x   (true label ${y})`, 66, 160, { size: 14, align: "center", color: C.x, weight: 600 });
+      rect(ctx, 10, 30, 112, 112, "#fff", C.x, 2); NN.drawDigit(ctx, x, 10, 30, 4); text(ctx, `$\\mathbf{x}$   (true label ${y})`, 66, 160, { size: 14, align: "center", color: C.x, weight: 600 });
       const netPred = this.net.predict(x); text(ctx, `network predicts ${netPred}`, 66, 180, { size: 13, align: "center", color: "#555" });
       // top training images
-      text(ctx, "training digits with the largest |wᵢ(x)|", 150, 22, { size: 14, color: "#555" });
-      for (let k = 0; k < 12; k++) { const i = order[k], x0 = 150 + (k % 6) * 62, y0 = 30 + Math.floor(k / 6) * 92; NN.drawDigit(ctx, M.image("train", i), x0, y0, 2); rect(ctx, x0, y0, 56, 56, null, w[i] >= 0 ? C.loss : C.x, 2); text(ctx, `${w[i] >= 0 ? "+" : "−"}${fmt(Math.abs(w[i]), 3)}`, x0 + 28, y0 + 72, { size: 12, align: "center", mono: true, color: w[i] >= 0 ? C.loss : C.x }); text(ctx, `y=${M.label("train", i)}`, x0 + 28, y0 + 86, { size: 11, align: "center", color: "#777" }); }
+      text(ctx, "training digits with the largest $|w_i(\\mathbf{x})|$", 150, 22, { size: 14, color: "#555" });
+      for (let k = 0; k < 12; k++) { const i = order[k], x0 = 150 + (k % 6) * 62, y0 = 30 + Math.floor(k / 6) * 92; NN.drawDigit(ctx, M.image("train", i), x0, y0, 2); rect(ctx, x0, y0, 56, 56, null, w[i] >= 0 ? C.loss : C.x, 2); text(ctx, `${w[i] >= 0 ? "+" : "−"}${fmt(Math.abs(w[i]), 3)}`, x0 + 28, y0 + 72, { size: 12, align: "center", mono: true, color: w[i] >= 0 ? C.loss : C.x }); text(ctx, `$y = ${M.label("train", i)}$`, x0 + 28, y0 + 86, { size: 11, align: "center", color: "#777" }); }
       text(ctx, "red: positive weight · blue: negative weight", 150, 222, { size: 12, color: "#777" });
       // yhat bars
-      const bx = 540; text(ctx, "ŷₖ(x) = Σᵢ wᵢ(x) 1{yᵢ = k}", bx, 22, { size: 14, color: C.p });
+      const bx = 540; text(ctx, "$\\hat{y}_k(\\mathbf{x}) = \\sum_i w_i(\\mathbf{x})\\, \\mathbf{1}\\{y_i = k\\}$", bx, 22, { size: 14, color: C.p });
       let ymax = 0.05; for (let k = 0; k < 10; k++) ymax = Math.max(ymax, Math.abs(yhat[k]));
       let pred = 0; for (let k = 1; k < 10; k++) if (yhat[k] > yhat[pred]) pred = k;
       bars(ctx, Array.from(yhat), bx, 30, 210, 150, { min: -ymax, max: ymax, color: (k) => (k === pred ? C.p : "#cdb6e0"), labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] });
       text(ctx, `smoother predicts ${pred}`, bx, 215, { size: 14, color: pred === y ? C.h : C.loss, weight: 600 });
       // weight profile: all 5000 weights sorted
       const px = 10, py = 260, pw = 730, ph = 120; rect(ctx, px, py, pw, ph, "#fafafa", "#ddd");
-      text(ctx, `all ${M.nTrain.toLocaleString()} weights wᵢ(x), sorted`, px + 6, py - 6, { size: 14, color: "#555" });
+      text(ctx, `all ${M.nTrain.toLocaleString()} weights $w_i(\\mathbf{x})$, sorted`, px + 6, py - 6, { size: 14, color: "#555" });
       const sorted = Array.from(w).sort((a, b) => b - a); let wm = Math.max(1e-6, Math.abs(sorted[0]), Math.abs(sorted[sorted.length - 1]));
       const y0 = py + ph / 2; ctx.save(); ctx.strokeStyle = "#999"; ctx.beginPath(); ctx.moveTo(px, y0); ctx.lineTo(px + pw, y0); ctx.stroke(); ctx.restore();
       for (let i = 0; i < sorted.length; i++) { const xx = px + 2 + (pw - 4) * i / sorted.length, hh = sorted[i] / wm * (ph / 2 - 6); rect(ctx, xx, Math.min(y0, y0 - hh), Math.max(0.5, (pw - 4) / sorted.length), Math.abs(hh), sorted[i] >= 0 ? C.loss : C.x); }
-      text(ctx, `Σᵢ wᵢ(x) = ${fmt(sum, 3)}`, px, py + ph + 24, { size: 15, mono: true });
-      text(ctx, `effective neighbours (Σw)²/Σw² = ${Math.round(sum * sum / sq)}`, px + 230, py + ph + 24, { size: 15, mono: true });
+      text(ctx, `$\\sum_i w_i(\\mathbf{x}) = ${fmt(sum, 3)}$`, px, py + ph + 24, { size: 15, mono: true });
+      text(ctx, `effective neighbours $(\\sum_i w_i)^2 / \\sum_i w_i^2 = ${Math.round(sum * sum / sq)}$`, px + 230, py + ph + 24, { size: 15, mono: true });
       text(ctx, `smoother test accuracy ${(100 * S.acc).toFixed(1)}%`, px + pw, py + ph + 48, { size: 15, mono: true, color: ACCENT, align: "right" });
-      text(ctx, kind === "hidden" ? "features: 64 learned hidden units + intercept, ridge λ = 0.001" : "features: 784 raw pixels + intercept, ridge λ = 1", px, py + ph + 48, { size: 13, color: "#777" });
+      text(ctx, kind === "hidden" ? "features: 64 learned hidden units + intercept, ridge $\\lambda = 0.001$" : "features: 784 raw pixels + intercept, ridge $\\lambda = 1$", px, py + ph + 48, { size: 13, color: "#777" });
     },
   };
 })();

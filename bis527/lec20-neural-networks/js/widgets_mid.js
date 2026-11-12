@@ -4,6 +4,7 @@
   const C = NN.COLORS, H = window.WH, W = window.Widgets, State = H.State;
   const { $, text, line, arrow, circle, rect, bars, fmt, bindVal, heatmap, probColor, run, stop, drawPoints } = H;
   const ACCENT = "#00356b";
+  const TEX = (s) => (window.katex ? katex.renderToString(s, { throwOnError: false }) : s);
 
   // ========== 8. playground ===============================================
   W.playground = {
@@ -47,21 +48,21 @@
       for (let i = 1; i < n; i++) for (let j = 1; j < n; j++) { const a = field[i * n + j] - 0.5, b = field[i * n + j - 1] - 0.5, c = field[(i - 1) * n + j] - 0.5; if (a * b < 0 || a * c < 0) ctx.fillRect(j * size / n - 1, 10 + i * size / n - 1, size / n + 1, size / n + 1); }
       ctx.restore();
       drawPoints(ctx, this.data, 0, 10, size); rect(ctx, 0, 10, size, size, null, "#ccc");
-      text(ctx, "shading: p(blue | x)    black: the boundary p = ½", 0, 432, { size: 14, color: "#555" });
+      text(ctx, "shading: $p(\\text{blue} \\mid \\mathbf{x})$    black: the boundary $p = 1/2$", 0, 432, { size: 14, color: "#555" });
       // hidden units, green = active, sized to fill the panel
       const gx = 430, gy = 32, gw = 330;
       const lo = m.actName === "tanh" ? -1 : 0, hi = m.actName === "tanh" ? 1 : (m.actName === "sigmoid" ? 1 : hmax);
       const green = (t) => { t = Math.max(0, Math.min(1, t)); return [Math.round(255 - 213 * t), Math.round(255 - 98 * t), Math.round(255 - 163 * t)]; };
       if (hid) {
         const cols = hid <= 4 ? 2 : hid <= 9 ? 3 : 4, rows = Math.ceil(hid / cols), gap = 8, cell = Math.min(150, Math.floor((gw - (cols - 1) * gap) / cols));
-        text(ctx, hid === 1 ? "the hidden unit h₁" : `the ${hid} hidden units h₁ … h${hid}`, gx, gy - 12, { size: 14, color: C.h, weight: 600 });
+        text(ctx, hid === 1 ? "the hidden unit $h_1$" : `the ${hid} hidden units $h_1, \\ldots, h_{${hid}}$`, gx, gy - 12, { size: 14, color: C.h, weight: 600 });
         for (let u = 0; u < hid; u++) {
           const cx = gx + (u % cols) * (cell + gap), cy = gy + Math.floor(u / cols) * (cell + gap);
           heatmap(ctx, unitFields[u], n, cx, cy, cell, cell, (v) => green((v - lo) / (hi - lo)));
           rect(ctx, cx, cy, cell, cell, null, "#bbb");
-          if (cell >= 60) text(ctx, `h${u + 1}`, cx + 5, cy + 16, { size: 12, color: C.h, weight: 600 });
+          if (cell >= 60) text(ctx, `$h_{${u + 1}}$`, cx + 5, cy + 16, { size: 12, color: C.h, weight: 600 });
         }
-      } else text(ctx, "no hidden layer: logistic regression on x", gx, gy - 12, { size: 14, color: C.h, weight: 600 });
+      } else text(ctx, "no hidden layer: logistic regression on $\\mathbf{x}$", gx, gy - 12, { size: 14, color: C.h, weight: 600 });
       // loss curve
       const lx = 430, ly = 372, lw = 330, lh = 66;
       rect(ctx, lx, ly, lw, lh, "#fafafa", "#ddd");
@@ -82,13 +83,13 @@
       const ctx = this.ctx, m = +this.hid.value, sc = 0.44; ctx.clearRect(0, 0, 600, 420);
       const yC = 200, mh = (u) => Math.max(3, u * sc);
       const blocks = m > 0
-        ? [["x", 784, 1, C.x, "784"], ["Θ₁", 784, m, C.w, `${m} × 784`], ["h", m, 1, C.h, `${m}`], ["Θ₂", m, 10, C.w, `10 × ${m}`], ["p", 10, 1, C.p, "10"]]
-        : [["x", 784, 1, C.x, "784"], ["Θ", 784, 10, C.w, "10 × 784"], ["p", 10, 1, C.p, "10"]];
+        ? [["$\\mathbf{x}$", 784, 1, C.x, "784"], ["$\\boldsymbol{\\Theta}_1$", 784, m, C.w, `$${m} \\times 784$`], ["$\\mathbf{h}$", m, 1, C.h, `${m}`], ["$\\boldsymbol{\\Theta}_2$", m, 10, C.w, `$10 \\times ${m}$`], ["$\\mathbf{p}$", 10, 1, C.p, "10"]]
+        : [["$\\mathbf{x}$", 784, 1, C.x, "784"], ["$\\boldsymbol{\\Theta}$", 784, 10, C.w, "$10 \\times 784$"], ["$\\mathbf{p}$", 10, 1, C.p, "10"]];
       let xcur = 30;
       const drawn = [];
       for (const [name, hgt, wid, col, dim] of blocks) {
         const hh = mh(hgt), ww = Math.max(wid === 1 ? 10 : 3, wid * sc);
-        if (name.startsWith("Θ")) { // matrix: rows = output dim, cols = input dim; draw rotated to show rows x cols
+        if (name.includes("Theta")) { // matrix: rows = output dim, cols = input dim; draw rotated to show rows x cols
           const rows = mh(wid), colsW = Math.max(3, hgt * sc);
           rect(ctx, xcur, yC - rows / 2, colsW, rows, col + "33", col, 2);
           text(ctx, name, xcur + colsW / 2, yC - rows / 2 - 10, { size: 18, align: "center", color: col, weight: 600 });
@@ -103,8 +104,8 @@
       }
       for (let i = 0; i < drawn.length - 1; i++) arrow(ctx, drawn[i][0] + drawn[i][1] + 6, yC, drawn[i + 1][0] - 6, yC, "#888", 1.5);
       const nP = m > 0 ? 784 * m + m + 10 * m + 10 : 7850;
-      text(ctx, "drawn to scale: one unit = 0.44 px", 30, 400, { size: 14, color: "#777" });
-      $("shStat").innerHTML = m > 0 ? `784·${m} + ${m} + 10·${m} + 10 = <b>${nP.toLocaleString()}</b> parameters` : `784·10 + 10 = <b>7,850</b> parameters (logistic regression)`;
+      text(ctx, "drawn to scale: one unit = 0.44 px", 70, 400, { size: 14, color: "#777" });
+      $("shStat").innerHTML = m > 0 ? TEX(`784 \\cdot ${m} + ${m} + 10 \\cdot ${m} + 10 = \\mathbf{${nP.toLocaleString().replace(",", "{,}")}}`) + " parameters" : TEX("784 \\cdot 10 + 10 = \\mathbf{7{,}850}") + " parameters (logistic regression)";
     },
   };
 
@@ -158,23 +159,23 @@
       text(ctx, "draw here", pad.x, pad.y - 10, { size: 15, color: "#555" });
       // network input
       rect(ctx, 250, 60, 84, 84, "#fff", C.x, 2); NN.drawDigit(ctx, x, 250, 60, 3);
-      text(ctx, "x", 292, 48, { size: 18, align: "center", color: C.x, weight: 600 }); text(ctx, "784 inputs", 292, 160, { size: 13, align: "center", color: "#555" });
-      text(ctx, "centred, 28 × 28", 292, 176, { size: 12, align: "center", color: "#888" });
-      arrow(ctx, 340, 102, 390, 102, C.w, 2); text(ctx, "Θ₁, ReLU", 365, 92, { size: 13, align: "center", color: C.w });
+      text(ctx, "$\\mathbf{x}$", 292, 48, { size: 18, align: "center", color: C.x, weight: 600 }); text(ctx, "784 inputs", 292, 160, { size: 13, align: "center", color: "#555" });
+      text(ctx, "centred, $28 \\times 28$", 292, 176, { size: 12, align: "center", color: "#888" });
+      arrow(ctx, 340, 102, 390, 102, C.w, 2); text(ctx, "$\\boldsymbol{\\Theta}_1$, ReLU", 365, 92, { size: 13, align: "center", color: C.w });
       // hidden 8x8
       const hx = 400, hy = 60, cs = 21; let hmax = 1e-6; for (let j = 0; j < 64; j++) hmax = Math.max(hmax, out.h[j]);
       for (let j = 0; j < 64; j++) { const v = out.h[j] / hmax; rect(ctx, hx + (j % 8) * cs, hy + Math.floor(j / 8) * cs, cs - 1, cs - 1, `rgba(42,157,92,${0.08 + 0.92 * v})`); }
       rect(ctx, hx, hy, 8 * cs, 8 * cs, null, C.h, 2);
-      text(ctx, "h", hx + 4 * cs, 48, { size: 18, align: "center", color: C.h, weight: 600 }); text(ctx, "64 hidden units", hx + 4 * cs, hy + 8 * cs + 18, { size: 13, align: "center", color: "#555" });
+      text(ctx, "$\\mathbf{h}$", hx + 4 * cs, 48, { size: 18, align: "center", color: C.h, weight: 600 }); text(ctx, "64 hidden units", hx + 4 * cs, hy + 8 * cs + 18, { size: 13, align: "center", color: "#555" });
       text(ctx, `${out.h.filter((v) => v > 0).length} active`, hx + 4 * cs, hy + 8 * cs + 34, { size: 12, align: "center", color: "#888" });
-      arrow(ctx, hx + 8 * cs + 8, 102, hx + 8 * cs + 58, 102, C.w, 2); text(ctx, "Θ₂, softmax", hx + 8 * cs + 33, 92, { size: 13, align: "center", color: C.w });
+      arrow(ctx, hx + 8 * cs + 8, 102, hx + 8 * cs + 58, 102, C.w, 2); text(ctx, "$\\boldsymbol{\\Theta}_2$, softmax", hx + 8 * cs + 33, 92, { size: 13, align: "center", color: C.w });
       // output
       const ox = 640, oy = 60, bh = 170, bw = 110; let pred = 0; for (let k = 1; k < 10; k++) if (out.p[k] > out.p[pred]) pred = k;
-      text(ctx, "p", ox + bw / 2, 48, { size: 18, align: "center", color: C.p, weight: 600 });
+      text(ctx, "$\\mathbf{p}$", ox + bw / 2, 48, { size: 18, align: "center", color: C.p, weight: 600 });
       for (let k = 0; k < 10; k++) { const yy = oy + k * 17; rect(ctx, ox + 18, yy, bw * 0.75 * out.p[k], 13, k === pred ? C.p : "#cdb6e0"); text(ctx, String(k), ox + 8, yy + 11, { size: 13, align: "center", color: k === pred ? C.p : "#555", weight: k === pred ? 700 : 400 }); }
-      text(ctx, `${pred}  (p = ${fmt(out.p[pred])})`, ox + 18, oy + bh + 16, { size: 15, color: C.p, weight: 600 });
+      text(ctx, `${pred}  ($p = ${fmt(out.p[pred])}$)`, 736, oy + bh + 16, { size: 15, color: C.p, weight: 600, align: "right" });
       // z strip
-      text(ctx, "pre-activations z₁ = Θ₁x + b₁ (negative in blue, ReLU zeroes them)", 250, 330, { size: 13, color: "#555" });
+      text(ctx, "pre-activations $\\mathbf{z}_1 = \\boldsymbol{\\Theta}_1\\mathbf{x} + \\mathbf{b}_1$ (negative in blue, ReLU zeroes them)", 250, 330, { size: 13, color: "#555" });
       let zmax = 1e-6; for (let j = 0; j < 64; j++) zmax = Math.max(zmax, Math.abs(out.z1[j]));
       for (let j = 0; j < 64; j++) rect(ctx, 250 + j * 7.8, 340, 7, 24, NN.divergeColor(out.z1[j], zmax));
     },
@@ -189,14 +190,14 @@
       for (let l = 0; l <= 5; l++) { line(ctx, x0, Y(l), x0 + w, Y(l), "#eee"); text(ctx, String(l), x0 - 8, Y(l) + 5, { size: 13, align: "right", color: "#777" }); }
       for (let v = 0; v <= 1; v += 0.25) { line(ctx, X(v), y0, X(v), y0 + h, "#eee"); text(ctx, fmt(v, 2), X(v), y0 + h + 18, { size: 13, align: "center", color: "#777" }); }
       line(ctx, x0, y0 + h, x0 + w, y0 + h, "#999"); line(ctx, x0, y0, x0, y0 + h, "#999");
-      text(ctx, "p_y  (probability of the true class)", x0 + w / 2, y0 + h + 40, { size: 15, align: "center", color: C.p });
-      text(ctx, "−log p_y", x0 + 8, y0 + 14, { size: 15, color: C.loss });
+      text(ctx, "$p_y$  (probability of the true class)", x0 + w / 2, y0 + h + 40, { size: 15, align: "center", color: C.p });
+      text(ctx, "$-\\log p_y$", x0 + 8, y0 + 14, { size: 15, color: C.loss });
       ctx.save(); ctx.strokeStyle = C.loss; ctx.lineWidth = 3; ctx.beginPath();
       for (let i = 1; i <= 300; i++) { const v = i / 300, l = -Math.log(v); i === 1 ? ctx.moveTo(X(v), Y(l)) : ctx.lineTo(X(v), Y(l)); } ctx.stroke(); ctx.restore();
       const L = -Math.log(p); line(ctx, X(p), Y(L), X(p), y0 + h, C.p, 1.5, [5, 4]); line(ctx, x0, Y(L), X(p), Y(L), C.p, 1.5, [5, 4]);
       circle(ctx, X(p), Y(L), 7, C.p, "#fff", 2);
-      text(ctx, `p_y = ${fmt(p)}   →   loss = ${fmt(L, 2)}`, X(0.5), y0 + 60, { size: 20, align: "center", color: C.ink, weight: 600 });
-      const dl = -1 / p; text(ctx, `slope dL/dp = −1/p = ${fmt(dl, 1)}`, X(0.5), y0 + 90, { size: 15, align: "center", color: "#555" });
+      text(ctx, `$p_y = ${fmt(p)}$   $\\to$   loss $-\\log p_y = ${fmt(L, 2)}$`, X(0.5), y0 + 60, { size: 20, align: "center", color: C.ink, weight: 600 });
+      const dl = -1 / p; text(ctx, `slope $dL/dp = -1/p = ${fmt(dl, 1)}$`, X(0.5), y0 + 90, { size: 15, align: "center", color: "#555" });
     },
   };
 
@@ -242,12 +243,12 @@
       this.path.forEach((p, i) => { const q = P(p); if (q[0] < x0 - 5 || q[0] > x0 + size + 5 || q[1] < y0 - 5 || q[1] > y0 + size + 5) return; circle(ctx, q[0], q[1], i === this.path.length - 1 ? 7 : 3, i === this.path.length - 1 ? C.loss : "rgba(192,57,43,0.6)"); });
       const last = this.path[this.path.length - 1], g = this.S.g(last[0], last[1]);
       const q = P(last), gl = Math.hypot(g[0], g[1]); if (gl > 1e-6 && Math.abs(last[0]) < 3 && Math.abs(last[1]) < 3) arrow(ctx, q[0], q[1], q[0] + 40 * g[0] / gl, q[1] - 40 * g[1] / gl, C.loss, 2);
-      text(ctx, "θ₁", x0 + size + 8, y0 + size / 2 + 5, { size: 16, color: "#555" }); text(ctx, "θ₂", x0 + size / 2, y0 - 6, { size: 16, align: "center", color: "#555" });
+      text(ctx, "$\\theta_1$", x0 + size + 8, y0 + size / 2 + 5, { size: 16, color: "#555" }); text(ctx, "$\\theta_2$", x0 + size / 2, y0 - 6, { size: 16, align: "center", color: "#555" });
       const sx = 440; text(ctx, `step ${this.path.length - 1}`, sx, 50, { size: 16, weight: 600 });
-      text(ctx, `L = ${fmt(this.S.f(last[0], last[1]), 3)}`, sx, 80, { size: 16, mono: true }); text(ctx, `‖∇L‖ = ${fmt(gl, 3)}`, sx, 104, { size: 16, mono: true, color: C.loss });
-      text(ctx, `η = ${fmt(Math.pow(10, +this.lr.value), 3)}`, sx, 128, { size: 16, mono: true });
+      text(ctx, `$L = ${fmt(this.S.f(last[0], last[1]), 3)}$`, sx, 80, { size: 16, mono: true }); text(ctx, `$\\|\\nabla L\\| = ${fmt(gl, 3)}$`, sx, 104, { size: 16, mono: true, color: C.loss });
+      text(ctx, `$\\eta = ${fmt(Math.pow(10, +this.lr.value), 3)}$`, sx, 128, { size: 16, mono: true });
       text(ctx, "arrow: the gradient", sx, 170, { size: 14, color: C.loss }); text(ctx, "★ minimum", sx, 192, { size: 14, color: ACCENT });
-      if (Math.abs(last[0]) > 2.2 || Math.abs(last[1]) > 2.2) text(ctx, "diverged: η too large", sx, 230, { size: 16, color: C.loss, weight: 600 });
+      if (Math.abs(last[0]) > 2.2 || Math.abs(last[1]) > 2.2) text(ctx, "diverged: $\\eta$ too large", sx, 230, { size: 16, color: C.loss, weight: 600 });
     },
   };
 
@@ -267,8 +268,8 @@
       const ctx = this.ctx, x = +this.x.value, w = +this.w.value, b = +this.b.value; ctx.clearRect(0, 0, 640, 400);
       const z = w * x + b, a = 1 / (1 + Math.exp(-z)), L = -Math.log(a); // label y = 1
       const dLda = -1 / a, dadz = a * (1 - a), dLdz = dLda * dadz, dLdw = dLdz * x, dLdb = dLdz, dLdx = dLdz * w;
-      const nodes = { x: [70, 90, "x", fmt(x, 1), C.x], w: [70, 200, "θ", fmt(w, 1), C.w], b: [70, 335, "b", fmt(b, 1), C.w], z: [240, 200, "z", fmt(z, 2), C.ink], a: [390, 200, "a", fmt(a, 3), C.h], L: [540, 200, "L", fmt(L, 3), C.loss] };
-      const edges = [["x", "z", "∂z/∂x = θ", fmt(w, 1)], ["w", "z", "∂z/∂θ = x", fmt(x, 1)], ["b", "z", "∂z/∂b = 1", "1"], ["z", "a", "∂a/∂z = a(1−a)", fmt(dadz, 3)], ["a", "L", "∂L/∂a = −1/a", fmt(dLda, 2)]];
+      const nodes = { x: [70, 90, "$x$", fmt(x, 1), C.x], w: [70, 200, "$\\theta$", fmt(w, 1), C.w], b: [70, 335, "$b$", fmt(b, 1), C.w], z: [240, 200, "$z$", fmt(z, 2), C.ink], a: [390, 200, "$a$", fmt(a, 3), C.h], L: [540, 200, "$L$", fmt(L, 3), C.loss] };
+      const edges = [["x", "z", "$\\partial z/\\partial x = \\theta$", fmt(w, 1)], ["w", "z", "$\\partial z/\\partial \\theta = x$", fmt(x, 1)], ["b", "z", "$\\partial z/\\partial b = 1$", "1"], ["z", "a", "$\\partial a/\\partial z = a(1-a)$", fmt(dadz, 3)], ["a", "L", "$\\partial L/\\partial a = -1/a$", fmt(dLda, 2)]];
       const fwdShow = { x: true, w: true, b: true, z: this.fwd >= 1, a: this.fwd >= 2, L: this.fwd >= 3 };
       const bwdVal = { L: "1", a: fmt(dLda, 2), z: fmt(dLdz, 3), x: fmt(dLdx, 3), w: fmt(dLdw, 3), b: fmt(dLdb, 3) };
       const bwdShow = { L: this.bwd >= 1, a: this.bwd >= 1, z: this.bwd >= 2, w: this.bwd >= 3, b: this.bwd >= 3, x: this.bwd >= 4 };
@@ -277,11 +278,11 @@
         const [nx, ny, name, val, col] = nodes[k];
         circle(ctx, nx, ny, 30, "#fff", col, 2.5); text(ctx, name, nx, ny + 7, { size: 22, align: "center", color: col, weight: 600 });
         if (fwdShow[k]) text(ctx, val, nx, ny + 52, { size: 16, align: "center", mono: true });
-        if (bwdShow[k]) text(ctx, "∂L/∂" + name + " = " + bwdVal[k], nx, ny - 42, { size: 15, align: "center", color: C.loss, mono: true });
+        if (bwdShow[k]) text(ctx, "$\\partial L/\\partial " + name.slice(1, -1) + " = " + bwdVal[k] + "$", nx, ny - 42, { size: 15, align: "center", color: C.loss, mono: true });
       }
-      text(ctx, "z = θ·x + b", 240, 265, { size: 13, align: "center", color: "#555" }); text(ctx, "a = σ(z)", 390, 265, { size: 13, align: "center", color: "#555" }); text(ctx, "L = −log a   (y = 1)", 540, 265, { size: 13, align: "center", color: "#555" });
+      text(ctx, "$z = \\theta x + b$", 240, 265, { size: 13, align: "center", color: "#555" }); text(ctx, "$a = \\sigma(z)$", 390, 265, { size: 13, align: "center", color: "#555" }); text(ctx, "$L = -\\log a$   ($y = 1$)", 540, 265, { size: 13, align: "center", color: "#555" });
       text(ctx, "forward values below each node", 270, 380, { size: 14, color: "#555" }); text(ctx, "backward derivatives above, in red", 270, 360, { size: 14, color: C.loss });
-      if (this.bwd >= 3) text(ctx, `∂L/∂θ = (−1/a)(a(1−a))(x) = ${fmt(dLdw, 3)}`, 300, 330, { size: 15, color: C.loss, mono: true, align: "left" });
+      if (this.bwd >= 3) text(ctx, `$\\partial L/\\partial \\theta = (-1/a)\\, a(1-a)\\, x = ${fmt(dLdw, 3)}$`, 300, 330, { size: 15, color: C.loss, mono: true, align: "left" });
     },
   };
 
@@ -295,28 +296,28 @@
       // forward row
       const yF = 40, yB = 262;
       text(ctx, "forward", 10, 25, { size: 15, weight: 600, color: "#555" }); text(ctx, "backward", 10, yB - 15, { size: 15, weight: 600, color: C.loss });
-      rect(ctx, 10, yF, 84, 84, "#fff", C.x, 2); NN.drawDigit(ctx, x, 10, yF, 3); text(ctx, `x   (y = ${y})`, 52, yF + 104, { size: 14, align: "center", color: C.x, weight: 600 });
-      arrow(ctx, 110, yF + 42, 190, yF + 42, C.w, 2); text(ctx, "Θ₁, ReLU", 150, yF + 32, { size: 13, align: "center", color: C.w });
+      rect(ctx, 10, yF, 84, 84, "#fff", C.x, 2); NN.drawDigit(ctx, x, 10, yF, 3); text(ctx, `$\\mathbf{x}$   ($y = ${y}$)`, 52, yF + 104, { size: 14, align: "center", color: C.x, weight: 600 });
+      arrow(ctx, 110, yF + 42, 190, yF + 42, C.w, 2); text(ctx, "$\\boldsymbol{\\Theta}_1$, ReLU", 150, yF + 32, { size: 13, align: "center", color: C.w });
       const hx = 200, cs = 20; let hmax = 1e-6; for (let j = 0; j < 64; j++) hmax = Math.max(hmax, out.h[j]);
       for (let j = 0; j < 64; j++) rect(ctx, hx + (j % 8) * cs, yF + Math.floor(j / 8) * cs, cs - 1, cs - 1, `rgba(42,157,92,${0.08 + 0.92 * out.h[j] / hmax})`);
-      text(ctx, "h", hx + 80, yF + 184, { size: 14, align: "center", color: C.h, weight: 600 });
-      arrow(ctx, hx + 170, yF + 42, hx + 250, yF + 42, C.w, 2); text(ctx, "Θ₂, softmax", hx + 210, yF + 32, { size: 13, align: "center", color: C.w });
+      text(ctx, "$\\mathbf{h}$", hx + 80, yF + 184, { size: 14, align: "center", color: C.h, weight: 600 });
+      arrow(ctx, hx + 170, yF + 42, hx + 250, yF + 42, C.w, 2); text(ctx, "$\\boldsymbol{\\Theta}_2$, softmax", hx + 210, yF + 32, { size: 13, align: "center", color: C.w });
       const px = 460; bars(ctx, Array.from(out.p), px, yF, 250, 120, { min: 0, max: 1, color: (k) => (k === y ? C.p : "#cdb6e0"), labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] });
-      text(ctx, "p", px + 125, yF + 184, { size: 14, align: "center", color: C.p, weight: 600 });
+      text(ctx, "$\\mathbf{p}$", px + 125, yF + 184, { size: 14, align: "center", color: C.p, weight: 600 });
       // backward row
       let d1max = 1e-6; for (let j = 0; j < 64; j++) d1max = Math.max(d1max, Math.abs(d1[j]));
       bars(ctx, Array.from(d2), px, yB, 250, 120, { min: -1, max: 1, color: (k) => (k === y ? C.loss : "#e8a39b"), labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] });
-      text(ctx, "δ₂ = p − e_y", px + 125, yB + 184, { size: 14, align: "center", color: C.loss, weight: 600 });
-      arrow(ctx, px - 10, yB + 42, hx + 170, yB + 42, C.loss, 2); text(ctx, "Θ₂ᵀ δ₂, ⊙ φ′", hx + 210, yB + 32, { size: 13, align: "center", color: C.loss });
+      text(ctx, "$\\boldsymbol{\\delta}_2 = \\mathbf{p} - \\mathbf{e}_y$", px + 125, yB + 184, { size: 14, align: "center", color: C.loss, weight: 600 });
+      arrow(ctx, px - 10, yB + 42, hx + 170, yB + 42, C.loss, 2); text(ctx, "$(\\boldsymbol{\\Theta}_2^{\\top}\\boldsymbol{\\delta}_2) \\odot \\varphi'$", hx + 210, yB + 32, { size: 13, align: "center", color: C.loss });
       for (let j = 0; j < 64; j++) rect(ctx, hx + (j % 8) * cs, yB + Math.floor(j / 8) * cs, cs - 1, cs - 1, out.z1[j] > 0 ? NN.divergeColor(d1[j], d1max) : "#eee");
-      text(ctx, "δ₁   (grey: ReLU off)", hx + 80, yB + 184, { size: 14, align: "center", color: C.loss, weight: 600 });
-      arrow(ctx, hx - 10, yB + 42, 110, yB + 42, C.loss, 2); text(ctx, "∇Θ₁ = δ₁ xᵀ", 150, yB + 32, { size: 13, align: "center", color: C.loss });
+      text(ctx, "$\\boldsymbol{\\delta}_1$   (grey: ReLU off)", hx + 80, yB + 184, { size: 14, align: "center", color: C.loss, weight: 600 });
+      arrow(ctx, hx - 10, yB + 42, 110, yB + 42, C.loss, 2); text(ctx, "$\\nabla_{\\boldsymbol{\\Theta}_1} L = \\boldsymbol{\\delta}_1 \\mathbf{x}^{\\top}$", 150, yB + 32, { size: 13, align: "center", color: C.loss });
       // gradient wrt W1 for one hidden unit, as an image: most active unit
       let jb = 0; for (let j = 1; j < 64; j++) if (Math.abs(d1[j]) > Math.abs(d1[jb])) jb = j;
       const gimg = new Float32Array(784); for (let i = 0; i < 784; i++) gimg[i] = d1[jb] * x[i]; let gmax = 1e-6; for (let i = 0; i < 784; i++) gmax = Math.max(gmax, Math.abs(gimg[i]));
       for (let r = 0; r < 28; r++) for (let c = 0; c < 28; c++) { const v = gimg[r * 28 + c]; if (v !== 0) rect(ctx, 10 + c * 3, yB + r * 3, 3, 3, NN.divergeColor(v, gmax)); } rect(ctx, 10, yB, 84, 84, null, C.loss, 2);
-      text(ctx, `∇ for unit ${jb + 1}`, 52, yB + 104, { size: 13, align: "center", color: C.loss });
-      text(ctx, "one row of ∇Θ₁ is δ₁ⱼ times the image", 10, 462, { size: 13, color: "#555" });
+      text(ctx, `$\\nabla$ for unit ${jb + 1}`, 52, yB + 104, { size: 13, align: "center", color: C.loss });
+      text(ctx, "row $j$ of $\\nabla_{\\boldsymbol{\\Theta}_1} L$ is $\\delta_{1j}$ times the image", 10, 462, { size: 13, color: "#555" });
     },
   };
 
@@ -361,7 +362,7 @@
       const P = (p) => [x0 + (p[0] + 1) / 6 * size, y0 + (3 - p[1]) / 6 * size];
       ctx.save(); ctx.strokeStyle = C.loss; ctx.lineWidth = 1.5; ctx.beginPath(); this.path.forEach((p, i) => { const q = P(p); i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]); }); ctx.stroke(); ctx.restore();
       const last = P(this.path[this.path.length - 1]); circle(ctx, last[0], last[1], 7, C.loss, "#fff", 2);
-      text(ctx, "θ", x0 + size + 8, y0 + size / 2 + 5, { size: 16, color: "#555" }); text(ctx, "b", x0 + size / 2, y0 - 6, { size: 16, align: "center", color: "#555" });
+      text(ctx, "$\\theta$", x0 + size + 8, y0 + size / 2 + 5, { size: 16, color: "#555" }); text(ctx, "$b$", x0 + size / 2, y0 - 6, { size: 16, align: "center", color: "#555" });
       text(ctx, "contours: the loss averaged over all 200 points", x0, y0 + size + 22, { size: 14, color: "#555" });
       // loss history
       const lx = 440, ly = 40, lw = 190, lh = 120; rect(ctx, lx, ly, lw, lh, "#fafafa", "#ddd"); text(ctx, "full loss along the path", lx + 4, ly - 6, { size: 13, color: C.loss });
@@ -370,7 +371,7 @@
       $("sgdStat").innerHTML = `${this.path.length - 1} steps &nbsp; ${fmt(epochs, 1)} epochs &nbsp; loss <b>${fmt(this.path.length > 1 ? this.hist[this.hist.length - 1] : this.full(-0.6, 2.5), 3)}</b>`;
       text(ctx, `batch ${B}: ${Math.ceil(this.n / B)} steps per epoch`, lx, 300, { size: 15 });
       text(ctx, `${this.n} gradients per epoch`, lx, 324, { size: 15, color: "#555" });
-      text(ctx, "every batch size pays the same", lx, 352, { size: 14, color: "#555" }); text(ctx, "gradients per epoch; small batches", lx, 372, { size: 14, color: "#555" }); text(ctx, "spend them on more steps.", lx, 392, { size: 14, color: "#555" });
+      text(ctx, "every batch size pays the", lx, 350, { size: 13, color: "#555" }); text(ctx, "same gradients per epoch;", lx, 367, { size: 13, color: "#555" }); text(ctx, "small batches spend them", lx, 384, { size: 13, color: "#555" }); text(ctx, "on more steps.", lx, 401, { size: 13, color: "#555" });
     },
   };
 })();

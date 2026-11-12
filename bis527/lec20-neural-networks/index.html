@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="css/deck.css">
 </head>
 <body>
+<main>
 <div id="stage">
 
 <section class="slide title-slide" data-widget="titleNet">
@@ -182,7 +183,7 @@
   <h2>With its features fixed, a network is a weighting estimator</h2>
   <div class="row">
     <div class="col vis"><canvas id="wtCanvas"></canvas>
-      <div class="controls"><label>features <select id="wtFeat"><option value="hidden">the 64 learned hidden units h(x)</option><option value="pixels">the 784 raw pixels x</option></select></label><button id="wtRandom">another test digit</button></div>
+      <div class="controls"><label>features <select id="wtFeat"><option value="hidden">the 64 learned hidden units</option><option value="pixels">the 784 raw pixels</option></select></label><button id="wtRandom">another test digit</button></div>
     </div>
     <div class="col side">
       <div class="eq" style="font-size:26px">$\hat y(\bx) = \sum_{i=1}^{n} w_i(\bx)\, Y_i$</div>
@@ -212,9 +213,10 @@
 </section>
 
 
-</div>
 <div id="progress"></div>
 <div id="counter"></div>
+</div>
+</main>
 
 <script src="vendor/katex/katex.min.js"></script>
 <script src="vendor/katex/contrib/auto-render.min.js"></script>

@@ -41,11 +41,11 @@ canvas { display: block; flex-shrink: 0; }
 .controls button:disabled { opacity: 0.45; cursor: default; }
 .controls .val { font-family: var(--mono); font-size: 16px; min-width: 52px; display: inline-block; color: var(--muted); }
 .caption { font-size: 18px; color: var(--muted); margin-top: 8px; }
-.hint { position: absolute; left: 64px; bottom: 18px; font-size: 15px; color: #999; }
+.hint { position: absolute; left: 64px; bottom: 18px; font-size: 15px; color: #666; }
 .katex, .katex .katex-html, .nobr { white-space: nowrap; }
 .footnote { position: absolute; left: 64px; bottom: 48px; font-size: 15px; color: #666; }
 #progress { position: absolute; left: 0; bottom: 0; height: 4px; background: var(--accent); width: 0; transition: width .2s; }
-#counter { position: absolute; right: 24px; bottom: 14px; font-size: 15px; color: #999; }
+#counter { position: absolute; right: 24px; bottom: 14px; font-size: 15px; color: #666; }
 .title-slide { justify-content: center; align-items: flex-start; }
 .title-slide .sub { font-size: 28px; color: var(--muted); margin-top: 6px; }
 .title-slide .meta { font-size: 22px; color: var(--muted); margin-top: 40px; line-height: 1.5; }

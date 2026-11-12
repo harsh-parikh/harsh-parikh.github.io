@@ -66,6 +66,9 @@
 
   renderMath(document.body);
   const start = parseInt(location.hash.slice(1), 10);
-  go(isNaN(start) ? 0 : start - 1);
+  // The figures set their maths in KaTeX's fonts; load them before the first figure is drawn.
+  const faces = ["400 16px KaTeX_Main", "700 16px KaTeX_Main", "italic 400 16px KaTeX_Math", "italic 700 16px KaTeX_Math", "400 16px KaTeX_Size1"];
+  const fontsReady = document.fonts ? Promise.all(faces.map((f) => document.fonts.load(f, "xθ∑"))) : Promise.resolve();
+  Promise.race([fontsReady, new Promise((r) => setTimeout(r, 3000))]).catch(() => {}).then(() => go(isNaN(start) ? 0 : start - 1));
   window.Deck = { go, renderMath, current: () => cur };
 })();
