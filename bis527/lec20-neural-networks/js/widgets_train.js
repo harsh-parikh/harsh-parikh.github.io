@@ -250,7 +250,7 @@
         const f = F[i], nz = []; for (let a = 0; a < d; a++) if (f[a] !== 0) nz.push(a);
         for (const a of nz) { const fa = f[a], row = a * d; for (const b of nz) G[row + b] += fa * f[b]; }
       }
-      for (let a = 0; a < d; a++) G[a * d + a] += lam;
+      for (let a = 0; a < d - 1; a++) G[a * d + a] += lam; // intercept (last feature) unpenalized
       const A = invert(G, d);
       // beta = A H^T Y (d x 10) for the proxy's test accuracy
       const HtY = new Float64Array(d * 10); for (let i = 0; i < n; i++) { const f = F[i], y = M.label("train", i); for (let a = 0; a < d; a++) if (f[a] !== 0) HtY[a * 10 + y] += f[a]; }
@@ -286,9 +286,9 @@
       const y0 = py + ph / 2; ctx.save(); ctx.strokeStyle = "#999"; ctx.beginPath(); ctx.moveTo(px, y0); ctx.lineTo(px + pw, y0); ctx.stroke(); ctx.restore();
       for (let i = 0; i < sorted.length; i++) { const xx = px + 2 + (pw - 4) * i / sorted.length, hh = sorted[i] / wm * (ph / 2 - 6); rect(ctx, xx, Math.min(y0, y0 - hh), Math.max(0.5, (pw - 4) / sorted.length), Math.abs(hh), sorted[i] >= 0 ? C.loss : C.x); }
       text(ctx, `Σᵢ wᵢ(x) = ${fmt(sum, 3)}`, px, py + ph + 24, { size: 15, mono: true });
-      text(ctx, `effective neighbours (Σw)²/Σw² = ${Math.round(sum * sum / sq)}`, px + 200, py + ph + 24, { size: 15, mono: true });
-      text(ctx, `this smoother: ${(100 * S.acc).toFixed(1)}% test accuracy`, px + pw, py + ph + 24, { size: 15, mono: true, color: ACCENT, align: "right" });
-      text(ctx, kind === "hidden" ? "features: 64 learned hidden units + 1, ridge λ = 0.001" : "features: 784 raw pixels + 1, ridge λ = 1", px, py + ph + 48, { size: 13, color: "#777" });
+      text(ctx, `effective neighbours (Σw)²/Σw² = ${Math.round(sum * sum / sq)}`, px + 230, py + ph + 24, { size: 15, mono: true });
+      text(ctx, `smoother test accuracy ${(100 * S.acc).toFixed(1)}%`, px + pw, py + ph + 48, { size: 15, mono: true, color: ACCENT, align: "right" });
+      text(ctx, kind === "hidden" ? "features: 64 learned hidden units + intercept, ridge λ = 0.001" : "features: 784 raw pixels + intercept, ridge λ = 1", px, py + ph + 48, { size: 13, color: "#777" });
     },
   };
 })();
