@@ -15,7 +15,7 @@
     const sel = (lab, name, vals, cur, f) => { const l = mk(`${lab} <select></select>`); const s = l.querySelector("select"); vals.forEach((v) => { const o = document.createElement("option"); o.value = v; o.textContent = f ? f(v) : v; if (String(v) === String(cur)) o.selected = true; s.appendChild(o); }); s.addEventListener("change", () => { this.o[name] = isNaN(+s.value) ? s.value : +s.value; this.reset(); }); return s; };
     this.c = {};
     this.c.hidden = sel("hidden units", "hidden", [0, 16, 32, 64, 128, 256], this.o.hidden, (v) => (v === 0 ? "0 (logistic regression)" : v));
-    this.c.act = sel("g", "act", ["relu", "tanh", "sigmoid"], this.o.act, (v) => NN.ACT[v].name);
+    this.c.act = sel("φ", "act", ["relu", "tanh", "sigmoid"], this.o.act, (v) => NN.ACT[v].name);
     this.c.lr = sel("η", "lr", [0.001, 0.01, 0.03, 0.1, 0.3, 1, 3], this.o.lr);
     this.c.batch = sel("batch", "batch", [1, 8, 32, 128, 512], this.o.batch);
     this.c.nTrain = sel("training images", "nTrain", [200, 500, 1000, 2000, 4000], this.o.nTrain, (v) => v.toLocaleString());
@@ -125,11 +125,11 @@
       // top-9 test digits
       const acts = []; for (let i = 0; i < this.M.nVal; i++) { const x = this.M.image("val", i); let z = m.b1[this.sel]; for (let k = 0; k < 784; k++) { const v = x[k]; if (v) z += v * m.W1[k * Hn + this.sel]; } acts.push([z, i]); }
       acts.sort((a, b) => b[0] - a[0]);
-      text(ctx, "validation digits that activate it most", rx + 100, 52, { size: 14, color: "#555" });
+      text(ctx, "top 9 validation digits", rx + 100, 52, { size: 14, color: "#555" });
       for (let k = 0; k < 9; k++) { const [, i] = acts[k]; const x0 = rx + 100 + (k % 3) * 60, y0 = 60 + Math.floor(k / 3) * 60; NN.drawDigit(ctx, this.M.image("val", i), x0, y0, 2); rect(ctx, x0, y0, 56, 56, null, "#ddd"); }
       // output weights of the unit
       const wout = Array.from({ length: 10 }, (_, k) => m.W2[this.sel * 10 + k]); const wm = Math.max(0.01, ...wout.map(Math.abs));
-      text(ctx, "its weights into the ten outputs (row of Θ₂)", rx, 275, { size: 14, color: C.w });
+      text(ctx, "its weights into the ten outputs (column of Θ₂)", rx, 275, { size: 14, color: C.w });
       bars(ctx, wout, rx, 285, 300, 110, { min: -wm, max: wm, color: (k, v) => (v >= 0 ? C.loss : C.x), labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] });
       text(ctx, "red: evidence for the digit · blue: evidence against", rx, 425, { size: 13, color: "#555" });
     },

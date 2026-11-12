@@ -9,7 +9,7 @@
   W.playground = {
     init(s) {
       this.ctx = NN.setupCanvas($("pgCanvas"), 760, 440);
-      this.hid = bindVal("pgHidden", "pgHiddenV"); this.lr = bindVal("pgLr", "pgLrV", (v) => fmt(Math.pow(10, v), 3));
+      this.hid = bindVal("pgHidden", "pgHiddenV"); this.lr = bindVal("pgLr", "pgLrV", (v) => String(+Math.pow(10, v).toPrecision(2)));
       $("pgData").addEventListener("change", () => this.reset()); this.hid.addEventListener("change", () => this.reset()); $("pgAct").addEventListener("change", () => this.reset());
       $("pgReset").addEventListener("click", () => this.reset());
       $("pgRun").addEventListener("click", () => { this.running = !this.running; $("pgRun").textContent = this.running ? "pause" : "run"; if (this.running) run(this, () => this.step()); });
@@ -26,7 +26,7 @@
       const lr = Math.pow(10, +this.lr.value), n = this.data.n, bsz = 32;
       for (let k = 0; k < 12; k++) {
         const idx = Array.from({ length: bsz }, () => Math.floor(this.rng.next() * n));
-        const l = this.model.trainBatch(this.data.X, this.data.Y, idx, lr, 1e-4, 0.9); this.step_++;
+        const l = this.model.trainBatch(this.data.X, this.data.Y, idx, lr, 0, 0); this.step_++;
         if (this.step_ % 4 === 0) this.losses.push(l);
       }
       this.draw();

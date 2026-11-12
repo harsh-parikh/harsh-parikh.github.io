@@ -19,6 +19,7 @@
     </div>
     <div class="col vis"><canvas id="titleCanvas"></canvas></div>
   </div>
+  <div class="footnote">Claude was used to design these notes.</div>
   <div class="hint">Every figure is live. <span class="kbd">→</span> next &nbsp; <span class="kbd">←</span> back &nbsp; <span class="kbd">F</span> fullscreen</div>
 </section>
 
@@ -132,7 +133,7 @@
         <label>data <select id="pgData"><option value="xor">XOR</option><option value="rings">rings</option><option value="spiral">spiral</option><option value="blobs">two blobs</option></select></label>
         <label>hidden units <input type="range" id="pgHidden" min="1" max="16" value="4"><span class="val" id="pgHiddenV">4</span></label>
         <label>$\varphi$ <select id="pgAct"><option value="relu">ReLU</option><option value="tanh">tanh</option><option value="sigmoid">sigmoid</option><option value="linear">linear</option></select></label>
-        <label>learning rate $\eta$ <input type="range" id="pgLr" min="-3" max="0.3" step="0.1" value="-0.7"><span class="val" id="pgLrV"></span></label>
+        <label>learning rate $\eta$ <input type="range" id="pgLr" min="-3" max="0.3" step="0.1" value="-0.3"><span class="val" id="pgLrV"></span></label>
         <button id="pgRun" class="primary">train</button><button id="pgReset">reset</button>
         <span class="stat" id="pgStat"></span>
       </div>
@@ -336,11 +337,11 @@
     </div>
     <div class="col side">
       <div class="eq" style="font-size:26px">$\hat y(\bx) = \sum_{i=1}^{n} w_i(\bx)\, Y_i$</div>
-      <div class="eq" style="font-size:23px">$w_i(\bx) = \ch{\bh}(\bx)^{\!\top}\,(\ch{H}^{\!\top}\ch{H} + \lambda I)^{-1}\,\ch{\bh}(\bx_i)$</div>
-      <p class="small">$\ch{\bh}(\bx)$: the 64 hidden features of $\bx$; $\ch{H}$ stacks $\ch{\bh}(\bx_i)$ over $n = 4{,}000$ training images; $Y_i$ is the one-hot label.</p>
+      <div class="eq" style="font-size:22px">$\begin{aligned} w_i(\bx) &= \tfrac{1}{n} + \big(\ch{\bh}(\bx) - \ch{\bar{\bh}}\big)^{\!\top} \\ &\quad\, (\ch{H}^{\!\top}\ch{H} + \lambda I)^{-1}\big(\ch{\bh}(\bx_i) - \ch{\bar{\bh}}\big) \end{aligned}$</div>
+      <p class="small">$\ch{\bh}(\bx)$: the 64 hidden features of $\bx$; $\ch{\bar{\bh}}$: their average over the $n = 4{,}000$ training images; $\ch{H}$ stacks $\ch{\bh}(\bx_i) - \ch{\bar{\bh}}$; $Y_i$ is the one-hot label.</p>
       <p>Freeze the features; ridge-regress the labels on them.</p>
       <p>$w_i(\bx)$ ignores the labels: a linear smoother, like ridge and splines.</p>
-      <p>Weights can be negative and need not sum to one.</p>
+      <p>The $\tfrac{1}{n}$ makes the weights sum to one; some are negative.</p>
     </div>
   </div>
 </section>
@@ -356,7 +357,7 @@
       <p>Backpropagation: the chain rule, one backward pass.</p>
       <p>Many parameters: validation set, weight decay, early stopping.</p>
       <p class="small" style="margin-top:18px">Reading: Goodfellow, Bengio, Courville, <i>Deep Learning</i> (2016), ch. 6 and 8; Hastie, Tibshirani, Friedman, <i>ESL</i>, ch. 11; Nielsen, <i>Neural Networks and Deep Learning</i> (online).</p>
-      <p class="small">Data: MNIST (LeCun, Cortes, Burges). Maths: KaTeX. Every figure is plain JavaScript in this folder; <span class="kbd">index_full.html</span> has ten more slides.</p>
+      <p class="small">Data: MNIST (LeCun, Cortes, Burges). Maths: KaTeX. Every figure is plain JavaScript in this folder; <span class="kbd">index.html</span> is the 12-slide version.</p>
     </div>
   </div>
 </section>
