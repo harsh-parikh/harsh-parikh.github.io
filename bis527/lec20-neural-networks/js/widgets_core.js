@@ -292,7 +292,7 @@
     },
   };
 
-  // ========== 4. logistic regression templates =============================
+  // ========== 4. logistic regression weight maps ===========================
   W.logreg = {
     init(s) {
       this.M = NN.getMNIST(); this.P = NN.getPretrained().logreg;
@@ -308,7 +308,7 @@
       const ctx = this.ctx, img = this.M.image("test", this.idx), y = this.M.label("test", this.idx);
       ctx.clearRect(0, 0, 700, 480);
       const out = this.model.forward1(img);
-      // top: digit, enlarged template, scores
+      // top: digit, enlarged weight map, scores
       NN.drawDigit(ctx, img, 10, 10, 5); rect(ctx, 10, 10, 140, 140, null, "#ddd");
       text(ctx, `$\\mathbf{x}$  (true label ${y})`, 80, 170, { size: 15, align: "center", color: C.x, weight: 600 });
       NN.drawWeightImage(ctx, this.P.W, this.sel, 10, 180, 10, 5, 28, this.vmax);
@@ -321,7 +321,7 @@
       bars(ctx, Array.from(p), 470, 118, 220, 50, { min: 0, max: 1, color: (k) => (k === y ? C.p : "#cdb6e0"), labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] });
       let pred = 0; for (let k = 1; k < 10; k++) if (p[k] > p[pred]) pred = k;
       text(ctx, `predicted ${pred}, $p = ${fmt(p[pred])}$`, 470, 215, { size: 15, color: pred === y ? C.h : C.loss, weight: 600 });
-      // templates row
+      // weight maps row
       text(ctx, "the ten weight maps $\\boldsymbol{\\theta}_0, \\ldots, \\boldsymbol{\\theta}_9$", 10, 245, { size: 15, color: "#555" });
       for (let k = 0; k < 10; k++) {
         const x0 = 10 + k * 69;
