@@ -203,7 +203,7 @@
       const pos = layers.map((n, li) => Array.from({ length: n }, (_, j) => [xs[li], 215 + (j - (n - 1) / 2) * 24]));
       for (let li = 0; li < 2; li++) for (const a of pos[li]) for (const b of pos[li + 1]) line(ctx, a[0], a[1], b[0], b[1], "#ddd", 1);
       pos.forEach((L, li) => L.forEach((p) => circle(ctx, p[0], p[1], 7, "#fff", cols[li], 2)));
-      text(ctx, "Monitor validation accuracy every epoch; stop when it stops improving.", 280, 405, { size: 15, align: "center", color: "#555" });
+      text(ctx, "Monitor validation accuracy every epoch. Stop when it stops improving.", 280, 405, { size: 15, align: "center", color: "#555" });
     },
   };
 })();

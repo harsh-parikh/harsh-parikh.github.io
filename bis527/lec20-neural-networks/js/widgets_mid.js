@@ -371,7 +371,7 @@
       $("sgdStat").innerHTML = `${this.path.length - 1} steps &nbsp; ${fmt(epochs, 1)} epochs &nbsp; loss <b>${fmt(this.path.length > 1 ? this.hist[this.hist.length - 1] : this.full(-0.6, 2.5), 3)}</b>`;
       text(ctx, `batch ${B}: ${Math.ceil(this.n / B)} steps per epoch`, lx, 300, { size: 15 });
       text(ctx, `${this.n} gradients per epoch`, lx, 324, { size: 15, color: "#555" });
-      text(ctx, "every batch size pays the", lx, 350, { size: 13, color: "#555" }); text(ctx, "same gradients per epoch;", lx, 367, { size: 13, color: "#555" }); text(ctx, "small batches spend them", lx, 384, { size: 13, color: "#555" }); text(ctx, "on more steps.", lx, 401, { size: 13, color: "#555" });
+      text(ctx, "every batch size pays the", lx, 350, { size: 13, color: "#555" }); text(ctx, "same gradients per epoch, and", lx, 367, { size: 13, color: "#555" }); text(ctx, "small batches spend them", lx, 384, { size: 13, color: "#555" }); text(ctx, "on more steps.", lx, 401, { size: 13, color: "#555" });
     },
   };
 })();

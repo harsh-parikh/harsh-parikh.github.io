@@ -14,15 +14,15 @@ leaves your computer.
 | `F` | fullscreen |
 
 Every figure is live. Drag the sliders, change the menus, draw a digit on slide 5,
-and train a network on slide 8. Slide 9 can show the hidden units of the network
-you trained on slide 8 (choose "from the live run").
+and train a network on slide 9. Slide 10 can show the hidden units of the network
+you trained on slide 9 (choose "from the live run").
 
 ## What is in the folder
 
 ```
-index.html            the lecture: 12 slides
+index.html            the lecture: 13 slides
 index_full.html       the longer version: 22 slides (adds the vector view, the linear limit, one neuron,
-                      activation functions, shapes, the loss curve, backprop through the network,
+                      activation functions, shapes, backprop through the network,
                       SGD on a 2-parameter loss, and convolution)
 css/deck.css          layout and typography
 js/deck.js            navigation, scaling, KaTeX rendering

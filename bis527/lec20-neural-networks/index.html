@@ -46,15 +46,15 @@
   <h2>Start from logistic regression</h2>
   <div class="row">
     <div class="col vis"><canvas id="logregCanvas"></canvas>
-      <div class="controls"><button id="logregRandom">another digit</button><span class="small">Click a template to enlarge it.</span></div>
+      <div class="controls"><button id="logregRandom">another digit</button><span class="small">Click a weight map to enlarge it.</span></div>
     </div>
     <div class="col side">
       <div class="eq">$\cp{p_k} = \Pr(y = k \mid \cx{\bx})$</div>
       <div class="eq">$\cp{p_k} = \dfrac{\exp(\cw{\btheta_k}^{\!\top}\cx{\bx} + \cw{b_k})}{\sum_{j} \exp(\cw{\btheta_j}^{\!\top}\cx{\bx} + \cw{b_j})}$</div>
-      <p>One template $\cw{\btheta_k}$ and intercept $\cw{b_k}$ per class.</p>
-      <p>The softmax turns ten scores into probabilities.</p>
-      <p><span class="cl">Red</span> pixels raise the score for $k$, <span class="cx">blue</span> lower it.</p>
-      <p class="small">90% test accuracy. Every boundary is a straight line.</p>
+      <p>Class $k$ has a weight vector $\cw{\btheta_k} \in \R^{784}$, one weight per pixel, and an intercept $\cw{b_k}$.</p>
+      <p>Its weight map: <span class="cl">red</span> pixels raise the score for $k$, <span class="cx">blue</span> lower it.</p>
+      <p>The softmax turns the ten scores into probabilities.</p>
+      <p class="small">90% test accuracy. Each boundary between two classes is flat in $\cx{\bx}$.</p>
     </div>
   </div>
 </section>
@@ -98,6 +98,22 @@
   </div>
 </section>
 
+<section class="slide" data-widget="loss">
+  <h2>The loss: negative log-likelihood</h2>
+  <div class="row">
+    <div class="col vis"><canvas id="lossCanvas"></canvas>
+      <div class="controls"><label>$\cp{p_y}$ <input type="range" id="lossP" min="0.01" max="1" step="0.01" value="0.4"><span class="val" id="lossPv"></span></label></div>
+    </div>
+    <div class="col side">
+      <div class="eq">$L(\btheta) = -\frac{1}{n}\sum_{i=1}^{n} \log \cp{p_{y_i}}(\cx{\bx_i};\btheta)$</div>
+      <p>$\cp{p_{y_i}}$: the probability the network assigns to the true class.</p>
+      <p>Maximum likelihood, as in logistic regression.</p>
+      <p>A confident wrong answer costs the most: $-\log p \to \infty$ as $p \to 0$.</p>
+      <p class="small">Accuracy cannot be the objective: its gradient is zero almost everywhere.</p>
+    </div>
+  </div>
+</section>
+
 <section class="slide" data-widget="gd">
   <h2>Learning: gradient descent</h2>
   <div class="row">
@@ -110,11 +126,11 @@
       </div>
     </div>
     <div class="col side">
-      <div class="eq">$L(\btheta) = -\frac{1}{n}\sum_{i=1}^{n} \log \cp{p_{y_i}}(\cx{\bx_i};\btheta)$</div>
-      <p>The average negative log-likelihood, as in logistic regression.</p>
       <div class="eq">$\btheta \;\leftarrow\; \btheta - \eta\,\cl{\nabla_{\btheta} L(\btheta)}$</div>
-      <p>Not convex, 50,890 parameters: take gradient steps.</p>
-      <p>Too small an $\eta$ is slow; too large jumps across the valley.</p>
+      <p>Not convex, 50,890 parameters, no closed form: take steps.</p>
+      <p>$-\cl{\nabla L}$ is the steepest way down near $\btheta$. It does not point at the minimum.</p>
+      <p>$\cl{\nabla L} = \mathbf{0}$ at every minimum, but also at saddle points.</p>
+      <p class="small">Too small an $\eta$ is slow. Too large overshoots.</p>
     </div>
   </div>
 </section>
@@ -144,7 +160,7 @@
   <div class="row">
     <div class="col vis" style="flex:1">
       <div class="controls" id="trControls"></div>
-      <p class="small" style="margin:6px 0 2px 0">Each step uses a random mini-batch of 32 images; one epoch is one pass over the 4,000. The epoch is chosen on validation; test is reported once.</p>
+      <p class="small" style="margin:6px 0 2px 0">Each step uses a random mini-batch of 32 images, and one epoch is one pass over the 4,000. The epoch is chosen on validation, and test is reported once.</p>
       <canvas id="trCanvas"></canvas>
     </div>
   </div>
@@ -158,7 +174,7 @@
     </div>
     <div class="col side">
       <p>Each tile: one row of $\cw{\bTheta_1}$ as a <span class="nobr">28 &times; 28</span> image.</p>
-      <p>A hidden unit is a learned stroke template.</p>
+      <p>Each weight map is concentrated on a stroke, not a whole digit.</p>
       <p>Right: the validation digits that activate it, and its ten output weights.</p>
     </div>
   </div>
@@ -175,6 +191,7 @@
       <div class="eq" style="font-size:21px">$L_\lambda(\btheta) = L(\btheta) + \frac{\lambda}{2}\big(\|\cw{\bTheta_1}\|^2 + \|\cw{\bTheta_2}\|^2\big)$</div>
       <p>500 images, 101,770 parameters: training hits 100%, validation stalls.</p>
       <p>Remedies: more data, weight decay $\lambda$, early stopping on validation.</p>
+      <p class="small">On this run, weight decay at these values does not help. 4,000 training images give 94% validation accuracy.</p>
     </div>
   </div>
 </section>
@@ -188,10 +205,10 @@
     <div class="col side">
       <div class="eq" style="font-size:26px">$\hat y(\bx) = \sum_{i=1}^{n} w_i(\bx)\, Y_i$</div>
       <div class="eq" style="font-size:24px">$w_i(\bx) = \tfrac{1}{n} + \ch{\tilde{\bh}}(\bx)^{\!\top} S^{-1}\, \ch{\tilde{\bh}}(\bx_i)$</div>
-      <p class="small">$\ch{\bh}(\bx)$: the 64 hidden features of $\bx$; $\ch{\tilde{\bh}}(\bx) = \ch{\bh}(\bx) - \ch{\bar{\bh}}$, where $\ch{\bar{\bh}}$ is their average over the $n = 4{,}000$ training images; $S = \sum_i \ch{\tilde{\bh}}(\bx_i)\,\ch{\tilde{\bh}}(\bx_i)^{\!\top} + \lambda I$; $Y_i$ is the one-hot label.</p>
-      <p>Freeze the features; ridge-regress the labels on them.</p>
+      <p class="small">$\ch{\bh}(\bx)$: the 64 hidden features of $\bx$. $\ch{\tilde{\bh}}(\bx) = \ch{\bh}(\bx) - \ch{\bar{\bh}}$, where $\ch{\bar{\bh}}$ is their average over the $n = 4{,}000$ training images. $S = \sum_i \ch{\tilde{\bh}}(\bx_i)\,\ch{\tilde{\bh}}(\bx_i)^{\!\top} + \lambda I$. $Y_i$ is the one-hot label.</p>
+      <p>Freeze the features and ridge-regress the labels on them.</p>
       <p>$w_i(\bx)$ ignores the labels: a linear smoother, like ridge and splines.</p>
-      <p>The $\tfrac{1}{n}$ makes the weights sum to one; some are negative.</p>
+      <p>The $\tfrac{1}{n}$ makes the weights sum to one. Some are negative.</p>
     </div>
   </div>
 </section>
@@ -202,12 +219,12 @@
     <div class="col vis"><canvas id="sumCanvas"></canvas></div>
     <div class="col side">
       <p>A neuron: a weighted sum, then a nonlinearity.</p>
-      <p>A hidden layer learns features; softmax regression on them.</p>
+      <p>A hidden layer learns features, and softmax regression uses them.</p>
       <p>Training: gradient descent on the average negative log-likelihood.</p>
       <p>Backpropagation: the chain rule, one backward pass.</p>
       <p>Many parameters: validation set, weight decay, early stopping.</p>
-      <p class="small" style="margin-top:18px">Reading: Goodfellow, Bengio, Courville, <i>Deep Learning</i> (2016), ch. 6 and 8; Hastie, Tibshirani, Friedman, <i>ESL</i>, ch. 11; Nielsen, <i>Neural Networks and Deep Learning</i> (online).</p>
-      <p class="small">Data: MNIST (LeCun, Cortes, Burges). Maths: KaTeX. Every figure is plain JavaScript in this folder; <span class="kbd">index_full.html</span> has ten more slides.</p>
+      <p class="small" style="margin-top:18px">Reading: ISLR &sect;10.1&ndash;10.2 and &sect;10.7. Goodfellow, Bengio, Courville, <i>Deep Learning</i> (2016), ch. 6 and 8. Hastie, Tibshirani, Friedman, <i>ESL</i>, ch. 11. Nielsen, <i>Neural Networks and Deep Learning</i> (online).</p>
+      <p class="small">Data: MNIST (LeCun, Cortes, Burges). Maths: KaTeX. Every figure is plain JavaScript in this folder. <span class="kbd">index_full.html</span> has nine more slides.</p>
     </div>
   </div>
 </section>
