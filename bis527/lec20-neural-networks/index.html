@@ -32,9 +32,10 @@
     </div>
     <div class="col vis"><canvas id="digitBig"></canvas><div class="caption" id="digitInfo">Hover over the large digit to read a pixel value.</div></div>
     <div class="col side">
-      <p>Each image: 28 &times; 28 = 784 numbers.</p>
+      <p>Each image: <span class="nobr">28 &times; 28 = 784</span> numbers.</p>
       <p>Each pixel between 0 (paper) and 1 (ink).</p>
-      <div class="eq">$\cx{\bx} \in [0,1]^{784}, \qquad y \in \{0,1,\dots,9\}$</div>
+      <div class="eq">$\cx{\bx} \in [0,1]^{784}$</div>
+      <div class="eq">$y \in \{0,1,\dots,9\}$</div>
       <p class="small">4,000 training, 1,000 validation, 1,000 test images in this deck.</p>
     </div>
   </div>
@@ -47,7 +48,8 @@
       <div class="controls"><button id="logregRandom">another digit</button><span class="small">Click a template to enlarge it.</span></div>
     </div>
     <div class="col side">
-      <div class="eq">$\cp{p_k} = \Pr(y = k \mid \cx{\bx}) = \dfrac{\exp(\cw{\btheta_k}^{\!\top}\cx{\bx} + \cw{b_k})}{\sum_{j} \exp(\cw{\btheta_j}^{\!\top}\cx{\bx} + \cw{b_j})}$</div>
+      <div class="eq">$\cp{p_k} = \Pr(y = k \mid \cx{\bx})$</div>
+      <div class="eq">$\cp{p_k} = \dfrac{\exp(\cw{\btheta_k}^{\!\top}\cx{\bx} + \cw{b_k})}{\sum_{j} \exp(\cw{\btheta_j}^{\!\top}\cx{\bx} + \cw{b_j})}$</div>
       <p>One template $\cw{\btheta_k}$ and intercept $\cw{b_k}$ per class.</p>
       <p>The softmax turns ten scores into probabilities.</p>
       <p><span class="cl">Red</span> pixels raise the score for $k$, <span class="cx">blue</span> lower it.</p>
@@ -154,7 +156,7 @@
       <div class="controls"><label>weights <select id="featSrc"><option value="pre">pretrained (60,000 images)</option><option value="live">from the live run</option></select></label><span class="small">Click a tile.</span></div>
     </div>
     <div class="col side">
-      <p>Each tile: one row of $\cw{\bTheta_1}$ as a 28 &times; 28 image.</p>
+      <p>Each tile: one row of $\cw{\bTheta_1}$ as a <span class="nobr">28 &times; 28</span> image.</p>
       <p>A hidden unit is a learned stroke template.</p>
       <p>Right: the validation digits that activate it, and its ten output weights.</p>
     </div>
@@ -169,7 +171,7 @@
       <canvas id="ofCanvas"></canvas>
     </div>
     <div class="col side" style="flex:0 0 360px">
-      <div class="eq">$L_\lambda(\btheta) = L(\btheta) + \frac{\lambda}{2}\big(\|\cw{\bTheta_1}\|^2 + \|\cw{\bTheta_2}\|^2\big)$</div>
+      <div class="eq" style="font-size:21px">$L_\lambda(\btheta) = L(\btheta) + \frac{\lambda}{2}\big(\|\cw{\bTheta_1}\|^2 + \|\cw{\bTheta_2}\|^2\big)$</div>
       <p>500 images, 101,770 parameters: training hits 100%, validation stalls.</p>
       <p>Remedies: more data, weight decay $\lambda$, early stopping on validation.</p>
     </div>
@@ -184,8 +186,8 @@
     </div>
     <div class="col side">
       <div class="eq" style="font-size:26px">$\hat y(\bx) = \sum_{i=1}^{n} w_i(\bx)\, Y_i$</div>
-      <div class="eq" style="font-size:22px">$\begin{aligned} w_i(\bx) &= \tfrac{1}{n} + \big(\ch{\bh}(\bx) - \ch{\bar{\bh}}\big)^{\!\top} \\ &\quad\, (\ch{H}^{\!\top}\ch{H} + \lambda I)^{-1}\big(\ch{\bh}(\bx_i) - \ch{\bar{\bh}}\big) \end{aligned}$</div>
-      <p class="small">$\ch{\bh}(\bx)$: the 64 hidden features of $\bx$; $\ch{\bar{\bh}}$: their average over the $n = 4{,}000$ training images; $\ch{H}$ stacks $\ch{\bh}(\bx_i) - \ch{\bar{\bh}}$; $Y_i$ is the one-hot label.</p>
+      <div class="eq" style="font-size:24px">$w_i(\bx) = \tfrac{1}{n} + \ch{\tilde{\bh}}(\bx)^{\!\top} S^{-1}\, \ch{\tilde{\bh}}(\bx_i)$</div>
+      <p class="small">$\ch{\bh}(\bx)$: the 64 hidden features of $\bx$; $\ch{\tilde{\bh}}(\bx) = \ch{\bh}(\bx) - \ch{\bar{\bh}}$, where $\ch{\bar{\bh}}$ is their average over the $n = 4{,}000$ training images; $S = \sum_i \ch{\tilde{\bh}}(\bx_i)\,\ch{\tilde{\bh}}(\bx_i)^{\!\top} + \lambda I$; $Y_i$ is the one-hot label.</p>
       <p>Freeze the features; ridge-regress the labels on them.</p>
       <p>$w_i(\bx)$ ignores the labels: a linear smoother, like ridge and splines.</p>
       <p>The $\tfrac{1}{n}$ makes the weights sum to one; some are negative.</p>
