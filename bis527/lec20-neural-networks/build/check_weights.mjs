@@ -1,0 +1,13 @@
+import { createRequire } from "node:module"; import path from "node:path"; import fs from "node:fs";
+const require = createRequire(path.join(process.env.HOME, "Documents/projects/simulator/talks/umich-causal-ai-2026/node_modules/"));
+const { chromium } = require("playwright-core");
+const exe = fs.readdirSync(path.join(process.env.HOME, "Library/Caches/ms-playwright")).filter((d) => d.startsWith("chromium-")).sort().pop();
+const browser = await chromium.launch();
+const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
+page.on("pageerror", (e) => console.log("pageerror", e.message));
+await page.goto("file://" + process.cwd() + "/index.html#12"); await page.waitForTimeout(1500);
+await page.screenshot({ path: "build/shots/weights-hidden.png" });
+const t0 = Date.now(); await page.selectOption("#wtFeat", "pixels"); await page.waitForFunction(() => { const c = document.getElementById("wtCanvas"); return true; });
+await page.waitForTimeout(12000); console.log("pixels build waited", Date.now() - t0, "ms");
+await page.screenshot({ path: "build/shots/weights-pixels.png" });
+await browser.close();

@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Introduction to Neural Networks — BIS 527</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<link rel="stylesheet" href="css/deck.css">
+</head>
+<body>
+<div id="stage">
+
+<!-- 1 ------------------------------------------------------------------ -->
+<section class="slide title-slide" data-widget="titleNet">
+  <div class="row">
+    <div class="col side">
+      <h1>Introduction to<br>Neural Networks</h1>
+      <div class="sub">BIS 527 &middot; Yale School of Public Health</div>
+      <div class="meta">Harsh Parikh<br>November 12, 2026</div>
+    </div>
+    <div class="col vis"><canvas id="titleCanvas"></canvas></div>
+  </div>
+  <div class="hint">Every figure is live. <span class="kbd">→</span> next &nbsp; <span class="kbd">←</span> back &nbsp; <span class="kbd">F</span> fullscreen &nbsp; <span class="kbd">N</span> notes</div>
+  <aside class="notes">The animation is a network with two hidden layers, one more than we build today: inputs on the left, outputs on the right; orange pulses are the forward pass. Plan for the hour: the task (MNIST), the model we already know (multinomial logistic regression), a hidden layer as learned features, the forward pass on a digit you draw, the loss and gradient descent, backpropagation, a live training run, what the hidden units learned, overfitting, and the network as a weighting estimator.</aside>
+</section>
+
+<!-- 2 ------------------------------------------------------------------ -->
+<section class="slide" data-widget="digits">
+  <h2>A task: read a handwritten digit</h2>
+  <div class="row">
+    <div class="col vis">
+      <div class="digit-grid" id="digitGrid"></div>
+      <div class="caption">MNIST test images. Click one.</div>
+    </div>
+    <div class="col vis"><canvas id="digitBig"></canvas><div class="caption" id="digitInfo">Hover over the large digit to read a pixel value.</div></div>
+    <div class="col side">
+      <p>Each image: 28 &times; 28 = 784 numbers.</p>
+      <p>Each pixel between 0 (paper) and 1 (ink).</p>
+      <div class="eq">$\cx{\bx} \in [0,1]^{784}, \qquad y \in \{0,1,\dots,9\}$</div>
+      <p class="small">4,000 training, 1,000 validation, 1,000 test images in this deck.</p>
+    </div>
+  </div>
+  <aside class="notes">Start concrete. The input is a grid of grey levels; the output is one of ten labels. Everything that follows is about building a function from the 784 numbers to the label. MNIST has 60,000 training and 10,000 test images (LeCun, Cortes, Burges); this deck carries 4,000 for training, 1,000 as a validation set for choosing epochs, and 1,000 test images reported once.</aside>
+</section>
+
+<!-- 3 ------------------------------------------------------------------ -->
+<section class="slide" data-widget="unroll">
+  <h2>An image is a vector</h2>
+  <div class="row">
+    <div class="col vis"><canvas id="unrollCanvas"></canvas>
+      <div class="controls"><label>row <input type="range" id="unrollRow" min="0" max="27" value="7"><span class="val" id="unrollRowVal">8</span></label></div>
+    </div>
+    <div class="col side">
+      <p>Read the pixels row by row.</p>
+      <div class="eq">$\cx{\bx} = (\cx{x_1}, \cx{x_2}, \dots, \cx{x_{784}})$</div>
+      <p>The model receives a list of 784 numbers, not a picture.</p>
+      <p>We want a function $f(\cx{\bx})$ that returns the digit.</p>
+    </div>
+  </div>
+  <aside class="notes">The flattening throws away the neighbourhood structure. The fully connected network we build today does not know that pixel 29 sits under pixel 1. Convolutions, at the end, put that knowledge back.</aside>
+</section>
+
+<!-- 4 ------------------------------------------------------------------ -->
+<section class="slide" data-widget="logreg">
+  <h2>Start from logistic regression</h2>
+  <div class="row">
+    <div class="col vis"><canvas id="logregCanvas"></canvas>
+      <div class="controls"><button id="logregRandom">another digit</button><span class="small">Click a template to enlarge it.</span></div>
+    </div>
+    <div class="col side">
+      <div class="eq">$\cp{p_k} = \Pr(y = k \mid \cx{\bx}) = \dfrac{\exp(\cw{\btheta_k}^{\!\top}\cx{\bx} + \cw{b_k})}{\sum_{j} \exp(\cw{\btheta_j}^{\!\top}\cx{\bx} + \cw{b_j})}$</div>
+      <p>One template $\cw{\btheta_k}$ and intercept $\cw{b_k}$ per class.</p>
+      <p>The softmax turns ten scores into probabilities.</p>
+      <p><span class="cl">Red</span> pixels raise the score for $k$, <span class="cx">blue</span> lower it.</p>
+      <p class="small">90% test accuracy. Every boundary is a straight line.</p>
+    </div>
+  </div>
+  <aside class="notes">This is multinomial logistic regression, the model the class already knows. The weights are a template per class. The score for class k is the match between the image and template k. Softmax turns the ten scores into probabilities. Ten percent of test digits are wrong, and no choice of the ten templates fixes that: the score for each class is linear in the pixels, so each boundary is flat. The weights were fit on all 60,000 training images. The score for class k is theta_k transpose x plus b_k; the softmax exponentiates and normalizes the ten scores. Every boundary between two classes is a straight line, and the remaining ten percent of errors need boundaries that bend.</aside>
+</section>
+
+<!-- 5 ------------------------------------------------------------------ -->
+<section class="slide" data-widget="linearLimit">
+  <h2>What one line cannot do</h2>
+  <div class="row">
+    <div class="col vis"><canvas id="linCanvas"></canvas>
+      <div class="controls">
+        <label>data <select id="linData"><option value="blobs">two blobs</option><option value="xor" selected>XOR</option><option value="rings">rings</option><option value="spiral">spiral</option></select></label>
+        <button id="linReset">retrain</button>
+        <span class="stat" id="linStat"></span>
+      </div>
+    </div>
+    <div class="col side">
+      <p>Logistic regression draws one straight boundary.</p>
+      <div class="eq">$\cw{\btheta}^{\!\top}\cx{\bx} + \cw{b} = 0$</div>
+      <p>For the XOR, ring, and spiral data no line separates the classes.</p>
+      <p>The fix is new features. A neural network learns them.</p>
+    </div>
+  </div>
+  <aside class="notes">Two inputs instead of 784, so we can draw the boundary. The logistic fit runs live. On the blobs it works; on the rest it stalls near fifty percent. Classically one would hand-build features such as x1 times x2 or the radius. The network builds them from data.</aside>
+</section>
+
+<!-- 6 ------------------------------------------------------------------ -->
+<section class="slide" data-widget="neuron">
+  <h2>One neuron</h2>
+  <div class="row">
+    <div class="col vis"><canvas id="neuronCanvas"></canvas>
+      <div class="controls">
+        <label>$\cw{\theta_1}$ <input type="range" id="nW1" min="-4" max="4" step="0.1" value="2"><span class="val" id="nW1v"></span></label>
+        <label>$\cw{\theta_2}$ <input type="range" id="nW2" min="-4" max="4" step="0.1" value="1.5"><span class="val" id="nW2v"></span></label>
+        <label>$\cw{b}$ <input type="range" id="nB" min="-3" max="3" step="0.1" value="0"><span class="val" id="nBv"></span></label>
+        <label>$\varphi$ <select id="nAct"><option value="sigmoid">sigmoid</option><option value="tanh">tanh</option><option value="relu">ReLU</option><option value="linear">linear</option></select></label>
+      </div>
+    </div>
+    <div class="col side">
+      <div class="eq">$\ch{a} = \varphi\big(\cw{\theta_1}\cx{x_1} + \cw{\theta_2}\cx{x_2} + \cw{b}\big)$</div>
+      <p>A neuron is a weighted sum followed by a nonlinear function $\varphi$.</p>
+      <p>The weights set the direction of the boundary. The bias shifts it.</p>
+      <p>With a sigmoid $\varphi$, one neuron is logistic regression.</p>
+    </div>
+  </div>
+  <aside class="notes">Drag the weights: the boundary rotates. Drag the bias: it translates. The shading is the activation a over the plane. Nothing here is new; a neuron is one logistic regression unit.</aside>
+</section>
+
+<!-- 7 ------------------------------------------------------------------ -->
+<section class="slide" data-widget="activations">
+  <h2>Activation functions</h2>
+  <div class="row">
+    <div class="col vis"><canvas id="actCanvas"></canvas>
+      <div class="controls" id="actButtons"></div>
+    </div>
+    <div class="col side">
+      <div class="eq" id="actEq"></div>
+      <p>Solid: $\varphi(z)$. Dashed: the derivative $\varphi'(z)$, used in learning.</p>
+      <p>Without a nonlinear $\varphi$, stacked layers collapse to one linear map.</p>
+      <div class="eq">$\cw{\bTheta_2}(\cw{\bTheta_1}\cx{\bx}) = (\cw{\bTheta_2}\cw{\bTheta_1})\,\cx{\bx}$</div>
+    </div>
+  </div>
+  <aside class="notes">Sigmoid and tanh saturate: the derivative vanishes far from zero, so learning slows. ReLU keeps a derivative of one on the positive side and is the default for hidden layers. The composition identity is why the nonlinearity is not optional.</aside>
+</section>
+
+<!-- 8 ------------------------------------------------------------------ -->
+<section class="slide" data-widget="playground">
+  <h2>A hidden layer</h2>
+  <div class="row">
+    <div class="col vis"><p class="small" style="margin:0 0 4px 0">Two inputs here instead of 784, so the boundary can be drawn.</p><canvas id="pgCanvas"></canvas>
+      <div class="controls">
+        <label>data <select id="pgData"><option value="xor">XOR</option><option value="rings">rings</option><option value="spiral">spiral</option><option value="blobs">two blobs</option></select></label>
+        <label>hidden units <input type="range" id="pgHidden" min="1" max="16" value="4"><span class="val" id="pgHiddenV">4</span></label>
+        <label>$\varphi$ <select id="pgAct"><option value="relu">ReLU</option><option value="tanh">tanh</option><option value="sigmoid">sigmoid</option><option value="linear">linear</option></select></label>
+        <label>learning rate $\eta$ <input type="range" id="pgLr" min="-3" max="0.3" step="0.1" value="-0.7"><span class="val" id="pgLrV"></span></label>
+        <button id="pgRun" class="primary">train</button><button id="pgReset">reset</button>
+        <span class="stat" id="pgStat"></span>
+      </div>
+    </div>
+    <div class="col side">
+      <div class="eq">$\ch{\bh} = \varphi(\cw{\bTheta_1}\cx{\bx} + \cw{\bb_1})$</div>
+      <div class="eq">$\cp{\bp} = \mathrm{softmax}(\cw{\bTheta_2}\ch{\bh} + \cw{\bb_2})$</div>
+      <p>$\ch{\bh}(\cx{\bx})$: the hidden layer's output, the learned features of $\cx{\bx}$.</p>
+      <p>Each hidden unit: a weighted sum, then $\varphi(z) = \max(0, z)$.</p>
+      <p>Its sum is zero along one line (small panels).</p>
+      <p>Softmax on $\ch{\bh}$: straight in $\ch{\bh}$, bent in $\cx{\bx}$.</p>
+    </div>
+  </div>
+  <aside class="notes">This is the whole idea of the lecture. Two inputs instead of 784 so the boundary can be drawn; the data are the XOR pattern (classes by quadrant), rings, or a spiral. First set one hidden unit: one straight line, and on XOR accuracy stalls near fifty percent. Then raise the hidden units: each learned feature is a ramp that is zero on one side of its line, and multinomial logistic regression on those features gives a boundary that is straight in h and therefore bends in x (piecewise linear for ReLU). Switch to the linear activation (phi is called the activation function): two linear maps compose to one linear map, so the model is again logistic regression on the raw inputs and the boundary stays straight. The learning rate eta is the step size of training, defined two slides on. With a linear activation, Theta2 times Theta1 x equals (Theta2 Theta1) x: two linear maps compose to one, and the boundary is straight again. Phi is called the activation function.</aside>
+</section>
+
+<!-- 9 ------------------------------------------------------------------ -->
+<section class="slide" data-widget="shapes">
+  <h2>The same network on MNIST</h2>
+  <div class="row">
+    <div class="col vis"><canvas id="shapesCanvas"></canvas>
+      <div class="controls"><label>hidden units <input type="range" id="shHidden" min="0" max="256" step="16" value="64"><span class="val" id="shHiddenV">64</span></label><span class="stat" id="shStat"></span></div>
+    </div>
+    <div class="col side">
+      <div class="eq">$\cx{\bx}\in\R^{784} \;\to\; \ch{\bh}\in\R^{m} \;\to\; \cp{\bp}\in\R^{10}$</div>
+      <div class="eq">$\cw{\bTheta_1}\in\R^{m\times 784},\quad \cw{\bTheta_2}\in\R^{10\times m}$</div>
+      <p>Two inputs become 784. Two classes become ten.</p>
+      <p>With $m = 64$ hidden units: 50,890 parameters, against 7,850 for logistic regression.</p>
+    </div>
+  </div>
+  <aside class="notes">Rectangles are drawn to scale. Zero hidden units is logistic regression. The parameter count grows linearly in m; the data stays at 60,000 images. Keep that ratio in mind for the overfitting slide.</aside>
+</section>
+
+<!-- 10 ----------------------------------------------------------------- -->
+<section class="slide" data-widget="forward">
+  <h2>The forward pass on a digit you draw</h2>
+  <div class="row">
+    <div class="col vis">
+      <canvas id="fwCanvas"></canvas>
+      <div class="controls"><button id="fwClear">clear</button><button id="fwRandom">test digit</button><span class="small">Draw in the left box with the mouse.</span></div>
+    </div>
+    <div class="col side">
+      <div class="eq" style="font-size:24px">$\cx{\bx} \;\xrightarrow{\;\cw{\bTheta_1},\;\varphi\;}\; \ch{\bh} \;\xrightarrow{\;\cw{\bTheta_2},\;\mathrm{softmax}\;}\; \cp{\bp}$</div>
+      <p>Pretrained: 64 ReLU units, 97% test accuracy.</p>
+      <p>Draw a digit: 784 inputs, 64 features, 10 probabilities.</p>
+    </div>
+  </div>
+  <aside class="notes">The 8 by 8 grid is the hidden vector h; dark cells are active units, those whose ReLU output is positive. The bars are p. Draw a 7 with a crossbar, or a thin 1, and watch the probabilities move. A badly centred digit fails: the network has no translation invariance. The forward pass computes p from x layer by layer. The network was trained beforehand on the 60,000 training images with 64 units and 20 epochs fixed in advance, so nothing about it was chosen on the test set.</aside>
+</section>
+
+<!-- 11 ----------------------------------------------------------------- -->
+<section class="slide" data-widget="loss">
+  <h2>The loss: cross-entropy</h2>
+  <div class="row">
+    <div class="col vis"><canvas id="lossCanvas"></canvas>
+      <div class="controls"><label>$\cp{p_y}$ <input type="range" id="lossP" min="0.01" max="1" step="0.01" value="0.4"><span class="val" id="lossPv"></span></label></div>
+    </div>
+    <div class="col side">
+      <div class="eq">$L_i(\btheta) = -\log \cp{p_{y_i}}, \qquad L(\btheta) = \frac{1}{n}\sum_{i=1}^{n} L_i(\btheta)$</div>
+      <p>$\cp{p_{y_i}}$ is the probability the network gives the true class.</p>
+      <p>This is the negative log-likelihood of the multinomial model.</p>
+      <p>A confident wrong answer costs far more than a hesitant one.</p>
+    </div>
+  </div>
+  <aside class="notes">Same loss as logistic regression; the parameters theta now include the hidden layer. Drag p toward zero and the loss explodes, which is why the gradient on a confident mistake is large.</aside>
+</section>
+
+<!-- 12 ----------------------------------------------------------------- -->
+<section class="slide" data-widget="gd">
+  <h2>Learning: gradient descent</h2>
+  <div class="row">
+    <div class="col vis"><canvas id="gdCanvas"></canvas>
+      <div class="controls">
+        <label>surface <select id="gdSurf"><option value="bowl">bowl</option><option value="valley">valley</option><option value="two">two minima</option></select></label>
+        <label>$\eta$ <input type="range" id="gdLr" min="-2.5" max="0.2" step="0.05" value="-1"><span class="val" id="gdLrV"></span></label>
+        <button id="gdStep">step</button><button id="gdRun" class="primary">run</button><button id="gdReset">reset</button>
+        <span class="small">Click the plot to choose a start.</span>
+      </div>
+    </div>
+    <div class="col side">
+      <div class="eq">$L(\btheta) = -\frac{1}{n}\sum_{i=1}^{n} \log \cp{p_{y_i}}(\cx{\bx_i};\btheta)$</div>
+      <p>The average negative log-likelihood, as in logistic regression.</p>
+      <div class="eq">$\btheta \;\leftarrow\; \btheta - \eta\,\cl{\nabla_{\btheta} L(\btheta)}$</div>
+      <p>Not convex, 50,890 parameters: take gradient steps.</p>
+      <p>Too small an $\eta$ is slow; too large jumps across the valley.</p>
+    </div>
+  </div>
+  <aside class="notes">Two parameters so the surface can be drawn; the real surface has 50,890 dimensions. Show the three failure modes live: slow, oscillating, diverging. Then the two-minima surface: neural network losses are not convex, and initialisation matters. Theta holds every weight and intercept (called a bias in this literature). Logistic regression is convex and IRLS solves it in a few steps; here the loss is not convex and theta has 50,890 entries for the 64-unit network, so a Newton step would mean a 50,890 by 50,890 Hessian and we take first-order steps instead.</aside>
+</section>
+
+<!-- 13 ----------------------------------------------------------------- -->
+<section class="slide" data-widget="backprop">
+  <h2>Backpropagation: the chain rule, organized</h2>
+  <div class="row">
+    <div class="col vis"><canvas id="bpCanvas"></canvas>
+      <div class="controls">
+        <label>$\cx{x}$ <input type="range" id="bpX" min="-2" max="2" step="0.1" value="1.5"><span class="val" id="bpXv"></span></label>
+        <label>$\cw{\theta}$ <input type="range" id="bpW" min="-2" max="2" step="0.1" value="0.8"><span class="val" id="bpWv"></span></label>
+        <label>$\cw{b}$ <input type="range" id="bpB" min="-2" max="2" step="0.1" value="-0.5"><span class="val" id="bpBv"></span></label>
+        <button id="bpFwd" class="primary">forward</button><button id="bpBwd">backward</button><button id="bpReset">reset</button>
+      </div>
+    </div>
+    <div class="col side">
+      <div class="eq">$\dfrac{\partial L}{\partial \cw{\theta}} = \dfrac{\partial L}{\partial \ch{a}}\cdot\dfrac{\partial \ch{a}}{\partial z}\cdot\dfrac{\partial z}{\partial \cw{\theta}}$</div>
+      <p class="small">$z = \cw{\theta}\cx{x} + \cw{b}$, &nbsp; $\ch{a} = \sigma(z) = \frac{1}{1+e^{-z}}$, &nbsp; $L = -\log \ch{a}$ for $y = 1$.</p>
+      <p>Forward: each node from the nodes before it.</p>
+      <p>Backward: multiply local derivatives back to each weight.</p>
+    </div>
+  </div>
+  <aside class="notes">One neuron, one example with label y equal to one. Press forward: values fill left to right. Press backward: derivatives fill right to left, each edge multiplying by a local derivative, the derivative of a node with respect to its direct input. The gradient for theta is the product along the path. In a network a weight in the first layer reaches the loss through every output, and the chain rule sums over those paths; backpropagation organizes this so each node's derivative is computed once and reused by everything upstream of it. That is why the backward pass costs about as much as the forward pass, however many weights there are. Frameworks such as PyTorch do the bookkeeping over graphs with millions of nodes. Every node stores one number forward (its value) and one number backward (the derivative of the loss with respect to it). Sigma is the logistic function, the two-class softmax.</aside>
+</section>
+
+<!-- 14 ----------------------------------------------------------------- -->
+<section class="slide" data-widget="backprop2">
+  <h2>Backpropagation through the whole network</h2>
+  <div class="row">
+    <div class="col vis"><canvas id="bp2Canvas"></canvas>
+      <div class="controls"><button id="bp2Random">another digit</button><span class="small">Pretrained network on a test digit.</span></div>
+    </div>
+    <div class="col side">
+      <div class="eq" style="font-size:25px">$\cl{\bdelta_2} = \cp{\bp} - \mathbf{e}_{y}, \qquad \nabla_{\cw{\bTheta_2}} L = \cl{\bdelta_2}\,\ch{\bh}^{\!\top}$</div>
+      <div class="eq" style="font-size:25px">$\cl{\bdelta_1} = (\cw{\bTheta_2}^{\!\top}\cl{\bdelta_2}) \odot \varphi'(\bz_1)$</div>
+      <div class="eq" style="font-size:25px">$\nabla_{\cw{\bTheta_1}} L = \cl{\bdelta_1}\,\cx{\bx}^{\!\top}$</div>
+      <p>The output error is probability minus truth.</p>
+      <p>Each weight gradient is an outer product: error signal times the layer's input.</p>
+    </div>
+  </div>
+  <aside class="notes">The top row is the forward pass; the bottom row is the backward pass in red. Delta two is the ten bars: the true class goes negative, the rest positive. Delta one is the 64 cells; ReLU zeroes the inactive units. The backward pass costs about as much as the forward pass.</aside>
+</section>
+
+<!-- 15 ----------------------------------------------------------------- -->
+<section class="slide" data-widget="sgd">
+  <h2>Stochastic gradient descent</h2>
+  <div class="row">
+    <div class="col vis"><canvas id="sgdCanvas"></canvas>
+      <div class="controls">
+        <label>batch size <select id="sgdBatch"><option value="1">1</option><option value="8" selected>8</option><option value="32">32</option><option value="200">200 (all)</option></select></label>
+        <label>$\eta$ <input type="range" id="sgdLr" min="-2" max="0.5" step="0.05" value="-0.5"><span class="val" id="sgdLrV"></span></label>
+        <button id="sgdRun" class="primary">run</button><button id="sgdReset">reset</button>
+        <span class="stat" id="sgdStat"></span>
+      </div>
+    </div>
+    <div class="col side">
+      <div class="eq">$\btheta \;\leftarrow\; \btheta - \eta\,\frac{1}{|B|}\sum_{i\in B} \cl{\nabla L_i(\btheta)}$</div>
+      <p>A mini-batch gradient is a noisy, cheap estimate of the full gradient.</p>
+      <p>One pass over all the data is an epoch.</p>
+      <p>Smaller batches: more steps per epoch, noisier path.</p>
+    </div>
+  </div>
+  <aside class="notes">A real problem: logistic regression with one feature, so the two parameters w and b give a drawable loss surface over 200 points. Contours are the full-data loss. With batch size one the path jitters; with the full batch it is smooth but each step costs 200 gradients. Modern training uses batches of 32 to 512.</aside>
+</section>
+
+<!-- 16 ----------------------------------------------------------------- -->
+<section class="slide" data-widget="trainer">
+  <h2>Train on MNIST, live</h2>
+  <div class="row">
+    <div class="col vis" style="flex:1">
+      <div class="controls" id="trControls"></div>
+      <canvas id="trCanvas"></canvas>
+    </div>
+  </div>
+  <aside class="notes">Five thousand training images, one thousand test images, in the browser. Before each run, ask the class to predict: what happens with zero hidden units, with a learning rate ten times larger, with batch size one? Then run. Watch train and test accuracy diverge when the training set is small.</aside>
+</section>
+
+<!-- 17 ----------------------------------------------------------------- -->
+<section class="slide" data-widget="features">
+  <h2>What the hidden units learned</h2>
+  <div class="row">
+    <div class="col vis"><canvas id="featCanvas"></canvas>
+      <div class="controls"><label>weights <select id="featSrc"><option value="pre">pretrained (60,000 images)</option><option value="live">from the live run</option></select></label><span class="small">Click a tile.</span></div>
+    </div>
+    <div class="col side">
+      <p>Each tile: one row of $\cw{\bTheta_1}$ as a 28 &times; 28 image.</p>
+      <p>A hidden unit is a learned stroke template.</p>
+      <p>Right: the validation digits that activate it, and its ten output weights.</p>
+    </div>
+  </div>
+  <aside class="notes">Compare with the ten logistic-regression templates: those were whole digits; these are parts. The output layer composes parts into digits with signed weights. This is the learned basis expansion. In 784 dimensions each unit's line from the playground is a hyperplane; drawn as an image it is a stroke template. Red is evidence for a digit, blue against.</aside>
+</section>
+
+<!-- 18 ----------------------------------------------------------------- -->
+<section class="slide" data-widget="overfit">
+  <h2>Overfitting</h2>
+  <div class="row">
+    <div class="col vis" style="flex:1">
+      <div class="controls" id="ofControls"></div>
+      <canvas id="ofCanvas"></canvas>
+    </div>
+    <div class="col side" style="flex:0 0 360px">
+      <div class="eq">$L_\lambda(\btheta) = L(\btheta) + \frac{\lambda}{2}\big(\|\cw{\bTheta_1}\|^2 + \|\cw{\bTheta_2}\|^2\big)$</div>
+      <p>500 images, 101,770 parameters: training hits 100%, validation stalls.</p>
+      <p>Remedies: more data, weight decay $\lambda$, early stopping on validation.</p>
+    </div>
+  </div>
+  <aside class="notes">Same trainer, preset to a small sample and a large network: 128 hidden units give 101,770 parameters for 500 images. The dashed line marks the epoch with the best validation accuracy: early stopping. Raise lambda and the gap narrows. The validation set chooses the epoch; the test accuracy is then reported once at that epoch, so it stays an honest estimate. With this many parameters a held-out set is not optional. Weight decay shrinks the weights by a factor one minus eta lambda at each step; the intercepts are not penalized, as in ridge regression. The parameter count is 784 times 128 plus 128 plus 1,280 plus 10.</aside>
+</section>
+
+<!-- 19 ----------------------------------------------------------------- -->
+<section class="slide" data-widget="conv">
+  <h2>Toward images: convolution</h2>
+  <div class="row">
+    <div class="col vis"><canvas id="convCanvas"></canvas>
+      <div class="controls">
+        <label>filter <select id="convPreset"><option value="vert">vertical edge</option><option value="horiz">horizontal edge</option><option value="blur">blur</option><option value="sharpen">sharpen</option><option value="custom">custom</option></select></label>
+        <div class="filter-grid" id="convGrid"></div>
+        <button id="convRandom">another digit</button><button id="convAnim" class="primary">slide the filter</button>
+      </div>
+    </div>
+    <div class="col side">
+      <div class="eq">$(\cw{K} * \cx{\bx})_{ij} = \sum_{u,v} \cw{K_{uv}}\;\cx{x_{i+u,\,j+v}}$</div>
+      <p>A convolution slides one small template over every position.</p>
+      <p>Nine weights instead of 784 per unit, and the same feature detector everywhere.</p>
+      <p>Convolutional networks learn the filters. Next lecture.</p>
+    </div>
+  </div>
+  <aside class="notes">Edit the nine numbers in the grid. The fully connected network had to learn a stroke separately at every location; a convolution learns it once. That weight sharing is what makes image networks work.</aside>
+</section>
+
+<!-- 11b -->
+<section class="slide" data-widget="weights">
+  <h2>With its features fixed, a network is a weighting estimator</h2>
+  <div class="row">
+    <div class="col vis"><canvas id="wtCanvas"></canvas>
+      <div class="controls"><label>features <select id="wtFeat"><option value="hidden">the 64 learned hidden units h(x)</option><option value="pixels">the 784 raw pixels x</option></select></label><button id="wtRandom">another test digit</button></div>
+    </div>
+    <div class="col side">
+      <div class="eq" style="font-size:26px">$\hat y(\bx) = \sum_{i=1}^{n} w_i(\bx)\, Y_i$</div>
+      <div class="eq" style="font-size:23px">$w_i(\bx) = \ch{\bh}(\bx)^{\!\top}\,(\ch{H}^{\!\top}\ch{H} + \lambda I)^{-1}\,\ch{\bh}(\bx_i)$</div>
+      <p class="small">$\ch{\bh}(\bx)$: the 64 hidden features of $\bx$; $\ch{H}$ stacks $\ch{\bh}(\bx_i)$ over $n = 4{,}000$ training images; $Y_i$ is the one-hot label.</p>
+      <p>Freeze the features; ridge-regress the labels on them.</p>
+      <p>$w_i(\bx)$ ignores the labels: a linear smoother, like ridge and splines.</p>
+      <p>Weights can be negative and need not sum to one.</p>
+    </div>
+  </div>
+  <aside class="notes">The same formula as ridge regression, with h in place of x. Given the learned features the map from labels to prediction is linear, so every tool for linear smoothers applies: the hat matrix, degrees of freedom, leave-one-out. Two qualifications. The features were learned from the same labels, so the full map is not linear; the weighting view holds once the features are fixed, which is also the status of a random forest's weights given its trees. And the real output layer is a softmax trained jointly by gradient descent; the ridge smoother shown here replaces it on the same frozen features, and its test accuracy is printed next to the network's. Switch to raw pixels: the same formula with the pixels themselves as features, and the training digits with the largest weights stop resembling the test digit. The intercept is unpenalized, as on the previous slide. H stacks the 64 features of the 4,000 training images; Y_i is the ten-vector with a one at y_i, so the prediction is the largest entry of y-hat. Lambda is fixed at 0.001, not tuned; the intercept is unpenalized.</aside>
+</section>
+
+<!-- 21 ----------------------------------------------------------------- -->
+<section class="slide" data-widget="summary">
+  <h2>Summary</h2>
+  <div class="row">
+    <div class="col vis"><canvas id="sumCanvas"></canvas></div>
+    <div class="col side">
+      <p>A neuron: a weighted sum, then a nonlinearity.</p>
+      <p>A hidden layer learns features; softmax regression on them.</p>
+      <p>Training: gradient descent on the average negative log-likelihood.</p>
+      <p>Backpropagation: the chain rule, one backward pass.</p>
+      <p>Many parameters: validation set, weight decay, early stopping.</p>
+      <p class="small" style="margin-top:18px">Reading: Goodfellow, Bengio, Courville, <i>Deep Learning</i> (2016), ch. 6 and 8; Hastie, Tibshirani, Friedman, <i>ESL</i>, ch. 11; Nielsen, <i>Neural Networks and Deep Learning</i> (online).</p>
+      <p class="small">Data: MNIST (LeCun, Cortes, Burges). Maths: KaTeX. Every figure is plain JavaScript in this folder; <span class="kbd">index_full.html</span> has ten more slides.</p>
+    </div>
+  </div>
+  <aside class="notes">Close the loop with the diagram: forward pass, loss, backward pass, update. Then the readings.</aside>
+</section>
+
+<!-- 22 ----------------------------------------------------------------- -->
+<section class="slide readlist">
+  <h2>Reading and credits</h2>
+  <div class="two">
+    <div>
+      <p><b>Goodfellow, Bengio, Courville</b>, <i>Deep Learning</i> (MIT Press, 2016), chapters 6 and 8. Free online.</p>
+      <p><b>Hastie, Tibshirani, Friedman</b>, <i>The Elements of Statistical Learning</i>, chapter 11.</p>
+      <p><b>Nielsen</b>, <i>Neural Networks and Deep Learning</i> (online book), chapters 1 and 2.</p>
+      <p><b>LeCun, Bottou, Bengio, Haffner</b> (1998), gradient-based learning applied to document recognition. <i>Proc. IEEE</i>. The MNIST paper.</p>
+    </div>
+    <div>
+      <p><b>Data.</b> MNIST, Yann LeCun, Corinna Cortes, Christopher J.C. Burges. 5,000 training and 1,000 test images are embedded in this deck.</p>
+      <p><b>Code.</b> Every figure is plain JavaScript in <span class="kbd">js/</span>. The two pretrained models were fit with <span class="kbd">build/train_pretrained.py</span> on all 60,000 images.</p>
+      <p><b>Maths.</b> Rendered with KaTeX (MIT licence).</p>
+      <p class="small" style="margin-top:28px">Open <span class="kbd">index.html</span> in any browser. Nothing leaves your computer.</p>
+    </div>
+  </div>
+  <div class="meta small" style="margin-top:auto">Harsh Parikh &middot; harsh.parikh@yale.edu &middot; Amazon SCOT and Yale University</div>
+</section>
+
+</div>
+<div id="progress"></div>
+<div id="counter"></div>
+<div id="notesPane"></div>
+
+<script src="vendor/katex/katex.min.js"></script>
+<script src="vendor/katex/contrib/auto-render.min.js"></script>
+<script src="js/mnist_data.js"></script>
+<script src="js/pretrained.js"></script>
+<script src="js/nn.js"></script>
+<script src="js/widgets_core.js"></script>
+<script src="js/widgets_mid.js"></script>
+<script src="js/widgets_train.js"></script>
+<script src="js/deck.js"></script>
+</body>
+</html>
