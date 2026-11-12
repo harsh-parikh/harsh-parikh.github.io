@@ -41,24 +41,34 @@
         x[0] = -1 + 2 * (j + 0.5) / n; x[1] = 1 - 2 * (i + 0.5) / n; const out = m.forward1(x); field[i * n + j] = out.p[1];
         for (let u = 0; u < hid; u++) { unitFields[u][i * n + j] = out.h[u]; hmax = Math.max(hmax, Math.abs(out.h[u])); }
       }
-      heatmap(ctx, field, n, 0, 10, size, size, probColor); drawPoints(ctx, this.data, 0, 10, size); rect(ctx, 0, 10, size, size, null, "#ccc");
-      text(ctx, "p(class = blue | x)", 0, 432, { size: 14, color: "#555" });
-      // hidden units
-      const cols = 4, cell = 66, gx = 420, gy = 10;
-      text(ctx, hid ? `the ${hid} hidden units  h₁ … h${hid}` : "no hidden layer", gx, gy - 0 + 0, { size: 14, color: C.h, weight: 600 });
+      heatmap(ctx, field, n, 0, 10, size, size, probColor);
+      // decision boundary p = 0.5
+      ctx.save(); ctx.fillStyle = "#1a1a1a";
+      for (let i = 1; i < n; i++) for (let j = 1; j < n; j++) { const a = field[i * n + j] - 0.5, b = field[i * n + j - 1] - 0.5, c = field[(i - 1) * n + j] - 0.5; if (a * b < 0 || a * c < 0) ctx.fillRect(j * size / n - 1, 10 + i * size / n - 1, size / n + 1, size / n + 1); }
+      ctx.restore();
+      drawPoints(ctx, this.data, 0, 10, size); rect(ctx, 0, 10, size, size, null, "#ccc");
+      text(ctx, "shading: p(blue | x)    black: the boundary p = ½", 0, 432, { size: 14, color: "#555" });
+      // hidden units, green = active, sized to fill the panel
+      const gx = 430, gy = 32, gw = 330;
       const lo = m.actName === "tanh" ? -1 : 0, hi = m.actName === "tanh" ? 1 : (m.actName === "sigmoid" ? 1 : hmax);
-      for (let u = 0; u < hid; u++) {
-        const cx = gx + (u % cols) * (cell + 8), cy = gy + 10 + Math.floor(u / cols) * (cell + 8);
-        heatmap(ctx, unitFields[u], n, cx, cy, cell, cell, (v) => probColor((v - lo) / (hi - lo)));
-        rect(ctx, cx, cy, cell, cell, null, "#ccc");
-      }
+      const green = (t) => { t = Math.max(0, Math.min(1, t)); return [Math.round(255 - 213 * t), Math.round(255 - 98 * t), Math.round(255 - 163 * t)]; };
+      if (hid) {
+        const cols = hid <= 4 ? 2 : hid <= 9 ? 3 : 4, rows = Math.ceil(hid / cols), gap = 8, cell = Math.min(150, Math.floor((gw - (cols - 1) * gap) / cols));
+        text(ctx, hid === 1 ? "the hidden unit h₁" : `the ${hid} hidden units h₁ … h${hid}`, gx, gy - 12, { size: 14, color: C.h, weight: 600 });
+        for (let u = 0; u < hid; u++) {
+          const cx = gx + (u % cols) * (cell + gap), cy = gy + Math.floor(u / cols) * (cell + gap);
+          heatmap(ctx, unitFields[u], n, cx, cy, cell, cell, (v) => green((v - lo) / (hi - lo)));
+          rect(ctx, cx, cy, cell, cell, null, "#bbb");
+          if (cell >= 60) text(ctx, `h${u + 1}`, cx + 5, cy + 16, { size: 12, color: C.h, weight: 600 });
+        }
+      } else text(ctx, "no hidden layer: logistic regression on x", gx, gy - 12, { size: 14, color: C.h, weight: 600 });
       // loss curve
-      const lx = 420, ly = 330, lw = 320, lh = 90;
+      const lx = 430, ly = 372, lw = 330, lh = 66;
       rect(ctx, lx, ly, lw, lh, "#fafafa", "#ddd");
-      text(ctx, "training loss", lx + 4, ly + 14, { size: 13, color: C.loss });
+      text(ctx, "training loss", lx + 6, ly + 14, { size: 12, color: C.loss });
       if (this.losses.length > 1) {
-        const L = this.losses, maxL = Math.max(0.8, ...L.slice(0, 20)); ctx.save(); ctx.strokeStyle = C.loss; ctx.lineWidth = 2; ctx.beginPath();
-        L.forEach((v, i) => { const px = lx + 4 + (lw - 8) * i / (L.length - 1), py = ly + lh - 4 - Math.min(1, v / maxL) * (lh - 20); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }); ctx.stroke(); ctx.restore();
+        const L = this.losses, maxL = Math.max(0.8, ...L.slice(0, 20)); ctx.save(); ctx.strokeStyle = C.loss; ctx.lineWidth = 2; ctx.beginPath(); let acc = L[0];
+        L.forEach((v, i) => { acc = 0.9 * acc + 0.1 * v; const px = lx + 4 + (lw - 8) * i / (L.length - 1), py = ly + lh - 4 - Math.min(1, acc / maxL) * (lh - 20); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }); ctx.stroke(); ctx.restore();
       }
       const ev = m.evaluate(this.data.X, this.data.Y, this.data.n, false);
       $("pgStat").innerHTML = `step ${this.step_} &nbsp; loss <b>${fmt(ev.loss, 3)}</b> &nbsp; accuracy <b>${(100 * ev.acc).toFixed(0)}%</b> &nbsp; ${m.nParams()} parameters`;
