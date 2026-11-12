@@ -331,7 +331,7 @@
       }
       // colour key
       for (let i = 0; i < 60; i++) rect(ctx, 10 + i * 3, 370, 3, 12, NN.divergeColor((i - 30) / 30, 1));
-      text(ctx, "negative weight", 10, 400, { size: 13, color: C.x }); text(ctx, "positive weight", 190, 400, { size: 13, color: C.loss, align: "right" });
+      text(ctx, "negative", 10, 400, { size: 13, color: C.x }); text(ctx, "0", 100, 400, { size: 13, color: "#555", align: "center" }); text(ctx, "positive", 190, 400, { size: 13, color: C.loss, align: "right" }); text(ctx, "weight", 100, 416, { size: 13, color: "#555", align: "center" });
       text(ctx, "A weight map is the weight vector of one class, drawn as a $28 \\times 28$ image.", 10, 440, { size: 15, color: "#555" });
     },
   };
